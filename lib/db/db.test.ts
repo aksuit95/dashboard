@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { activeInstruments } from "@/config/universe";
-import { openDatabase } from "@/lib/db/client";
+import { databasePath, openDatabase } from "@/lib/db/client";
 import { applyQuote, readQuote, recordIngest, syncInstruments } from "@/lib/db/quotes";
 import { ok, stale, empty } from "@/lib/sources/types";
 
@@ -47,6 +47,18 @@ describe("시세 저장", () => {
     const runs = db.prepare("SELECT status, message FROM ingest_runs").all() as { status: string; message: string }[];
     expect(runs).toEqual([{ status: "stale", message: "timeout" }]);
     db.close();
+  });
+
+  it("Vercel 에서는 읽기 전용 프로젝트 경로 대신 임시 파일을 쓴다", () => {
+    const previousVercel = process.env.VERCEL;
+    const previousUrl = process.env.DATABASE_URL;
+    process.env.VERCEL = "1";
+    process.env.DATABASE_URL = "file:./data/market.sqlite";
+    expect(databasePath()).toBe("/tmp/market.sqlite");
+    if (previousVercel == null) delete process.env.VERCEL;
+    else process.env.VERCEL = previousVercel;
+    if (previousUrl == null) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousUrl;
   });
 
   it("저장된 적 없는 종목의 실패는 0원 행을 만들지 않는다", () => {

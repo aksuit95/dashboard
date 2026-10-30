@@ -150,9 +150,16 @@ CREATE TABLE IF NOT EXISTS imports (
 
 export type AppDatabase = DatabaseSync;
 
+function isLocalFileSetting(configured: string | undefined): boolean {
+  if (!configured) return true;
+  return configured === ":memory:" || configured.startsWith("file:") || !configured.includes("://");
+}
+
 export function databasePath(): string {
   const configured = process.env.DATABASE_URL?.trim();
   if (configured === ":memory:") return ":memory:";
+  // Vercel 함수 디렉터리는 읽기 전용이다. /tmp 만 쓸 수 있고, 인스턴스가 식으면 비워진다.
+  if (process.env.VERCEL && isLocalFileSetting(configured)) return "/tmp/market.sqlite";
   if (!configured) return path.join(process.cwd(), "data", "market.sqlite");
   const file = configured.startsWith("file:") ? configured.slice("file:".length) : configured;
   return path.isAbsolute(file) ? file : path.join(process.cwd(), file);
@@ -163,7 +170,7 @@ export function openDatabase(file = databasePath()): AppDatabase {
     fs.mkdirSync(path.dirname(file), { recursive: true });
   }
   const db = new DatabaseSync(file);
-  if (file !== ":memory:") db.exec("PRAGMA journal_mode = WAL;");
+  if (file !== ":memory:" && !process.env.VERCEL) db.exec("PRAGMA journal_mode = WAL;");
   db.exec(SCHEMA);
   return db;
 }
@@ -171,7 +178,14 @@ export function openDatabase(file = databasePath()): AppDatabase {
 let cached: AppDatabase | null = null;
 
 export function getDb(): AppDatabase {
-  if (!cached) cached = openDatabase();
+  if (!cached) {
+    try {
+      cached = openDatabase();
+    } catch (error) {
+      console.error("SQLite 파일을 열지 못했습니다. 메모리 DB로 전환합니다.", error);
+      cached = openDatabase(":memory:");
+    }
+  }
   return cached;
 }
 
