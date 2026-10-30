@@ -1,0 +1,35 @@
+{
+  "name": "kr-research-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "job:ingest": "tsx jobs/ingest.ts",
+    "job:daily": "tsx jobs/daily.ts",
+    "job:backfill": "tsx jobs/backfill.ts",
+    "job:poll": "tsx jobs/poll.ts"
+  },
+  "dependencies": {
+    "lightweight-charts": "^4.2.3",
+    "next": "^15.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/node": "^24.7.0",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
