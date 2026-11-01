@@ -146,6 +146,26 @@ CREATE TABLE IF NOT EXISTS imports (
   created_at TEXT NOT NULL,
   row_count INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS naver_ranks (
+  market TEXT NOT NULL,
+  item_code TEXT NOT NULL,
+  rank INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  price REAL,
+  change_pct REAL,
+  market_cap_krw REAL,
+  as_of TEXT,
+  PRIMARY KEY (market, item_code)
+);
+
+CREATE TABLE IF NOT EXISTS naver_indexes (
+  item_code TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  price REAL NOT NULL,
+  change_pct REAL,
+  as_of TEXT
+);
 `;
 
 export type AppDatabase = DatabaseSync;

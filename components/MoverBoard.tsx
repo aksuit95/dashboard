@@ -5,7 +5,7 @@ import type { MoverRow } from "@/lib/view/read";
 
 const markets = ["KOSPI", "KOSDAQ", "US"] as const;
 
-export function MoverBoard({ rows, shortWindow, excluded }: { rows: MoverRow[]; shortWindow: boolean; excluded: number }) {
+export function MoverBoard({ rows, shortWindow, excluded, naverAsOf }: { rows: MoverRow[]; shortWindow: boolean; excluded: number; naverAsOf: string | null }) {
   const [market, setMarket] = useState<(typeof markets)[number]>("KOSPI");
   const [mode, setMode] = useState<"high" | "move">("high");
   const [span, setSpan] = useState<"daily" | "weekly">("daily");
@@ -31,7 +31,10 @@ export function MoverBoard({ rows, shortWindow, excluded }: { rows: MoverRow[]; 
         ) : null}
       </div>
       <p className="mb-3 text-xs text-zinc-500">
-        설정된 유니버스 안의 종목만 봅니다. 시총 미확인·소형주·ETF 는 제외했고, 이번 조회에서 {excluded}개를 빼 두었습니다.
+        {naverAsOf
+          ? "코스피·코스닥은 네이버 시가총액 상위 20종목입니다. 미국은 설정한 유니버스만 봅니다."
+          : "네이버 순위가 없으면 설정한 유니버스만 봅니다."}{" "}
+        시총 미확인·소형주·ETF 는 유니버스 쪽에서 제외했고, 이번 조회에서 {excluded}개를 빼 두었습니다.
         {shortWindow ? " 52주(252거래일)가 아직 다 차지 않은 종목이 있습니다." : ""}
       </p>
       <div className="overflow-x-auto rounded-xl border border-white/10">

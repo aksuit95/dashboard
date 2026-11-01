@@ -9,7 +9,7 @@ export default function TaiwanPage() {
     <div>
       <PageHeader
         title="대만 월매출"
-        description="MOPS 월매출을 CSV 로 넣습니다. 섹터 YoY 는 종목별 YoY 의 평균이 아니라, 전년 동월 값이 있는 종목의 매출 합으로 계산합니다."
+        description="TWSE 상장사 월매출입니다. 금액 단위는 천 대만달러입니다. 한 응답에 당월·전월·전년 동월만 있어 긴 차트는 없고, YoY와 MoM은 계산됩니다. 섹터 YoY는 종목별 평균이 아니라 전년 동월이 있는 종목의 매출 합입니다. 상장 목록에 없는 종목은 빠집니다."
       />
       {sectors.map((sector) => (
         <section key={sector.sector} className="mb-6">

@@ -10,7 +10,7 @@ export default function RiskPage() {
     <div>
       <PageHeader
         title="위험 지표"
-        description="이격도 = 종가 / N일 이동평균 × 100. 금리차는 10년물에서 2년 금리 선물을 뺀 값입니다. Fear & Greed 와 VKOSPI 는 안정적인 공개 출처가 없어 연결하지 않았습니다."
+        description="이격도 = 종가 / N일 이동평균 × 100. 금리차는 10년물에서 2년 금리 선물을 뺀 값입니다."
       />
       <div className="grid gap-4 lg:grid-cols-2">
         {data.disparity.map((item) => (
@@ -26,6 +26,7 @@ export default function RiskPage() {
       </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {data.vix ? <QuoteCard card={data.vix} /> : null}
+        {data.sox ? <QuoteCard card={data.sox} /> : null}
         <section className="rounded-xl border border-white/10 bg-[#151a22] p-4">
           <h2 className="font-medium">금리차</h2>
           <p className="mt-2 text-3xl font-semibold tabular-nums">{formatPlain(data.spread?.value ?? null)}%p</p>

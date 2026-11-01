@@ -127,3 +127,65 @@ export async function fetchYahooHistory(symbol: string, range = "5y"): Promise<S
 export function resetYahooAuth(): void {
   crumbCache = null;
 }
+
+export type YahooEtfFacts = {
+  shares: number | null;
+  nav: number | null;
+  aum: number | null;
+  holdings: { symbol: string; name: string; weight: number }[];
+};
+
+function yahooRaw(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (!value || typeof value !== "object") return null;
+  const raw = (value as { raw?: unknown }).raw;
+  return typeof raw === "number" && Number.isFinite(raw) ? raw : null;
+}
+
+/** 비중 합이 1.5 이하면 비율(0.19)로 보고 퍼센트로 바꾼다. navPrice 만 NAV 로 쓴다. */
+export function parseYahooEtfFacts(payload: unknown): YahooEtfFacts | null {
+  if (!payload || typeof payload !== "object") return null;
+  const result = (payload as { quoteSummary?: { result?: unknown[] } }).quoteSummary?.result?.[0];
+  if (!result || typeof result !== "object") return null;
+  const row = result as Record<string, unknown>;
+  const summary = row.summaryDetail as Record<string, unknown> | undefined;
+  const stats = row.defaultKeyStatistics as Record<string, unknown> | undefined;
+  const nav = yahooRaw(summary?.navPrice);
+  const shares = yahooRaw(stats?.sharesOutstanding);
+  const aum = yahooRaw(summary?.totalAssets) ?? yahooRaw(stats?.totalAssets);
+  const holdings: YahooEtfFacts["holdings"] = [];
+  const list = (row.topHoldings as { holdings?: unknown[] } | undefined)?.holdings;
+  if (Array.isArray(list)) {
+    for (const item of list) {
+      if (!item || typeof item !== "object") continue;
+      const holding = item as Record<string, unknown>;
+      const symbol = String(holding.symbol ?? "").trim();
+      const name = String(holding.holdingName ?? symbol).trim();
+      const weight = yahooRaw(holding.holdingPercent);
+      if (!symbol || !name || weight == null || weight < 0) continue;
+      holdings.push({ symbol, name, weight });
+    }
+  }
+  const sum = holdings.reduce((total, item) => total + item.weight, 0);
+  const scaled = sum > 0 && sum <= 1.5 ? holdings.map((item) => ({ ...item, weight: item.weight * 100 })) : holdings;
+  if (nav == null && shares == null && aum == null && !scaled.length) return null;
+  return { shares, nav, aum, holdings: scaled };
+}
+
+export async function fetchYahooEtfFacts(symbol: string): Promise<SourceResult<YahooEtfFacts>> {
+  try {
+    const auth = await loadCrumb();
+    const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(symbol)}?modules=summaryDetail,defaultKeyStatistics,topHoldings&crumb=${encodeURIComponent(auth.crumb)}`;
+    const response = await fetch(url, { headers: { "user-agent": UA, cookie: auth.cookie } });
+    if (response.status === 401) {
+      crumbCache = null;
+      return stale("Yahoo 인증이 거절되었습니다.");
+    }
+    if (!response.ok) return stale(`Yahoo ETF 응답 ${response.status}`);
+    const parsed = parseYahooEtfFacts(await response.json());
+    if (!parsed) return empty("Yahoo ETF 구성이 없습니다.");
+    return ok(parsed);
+  } catch (error) {
+    return stale(error instanceof Error ? error.message : "Yahoo ETF 수집 실패");
+  }
+}

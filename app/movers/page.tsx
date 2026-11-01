@@ -9,9 +9,9 @@ export default function MoversPage() {
     <div>
       <PageHeader
         title="52주 신고가와 등락"
-        description="한국 시총 1,000억 원 미만, 미국 시총 10억 달러 미만, ETF·ETN·REITs·SPAC 은 제외합니다. 전 종목 목록 없이 설정의 유니버스만 계산합니다."
+        description="한국 등락은 챗봇과 같은 네이버 시가총액 상위 20입니다. 52주 신고가는 일봉이 쌓인 종목만 계산합니다. 미국은 시총 10억 달러 미만과 ETF·ETN·REITs·SPAC 을 제외한 유니버스입니다."
       />
-      <MoverBoard rows={data.rows} shortWindow={data.shortWindow} excluded={data.excluded} />
+      <MoverBoard rows={data.rows} shortWindow={data.shortWindow} excluded={data.excluded} naverAsOf={data.naverAsOf} />
     </div>
   );
 }

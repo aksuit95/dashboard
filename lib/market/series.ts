@@ -6,7 +6,7 @@ export type BreadthDay = {
 
 /** 최근 window 거래일의 상승 종목 수 합 / 하락 종목 수 합 × 100. 보합은 사용하지 않는다. */
 export function adrRatio(days: BreadthDay[], window = 20): number | null {
-  if (!days.length) return null;
+  if (days.length < window) return null;
   const slice = days.slice(-window);
   let up = 0;
   let down = 0;

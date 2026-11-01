@@ -62,9 +62,11 @@ describe("ADR, 이격도, ETF, 연간 수익률", () => {
     expect(adrRatio([...older, ...newer])).toBeCloseTo(100, 6);
   });
 
-  it("하락 합이 0이거나 비어 있으면 null", () => {
+  it("하락 합이 0이거나 20거래일이 안 되면 null", () => {
     expect(adrRatio([])).toBeNull();
     expect(adrRatio([{ advancers: 3, decliners: 0, unchanged: 1 }])).toBeNull();
+    const short = Array.from({ length: 19 }, () => ({ advancers: 2, decliners: 1, unchanged: 0 }));
+    expect(adrRatio(short)).toBeNull();
   });
 
   it("이격도는 종가 / 이동평균 × 100", () => {

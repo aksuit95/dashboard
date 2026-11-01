@@ -353,6 +353,22 @@ export const instruments: InstrumentConfig[] = [
     active: true,
     history: true,
   },
+  {
+    id: "^SOX",
+    symbol: "^SOX",
+    name: "필라델피아 반도체",
+    venue: "NASDAQ",
+    source: "yahoo",
+    currency: "POINTS",
+    kind: "index",
+    instrumentClass: "index",
+    sharesPerReceipt: 1,
+    session: "rth",
+    group: "index",
+    active: true,
+    history: true,
+    note: "챗봇과 같은 야후 차트 심볼 ^SOX",
+  },
 
   {
     id: "KRW=X",

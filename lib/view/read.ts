@@ -161,12 +161,16 @@ export function loadBoard(db: AppDatabase): { sections: BoardSection[]; referenc
 }
 
 export function loadAdr(db: AppDatabase): {
-  markets: { market: string; ratio: number | null; previous: number | null; up: number; down: number; series: { date: string; value: number }[] }[];
+  markets: { market: string; ratio: number | null; previous: number | null; up: number; down: number; flat: number; series: { date: string; value: number }[] }[];
 } {
-  const markets = ["KOSPI", "KOSDAQ"].map((market) => {
+  const markets = [
+    { code: "ALL", label: "전 시장" },
+    { code: "KOSPI", label: "KOSPI" },
+    { code: "KOSDAQ", label: "KOSDAQ" },
+  ].map(({ code, label }) => {
     const rows = db.prepare(`
       SELECT date, advancers, decliners, unchanged FROM breadth_daily WHERE market = ? ORDER BY date
-    `).all(market) as { date: string; advancers: number; decliners: number; unchanged: number }[];
+    `).all(code) as { date: string; advancers: number; decliners: number; unchanged: number }[];
     const series = rows
       .map((row, index) => {
         const value = adrRatio(rows.slice(0, index + 1));
@@ -177,11 +181,12 @@ export function loadAdr(db: AppDatabase): {
     const ratio = adrRatio(rows);
     const previous = rows.length > 1 ? adrRatio(rows.slice(0, -1)) : null;
     return {
-      market,
+      market: label,
       ratio,
       previous: ratio != null && previous != null ? ratio - previous : null,
       up: latest?.advancers ?? 0,
       down: latest?.decliners ?? 0,
+      flat: latest?.unchanged ?? 0,
       series,
     };
   });
@@ -191,6 +196,7 @@ export function loadAdr(db: AppDatabase): {
 export function loadRisk(db: AppDatabase): {
   disparity: { id: string; name: string; latest25: number | null; latest50: number | null; series25: { date: string; value: number }[]; series50: { date: string; value: number }[] }[];
   vix: CardModel | null;
+  sox: CardModel | null;
   spread: { value: number | null; ten: number | null; two: number | null; note: string } | null;
 } {
   const { fx, asOf } = fxFrom(db);
@@ -208,11 +214,13 @@ export function loadRisk(db: AppDatabase): {
     };
   });
   const vixItem = instrumentById("^VIX");
+  const soxItem = instrumentById("^SOX");
   const ten = readQuote(db, "^TNX");
   const two = readQuote(db, "2YY=F");
   return {
     disparity: disparityRows,
     vix: vixItem ? cardFor(db, vixItem, fx, asOf) : null,
+    sox: soxItem ? cardFor(db, soxItem, fx, asOf) : null,
     spread: {
       value: ten && two ? ten.price - two.price : null,
       ten: ten?.price ?? null,
@@ -238,6 +246,7 @@ export type EtfCard = {
   flow: number | null;
   shares: number | null;
   aum: number | null;
+  nav: number | null;
   currency: string;
   stale: boolean;
 };
@@ -261,6 +270,7 @@ export function loadEtfFlows(db: AppDatabase): { id: string; name: string; cards
         flow: etfNetFlow(previous?.shares_outstanding ?? null, latest?.shares_outstanding ?? null, latest?.nav ?? null),
         shares: latest?.shares_outstanding ?? null,
         aum: latest?.aum ?? null,
+        nav: latest?.nav ?? null,
         currency: item?.currency ?? "USD",
         stale: false,
       };
@@ -570,15 +580,46 @@ export type MoverRow = {
   marketCap: string;
 };
 
-export function loadMovers(db: AppDatabase): { rows: MoverRow[]; shortWindow: boolean; excluded: number } {
+type NaverRankRow = {
+  market: string;
+  item_code: string;
+  name: string;
+  change_pct: number | null;
+  market_cap_krw: number | null;
+  as_of: string | null;
+};
+
+function moverFromCloses(id: string, name: string, market: string, closes: number[], marketCap: string, dailyOverride: number | null): { row: MoverRow; shortWindow: boolean } {
+  const high = fiftyTwoWeekHigh(closes);
+  return {
+    shortWindow: high?.shortWindow ?? false,
+    row: {
+      id,
+      name,
+      market,
+      daily: dailyOverride ?? trailingReturn(closes, 1),
+      weekly: trailingReturn(closes, 5),
+      high: high?.high ?? false,
+      sessions: high?.sessions ?? 0,
+      marketCap,
+    },
+  };
+}
+
+export function loadMovers(db: AppDatabase): { rows: MoverRow[]; shortWindow: boolean; excluded: number; naverAsOf: string | null } {
   const instruments = db.prepare(`
     SELECT id, name, symbol, currency, instrument_class, mover_market, market_cap, market_cap_currency, kind
     FROM instruments WHERE mover_market IS NOT NULL AND active = 1
   `).all() as InstrumentRow[];
+  const naverRanks = db.prepare(`
+    SELECT market, item_code, name, change_pct, market_cap_krw, as_of FROM naver_ranks ORDER BY market, rank
+  `).all() as NaverRankRow[];
+  const naverMarkets = new Set(naverRanks.map((row) => row.market));
   const rows: MoverRow[] = [];
   let excluded = 0;
   let shortWindow = false;
   for (const item of instruments) {
+    if (item.mover_market && naverMarkets.has(item.mover_market)) continue;
     const capCurrency = (item.market_cap_currency || item.currency) === "KRW" ? "KRW" : "USD";
     const decision = moverExclusion({
       marketCap: item.market_cap,
@@ -590,20 +631,56 @@ export function loadMovers(db: AppDatabase): { rows: MoverRow[]; shortWindow: bo
       continue;
     }
     const closes = listDailyBars(db, item.id).map((bar) => bar.close);
-    const high = fiftyTwoWeekHigh(closes);
-    if (high?.shortWindow) shortWindow = true;
-    rows.push({
-      id: item.id,
-      name: item.name,
-      market: item.mover_market ?? "",
-      daily: trailingReturn(closes, 1),
-      weekly: trailingReturn(closes, 5),
-      high: high?.high ?? false,
-      sessions: high?.sessions ?? 0,
-      marketCap: item.market_cap == null ? "시총 없음" : formatCompact(item.market_cap, capCurrency),
-    });
+    const built = moverFromCloses(
+      item.id,
+      item.name,
+      item.mover_market ?? "",
+      closes,
+      item.market_cap == null ? "시총 없음" : formatCompact(item.market_cap, capCurrency),
+      null,
+    );
+    if (built.shortWindow) shortWindow = true;
+    rows.push(built.row);
   }
-  return { rows, shortWindow, excluded };
+  for (const rank of naverRanks) {
+    const suffix = rank.market === "KOSPI" ? ".KS" : ".KQ";
+    const closes = listDailyBars(db, `${rank.item_code}${suffix}`).map((bar) => bar.close);
+    const built = moverFromCloses(
+      `naver:${rank.market}:${rank.item_code}`,
+      rank.name,
+      rank.market,
+      closes,
+      rank.market_cap_krw == null ? "시총 없음" : formatCompact(rank.market_cap_krw, "KRW"),
+      rank.change_pct,
+    );
+    if (built.shortWindow) shortWindow = true;
+    rows.push(built.row);
+  }
+  return { rows, shortWindow, excluded, naverAsOf: naverRanks[0]?.as_of ?? null };
+}
+
+export type NaverIndexRow = {
+  itemCode: string;
+  name: string;
+  price: number;
+  changePct: number | null;
+  asOf: string | null;
+};
+
+export function loadNaverIndexes(db: AppDatabase): NaverIndexRow[] {
+  return (db.prepare("SELECT item_code, name, price, change_pct, as_of FROM naver_indexes ORDER BY item_code").all() as {
+    item_code: string;
+    name: string;
+    price: number;
+    change_pct: number | null;
+    as_of: string | null;
+  }[]).map((row) => ({
+    itemCode: row.item_code,
+    name: row.name,
+    price: row.price,
+    changePct: row.change_pct,
+    asOf: row.as_of,
+  }));
 }
 
 export function loadHealth(db: AppDatabase): IngestRunRow[] {
