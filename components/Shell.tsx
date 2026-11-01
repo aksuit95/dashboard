@@ -7,42 +7,10 @@ import { useEffect, useState } from "react";
 const groups = [
   {
     title: { ko: "야간 프록시", en: "Global Proxy" },
-    items: [{ href: "/", ko: "Global Proxy", en: "Global Proxy" }],
-  },
-  {
-    title: { ko: "시장 지표", en: "Market Gauges" },
     items: [
-      { href: "/adr", ko: "등락비율", en: "ADR" },
-      { href: "/risk", ko: "위험 지표", en: "Risk Indicators" },
-      { href: "/annual-returns", ko: "연간 수익률", en: "Annual Returns" },
-    ],
-  },
-  {
-    title: { ko: "컨퍼런스콜", en: "Earnings Calls" },
-    items: [{ href: "/concall", ko: "전체 콜", en: "All calls" }],
-  },
-  {
-    title: { ko: "수급", en: "Fund Flows" },
-    items: [
-      { href: "/fund-flow", ko: "예탁금·신용", en: "Fund Flow" },
-      { href: "/etf-flow", ko: "ETF 유출입", en: "ETF Flows" },
-      { href: "/etf-constituents", ko: "ETF 비중 변화", en: "ETF Holdings" },
-      { href: "/overseas-net-buy", ko: "해외주식 결제", en: "Overseas Net Buy" },
-    ],
-  },
-  {
-    title: { ko: "종목·공시", en: "Stocks & Filings" },
-    items: [
-      { href: "/movers", ko: "52주·등락", en: "52W Highs / Movers" },
-      { href: "/dart", ko: "DART", en: "DART" },
-      { href: "/trade-stats", ko: "무역 통계", en: "Trade Data" },
-    ],
-  },
-  {
-    title: { ko: "AI 교역", en: "AI Trade" },
-    items: [
-      { href: "/rel-mcap", ko: "상대 시총", en: "Relative Market Cap" },
-      { href: "/taiwan-revenue", ko: "대만 월매출", en: "Taiwan Revenue" },
+      { href: "/", ko: "Global Proxy", en: "Global Proxy" },
+      { href: "/futures", ko: "글로벌 선물", en: "Futures" },
+      { href: "/single-stock", ko: "단일종목 ETF", en: "Single-stock ETF" },
     ],
   },
 ];
