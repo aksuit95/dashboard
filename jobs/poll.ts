@@ -1,6 +1,8 @@
 import { getDb } from "@/lib/db/client";
 import { loadEnv } from "@/lib/env";
 import { ingestQuotes } from "@/lib/ingest/run";
+import { loadMinervini } from "@/lib/sources/minervini-daily";
+import { minerviniUniverseIds } from "@/config/minervini";
 
 loadEnv();
 
@@ -13,6 +15,10 @@ async function tick(): Promise<void> {
   try {
     const reports = await ingestQuotes(getDb());
     console.log(new Date().toISOString(), reports.map((report) => `${report.source}:${report.status}`).join(" "));
+    for (const universe of minerviniUniverseIds) {
+      const minervini = await loadMinervini(getDb(), new Date(), fetch, universe);
+      if (minervini.stale) console.error(`minervini:${universe}`, minervini.error);
+    }
   } catch (error) {
     console.error(error);
   } finally {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
+import { asiaMarketSession, clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
 
 describe("선물·매크로 시세", () => {
   it("12개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
@@ -50,6 +50,7 @@ describe("선물·매크로 시세", () => {
       change: -591,
       changePct: -2,
       tradedAtMs: 1_700_000_000_000,
+      regularSession: null,
     });
   });
 
@@ -68,6 +69,36 @@ describe("선물·매크로 시세", () => {
     expect(clockSession(now - 5 * 60 * 1000, now)).toBe("live");
     expect(clockSession(now - 21 * 60 * 1000, now)).toBe("closed");
     expect(clockSession(null, now)).toBe("closed");
+  });
+
+  it("아시아 거래 상태는 시세 지연과 별도로 세션·점심휴장을 반영한다", () => {
+    const period = { startMs: Date.parse("2026-11-02T01:30:00Z"), endMs: Date.parse("2026-11-02T07:00:00Z") };
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T02:30:00Z"))).toBe("open");
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T03:30:00Z"))).toBe("break");
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T04:59:00Z"))).toBe("break");
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T05:00:00Z"))).toBe("open");
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T07:00:00Z"))).toBe("closed");
+    expect(asiaMarketSession("000688.SS", period, new Date("2026-11-02T01:00:00Z"))).toBe("pre");
+    const taiwan = { startMs: Date.parse("2026-11-02T01:00:00Z"), endMs: Date.parse("2026-11-02T05:30:00Z") };
+    expect(asiaMarketSession("^TWII", taiwan, new Date("2026-11-02T04:23:00Z"))).toBe("open");
+    expect(asiaMarketSession("^TWII", taiwan, new Date("2026-11-02T05:30:00Z"))).toBe("closed");
+    expect(asiaMarketSession("^TWII", taiwan, new Date("2026-11-03T02:00:00Z"))).toBe("unknown");
+    expect(asiaMarketSession("^TWII", null, new Date("2026-11-02T02:00:00Z"))).toBe("unknown");
+    expect(asiaMarketSession("^TWII", taiwan, new Date("2026-11-07T02:00:00Z"))).toBe("closed");
+    const japan = { startMs: Date.parse("2026-11-02T00:00:00Z"), endMs: Date.parse("2026-11-02T06:30:00Z") };
+    expect(asiaMarketSession("^N225", japan, new Date("2026-11-02T02:30:00Z"))).toBe("break");
+    expect(asiaMarketSession("^N225", japan, new Date("2026-11-02T03:30:00Z"))).toBe("open");
+  });
+
+  it("40분 지연된 대만 시세도 장중 상태를 유지하고 지연을 따로 표시한다", async () => {
+    const now = new Date("2026-11-02T02:00:00Z");
+    const fetchImpl: typeof fetch = async () => Response.json({ chart: { result: [{ meta: {
+      regularMarketPrice: 100,
+      regularMarketTime: now.getTime() / 1000 - 40 * 60,
+      currentTradingPeriod: { regular: { start: Date.parse("2026-11-02T01:00:00Z") / 1000, end: Date.parse("2026-11-02T05:30:00Z") / 1000 } },
+    } }] } });
+    const board = await loadMarketBoard(fetchImpl, now);
+    expect(board.asia[1]).toMatchObject({ session: "open", delayed: true, tradedAt: "2026-11-02T01:20:00.000Z" });
   });
 
   it("미국 정규장 밖이면 금리는 장마감이다", () => {

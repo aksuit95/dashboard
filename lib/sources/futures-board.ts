@@ -10,7 +10,9 @@ export type MarketCard = {
   price: number | null;
   change: number | null;
   changePct: number | null;
-  session: "live" | "closed" | "missing";
+  session: "live" | "open" | "break" | "pre" | "unknown" | "closed" | "missing";
+  tradedAt?: string;
+  delayed?: boolean;
   /** points 는 소수 2자리, percent 는 % , usd 는 $, krw 는 환율 */
   unit: "points" | "percent" | "usd" | "krw";
   error?: string;
@@ -30,6 +32,7 @@ export type YahooChartQuote = {
   change: number | null;
   changePct: number | null;
   tradedAtMs: number | null;
+  regularSession: { startMs: number; endMs: number } | null;
 };
 
 const FRESH_MS = 20 * 60 * 1000;
@@ -49,11 +52,15 @@ export function parseYahooChartQuote(payload: unknown): YahooChartQuote | null {
   const explicitPct = parseDecimal(row.fulldayChangePercent) ?? parseDecimal(row.regularMarketChangePercent);
   const changePct = explicitPct ?? (change == null || previous == null || previous === 0 ? null : (change / previous) * 100);
   const tradedAt = parseDecimal(row.regularMarketTime);
+  const regular = (row.currentTradingPeriod as { regular?: { start?: unknown; end?: unknown } } | undefined)?.regular;
+  const start = parseDecimal(regular?.start);
+  const end = parseDecimal(regular?.end);
   return {
     price,
     change,
     changePct,
     tradedAtMs: tradedAt == null ? null : tradedAt * 1000,
+    regularSession: start != null && end != null && end > start ? { startMs: start * 1000, endMs: end * 1000 } : null,
   };
 }
 
@@ -91,6 +98,31 @@ export function usCashSession(now: Date): "live" | "closed" {
 export function clockSession(tradedAtMs: number | null, nowMs: number): "live" | "closed" {
   if (tradedAtMs == null || !Number.isFinite(tradedAtMs)) return "closed";
   return nowMs - tradedAtMs <= FRESH_MS ? "live" : "closed";
+}
+
+/** Exchange sessions and quote freshness are independent. Vendor periods guard against holidays. */
+export function asiaMarketSession(symbol: string, period: YahooChartQuote["regularSession"], now: Date): MarketCard["session"] {
+  const japan = symbol === "^N225";
+  const taiwan = symbol === "^TWII";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: japan ? "Asia/Tokyo" : taiwan ? "Asia/Taipei" : "Asia/Shanghai",
+    weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(now);
+  const read = (key: string) => parts.find((part) => part.type === key)?.value;
+  if (read("weekday") === "Sat" || read("weekday") === "Sun") return "closed";
+  const minute = Number(read("hour")) * 60 + Number(read("minute"));
+  // https://www.twse.com.tw/en/about/company/service.html
+  // https://english.sse.com.cn/start/trading/schedule/
+  // https://www.jpx.co.jp/english/equities/trading/domestic/01.html
+  const start = taiwan || japan ? 540 : 570;
+  const end = japan ? 930 : taiwan ? 810 : 900;
+  if (minute >= end) return "closed";
+  // A missing or stale period cannot establish whether today is a trading day.
+  if (!period || period.endMs <= now.getTime() || period.startMs - now.getTime() > 24 * 60 * 60 * 1000) return "unknown";
+  if (minute < start) return "pre";
+  if (now.getTime() < period.startMs) return "unknown";
+  if (!taiwan && minute >= 690 && minute < (japan ? 750 : 780)) return "break";
+  return "open";
 }
 
 type FetchLike = typeof fetch;
@@ -139,8 +171,14 @@ async function yahooCard(
     const payload = await getJson(fetchImpl, `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(spec.id)}?interval=1d&range=5d`);
     const quote = parseYahooChartQuote(payload);
     if (!quote) return blank(spec, "응답에 시세가 없습니다.");
-    const session = spec.session === "us-cash" ? usCashSession(now) : clockSession(quote.tradedAtMs, now.getTime());
-    return { ...spec, price: quote.price, change: quote.change, changePct: quote.changePct, session };
+    const isAsia = asiaSpec.some((item) => item.id === spec.id);
+    const session = isAsia ? asiaMarketSession(spec.id, quote.regularSession, now)
+      : spec.session === "us-cash" ? usCashSession(now) : clockSession(quote.tradedAtMs, now.getTime());
+    return {
+      ...spec, price: quote.price, change: quote.change, changePct: quote.changePct, session,
+      ...(quote.tradedAtMs == null ? {} : { tradedAt: new Date(quote.tradedAtMs).toISOString() }),
+      delayed: isAsia && session === "open" && quote.tradedAtMs != null && now.getTime() - quote.tradedAtMs > FRESH_MS,
+    };
   } catch {
     return blank(spec, "조회에 실패했습니다.");
   }

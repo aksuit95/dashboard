@@ -6,12 +6,22 @@ import { useEffect, useState } from "react";
 
 const groups = [
   {
+    title: { ko: "종목 분석", en: "Stock Analysis" },
+    items: [{ href: "/minervini", ko: "마크 미너비니 기술적분석", en: "Mark Minervini" }],
+  },
+  {
     title: { ko: "야간 프록시", en: "Global Proxy" },
     items: [
       { href: "/", ko: "Global Proxy", en: "Global Proxy" },
       { href: "/futures", ko: "글로벌 시장", en: "Global Markets" },
       { href: "/single-stock", ko: "단일종목 ETF", en: "Single-stock ETF" },
       { href: "/market-hours", ko: "시장 운영시간", en: "Market Hours" },
+    ],
+  },
+  {
+    title: { ko: "시장 심리", en: "Market Sentiment" },
+    items: [
+      { href: "/risk", ko: "CNN 공포·탐욕 지수", en: "CNN Fear & Greed" },
     ],
   },
 ];

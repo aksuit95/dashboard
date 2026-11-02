@@ -26,6 +26,10 @@ function priceText(card: MarketCard): string {
 
 function sessionLabel(session: MarketCard["session"]): string {
   if (session === "live") return "최근 시세";
+  if (session === "open") return "장중";
+  if (session === "break") return "점심휴장";
+  if (session === "pre") return "장전";
+  if (session === "unknown") return "거래상태 확인중";
   if (session === "closed") return "장마감";
   return "없음";
 }
@@ -104,7 +108,7 @@ function Quote({ card }: { card: MarketCard }) {
             {card.symbol} · {card.venue}
           </p>
         </div>
-        <span className={`rounded-full border px-2 py-0.5 text-[11px] ${card.session === "live" ? "border-emerald-500/50 text-emerald-300" : "border-white/15 text-zinc-400"}`}>
+        <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] ${card.session === "live" || card.session === "open" ? "border-emerald-500/50 text-emerald-300" : "border-white/15 text-zinc-400"}`}>
           {sessionLabel(card.session)}
         </span>
       </div>
@@ -114,6 +118,12 @@ function Quote({ card }: { card: MarketCard }) {
           ? card.error ?? "대비 없음"
           : `${direction} ${formatNumber(Math.abs(card.change), 2)}  ${formatSigned(card.changePct)}%`}
       </p>
+      {card.tradedAt ? (
+        <p className="mt-2 text-[11px] text-zinc-500">
+          시세 기준 {new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(card.tradedAt))} KST
+          {card.delayed && card.session === "open" ? <span className="ml-2 text-amber-300">시세 지연</span> : null}
+        </p>
+      ) : null}
     </article>
   );
 }

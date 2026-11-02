@@ -48,6 +48,12 @@ CREATE TABLE IF NOT EXISTS ingest_runs (
   message TEXT NOT NULL DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS fear_greed_snapshot (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  payload TEXT NOT NULL,
+  fetched_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS daily_bars (
   instrument_id TEXT NOT NULL,
   date TEXT NOT NULL,

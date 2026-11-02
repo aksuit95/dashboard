@@ -1,6 +1,8 @@
 import { getDb } from "@/lib/db/client";
 import { loadEnv } from "@/lib/env";
 import { ingestQuotes } from "@/lib/ingest/run";
+import { loadMinervini } from "@/lib/sources/minervini-daily";
+import { minerviniUniverseIds } from "@/config/minervini";
 
 loadEnv();
 
@@ -8,6 +10,11 @@ async function main(): Promise<void> {
   const reports = await ingestQuotes(getDb());
   for (const report of reports) {
     console.log(`${report.status}\t${report.source}\t${report.message}`);
+  }
+  for (const universe of minerviniUniverseIds) {
+    const board = await loadMinervini(getDb(), new Date(), fetch, universe);
+    console.log(`minervini:${universe}\t${board.snapshot?.asOf ?? "—"}\t${board.error ?? "ok"}`);
+    if (board.stale) process.exitCode = 1;
   }
 }
 

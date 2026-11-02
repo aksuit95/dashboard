@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
+import { FearGreedBoard } from "@/components/FearGreedBoard";
 import { QuoteCard } from "@/components/QuoteCard";
 import { RangeChart } from "@/components/RangeChart";
 import { getDb } from "@/lib/db/client";
@@ -12,6 +13,7 @@ export default function RiskPage() {
         title="위험 지표"
         description="이격도 = 종가 / N일 이동평균 × 100. 금리차는 10년물에서 2년 금리 선물을 뺀 값입니다."
       />
+      <FearGreedBoard />
       <div className="grid gap-4 lg:grid-cols-2">
         {data.disparity.map((item) => (
           <section key={item.id} className="rounded-xl border border-white/10 bg-[#151a22] p-4">

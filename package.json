@@ -13,6 +13,7 @@
     "lint": "tsc --noEmit",
     "job:ingest": "tsx jobs/ingest.ts",
     "job:daily": "tsx jobs/daily.ts",
+    "job:minervini": "tsx jobs/minervini.ts",
     "job:backfill": "tsx jobs/backfill.ts",
     "job:poll": "tsx jobs/poll.ts"
   },
