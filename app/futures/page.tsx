@@ -5,8 +5,8 @@ export default function FuturesPage() {
   return (
     <div>
       <PageHeader
-        title="글로벌 선물"
-        description="코스피200 선물, 나스닥·S&P 선물, 미국 10년 금리, WTI, 원달러. 20초마다 다시 조회합니다."
+        title="글로벌 시장"
+        description="지수 선물, 아시아 증시, 반도체·변동성, 환율, 금리·원자재. 20초마다 조회하며 제공처에 따라 시세가 지연될 수 있습니다."
       />
       <FuturesBoard />
     </div>

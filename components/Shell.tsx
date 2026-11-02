@@ -9,8 +9,9 @@ const groups = [
     title: { ko: "야간 프록시", en: "Global Proxy" },
     items: [
       { href: "/", ko: "Global Proxy", en: "Global Proxy" },
-      { href: "/futures", ko: "글로벌 선물", en: "Futures" },
+      { href: "/futures", ko: "글로벌 시장", en: "Global Markets" },
       { href: "/single-stock", ko: "단일종목 ETF", en: "Single-stock ETF" },
+      { href: "/market-hours", ko: "시장 운영시간", en: "Market Hours" },
     ],
   },
 ];

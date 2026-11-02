@@ -1,7 +1,36 @@
 import { describe, expect, it } from "vitest";
-import { clockSession, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
+import { clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
 
 describe("선물·매크로 시세", () => {
+  it("12개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
+    const requested: string[] = [];
+    const fetchImpl: typeof fetch = async (input) => {
+      const url = String(input);
+      if (url.includes("naver.com")) {
+        return Response.json({ closePrice: "900", marketStatus: "OPEN" });
+      }
+      const symbol = decodeURIComponent(new URL(url).pathname.split("/").at(-1)!);
+      requested.push(symbol);
+      if (symbol === "000688.SS") throw new Error("upstream unavailable");
+      return Response.json({ chart: { result: [{ meta: {
+        regularMarketPrice: 100,
+        fulldayChange: 1,
+        fulldayChangePercent: 1.01,
+        regularMarketTime: 1_700_000_000,
+      } }] } });
+    };
+    const board = await loadMarketBoard(fetchImpl, new Date("2026-11-02T01:00:00Z"));
+    expect(board.futures.map((card) => card.id)).toEqual(["FUT", "NQ=F", "ES=F"]);
+    expect(board.asia.map((card) => card.id)).toEqual(["^N225", "^TWII", "000688.SS"]);
+    expect(board.usIndicators.map((card) => card.id)).toEqual(["^SOX", "^VIX"]);
+    expect(board.currencies.map((card) => card.id)).toEqual(["KRW=X", "DX-Y.NYB"]);
+    expect(board.macro.map((card) => card.id)).toEqual(["^TNX", "CL=F"]);
+    expect(requested).toHaveLength(11);
+    expect(board.asia[2]).toMatchObject({ price: null, session: "missing" });
+    expect(board.asia[0].price).toBe(100);
+    expect(board.usIndicators[1]).toMatchObject({ price: 100, unit: "points" });
+  });
+
   it("야후 전일 대비는 fulldayChange 를 쓴다", () => {
     const quote = parseYahooChartQuote({
       chart: {

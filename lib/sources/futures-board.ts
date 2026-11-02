@@ -1,6 +1,6 @@
 import { parseDecimal } from "@/lib/sources/proxy-board";
 
-/** 글로벌 선물·매크로 카드. 미국 선물은 야후 차트 메타, 코스피200 선물은 네이버 FUT. */
+/** 글로벌 시장 카드. 해외 지표는 야후 차트 메타, 코스피200 선물은 네이버 FUT. */
 
 export type MarketCard = {
   id: string;
@@ -19,6 +19,9 @@ export type MarketCard = {
 export type MarketBoard = {
   asOf: string;
   futures: MarketCard[];
+  asia: MarketCard[];
+  usIndicators: MarketCard[];
+  currencies: MarketCard[];
   macro: MarketCard[];
 };
 
@@ -106,15 +109,30 @@ const futuresSpec = [
   { id: "ES=F", name: "S&P 500 선물", symbol: "ESUSD", venue: "CME · 24h", unit: "points" as const, session: "clock" as const },
 ];
 
+const asiaSpec = [
+  { id: "^N225", name: "닛케이225", symbol: "N225", venue: "일본 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "^TWII", name: "대만 가권", symbol: "TWII", venue: "대만 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "000688.SS", name: "중국 과창판50", symbol: "000688", venue: "상하이 · STAR 50 현물 지수", unit: "points" as const, session: "clock" as const },
+];
+
+const usIndicatorsSpec = [
+  { id: "^SOX", name: "필라델피아 반도체 SOX", symbol: "SOX", venue: "미국 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "^VIX", name: "VIX 변동성 지수", symbol: "VIX", venue: "CBOE · 현물 지수", unit: "points" as const, session: "clock" as const },
+];
+
+const currenciesSpec = [
+  { id: "KRW=X", name: "원/달러 환율", symbol: "USDKRW", venue: "FX · 24h", unit: "krw" as const, session: "clock" as const },
+  { id: "DX-Y.NYB", name: "달러 인덱스 DXY", symbol: "DXY", venue: "ICE · 달러 지수", unit: "points" as const, session: "clock" as const },
+];
+
 const macroSpec = [
   { id: "^TNX", name: "미국 10년 국채 금리", symbol: "^TNX", venue: "CBOE", unit: "percent" as const, session: "us-cash" as const },
   { id: "CL=F", name: "WTI 원유", symbol: "CLUSD", venue: "NYMEX · 24h", unit: "usd" as const, session: "clock" as const },
-  { id: "KRW=X", name: "원/달러 환율", symbol: "USDKRW", venue: "FX · 24h", unit: "krw" as const, session: "clock" as const },
 ];
 
 async function yahooCard(
   fetchImpl: FetchLike,
-  spec: (typeof futuresSpec)[number] | (typeof macroSpec)[number],
+  spec: (typeof futuresSpec)[number] | (typeof macroSpec)[number] | (typeof asiaSpec)[number] | (typeof usIndicatorsSpec)[number] | (typeof currenciesSpec)[number],
   now: Date,
 ): Promise<MarketCard> {
   try {
@@ -133,18 +151,21 @@ function blank(spec: { id: string; name: string; symbol: string; venue: string; 
 }
 
 export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Date()): Promise<MarketBoard> {
-  const [kospi, nasdaq, spx, tnx, wti, fx] = await Promise.all([
+  const [kospi, futures, asia, usIndicators, currencies, macro] = await Promise.all([
     loadKospiFutures(fetchImpl),
-    yahooCard(fetchImpl, futuresSpec[0], now),
-    yahooCard(fetchImpl, futuresSpec[1], now),
-    yahooCard(fetchImpl, macroSpec[0], now),
-    yahooCard(fetchImpl, macroSpec[1], now),
-    yahooCard(fetchImpl, macroSpec[2], now),
+    Promise.all(futuresSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(asiaSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(usIndicatorsSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(currenciesSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(macroSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
   ]);
   return {
     asOf: now.toISOString(),
-    futures: [kospi, nasdaq, spx],
-    macro: [tnx, wti, fx],
+    futures: [kospi, ...futures],
+    asia,
+    usIndicators,
+    currencies,
+    macro,
   };
 }
 
