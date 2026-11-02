@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { RangeChart } from "@/components/RangeChart";
 import { formatNumber, formatSigned } from "@/lib/format";
+import { useDailyClose } from "@/components/useDailyClose";
 
-type Point = { date: string; value: number; commonKrw: number; adrPerShareKrw: number };
+type Point = { date: string; value: number; commonKrw: number; adrPerShareKrw: number; adrDate?: string; fxDate?: string };
 
 function isBook(value: unknown): value is { points: Point[] } {
   if (!value || typeof value !== "object" || !Array.isArray((value as { points?: unknown }).points)) return false;
@@ -16,6 +17,7 @@ function isBook(value: unknown): value is { points: Point[] } {
 }
 
 export function AdrPremiumChart() {
+  const dailyClose = useDailyClose();
   const [points, setPoints] = useState<Point[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,6 +38,8 @@ export function AdrPremiumChart() {
           setError("괴리율 응답이 비어 있습니다.");
           return;
         }
+        if (controller.signal.aborted) return;
+        setError(null);
         setPoints(payload.points);
       } catch (reason) {
         if (reason instanceof DOMException && reason.name === "AbortError") return;
@@ -44,7 +48,7 @@ export function AdrPremiumChart() {
     }
     void load();
     return () => controller.abort();
-  }, []);
+  }, [dailyClose]);
 
   const latest = points?.at(-1) ?? null;
   const tone = latest == null || latest.value === 0 ? "text-zinc-200" : latest.value > 0 ? "text-rose-400" : "text-sky-400";
@@ -54,7 +58,7 @@ export function AdrPremiumChart() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">SK하이닉스 본주 · 미국 ADR 괴리율</h3>
-          <p className="mt-1 text-xs text-zinc-500">SKHY 1 ADS = 보통주 0.1주. 같은 날짜의 종가와 원달러로 1주 원화를 맞춥니다.</p>
+          <p className="mt-1 text-xs text-zinc-500">SKHY 1 ADS = 보통주 0.1주. 한국 15:30 종가와 그 시점에 확정된 직전 미국장 ADR·환율 종가를 비교합니다.</p>
         </div>
         {latest ? (
           <p className={`text-2xl font-semibold tabular-nums ${tone}`}>{formatSigned(latest.value)}%</p>
@@ -62,9 +66,11 @@ export function AdrPremiumChart() {
       </div>
       {latest ? (
         <p className="mt-2 text-xs text-zinc-400">
-          {latest.date} · 본주 ₩{formatNumber(latest.commonKrw, 0)} · ADR 1주 환산 ₩{formatNumber(latest.adrPerShareKrw, 0)}
+          {latest.date} 15:30 KST · 본주 ₩{formatNumber(latest.commonKrw, 0)} · ADR 1주 환산 ₩{formatNumber(latest.adrPerShareKrw, 0)}
+          {latest.adrDate ? ` · ADR ${latest.adrDate} 미국장 종가 · 환율 ${latest.fxDate}` : ""}
         </p>
       ) : null}
+      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 매일 15:30 이후 1회 갱신 · 휴장일은 직전 종가 유지</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

@@ -1,8 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { proxyRanges, type ProxyRange, type ProxyVenue } from "@/config/proxy";
 import { AdrPremiumChart } from "@/components/AdrPremiumChart";
+import { SamsungPreferredChart } from "@/components/SamsungPreferredChart";
 import { formatNumber, formatSigned } from "@/lib/format";
 import { fxRate, kimchiPercent, premiumVs, type Candle, type PerpQuote, type ProxyBoard, type ProxyNameQuote } from "@/lib/sources/proxy-board";
 import { CandleChart } from "@/components/CandleChart";
@@ -124,11 +125,10 @@ export function ProxyBoard() {
       {board ? (
         <div className="grid gap-3 lg:grid-cols-2">
           {board.names.map((name) => (
-            <Fragment key={name.id}>
-              <ProxyCard name={name} kimchiOn={kimchiOn} rate={rate} onToggleKimchi={() => setKimchiOn((value) => !value)} />
-              {name.id === "000660" ? <AdrPremiumChart /> : null}
-            </Fragment>
+            <ProxyCard key={name.id} name={name} kimchiOn={kimchiOn} rate={rate} onToggleKimchi={() => setKimchiOn((value) => !value)} />
           ))}
+          <SamsungPreferredChart />
+          <AdrPremiumChart />
         </div>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
