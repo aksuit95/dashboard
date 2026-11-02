@@ -15,9 +15,11 @@
     "job:daily": "tsx jobs/daily.ts",
     "job:minervini": "tsx jobs/minervini.ts",
     "job:backfill": "tsx jobs/backfill.ts",
-    "job:poll": "tsx jobs/poll.ts"
+    "job:poll": "tsx jobs/poll.ts",
+    "valuation:export": "tsx jobs/valuation-export.ts"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
     "lightweight-charts": "^4.2.3",
     "next": "^15.5.6",
     "react": "^19.1.1",

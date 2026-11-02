@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 
 const groups = [
   {
+    title: { ko: "밸류에이션", en: "Valuation" },
+    items: [{ href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 Valuation" }],
+  },
+  {
     title: { ko: "종목 분석", en: "Stock Analysis" },
     items: [{ href: "/minervini", ko: "마크 미너비니 기술적분석", en: "Mark Minervini" }],
   },
