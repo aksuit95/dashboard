@@ -10,7 +10,7 @@ vi.mock("next/cache", () => ({ unstable_cache: (fn: (...args: string[]) => Promi
 } }));
 vi.mock("@/lib/db/client", () => ({ getDb: () => ({}) }));
 vi.mock("@/lib/sources/minervini-daily", () => ({ loadMinervini: state.load, readMinervini: () => state.saved, saveMinervini: state.save }));
-const snapshot = { asOf: "2026-11-02", fetchedAt: "2026-11-02T08:00:00Z", universeSize: 201, rows: [] };
+const snapshot = { version: 4, priceBasis: "KRX_REGULAR_CLOSE", asOf: "2026-11-02", fetchedAt: "2026-11-02T08:00:00Z", universeSize: 201, rows: [] };
 const success = { snapshot, expectedDate: "2026-11-02", stale: false, error: null };
 beforeEach(() => {
   vi.resetModules(); vi.useFakeTimers(); vi.setSystemTime(new Date("2026-11-02T08:00:00Z"));

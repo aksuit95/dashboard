@@ -10,6 +10,7 @@ const groups = [
     items: [
       { href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 Valuation" },
       { href: "/valuation/stocks", ko: "개별종목 밸류에이션", en: "Stock Valuation" },
+      { href: "/valuation/sectors", ko: "섹터별 등락률", en: "Sector Performance" },
     ],
   },
   {

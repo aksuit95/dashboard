@@ -3,6 +3,7 @@ import { loadEnv } from "@/lib/env";
 import { ingestQuotes } from "@/lib/ingest/run";
 import { loadMinervini } from "@/lib/sources/minervini-daily";
 import { minerviniUniverseIds } from "@/config/minervini";
+import { loadSectors } from "@/lib/sources/sector-returns-daily";
 
 loadEnv();
 
@@ -18,6 +19,8 @@ async function tick(): Promise<void> {
     for (const universe of minerviniUniverseIds) {
       const minervini = await loadMinervini(getDb(), new Date(), fetch, universe);
       if (minervini.stale) console.error(`minervini:${universe}`, minervini.error);
+      const sectors = await loadSectors(getDb(), new Date(), fetch, universe);
+      if (sectors.stale) console.error(`sectors:${universe}`, sectors.error);
     }
   } catch (error) {
     console.error(error);

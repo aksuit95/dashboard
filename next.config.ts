@@ -3,6 +3,7 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["node:sqlite"],
+  outputFileTracingIncludes: { "/api/valuation/sectors": ["./data/sectors/board.json"] },
 };
 
 export default function config(phase: string): NextConfig {

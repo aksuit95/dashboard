@@ -1,7 +1,9 @@
 import { type MinerviniBar, type MinerviniStock, screenMinervini } from "@/lib/market/minervini";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
+import { fetchKrxDailyBars } from "@/lib/sources/krx-daily-prices";
 
-export type MinerviniSnapshot = { universe?: MinerviniUniverse; asOf: string; fetchedAt: string; membershipAt: string; universeSize: number; rankedSize: number; rows: ReturnType<typeof screenMinervini> };
+export const minerviniSnapshotVersion = 4;
+export type MinerviniSnapshot = { version: number; priceBasis: "KRX_REGULAR_CLOSE"; universe?: MinerviniUniverse; asOf: string; fetchedAt: string; membershipAt: string; universeSize: number; rankedSize: number; rows: ReturnType<typeof screenMinervini> };
 type FetchLike = typeof fetch;
 
 export function parseMinerviniMembers(payload: unknown, universe: MinerviniUniverse = "kospi200"): { stocks: MinerviniStock[]; hasNext: boolean } {
@@ -44,7 +46,7 @@ async function request(fetchImpl: FetchLike, url: string) {
   return response;
 }
 
-export async function fetchMinerviniSnapshot(asOf: string, fetchImpl: FetchLike = fetch, now = new Date(), universe: MinerviniUniverse = "kospi200"): Promise<MinerviniSnapshot> {
+export async function fetchIndexMembers(universe: MinerviniUniverse, fetchImpl: FetchLike = fetch): Promise<MinerviniStock[]> {
   const spec = minerviniUniverses[universe];
   const members = new Map<string, MinerviniStock>();
   let finished = false;
@@ -58,18 +60,20 @@ export async function fetchMinerviniSnapshot(asOf: string, fetchImpl: FetchLike 
   }
   // Corporate actions can temporarily add members; never silently use a top-50 list.
   if (!finished || members.size < spec.minSize || members.size > spec.maxSize) throw new Error(`${spec.name} 전체 구성 확인 실패 (${members.size}개)`);
-  const stocks = [...members.values()];
+  return [...members.values()];
+}
+
+export async function fetchMinerviniSnapshot(asOf: string, fetchImpl: FetchLike = fetch, now = new Date(), universe: MinerviniUniverse = "kospi200"): Promise<MinerviniSnapshot> {
+  const stocks = await fetchIndexMembers(universe, fetchImpl);
   const inputs: { stock: MinerviniStock; bars: MinerviniBar[] }[] = [];
-  // Bounded batches prevent 200 simultaneous upstream connections.
-  for (let i = 0; i < stocks.length; i += 8) {
-    const batch = await Promise.all(stocks.slice(i, i + 8).map(async stock => {
-      const response = await request(fetchImpl, `https://fchart.stock.naver.com/sise.nhn?symbol=${stock.code}&timeframe=day&count=360&requestType=0`);
-      const bars = parseMinerviniBars(await response.text(), asOf);
-      if (bars.at(-1)?.date !== asOf) throw new Error(`${stock.code} ${asOf} 종가 미반영`);
+  // Bound parallel connections while collecting 360 completed KRX sessions per member.
+  for (let i = 0; i < stocks.length; i += 4) {
+    const batch = await Promise.all(stocks.slice(i, i + 4).map(async stock => {
+      const bars = await fetchKrxDailyBars(stock.code, asOf, fetchImpl);
       return { stock, bars };
     }));
     inputs.push(...batch);
   }
   const rows = screenMinervini(inputs, universe);
-  return { universe, asOf, fetchedAt: now.toISOString(), membershipAt: now.toISOString(), universeSize: members.size, rankedSize: rows.filter(r => r.rs != null).length, rows };
+  return { version: minerviniSnapshotVersion, priceBasis: "KRX_REGULAR_CLOSE", universe, asOf, fetchedAt: now.toISOString(), membershipAt: now.toISOString(), universeSize: stocks.length, rankedSize: rows.filter(r => r.rs != null).length, rows };
 }

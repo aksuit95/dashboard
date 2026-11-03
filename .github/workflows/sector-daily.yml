@@ -1,0 +1,64 @@
+name: Collect sectors and deploy to Vercel
+
+on:
+  schedule:
+    - cron: '0 7 * * 1-5'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Recollect and publish even if today's completed session already exists
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sector-daily-production
+  cancel-in-progress: false
+
+jobs:
+  collect-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Collect and validate both indices
+        shell: bash
+        env:
+          FORCE: ${{ inputs.force || 'false' }}
+        run: |
+          for attempt in 1 2 3; do
+            if [ "$FORCE" = "true" ]; then
+              npm run sectors:export -- --force && break
+            else
+              npm run sectors:export && break
+            fi
+            if [ "$attempt" = "3" ]; then exit 1; fi
+            sleep 60
+          done
+      - name: Commit only validated sector snapshots and trigger Vercel Git deployment
+        shell: bash
+        env:
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git add -- data/sectors/board.json
+          if git diff --cached --quiet; then
+            echo "Already published for the latest completed KRX session."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish KRX 15:30 sector snapshots'
+          git fetch origin "$BRANCH"
+          git rebase "origin/$BRANCH"
+          git push origin "HEAD:$BRANCH"

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { openDatabase, type AppDatabase } from "@/lib/db/client";
-import { fetchMinerviniSnapshot, parseKospi200, parseMinerviniMembers, parseMinerviniBars, type MinerviniSnapshot } from "./minervini";
+import { fetchMinerviniSnapshot, minerviniSnapshotVersion, parseKospi200, parseMinerviniMembers, parseMinerviniBars, type MinerviniSnapshot } from "./minervini";
 import type { MinerviniUniverse } from "@/config/minervini";
 import { loadMinervini, readMinervini, saveMinervini } from "./minervini-daily";
 
@@ -20,7 +20,11 @@ function upstream(universe: MinerviniUniverse = "kospi200") {
       const count = universe === "kospi200" && page === 4 ? 40 : 50;
       return Response.json({ isSuccess: true, result: { hasNext: page < lastPage, stocks: Array.from({ length: count }, (_, i) => ({ ...stock, marketType: universe === "kospi200" ? "KOSPI" : "KOSDAQ", itemCode: String(((page - 1) * 50 + i + 1) * 10).padStart(6, "0") })) } });
     }
-    return new Response(xml);
+    return Response.json({ hasNext: false, items: [
+      { tradingDateKst: "2026-11-03", regularMarketClosingPrice: "999", closingPrice: "999", openingPrice: "999", highPrice: "999", lowPrice: "999", tradingVolume: "1000" },
+      { tradingDateKst: "2026-11-02", regularMarketClosingPrice: "110", closingPrice: "114", openingPrice: "105", highPrice: "115", lowPrice: "100", tradingVolume: "2000" },
+      { tradingDateKst: "2026-10-30", regularMarketClosingPrice: "105", closingPrice: "109", openingPrice: "100", highPrice: "110", lowPrice: "90", tradingVolume: "1000" },
+    ] });
   });
 }
 describe("코스피200 수집·일별 저장", () => {
@@ -44,6 +48,8 @@ describe("코스피200 수집·일별 저장", () => {
     expect(one.snapshot?.universeSize).toBe(190);
     expect(one.snapshot?.rows).toHaveLength(190);
     expect(one.snapshot?.rankedSize).toBe(0);
+    expect(one.snapshot?.priceBasis).toBe("KRX_REGULAR_CLOSE");
+    expect(one.snapshot?.rows[0].price).toBe(110);
     const calls = fetcher.mock.calls.length;
     await loadMinervini(d, now, fetcher);
     expect(fetcher).toHaveBeenCalledTimes(calls);
@@ -51,7 +57,7 @@ describe("코스피200 수집·일별 저장", () => {
   });
   it("일부 실패·종가 미반영 시 마지막 성공값을 유지하고 1분 후 재시도한다", async () => {
     const d = db();
-    const previous: MinerviniSnapshot = { asOf: "2026-10-30", fetchedAt: "2026-10-30T08:00:00Z", membershipAt: "2026-10-30T08:00:00Z", universeSize: 200, rankedSize: 0, rows: [] };
+    const previous: MinerviniSnapshot = { version: minerviniSnapshotVersion, priceBasis: "KRX_REGULAR_CLOSE", asOf: "2026-10-30", fetchedAt: "2026-10-30T08:00:00Z", membershipAt: "2026-10-30T08:00:00Z", universeSize: 200, rankedSize: 0, rows: [] };
     saveMinervini(d, previous);
     const fail = vi.fn<typeof fetch>().mockRejectedValue(new Error("upstream offline"));
     const result = await loadMinervini(d, now, fail);
@@ -62,7 +68,7 @@ describe("코스피200 수집·일별 저장", () => {
     await loadMinervini(d, new Date(now.getTime() + 60_001), fail);
     expect(fail).toHaveBeenCalledTimes(2);
     const old = upstream();
-    old.mockImplementation(async url => String(url).includes("enrollStock") ? upstream()(url) : new Response(xml.replaceAll("20261102", "20261029")));
+    old.mockImplementation(async url => String(url).includes("enrollStock") ? upstream()(url) : Response.json({ hasNext: false, items: [{ tradingDateKst: "2026-10-30", regularMarketClosingPrice: "105", openingPrice: "100", highPrice: "110", lowPrice: "90", tradingVolume: "1000" }] }));
     await expect(fetchMinerviniSnapshot("2026-11-02", old, now)).rejects.toThrow("종가 미반영");
   });
   it("상위 50개만 반환하는 불완전 유니버스로 RS를 생성하지 않는다", async () => {
@@ -100,5 +106,14 @@ describe("코스피200 수집·일별 저장", () => {
     const otherFail = vi.fn<typeof fetch>().mockRejectedValue(new Error("kospi offline"));
     await loadMinervini(d, nextDay, otherFail, "kospi200");
     expect(otherFail).toHaveBeenCalledTimes(1);
+  });
+  it("기존 통합 종가 스냅샷은 같은 기준일이어도 재수집한다", async () => {
+    const d = db();
+    readMinervini(d);
+    d.prepare("INSERT INTO minervini_snapshots(as_of,payload) VALUES (?,?)").run("2026-11-02", JSON.stringify({ asOf: "2026-11-02", universeSize: 200, rows: [] }));
+    expect(readMinervini(d)).toBeNull();
+    const result = await loadMinervini(d, now, upstream());
+    expect(result.stale).toBe(false);
+    expect(result.snapshot).toMatchObject({ version: minerviniSnapshotVersion, priceBasis: "KRX_REGULAR_CLOSE" });
   });
 });

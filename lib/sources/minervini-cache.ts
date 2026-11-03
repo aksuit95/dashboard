@@ -8,7 +8,7 @@ const cachedDaily = unstable_cache(async (_session: string, universe: MinerviniU
   const board = await loadMinervini(getDb(), new Date(), fetch, universe);
   if (board.stale || !board.snapshot || board.snapshot.asOf !== _session) throw new Error(board.error ?? "종가 미반영");
   return board;
-}, ["kr-minervini-v3"], { revalidate: false });
+}, ["kr-minervini-v4-krx-1530"], { revalidate: false });
 
 const active = new Map<MinerviniUniverse, Promise<MinerviniBoard>>();
 const failures = new Map<MinerviniUniverse, { until: number; board: MinerviniBoard }>();

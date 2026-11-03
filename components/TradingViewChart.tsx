@@ -10,13 +10,13 @@ const number = (value: number) => value.toLocaleString("ko-KR", { maximumFractio
 
 export function TradingViewChart({ code, name }: { code: string; name: string }) {
   const host = useRef<HTMLDivElement>(null);
-  const [book, setBook] = useState<{ code: string; bars: MinerviniBar[] } | null>(null);
+  const [book, setBook] = useState<{ code: string; bars: MinerviniBar[]; priceBasis: string; asOf: string; fetchedAt: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [range, setRange] = useState<Range>("1Y");
   const [hover, setHover] = useState<MinerviniBar | null>(null);
   const url = `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(`KRX:${code}`)}`;
-  const bars = book?.code === code ? book.bars : null;
+  const bars = book?.code === code && book.priceBasis === "KRX_REGULAR_CLOSE" ? book.bars : null;
   const selected = useMemo(() => {
     if (!bars?.length) return [];
     const end = Date.parse(`${bars.at(-1)!.date}T00:00:00Z`);
@@ -27,10 +27,10 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
     setError(null); setHover(null);
     void (async () => {
       try {
-        const response = await fetch(`/api/valuation/stocks/candles?code=${encodeURIComponent(code)}`, { signal: controller.signal });
-        const result = await response.json() as { bars?: MinerviniBar[]; error?: string };
-        if (!response.ok || !result.bars?.length) throw new Error(result.error ?? "일봉을 불러오지 못했습니다.");
-        if (!controller.signal.aborted) setBook({ code, bars: result.bars });
+        const response = await fetch(`/api/valuation/stocks/candles?code=${encodeURIComponent(code)}&basis=krx-1530`, { cache: "no-store", signal: controller.signal });
+        const result = await response.json() as { code?: string; bars?: MinerviniBar[]; priceBasis?: string; asOf?: string; fetchedAt?: string; error?: string };
+        if (!response.ok || !result.bars?.length || result.code !== code || result.priceBasis !== "KRX_REGULAR_CLOSE" || !result.asOf || !result.fetchedAt) throw new Error(result.error ?? "KRX 정규장 일봉을 확인할 수 없습니다.");
+        if (!controller.signal.aborted) setBook({ code, bars: result.bars, priceBasis: result.priceBasis, asOf: result.asOf, fetchedAt: result.fetchedAt });
       } catch (cause) { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "일봉을 불러오지 못했습니다."); }
     })();
     return () => controller.abort();
@@ -66,7 +66,7 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
   const detail = hover ?? selected.at(-1);
   return <section className="overflow-hidden rounded-xl border border-white/10 bg-[#151a22] p-4 sm:p-6" aria-label={`${name} 트레이딩뷰 주가 차트`}>
     <div className="flex flex-wrap items-start justify-between gap-3">
-      <div><h2 className="font-semibold">{name} 주가 차트</h2><p className="mt-1 text-xs text-zinc-500">{code} · TradingView Lightweight Charts™ · 네이버 일봉</p></div>
+      <div><h2 className="font-semibold">{name} 주가 차트</h2><p className="mt-1 text-xs text-zinc-500">{code} · TradingView Lightweight Charts™ · KRX 15:30 정규장 종가</p></div>
       <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-sky-400 hover:underline">트레이딩뷰에서 열기 ↗</a>
     </div>
     <div className="my-4 flex flex-wrap items-center justify-between gap-3">
@@ -76,6 +76,7 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
     {error && <p role="status" className="mb-4 text-xs text-amber-200">{error} {bars ? "기존 일봉을 유지합니다." : "트레이딩뷰 링크에서도 확인할 수 있습니다."}<button type="button" onClick={() => setAttempt(value => value + 1)} className="ml-3 rounded border border-white/15 px-2 py-1">다시 시도</button></p>}
     <div ref={host} className="h-[420px] w-full" />
     <p className="mt-4 text-[11px] text-zinc-500">차트: <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" className="text-sky-400">TradingView</a> · 시세: 네이버 · {selected.length}개 일봉{selected.length ? ` · ${selected[0].date} ~ ${selected.at(-1)!.date}` : ""}</p>
-    <p className="mt-1 text-[11px] text-zinc-500">KRX 종목은 TradingView 기본 위젯에서 제공되지 않아 차트 라이브러리에 별도 일봉을 연결했습니다. 밸류에이션과 기준 시각이 다를 수 있습니다.</p>
+    <p className="mt-1 text-[11px] text-zinc-500">장중에는 직전 완료 거래일의 KRX 일봉을 표시합니다. NXT·시간외 종가는 포함하지 않습니다. QuantiWise 밸류에이션의 기준일은 별도입니다.</p>
+    {bars && book && <p className="mt-1 text-[11px] text-zinc-500">기준일 {book.asOf} · 가격 기준 KRX 15:30 · 수집 {new Date(book.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST</p>}
   </section>;
 }

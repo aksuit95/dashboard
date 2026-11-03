@@ -11,7 +11,7 @@ export function MinerviniGuide({ universe = "kospi200" }: { universe?: Minervini
         <p>{name}에서 상승 추세와 상대강도가 있는 종목을 추린 다음, 가격 변동폭과 거래량이 줄어드는 셋업이 있는지 확인하는 일봉 스크리너입니다. 기본 화면인 ‘RS 통과’에는 추세와 RS 조건을 통과한 종목이 나오며, 아직 VCP가 만들어지지 않은 ‘패턴 관찰’ 종목도 포함됩니다. 목록에 있다는 사실만으로 진입 조건이 완성된 것은 아닙니다.</p>
         <p className="mt-2">코스피200과 코스닥150의 RS는 각 지수 안에서 따로 계산합니다. 같은 RS 90이어도 수익률이 같다는 뜻은 아닙니다. 두 분석 영역의 검색·필터·새로고침도 각각 적용됩니다.</p>
         <ol className="mt-3 list-decimal space-y-2 pl-5">
-          <li><strong className="text-zinc-200">분석 기준일을 먼저 확인합니다.</strong> 표의 종가는 이 날짜의 정규장 종가입니다. ‘수집’은 데이터를 가져온 시각이므로, 수집 시각이 오늘이어도 분석 기준일은 전 거래일일 수 있습니다.</li>
+          <li><strong className="text-zinc-200">분석 기준일을 먼저 확인합니다.</strong> 표의 종가는 이 날짜의 KRX 15:30 정규장 종가입니다. 이동평균·RS·추세·VCP도 같은 KRX 일봉으로 계산합니다. ‘수집’은 데이터를 가져온 시각이므로, 수집 시각이 오늘이어도 분석 기준일은 전 거래일일 수 있습니다.</li>
           <li><strong className="text-zinc-200">‘RS 통과’에서 후보를 살펴봅니다.</strong> RS 하한을 80 또는 90으로 올리면 상대적으로 더 강한 종목만 남습니다. ‘추세 통과’에서는 RS가 70 미만인 종목도 볼 수 있습니다.</li>
           <li><strong className="text-zinc-200">‘VCP 셋업’에서 패턴이 갖춰진 종목을 확인합니다.</strong> 이 목록에는 ‘돌파 대기’와 ‘거래량 돌파’가 함께 나옵니다. ‘거래량 돌파’ 탭은 그중 종가와 거래량 조건까지 충족한 종목만 보여 줍니다.</li>
           <li><strong className="text-zinc-200">종목명을 눌러 조건 상세를 펼칩니다.</strong> 8가지 추세 조건의 통과 여부, 수축 폭, 거래량 감소, 이동평균선, 손절 거리를 확인하고 ‘종목 차트 확인’에서 실제 베이스 모양을 함께 살펴봅니다.</li>
@@ -43,7 +43,7 @@ export function MinerviniGuide({ universe = "kospi200" }: { universe?: Minervini
       <section aria-labelledby={`${universe}-guide-columns`}>
         <h2 id={`${universe}-guide-columns`} className="mb-2 font-semibold text-zinc-100">표의 각 지표 읽는 법</h2>
         <dl className="space-y-3">
-          <div><dt className="font-medium text-zinc-200">종가</dt><dd>분석 기준일의 정규장 마지막 가격입니다. 실시간 현재가나 시간외 가격이 아니므로, 다른 시세 화면과 비교할 때 같은 날짜·시장인지 확인해야 합니다.</dd></div>
+          <div><dt className="font-medium text-zinc-200">종가</dt><dd>분석 기준일의 KRX 15:30 정규장 마지막 가격입니다. NXT·시간외 가격은 포함하지 않으며, 다른 시세 화면과 비교할 때 같은 날짜·시장인지 확인해야 합니다.</dd></div>
           <div><dt className="font-medium text-zinc-200">RS — {name} 내 상대강도 순위</dt><dd>최근 여러 기간의 수익률을 합친 점수의 백분위입니다. RS 90은 분석 가능한 {name} 구성종목 안에서 대략 상위 10% 수준의 가격 성과라는 뜻입니다. 수익률 +90%나 상승 확률 90%를 의미하지 않습니다. 전체 시장이 하락해도 덜 하락한 종목의 RS가 높을 수 있습니다. 70은 기본 통과선이며 80·90은 화면에서 더 좁혀 보는 기준입니다.</dd></div>
           <div><dt className="font-medium text-zinc-200">추세 — 8개 조건 중 통과 개수</dt><dd>8/8에는 가격 조건 7개와 RS ≥ 70이 포함됩니다. ‘추세 통과’ 카드는 가격 조건 7개만을 뜻하므로 이 탭에는 7/8 종목도 나올 수 있습니다. 8/8이어도 VCP와 거래량 돌파까지 통과한 것은 아닙니다. 단순 개수만 비교하기보다 상세에서 어떤 조건이 ×인지 확인합니다.</dd></div>
           <div><dt className="font-medium text-zinc-200">피벗 / 피벗 대비</dt><dd>피벗은 분석 기준일을 제외한 직전 20거래일의 최고가입니다. ‘피벗 대비’는 (종가/피벗−1)×100입니다. -3%면 피벗 아래 3%, +2%면 피벗 위 2%이며, 0%는 피벗과 같은 가격으로 아직 종가 돌파가 아닙니다. +5%까지는 셋업 범위에 포함하고 +5% 초과는 ‘추격 주의’로 분류합니다. 이 피벗은 마지막 수축 구간의 저항선을 사람이 판단한 값과 다를 수 있습니다.</dd></div>
@@ -83,7 +83,7 @@ export function MinerviniGuide({ universe = "kospi200" }: { universe?: Minervini
           <li><strong className="text-zinc-200">지연·빈 값:</strong> 수집 실패·일부 종가 미반영 시 마지막 성공 결과와 기준일을 유지하고 재시도합니다. ‘이전 결과 표시 중’이면 기준일을 다시 확인합니다. ‘—’는 이력 부족·계산 불가 등의 결측값이며 0이 아닙니다.</li>
           <li><strong className="text-zinc-200">포함하지 않은 분석:</strong> 실제 스윙 기반 2~6회 VCP의 정밀 판정, EPS·매출 성장 및 가속도(SEPA), 실적 발표·공시·뉴스 분석은 포함하지 않습니다. 이 페이지의 ‘거래량 돌파’는 정해진 기술적 조건의 충족 여부입니다.</li>
         </ul>
-        <p className="mt-3 text-xs">데이터 출처: <a className="underline" href={`https://stock.naver.com/domestic/index/${spec.indexCode}/enrollstocks`} target="_blank" rel="noreferrer">네이버 {name}</a> · <a className="underline" href="https://github.com/FinanceData/FinanceDataReader/blob/master/src/FinanceDataReader/naver/data.py" target="_blank" rel="noreferrer">FinanceDataReader와 같은 네이버 일봉 피드</a>.</p>
+        <p className="mt-3 text-xs">데이터 출처: <a className="underline" href={`https://stock.naver.com/domestic/index/${spec.indexCode}/enrollstocks`} target="_blank" rel="noreferrer">네이버 {name}</a> · KRX 정규장 일별 시세. 종가는 15:30 정규장 값을 사용하며 공급자 시세에 배당·분할 보정을 별도로 추가하지 않습니다.</p>
       </section>
     </div>
   </details>;

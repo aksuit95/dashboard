@@ -1,7 +1,7 @@
 import type { AppDatabase } from "@/lib/db/client";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
 import { minerviniSession } from "@/lib/market/minervini-session";
-import { fetchMinerviniSnapshot, type MinerviniSnapshot } from "@/lib/sources/minervini";
+import { fetchMinerviniSnapshot, minerviniSnapshotVersion, type MinerviniSnapshot } from "@/lib/sources/minervini";
 
 export type MinerviniBoard = { snapshot: MinerviniSnapshot | null; stale: boolean; error: string | null; expectedDate: string | null };
 function ensureTable(db: AppDatabase, universe: MinerviniUniverse) {
@@ -12,7 +12,8 @@ function ensureTable(db: AppDatabase, universe: MinerviniUniverse) {
 export function readMinervini(db: AppDatabase, universe: MinerviniUniverse = "kospi200"): MinerviniSnapshot | null {
   const table = ensureTable(db, universe);
   const row = db.prepare(`SELECT payload FROM ${table} ORDER BY as_of DESC LIMIT 1`).get() as { payload: string } | undefined;
-  return row ? JSON.parse(row.payload) as MinerviniSnapshot : null;
+  const snapshot = row ? JSON.parse(row.payload) as MinerviniSnapshot : null;
+  return snapshot?.priceBasis === "KRX_REGULAR_CLOSE" && snapshot.version === minerviniSnapshotVersion ? snapshot : null;
 }
 export function saveMinervini(db: AppDatabase, snapshot: MinerviniSnapshot, universe: MinerviniUniverse = "kospi200") {
   if (snapshot.universe && snapshot.universe !== universe) throw new Error("분석 유니버스 불일치");
