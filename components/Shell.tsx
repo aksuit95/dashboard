@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 const groups = [
   {
     title: { ko: "밸류에이션", en: "Valuation" },
-    items: [{ href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 Valuation" }],
+    items: [
+      { href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 Valuation" },
+      { href: "/valuation/stocks", ko: "개별종목 밸류에이션", en: "Stock Valuation" },
+    ],
   },
   {
     title: { ko: "종목 분석", en: "Stock Analysis" },

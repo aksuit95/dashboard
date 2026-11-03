@@ -16,7 +16,8 @@
     "job:minervini": "tsx jobs/minervini.ts",
     "job:backfill": "tsx jobs/backfill.ts",
     "job:poll": "tsx jobs/poll.ts",
-    "valuation:export": "tsx jobs/valuation-export.ts"
+    "valuation:export": "tsx jobs/valuation-export.ts",
+    "valuation:stocks:export": "tsx jobs/stock-valuation-export.ts"
   },
   "dependencies": {
     "exceljs": "^4.4.0",

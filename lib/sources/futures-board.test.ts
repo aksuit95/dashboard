@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import { asiaMarketSession, clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
 
 describe("선물·매크로 시세", () => {
-  it("12개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
+  it("13개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
     const requested: string[] = [];
     const fetchImpl: typeof fetch = async (input) => {
       const url = String(input);
+      if (url.includes("prekospi.com")) throw new Error("night feed unavailable");
       if (url.includes("naver.com")) {
         return Response.json({ closePrice: "900", marketStatus: "OPEN" });
       }
@@ -20,7 +21,8 @@ describe("선물·매크로 시세", () => {
       } }] } });
     };
     const board = await loadMarketBoard(fetchImpl, new Date("2026-11-02T01:00:00Z"));
-    expect(board.futures.map((card) => card.id)).toEqual(["FUT", "NQ=F", "ES=F"]);
+    expect(board.futures.map((card) => card.id)).toEqual(["K200-NIGHT", "FUT", "NQ=F", "ES=F"]);
+    expect(board.futures[0]).toMatchObject({ price: null, session: "missing" });
     expect(board.asia.map((card) => card.id)).toEqual(["^N225", "^TWII", "000688.SS"]);
     expect(board.usIndicators.map((card) => card.id)).toEqual(["^SOX", "^VIX"]);
     expect(board.currencies.map((card) => card.id)).toEqual(["KRW=X", "DX-Y.NYB"]);
@@ -60,8 +62,21 @@ describe("선물·매크로 시세", () => {
       compareToPreviousClosePrice: "-19.90",
       fluctuationsRatio: "-2.13",
       marketStatus: "CLOSE",
-    })).toEqual({ price: 915.1, change: -19.9, changePct: -2.13, session: "closed" });
-    expect(parseNaverFuturesQuote({ closePrice: "900", marketStatus: "OPEN" })?.session).toBe("live");
+    })).toEqual({ price: 915.1, change: -19.9, changePct: -2.13, session: "closed", delayed: false });
+    expect(parseNaverFuturesQuote({ closePrice: "900", marketStatus: "OPEN" })?.session).toBe("open");
+  });
+
+  it("주간선물 종가를 야간 시세로 표시하지 않고 원본 시각과 지연을 전달한다", async () => {
+    const fetchImpl: typeof fetch = async (_input, init) => {
+      expect(init?.cache).toBe("no-store");
+      return Response.json({ closePrice: "918.65", marketStatus: "CLOSE", localTradedAt: "2026-11-02T15:34:59+09:00", delayTime: 20 });
+    };
+    const board = await loadMarketBoard(fetchImpl, new Date("2026-11-02T23:00:00+09:00"));
+    expect(board.futures[1]).toMatchObject({
+      name: "코스피200 주간선물", session: "closed", price: 918.65,
+      tradedAt: "2026-11-02T06:34:59.000Z", delayed: true,
+    });
+    expect(parseNaverFuturesQuote({ closePrice: "900", localTradedAt: "invalid" })?.tradedAt).toBeUndefined();
   });
 
   it("시세 시각이 20분을 넘으면 장마감이다", () => {

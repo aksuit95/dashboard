@@ -45,7 +45,7 @@ export function FuturesBoard() {
       if (document.hidden) return;
       const id = ++seq.current;
       try {
-        const response = await fetch("/api/futures/board");
+        const response = await fetch("/api/futures/board", { cache: "no-store" });
         const payload: unknown = await response.json();
         if (id !== seq.current) return;
         if (!response.ok || !isBoard(payload)) {
@@ -66,7 +66,7 @@ export function FuturesBoard() {
   return (
     <div className="space-y-8">
       {problem ? <p className="text-xs text-amber-300">{problem}</p> : null}
-      <Section title="지수 선물" description="코스피200 야간선물과 미국 주요 지수 선물." cards={board?.futures} />
+      <Section title="지수 선물" description="코스피200 야간·주간선물과 미국 주요 지수 선물. 야간 등락은 야간 시가 대비입니다." cards={board?.futures} />
       <Section title="아시아 증시" description="일본·대만·중국 기술주의 현물 지수." cards={board?.asia} />
       <Section title="미국 시장 지표" description="반도체 업종 흐름과 옵션에 반영된 예상 변동성." cards={board?.usIndicators} />
       <Section title="환율·달러" description="원화 환율과 주요 통화 대비 달러 강도." cards={board?.currencies} />
@@ -109,7 +109,7 @@ function Quote({ card }: { card: MarketCard }) {
           </p>
         </div>
         <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] ${card.session === "live" || card.session === "open" ? "border-emerald-500/50 text-emerald-300" : "border-white/15 text-zinc-400"}`}>
-          {sessionLabel(card.session)}
+          {card.sessionNote ?? sessionLabel(card.session)}
         </span>
       </div>
       <p className={`mt-4 text-3xl font-semibold tabular-nums ${tone(card.change)}`}>{priceText(card)}</p>
@@ -118,11 +118,17 @@ function Quote({ card }: { card: MarketCard }) {
           ? card.error ?? "대비 없음"
           : `${direction} ${formatNumber(Math.abs(card.change), 2)}  ${formatSigned(card.changePct)}%`}
       </p>
+      {card.changeBasis ? <p className="mt-1 text-[11px] text-zinc-500">{card.changeBasis}</p> : null}
       {card.tradedAt ? (
         <p className="mt-2 text-[11px] text-zinc-500">
           시세 기준 {new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(card.tradedAt))} KST
           {card.delayed && card.session === "open" ? <span className="ml-2 text-amber-300">시세 지연</span> : null}
         </p>
+      ) : null}
+      {card.sourceUrl ? (
+        <a href={card.sourceUrl} target="_blank" rel="noreferrer" className="mt-2 block text-[11px] text-zinc-500 underline underline-offset-2">
+          출처: {card.sourceName}
+        </a>
       ) : null}
     </article>
   );

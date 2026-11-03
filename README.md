@@ -31,7 +31,7 @@
 
 - **ADR.** SK하이닉스 나스닥 ADR(`SKHY`). 1 ADS = 보통주 1/10. 화면 가격은 보통주 1주 기준 원화이고, 같은 시각 KRX 종가 대비 프리미엄을 함께 표시합니다.
 - **DEX 무기한선물 (Hyperliquid).** `xyz:SMSN`, `xyz:SKHX`, `xyz:SKHY`, `xyz:HYUNDAI`, `xyz:KR200`. 기준은 직전 KRX 정규장 종가 대비 24시간 변화. 8시간 펀딩비는 포지션 쏠림을 읽는 보조 지표입니다. ADR 퍼프는 KRX 퍼프 대비 프리미엄도 표시합니다.
-- **글로벌 선물.** KOSPI200 야간선물, Nasdaq 100 선물, S&P 500 선물.
+- **글로벌 선물.** KOSPI200 야간선물([PreKOSPI](https://www.prekospi.com/methodology)의 한국투자증권 야간 체결 수집 기록), 주간선물(네이버 FUT, 20분 지연), Nasdaq 100 선물, S&P 500 선물. 야간 등락은 야간 시가 대비이며 원본 체결 시각·월물·출처를 표시합니다. 야간장 종료 후에는 마지막 야간 기록을 유지하고, 장중 90초 이상 미갱신이면 지연으로 표시합니다. 공개 비공식 API의 실패·스키마 변경 시 야간 시세를 수신 불가로 표시하며 주간 종가로 대체하지 않습니다.
 - **매크로.** 미국 10년물 금리, WTI, USD/KRW.
 - **GDR.** 삼성전자 런던 GDR(`SMSN.IL`, 1 GDR = 보통주 25주, 1주 환산), SK하이닉스 프랑크푸르트(`HY9H.F`, 1주 환산).
 - **미국 ETF 프록시.** Roundhill Memory(`DRAM`), iShares MSCI Korea(`EWY`), iShares Semiconductor(`SOXX`).
@@ -276,3 +276,11 @@ git push
 ```
 
 Git에 포함된 JSON은 해당 저장소 및 배포 사이트의 접근 권한에 따라 노출됩니다. 원본 엑셀의 다른 시트나 로컬 전체 경로는 JSON에 포함하지 않습니다.
+
+### 개별종목 밸류에이션 (`/valuation/stocks`)
+
+밸류에이션 메뉴의 **개별종목 밸류에이션**에서 같은 엑셀의 `종목별 밸류에이션` Peer Analysis 시트를 봅니다. 종목명·코드 검색, 지표별 정렬(결측은 마지막), PER 양수 필터와 종목 선택을 지원합니다. PER·PBR·EV/EBITDA, 지배/전체 EPS·BPS, 영업이익·FCF를 원본 항목 코드로 구분하며 천원 단위 금액은 억원으로 바꿉니다. 0·음수는 보존하고 결측은 `—`로 표시합니다.
+
+종목을 선택하면 TradingView Lightweight Charts™의 주가 차트와 `KRX:종목코드` 원본 링크가 함께 바뀝니다. 기본 위젯에서 삼성전자 KRX 심볼의 외부 표시가 제한되는 것을 확인했으므로, 차트 라이브러리에 기존 네이버 일봉 피드를 연결합니다([TradingView 위젯 데이터 안내](https://www.tradingview.com/widget-docs/faq/data/)). 주가·거래량, 기간 선택, 마우스 OHLC 확인을 지원하며 QuantiWise 수치를 외부에 전송하지 않습니다. 일봉 API는 내보낸 종목 목록만 허용하고 최대 1,500일봉을 5분 캐시합니다. 일봉 실패 시 재시도와 원본 차트 링크를 제공합니다. 원본 엑셀은 종목별 현재 스냅샷이므로 밸류에이션 과거 차트는 만들지 않습니다. 구성일, QuantiWise 갱신 시각, 원본 항목 기준일(`CPD-1TD`: 조회일의 직전 거래일)을 표시합니다.
+
+QuantiWise Refresh 후 저장하고 `npm run valuation:stocks:export`를 실행하면 `data/valuation/stocks.json`을 생성합니다. 기존 `VALUATION_WORKBOOK_PATH`를 사용하며 별도 파일은 `STOCK_VALUATION_WORKBOOK_PATH` 또는 명령의 파일 경로 인자로 지정합니다. 지수 갱신은 기존 `npm run valuation:export`를 그대로 사용합니다. 개별종목 내보내기는 파일 변경·단위 오류·중복 종목·기존 지표 누락·구성일 역행·동일 구성일 종목 누락 시 기존 JSON을 보존합니다. 이후 JSON과 코드를 배포하고 화면의 **데이터 반영**을 누릅니다.

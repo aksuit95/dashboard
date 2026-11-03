@@ -1,7 +1,7 @@
 import type { ValuationData, ValuationSeries } from "./types";
 
 export type SourceSheet = { name: string; rows: unknown[][] };
-const definitions = [
+export const definitions = [
   { id: "per", code: "E382160", name: "선행 PER", unit: "배", digits: 2, color: "#38bdf8" },
   { id: "pbr", code: "E382560", name: "선행 PBR", unit: "배", digits: 2, color: "#a78bfa" },
   { id: "eps", code: "E312060", name: "선행 EPS · 지배", unit: "원", digits: 0, color: "#34d399" },

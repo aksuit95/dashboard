@@ -1,6 +1,7 @@
 import { parseDecimal } from "@/lib/sources/proxy-board";
+import { loadNightFutures } from "@/lib/sources/night-futures";
 
-/** 글로벌 시장 카드. 해외 지표는 야후 차트 메타, 코스피200 선물은 네이버 FUT. */
+/** 글로벌 시장 카드. 해외 지표는 Yahoo, 코스피200 주간은 Naver, 야간은 PreKOSPI 수집 기록. */
 
 export type MarketCard = {
   id: string;
@@ -13,6 +14,10 @@ export type MarketCard = {
   session: "live" | "open" | "break" | "pre" | "unknown" | "closed" | "missing";
   tradedAt?: string;
   delayed?: boolean;
+  sourceName?: string;
+  sourceUrl?: string;
+  changeBasis?: string;
+  sessionNote?: string;
   /** points 는 소수 2자리, percent 는 % , usd 는 $, krw 는 환율 */
   unit: "points" | "percent" | "usd" | "krw";
   error?: string;
@@ -64,16 +69,19 @@ export function parseYahooChartQuote(payload: unknown): YahooChartQuote | null {
   };
 }
 
-export function parseNaverFuturesQuote(payload: unknown): { price: number; change: number | null; changePct: number | null; session: "live" | "closed" } | null {
+export function parseNaverFuturesQuote(payload: unknown): { price: number; change: number | null; changePct: number | null; session: "open" | "closed"; tradedAt?: string; delayed: boolean } | null {
   if (!payload || typeof payload !== "object") return null;
   const row = payload as Record<string, unknown>;
   const price = parseDecimal(row.closePrice);
   if (price == null) return null;
+  const tradedAtMs = typeof row.localTradedAt === "string" ? Date.parse(row.localTradedAt) : NaN;
   return {
     price,
     change: parseDecimal(row.compareToPreviousClosePrice),
     changePct: parseDecimal(row.fluctuationsRatio),
-    session: row.marketStatus === "OPEN" ? "live" : "closed",
+    session: row.marketStatus === "OPEN" ? "open" : "closed",
+    ...(Number.isFinite(tradedAtMs) ? { tradedAt: new Date(tradedAtMs).toISOString() } : {}),
+    delayed: (parseDecimal(row.delayTime) ?? 0) > 0,
   };
 }
 
@@ -129,6 +137,7 @@ type FetchLike = typeof fetch;
 
 async function getJson(fetchImpl: FetchLike, url: string): Promise<unknown> {
   const response = await fetchImpl(url, {
+    cache: "no-store",
     signal: AbortSignal.timeout(8000),
     headers: { accept: "application/json", "user-agent": "Mozilla/5.0" },
   });
@@ -189,7 +198,8 @@ function blank(spec: { id: string; name: string; symbol: string; venue: string; 
 }
 
 export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Date()): Promise<MarketBoard> {
-  const [kospi, futures, asia, usIndicators, currencies, macro] = await Promise.all([
+  const [night, kospi, futures, asia, usIndicators, currencies, macro] = await Promise.all([
+    loadNightFutures(fetchImpl, now),
     loadKospiFutures(fetchImpl),
     Promise.all(futuresSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
     Promise.all(asiaSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
@@ -199,7 +209,7 @@ export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Da
   ]);
   return {
     asOf: now.toISOString(),
-    futures: [kospi, ...futures],
+    futures: [night, kospi, ...futures],
     asia,
     usIndicators,
     currencies,
@@ -208,12 +218,13 @@ export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Da
 }
 
 async function loadKospiFutures(fetchImpl: FetchLike): Promise<MarketCard> {
-  const spec = { id: "FUT", name: "코스피200 야간선물", symbol: "K200=F", venue: "KRX Night", unit: "points" as const };
+  // Naver FUT is the daytime contract quote; it does not supply the night session.
+  const spec = { id: "FUT", name: "코스피200 주간선물", symbol: "FUT", venue: "KRX · 주간 · 20분 지연", unit: "points" as const };
   try {
     const payload = await getJson(fetchImpl, "https://m.stock.naver.com/api/index/FUT/basic");
     const quote = parseNaverFuturesQuote(payload);
     if (!quote) return blank(spec, "응답에 시세가 없습니다.");
-    return { ...spec, price: quote.price, change: quote.change, changePct: quote.changePct, session: quote.session };
+    return { ...spec, ...quote };
   } catch {
     return blank(spec, "조회에 실패했습니다.");
   }
