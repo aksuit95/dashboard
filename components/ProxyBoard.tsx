@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { proxyRanges, type ProxyRange, type ProxyVenue } from "@/config/proxy";
+import { proxyNames, proxyRanges, type ProxyRange, type ProxyVenue } from "@/config/proxy";
 import { AdrPremiumChart } from "@/components/AdrPremiumChart";
 import { SamsungPreferredChart } from "@/components/SamsungPreferredChart";
 import { formatNumber, formatSigned } from "@/lib/format";
 import { fxRate, kimchiPercent, premiumVs, type Candle, type PerpQuote, type ProxyBoard, type ProxyNameQuote } from "@/lib/sources/proxy-board";
+import { parseHyperliquidLive } from "@/lib/market/hyperliquid-live";
 import { CandleChart } from "@/components/CandleChart";
 
 const venues: { id: ProxyVenue; label: string }[] = [
@@ -97,10 +98,76 @@ export function ProxyBoard() {
       }
     }
     void load();
-    timer = window.setInterval(() => void load(), 20000);
+    timer = window.setInterval(() => void load(), 60_000);
     return () => window.clearInterval(timer);
   }, []);
 
+  const [livePrices, setLivePrices] = useState<Record<string, { price: number; at: number }>>({});
+  const [socketStatus, setSocketStatus] = useState("연결 중");
+  const [clock, setClock] = useState(() => Date.now());
+  useEffect(() => { const timer = window.setInterval(() => setClock(Date.now()), 5000); return () => window.clearInterval(timer); }, []);
+  useEffect(() => {
+    let socket: WebSocket | undefined, retry = 0, stopped = false;
+    const streams = proxyNames.map(name => `${name.binanceSymbol.toLowerCase()}@markPrice@1s`).join("/");
+    const connect = () => {
+      socket = new WebSocket(`wss://fstream.binance.com/market/stream?streams=${streams}`);
+      socket.onopen = () => setSocketStatus("연결됨");
+      socket.onmessage = event => {
+        try {
+          const value = JSON.parse(event.data).data;
+          const price = Number(value?.p), at = Number(value?.E);
+          if (typeof value?.s !== "string" || !proxyNames.some(name => name.binanceSymbol === value.s) || !Number.isFinite(price) || price <= 0 || !Number.isFinite(at)) return;
+          setLivePrices(previous => ({ ...previous, [value.s]: { price, at } }));
+        } catch { /* Ignore malformed messages. */ }
+      };
+      socket.onerror = () => socket?.close();
+      socket.onclose = () => {
+        setSocketStatus("재연결 중");
+        setLivePrices({});
+        if (!stopped) retry = window.setTimeout(connect, 5000);
+      };
+    };
+    connect();
+    return () => { stopped = true; window.clearTimeout(retry); if (socket) { socket.onclose = null; socket.close(); } };
+  }, []);
+
+  const [hyperLive, setHyperLive] = useState<Record<string, { quote: PerpQuote; at: number }>>({});
+  const [hyperStatus, setHyperStatus] = useState("연결 중");
+  useEffect(() => {
+    let socket: WebSocket | undefined, retry = 0, heartbeat = 0, stopped = false;
+    const coins = proxyNames.map(name => name.hyperliquidCoin);
+    const connect = () => {
+      socket = new WebSocket("wss://api.hyperliquid.xyz/ws");
+      socket.onopen = () => {
+        setHyperStatus("연결됨");
+        for (const coin of coins) socket?.send(JSON.stringify({ method: "subscribe", subscription: { type: "activeAssetCtx", coin } }));
+        heartbeat = window.setInterval(() => { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ method: "ping" })); }, 30_000);
+      };
+      socket.onmessage = event => {
+        try {
+          const quote = parseHyperliquidLive(JSON.parse(event.data), coins);
+          if (quote) setHyperLive(previous => ({ ...previous, [quote.symbol]: { quote, at: Date.now() } }));
+        } catch { /* Ignore malformed messages. */ }
+      };
+      socket.onerror = () => socket?.close();
+      socket.onclose = () => {
+        window.clearInterval(heartbeat);
+        setHyperStatus("재연결 중"); setHyperLive({});
+        if (!stopped) retry = window.setTimeout(connect, 5000);
+      };
+    };
+    connect();
+    return () => { stopped = true; window.clearTimeout(retry); window.clearInterval(heartbeat); if (socket) { socket.onclose = null; socket.close(); } };
+  }, []);
+
+  const displayNames = board?.names.map(name => {
+    const live = livePrices[name.binanceSymbol];
+    const hyper = hyperLive[name.hyperliquidCoin];
+    const binance = live && clock - live.at <= 15_000 && live.at <= clock + 10_000
+      ? { ...(name.binance ?? { symbol: name.binanceSymbol, quoteVolumeUsd: null, openInterest: null, fundingHourly: null }), markUsd: live.price } : name.binance;
+    const hyperliquid = hyper && clock - hyper.at <= 60_000 ? hyper.quote : name.hyperliquid;
+    return { ...name, binance, hyperliquid };
+  });
   const rate = board ? fxRate(board.fx, kimchiOn) : null;
   const kimchi = board ? kimchiPercent(board.fx.upbitUsdt, board.fx.naverUsdKrw) : null;
 
@@ -111,7 +178,7 @@ export function ProxyBoard() {
           <span>업비트 USDT {board?.fx.upbitUsdt == null ? "—" : krw(board.fx.upbitUsdt)}</span>
           <span>네이버 환율 {board?.fx.naverUsdKrw == null ? "—" : krw(board.fx.naverUsdKrw, 2)}</span>
           <span className={tone(kimchi)}>김프 {kimchi == null ? "—" : `${formatSigned(kimchi)}%`}</span>
-          {board ? <span>{seoulClockText(board.asOf)}</span> : null}
+          {board ? <span>서버 수집 {seoulClockText(board.asOf)}</span> : null}<span>바이낸스 WebSocket {socketStatus} · 하이퍼리퀴드 WebSocket {hyperStatus} · 실시간 수신 없으면 서버 저장 시세</span>
         </div>
         <button
           type="button"
@@ -124,7 +191,7 @@ export function ProxyBoard() {
       {problem ? <p className="mb-3 text-xs text-amber-300">{problem}</p> : null}
       {board ? (
         <div className="grid gap-3 lg:grid-cols-2">
-          {board.names.map((name) => (
+          {displayNames?.map((name) => (
             <ProxyCard key={name.id} name={name} kimchiOn={kimchiOn} rate={rate} onToggleKimchi={() => setKimchiOn((value) => !value)} />
           ))}
           <SamsungPreferredChart />

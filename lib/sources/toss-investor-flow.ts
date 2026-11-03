@@ -75,17 +75,30 @@ export function parseTossMarketRecords(payload: unknown, through: string): { poi
   }).filter(point => point.date <= through).sort((a, b) => a.date.localeCompare(b.date));
   return { points, latestUpdatedAt };
 }
-export async function loadTossMarketFlow(universe: MinerviniUniverse, asOf: string, fetcher: typeof fetch = fetch): Promise<TossMarketFlow> {
+export async function loadTossMarketFlow(universe: MinerviniUniverse, asOf: string, fetcher: typeof fetch = fetch, previous?: TossMarketFlow): Promise<TossMarketFlow> {
   const market = universe === "kospi200" ? "KOSPI" : "KOSDAQ", key = `${market}:${asOf}`;
-  const saved = marketCache.get(key);
+  const saved = !previous && marketCache.get(key);
   if (saved && saved.until > Date.now()) return saved.value;
   const bearer = await accessToken(fetcher);
   const start = new Date(`${asOf}T00:00:00Z`); start.setUTCFullYear(start.getUTCFullYear() - 1);
   const from = start.toISOString().slice(0, 10);
+  // Reuse only a complete one-year snapshot ending on its stated session.
+  const priorStart = previous && new Date(`${previous.asOf}T00:00:00Z`);
+  priorStart?.setUTCFullYear(priorStart.getUTCFullYear() - 1);
+  const first = previous?.points?.[0], last = previous?.points?.at(-1);
+  const complete = previous?.market === market && previous.asOf < asOf && last?.date === previous.asOf &&
+    first && priorStart && Date.parse(`${first.date}T00:00:00Z`) <= priorStart.getTime() + 7 * 86400000 &&
+    previous.points.every((p, i) => /^\d{4}-\d{2}-\d{2}$/.test(p.date) && (!i || previous.points[i - 1].date < p.date) && investors.every(k => p[k] == null || Number.isSafeInteger(p[k]))) &&
+    investors.every(k => last[k] != null) && last.date >= from;
+  const prior = complete ? previous : undefined;
+  const cutoff = prior?.points.at(-1)?.date ?? from;
   let until: string | null = asOf, latestUpdatedAt: string | null = null;
   const all: InvestorPoint[] = [];
   for (let page = 0; page < 5 && until; page++) {
-    const response = await fetcher(`${origin}/api/v1/market-indicators/${market}/investor-trading?interval=1d&count=100&until=${until}`, {
+    // Calendar days are an upper bound on missing trading days, including holidays.
+    const missingDays = Math.ceil((Date.parse(`${until}T00:00:00Z`) - Date.parse(`${cutoff}T00:00:00Z`)) / 86400000);
+    const count = prior ? Math.max(1, Math.min(100, missingDays)) : 100;
+    const response = await fetcher(`${origin}/api/v1/market-indicators/${market}/investor-trading?interval=1d&count=${count}&until=${until}`, {
       headers: { authorization: `Bearer ${bearer}` }, cache: "no-store", signal: AbortSignal.timeout(15000),
     });
     if (!response.ok) throw new Error(`토스 시장 수급 HTTP ${response.status}`);
@@ -94,18 +107,23 @@ export async function loadTossMarketFlow(universe: MinerviniUniverse, asOf: stri
     if (!latestUpdatedAt) latestUpdatedAt = parsed.latestUpdatedAt;
     if (parsed.points.some(p => all.some(previous => previous.date === p.date))) throw new Error("토스 시장 수급 페이지 날짜 중복");
     all.push(...parsed.points);
-    if (parsed.points.some(p => p.date <= from)) { until = null; break; }
+    if (parsed.points.some(p => p.date <= cutoff)) { until = null; break; }
+    // A short page covers all available observations in the requested range.
+    if (prior && parsed.points.length < count) { until = null; break; }
+    if (prior && missingDays <= 100) { until = null; break; }
     const next = payload.result?.nextUntil;
     if (next == null) { until = null; break; }
     if (typeof next !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(next) || next >= until) throw new Error("토스 시장 수급 다음 페이지 오류");
     until = next;
   }
   if (until) throw new Error("토스 시장 수급 1년 이력 페이지 확인 실패");
-  const points = all.filter(p => p.date >= from).sort((a, b) => a.date.localeCompare(b.date));
+  const merged = new Map((prior?.points ?? []).map(p => [p.date, p]));
+  for (const point of all) merged.set(point.date, point);
+  const points = [...merged.values()].filter(p => p.date >= from).sort((a, b) => a.date.localeCompare(b.date));
   if (!points.length) throw new Error("토스 시장 수급 데이터가 없습니다.");
   const result: TossMarketFlow = { market, asOf, collectedAt: new Date().toISOString(), latestUpdatedAt, points };
   // Cache only a complete latest observation; do not lock in a provisional or delayed result.
-  if (points.at(-1)?.date === asOf && investors.every(k => points.at(-1)?.[k] != null)) marketCache.set(key, { value: result, until: Date.now() + 5 * 60_000 });
+  if (!previous && points.at(-1)?.date === asOf && investors.every(k => points.at(-1)?.[k] != null)) marketCache.set(key, { value: result, until: Date.now() + 5 * 60_000 });
   return result;
 }
 export type TossFlowStock = { code: string; name: string; points: InvestorPoint[]; error: string | null };

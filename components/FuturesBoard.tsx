@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { formatNumber, formatSigned } from "@/lib/format";
 import type { MarketBoard, MarketCard } from "@/lib/sources/futures-board";
 
-const REFRESH_MS = 20_000;
+const REFRESH_MS = 60_000;
 
 function isBoard(value: unknown): value is MarketBoard {
   if (!value || typeof value !== "object") return false;
@@ -45,7 +45,7 @@ export function FuturesBoard() {
       if (document.hidden) return;
       const id = ++seq.current;
       try {
-        const response = await fetch("/api/futures/board", { cache: "no-store" });
+        const response = await fetch("/api/futures/board");
         const payload: unknown = await response.json();
         if (id !== seq.current) return;
         if (!response.ok || !isBoard(payload)) {

@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   try {
     const book = await loadProxyCandles(id, venue as ProxyVenue, range as ProxyRange);
     if (!book) return Response.json({ error: "차트를 만들지 못했습니다." }, { status: 404 });
-    return Response.json(book);
+    return Response.json(book, { headers: { "Cache-Control": "public, s-maxage=60" } });
   } catch {
     return Response.json({ error: "차트를 불러오지 못했습니다." }, { status: 500 });
   }

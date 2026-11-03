@@ -5,7 +5,7 @@ import { formatClock, formatHm, seoulMinutes, seoulSession, sessionSpans, usCash
 import { formatNumber, formatSigned } from "@/lib/format";
 import type { SingleStockBoard, SingleStockCard, SingleStockGroup } from "@/lib/sources/single-stock";
 
-const REFRESH_MS = 20_000;
+const REFRESH_MS = 60_000;
 const DAY = 24 * 60;
 
 const spanColor: Record<Exclude<SessionKind, "closed">, string> = {
