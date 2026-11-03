@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 
 const groups = [
   {
+    title: { ko: "수급분석", en: "Investor Flows" },
+    items: [
+      { href: "/investor-flow/kospi200", ko: "수급분석", en: "Investor Flows" },
+    ],
+  },
+  {
     title: { ko: "밸류에이션", en: "Valuation" },
     items: [
       { href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 Valuation" },
@@ -66,7 +72,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <div className="px-2 pb-1 text-[11px] uppercase tracking-wide text-zinc-500">{group.title[lang]}</div>
               <ul className="space-y-0.5">
                 {group.items.map((item) => {
-                  const active = pathname === item.href;
+                  const active = pathname === item.href || (item.href === "/investor-flow/kospi200" && pathname.startsWith("/investor-flow/"));
                   return (
                     <li key={item.href}>
                       <Link
