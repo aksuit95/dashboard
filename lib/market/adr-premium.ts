@@ -18,14 +18,16 @@ export function adrPremiumSeries(input: {
   usdkrw: CloseBar[];
   sharesPerReceipt: number;
   atKoreanClose?: boolean;
+  atLatestClose?: boolean;
 }): AdrPremiumPoint[] {
-  if (input.atKoreanClose) {
+  if (input.atKoreanClose || input.atLatestClose) {
     const adr = [...closeMap(input.adr)].filter(([, value]) => value > 0).sort(([a], [b]) => a.localeCompare(b));
     const fx = [...closeMap(input.usdkrw)].filter(([, value]) => value > 0).sort(([a], [b]) => a.localeCompare(b));
     const points: AdrPremiumPoint[] = [];
     for (const [date, commonKrw] of [...closeMap(input.common)].sort(([a], [b]) => a.localeCompare(b))) {
-      const priorAdr = adr.findLast(([day]) => day < date);
-      const priorFx = fx.findLast(([day]) => day < date);
+      const available = (day: string) => input.atLatestClose ? day <= date : day < date;
+      const priorAdr = adr.findLast(([day]) => available(day));
+      const priorFx = fx.findLast(([day]) => available(day));
       if (!priorAdr || !priorFx || commonKrw <= 0) continue;
       const adrPerShareKrw = perShareKrw(priorAdr[1], priorFx[1], input.sharesPerReceipt);
       const premium = premiumPercent(adrPerShareKrw, commonKrw);
@@ -56,4 +58,21 @@ function closeMap(bars: CloseBar[]): Map<string, number> {
     map.set(bar.date, bar.close);
   }
   return map;
+}
+
+/** Refresh the latest Korean point with the latest available completed US session. */
+export function latestAdrPremium(input: {
+  common: CloseBar[]; adr: CloseBar[]; usdkrw: CloseBar[]; sharesPerReceipt: number;
+}): AdrPremiumPoint | null {
+  const latest = (bars: CloseBar[], through?: string) => [...closeMap(bars)]
+    .filter(([date, close]) => close > 0 && (!through || date <= through))
+    .sort(([a], [b]) => a.localeCompare(b)).at(-1);
+  const common = latest(input.common);
+  const adr = latest(input.adr);
+  const fx = adr && latest(input.usdkrw, adr[0]);
+  if (!common || !adr || !fx) return null;
+  const adrPerShareKrw = perShareKrw(adr[1], fx[1], input.sharesPerReceipt);
+  const premium = premiumPercent(adrPerShareKrw, common[1]);
+  if (adrPerShareKrw == null || premium == null) return null;
+  return { date: common[0], commonKrw: common[1], adrPerShareKrw, premium, adrDate: adr[0], fxDate: fx[0] };
 }

@@ -17,7 +17,7 @@ function isBook(value: unknown): value is { points: Point[] } {
 }
 
 export function AdrPremiumChart() {
-  const dailyClose = useDailyClose();
+  const dailyClose = useDailyClose(true);
   const [points, setPoints] = useState<Point[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,7 +58,7 @@ export function AdrPremiumChart() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">SK하이닉스 본주 · 미국 ADR 괴리율</h3>
-          <p className="mt-1 text-xs text-zinc-500">SKHY 1 ADS = 보통주 0.1주. 한국 15:30 종가와 그 시점에 확정된 직전 미국장 ADR·환율 종가를 비교합니다.</p>
+          <p className="mt-1 text-xs text-zinc-500">SKHY 1 ADS = 보통주 0.1주. 최신 한국 종가와 확정된 미국 본장 ADR·환율을 비교합니다.</p>
         </div>
         {latest ? (
           <p className={`text-2xl font-semibold tabular-nums ${tone}`}>{formatSigned(latest.value)}%</p>
@@ -66,11 +66,11 @@ export function AdrPremiumChart() {
       </div>
       {latest ? (
         <p className="mt-2 text-xs text-zinc-400">
-          {latest.date} 15:30 KST · 본주 ₩{formatNumber(latest.commonKrw, 0)} · ADR 1주 환산 ₩{formatNumber(latest.adrPerShareKrw, 0)}
+          본주 {latest.date} 15:30 KST · ₩{formatNumber(latest.commonKrw, 0)} · ADR 1주 환산 ₩{formatNumber(latest.adrPerShareKrw, 0)}
           {latest.adrDate ? ` · ADR ${latest.adrDate} 미국장 종가 · 환율 ${latest.fxDate}` : ""}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 매일 15:30 이후 1회 갱신 · 휴장일은 직전 종가 유지</p>
+      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 한국 종가 15:30 이후, 미국 종가 오전 7시 이후 각 1회 갱신 (한국시간) · 휴장일은 직전 종가 유지</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

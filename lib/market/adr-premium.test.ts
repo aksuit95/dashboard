@@ -1,7 +1,25 @@
 import { describe, expect, it } from "vitest";
-import { adrPremiumSeries } from "@/lib/market/adr-premium";
+import { adrPremiumSeries, latestAdrPremium } from "@/lib/market/adr-premium";
 
 describe("SK하이닉스 ADR 괴리율", () => {
+  it("다음 한국 종가가 나와도 과거의 미국 마감 가격을 유지한다", () => {
+    const points = adrPremiumSeries({
+      sharesPerReceipt: 0.1, atLatestClose: true,
+      common: [{ date: "2026-11-02", close: 100000 }, { date: "2026-11-03", close: 110000 }],
+      adr: [{ date: "2026-10-30", close: 7 }, { date: "2026-11-02", close: 8 }],
+      usdkrw: [{ date: "2026-10-30", close: 1400 }, { date: "2026-11-02", close: 1410 }],
+    });
+    expect(points.map(point => point.adrDate)).toEqual(["2026-11-02", "2026-11-02"]);
+    expect(points[0].adrPerShareKrw).toBe(112800);
+  });
+  it("한국 휴장 중에도 최신 미국 종가를 직전 본주 종가에 반영한다", () => {
+    expect(latestAdrPremium({
+      sharesPerReceipt: 0.1,
+      common: [{ date: "2026-10-08", close: 100000 }],
+      adr: [{ date: "2026-10-09", close: 8 }],
+      usdkrw: [{ date: "2026-10-08", close: 1400 }, { date: "2026-10-12", close: 9999 }],
+    })).toMatchObject({ date: "2026-10-08", adrDate: "2026-10-09", fxDate: "2026-10-08", adrPerShareKrw: 112000 });
+  });
   it("한국 종가 시점에는 미래의 같은 날 미국 종가를 사용하지 않는다", () => {
     const points = adrPremiumSeries({
       sharesPerReceipt: 0.1, atKoreanClose: true,
