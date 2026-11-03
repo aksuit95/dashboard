@@ -30,14 +30,6 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Collect investor flows once per KRX session
-        id: investor-flow
-        continue-on-error: true
-        env:
-          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
-          TOSS_CLIENT_ID: ${{ secrets.TOSS_CLIENT_ID }}
-          TOSS_CLIENT_SECRET: ${{ secrets.TOSS_CLIENT_SECRET }}
-        run: npm run investor-flow:export
       - name: Collect proxy closes
         id: proxy-close
         continue-on-error: true
@@ -92,5 +84,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure'
         run: exit 1

@@ -46,13 +46,13 @@ export async function readPublishedInvestorDaily(universe: MinerviniUniverse, vi
   return { board: JSON.parse(row.board) as InvestorBoard, toss: row.toss ? JSON.parse(row.toss) : null, error: row.error, expected };
 }
 
-export async function exportInvestorPublication(db: AppDatabase, now = new Date(), file = investorPublicationPath, collect = collectInvestorDaily) {
+export async function exportInvestorPublication(db: AppDatabase, now = new Date(), file = investorPublicationPath, collect = collectInvestorDaily, retryFailed = false) {
   initInvestorDaily(db);
   const previous = await readInvestorPublication(file);
   // Restore the daily claims on a fresh Actions runner, including failures.
   for (const run of previous?.runs ?? []) db.prepare("INSERT OR IGNORE INTO investor_flow_daily_runs(as_of, started_at, finished_at, error) VALUES (?, ?, ?, ?)").run(run.as_of, run.started_at, run.finished_at, run.error);
   for (const row of previous?.snapshots ?? []) db.prepare("INSERT OR IGNORE INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)").run(row.as_of, row.universe, row.view, row.board, row.toss, row.error);
-  const result = await collect(db, now);
+  const result = await collect(db, now, retryFailed);
   const runs = db.prepare("SELECT * FROM investor_flow_daily_runs ORDER BY as_of DESC LIMIT 30").all() as Run[];
   if (!runs.length) return { ...result, changed: false };
   const dates = new Set(runs.map(r => r.as_of));

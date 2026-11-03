@@ -56,6 +56,15 @@ describe("scheduled investor flow snapshots", () => {
     expect(readInvestorDaily(db, "kospi200", "stocks", at("17:00"))).toMatchObject({ toss: null, error: "미발표" });
     expect(collectInvestorToss).toHaveBeenCalledTimes(4);
   });
+  it("allows a scheduled retry after failure and does not repeat successful tabs", async () => {
+    vi.mocked(collectInvestorToss).mockRejectedValueOnce(new Error("미발표"));
+    expect((await collectInvestorDaily(db, at("16:00"))).ok).toBe(false);
+    expect(collectInvestorToss).toHaveBeenCalledTimes(4);
+    expect((await collectInvestorDaily(db, at("17:00"), true)).ok).toBe(true);
+    expect(collectInvestorToss).toHaveBeenCalledTimes(5);
+    expect((await collectInvestorDaily(db, at("18:00"), true)).skipped).toBe(true);
+    expect(collectInvestorToss).toHaveBeenCalledTimes(5);
+  });
   it("rejects unauthenticated scheduled calls", async () => {
     const { GET } = await import("@/app/api/cron/investor-flow/route");
     vi.stubEnv("CRON_SECRET", "test-only");

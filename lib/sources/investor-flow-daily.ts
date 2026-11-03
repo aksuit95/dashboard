@@ -25,12 +25,13 @@ export function readInvestorDaily(db: AppDatabase, universe: MinerviniUniverse, 
   return { board: JSON.parse(row.board) as InvestorBoard, toss: row.toss ? JSON.parse(row.toss) : null, error: row.error, expected };
 }
 
-/** A durable claim prevents duplicate runs and retries, including after collection failure. */
-export async function collectInvestorDaily(db: AppDatabase, now = new Date()) {
+/** Keep completed successes; scheduled recovery can retry only a finished failed run. */
+export async function collectInvestorDaily(db: AppDatabase, now = new Date(), retryFailed = false) {
   initInvestorDaily(db);
   const asOf = minerviniSession(now);
   const today = new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
   if (asOf !== today) return { ok: true, skipped: true, asOf };
+  if (retryFailed) db.prepare("DELETE FROM investor_flow_daily_runs WHERE as_of = ? AND finished_at IS NOT NULL AND error IS NOT NULL").run(asOf);
   const claim = db.prepare("INSERT OR IGNORE INTO investor_flow_daily_runs(as_of, started_at) VALUES (?, ?)").run(asOf, now.toISOString());
   if (!claim.changes) {
     const run = db.prepare("SELECT error FROM investor_flow_daily_runs WHERE as_of = ?").get(asOf) as { error: string | null };
@@ -41,6 +42,8 @@ export async function collectInvestorDaily(db: AppDatabase, now = new Date()) {
     for (const universe of minerviniUniverseIds) {
       for (const view of ["index", "stocks"] as const) {
         try {
+          const saved = db.prepare("SELECT error, toss FROM investor_flow_daily_snapshots WHERE as_of = ? AND universe = ? AND view = ?").get(asOf, universe, view) as { error: string | null; toss: string | null } | undefined;
+          if (retryFailed && saved && !saved.error && saved.toss) continue;
           const board = await loadInvestorBoard(db, universe, view, now);
           let toss: Awaited<ReturnType<typeof collectInvestorToss>> | null = null;
           let error: string | null = null;
@@ -50,7 +53,7 @@ export async function collectInvestorDaily(db: AppDatabase, now = new Date()) {
             toss && "rows" in toss ? toss.rows.find(row => row.error)?.error : null];
           if (toss && "points" in toss && toss.points.at(-1)?.date !== asOf) problems.push(`${asOf} 시장 수급 미발표`);
           error = problems.filter(Boolean).join(" · ") || null;
-          db.prepare("INSERT INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)")
+          db.prepare("INSERT OR REPLACE INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)")
             .run(asOf, universe, view, JSON.stringify(board), toss ? JSON.stringify(toss) : null, error);
           if (error) errors.push(`${universe}:${view}: ${error}`);
         } catch (e) { errors.push(`${universe}:${view}: ${e instanceof Error ? e.message : "수집 실패"}`); }

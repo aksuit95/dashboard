@@ -36,4 +36,11 @@ describe("published proxy close", () => {
     expect(await fs.readFile(file, "utf8")).toBe(old);
     expect((await readProxyPublication(file))?.krAsOf).toBe("2026-11-02");
   });
+  it("uses the verified KRX regular-close history when the KRX API is unreachable", async () => {
+    krx.mockRejectedValueOnce(new Error("KRX Open API 네트워크 오류"));
+    await exportProxyPublication(file, new Date("2026-11-03T16:00:00+09:00"), dep);
+    const result = await readProxyPublication(file);
+    expect(result).toMatchObject({ krAsOf: "2026-11-03", priceBasis: "KRX_REGULAR_CLOSE", krSource: "NAVER_KRX_REGULAR" });
+    expect(result?.kr["005930"].at(-1)).toEqual({ date: "2026-11-03", close: 100 });
+  });
 });

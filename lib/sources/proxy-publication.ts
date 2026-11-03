@@ -10,7 +10,7 @@ import { fetchYahooHistory } from "./yahoo";
 
 type KrSymbol = "005930" | "005935" | "000660";
 const codes: KrSymbol[] = ["005930", "005935", "000660"];
-type Publication = { version: 1; priceBasis: "KRX_REGULAR_CLOSE"; krAsOf: string; usAsOf: string; fetchedAt: string; krFetchedAt: string; usFetchedAt: string;
+type Publication = { version: 1; priceBasis: "KRX_REGULAR_CLOSE"; krAsOf: string; usAsOf: string; fetchedAt: string; krFetchedAt: string; usFetchedAt: string; krSource?: "KRX_OPEN_API" | "NAVER_KRX_REGULAR";
   kr: Record<KrSymbol, CloseBar[]>; adr: CloseBar[]; fx: CloseBar[] };
 export const proxyPublicationPath = path.join(process.cwd(), "data", "proxy-close", "board.json");
 
@@ -34,7 +34,7 @@ export async function publishedProxyClose(file = proxyPublicationPath) {
   const latest = latestAdrPremium(input);
   if (latest) { const index = adr.findIndex(point => point.date === latest.date); if (index >= 0) adr[index] = latest; else adr.push(latest); }
   if (!samsung.length || !adr.length) throw new Error("프록시 종가 비교 자료 없음");
-  return { closeDate: p.krAsOf, usAsOf: p.usAsOf, fetchedAt: p.fetchedAt, krFetchedAt: p.krFetchedAt, usFetchedAt: p.usFetchedAt, priceBasis: p.priceBasis, samsung, adr: adr.map(point => ({ ...point, value: point.premium })) };
+  return { closeDate: p.krAsOf, usAsOf: p.usAsOf, fetchedAt: p.fetchedAt, krFetchedAt: p.krFetchedAt, usFetchedAt: p.usFetchedAt, priceBasis: p.priceBasis, krSource: p.krSource ?? "KRX_OPEN_API", samsung, adr: adr.map(point => ({ ...point, value: point.premium })) };
 }
 
 type Dependencies = { krx: typeof requestKrxOpenApi; history: typeof fetchKrxDailyCloses; yahoo: typeof fetchYahooHistory };
@@ -44,23 +44,34 @@ export async function exportProxyPublication(file = proxyPublicationPath, now = 
   if (previous && (previous.krAsOf > krAsOf || previous.usAsOf > usAsOf)) throw new Error("프록시 기준일 역행");
   if (previous?.krAsOf === krAsOf && previous.usAsOf === usAsOf) return { changed: false, krAsOf, usAsOf };
   let krFetchedAt = previous?.krFetchedAt, usFetchedAt = previous?.usFetchedAt;
+  let krSource: Publication["krSource"] = previous?.krSource ?? "KRX_OPEN_API";
   let kr = previous?.kr;
   if (!kr || previous?.krAsOf !== krAsOf) {
-    const rows = await dep.krx("sto/stk_bydd_trd", krAsOf.replaceAll("-", ""));
-    const latest = Object.fromEntries(codes.map(code => {
-      const matched = rows.filter(row => row.ISU_CD === code);
-      if (matched.length !== 1) throw new Error(`${code} KRX 종가 누락·중복`);
-      const raw = String(matched[0].TDD_CLSPRC ?? "").replaceAll(",", "");
-      const close = /^\d+(?:\.\d+)?$/.test(raw) ? Number(raw) : NaN;
-      if (!(close > 0)) throw new Error(`${code} KRX 종가 오류`);
-      return [code, close];
-    })) as Record<KrSymbol, number>;
+    let latest: Record<KrSymbol, number> | null = null;
+    try {
+      const rows = await dep.krx("sto/stk_bydd_trd", krAsOf.replaceAll("-", ""));
+      latest = Object.fromEntries(codes.map(code => {
+        const matched = rows.filter(row => row.ISU_CD === code);
+        if (matched.length !== 1) throw new Error(`${code} KRX 종가 누락·중복`);
+        const raw = String(matched[0].TDD_CLSPRC ?? "").replaceAll(",", "");
+        const close = /^\d+(?:\.\d+)?$/.test(raw) ? Number(raw) : NaN;
+        if (!(close > 0)) throw new Error(`${code} KRX 종가 오류`);
+        return [code, close];
+      })) as Record<KrSymbol, number>;
+      krSource = "KRX_OPEN_API";
+    } catch (error) {
+      // Network failure or not-yet-published KRX data: use the explicit KRX regular-close field only.
+      const message = error instanceof Error ? error.message : "";
+      if (!message.includes("KRX Open API 네트워크 오류") && !message.includes("KRX Open API 데이터 없음")) throw error;
+      krSource = "NAVER_KRX_REGULAR";
+    }
     const entries = await Promise.all(codes.map(async code => {
       // Refresh verified regular-close history to fill any missed sessions.
       const history = (await dep.history(code, krAsOf, fetch, 1500)).filter((bar): bar is CloseBar => bar.close != null);
       const existing = history.find(bar => bar.date === krAsOf);
-      if (existing && existing.close !== latest[code]) throw new Error(`${code} KRX 종가 이력 불일치`);
-      return [code, [...history.filter(bar => bar.date < krAsOf), { date: krAsOf, close: latest[code] }].slice(-1500)] as const;
+      if (!existing) throw new Error(`${code} ${krAsOf} KRX 정규장 종가 누락`);
+      if (latest && existing.close !== latest[code]) throw new Error(`${code} KRX 종가 이력 불일치`);
+      return [code, [...history.filter(bar => bar.date < krAsOf), { date: krAsOf, close: latest?.[code] ?? existing.close }].slice(-1500)] as const;
     }));
     krFetchedAt = now.toISOString();
     kr = Object.fromEntries(entries) as Record<KrSymbol, CloseBar[]>;
@@ -74,7 +85,7 @@ export async function exportProxyPublication(file = proxyPublicationPath, now = 
     usFetchedAt = now.toISOString();
     if (adr.at(-1)?.date !== usAsOf) throw new Error(`${usAsOf} 미국 ADR 종가 미반영`);
   }
-  const p = validateProxyPublication({ version: 1, priceBasis: "KRX_REGULAR_CLOSE", krAsOf, usAsOf, fetchedAt: now.toISOString(), krFetchedAt, usFetchedAt, kr, adr, fx });
+  const p = validateProxyPublication({ version: 1, priceBasis: "KRX_REGULAR_CLOSE", krAsOf, usAsOf, fetchedAt: now.toISOString(), krFetchedAt, usFetchedAt, krSource, kr, adr, fx });
   await fs.mkdir(path.dirname(file), { recursive: true });
   const temporary = `${file}.${process.pid}.tmp`;
   try { await fs.writeFile(temporary, JSON.stringify(p) + "\n", { flag: "wx" }); await fs.rename(temporary, file); }

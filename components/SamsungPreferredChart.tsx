@@ -18,6 +18,7 @@ function isBook(value: unknown): value is { points: PreferredDiscountPoint[] } {
 export function SamsungPreferredChart() {
   const dailyClose = useDailyClose();
   const [points, setPoints] = useState<PreferredDiscountPoint[] | null>(null);
+  const [krSource, setKrSource] = useState<string | null>(null);
   const [krFetchedAt, setKrFetchedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +35,8 @@ export function SamsungPreferredChart() {
         if (controller.signal.aborted) return;
         setError(null);
         setPoints(payload.points);
+        const source = (payload as { krSource?: unknown }).krSource;
+        if (typeof source === "string") setKrSource(source);
         const collected = (payload as { krFetchedAt?: unknown }).krFetchedAt;
         if (typeof collected === "string") setKrFetchedAt(collected);
       } catch (reason) {
@@ -63,7 +66,7 @@ export function SamsungPreferredChart() {
           {latest.date} 15:30 KST · 보통주 ₩{formatNumber(latest.commonKrw, 0)} · 우선주 ₩{formatNumber(latest.preferredKrw, 0)}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">거래일 16:00 이후 수집 · 휴장일은 직전 종가 유지{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
+      <p className="mt-2 text-xs text-zinc-500">거래일 16:00 이후 수집 · 휴장일은 직전 종가 유지{krSource ? ` · 종가 출처 ${krSource === "KRX_OPEN_API" ? "KRX Open API" : "네이버 KRX 정규장"}` : ""}{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

@@ -48,7 +48,7 @@
 - **GDR.** 삼성전자 런던 GDR(`SMSN.IL`, 1 GDR = 보통주 25주, 1주 환산), SK하이닉스 프랑크푸르트(`HY9H.F`, 1주 환산).
 - **미국 ETF 프록시.** Roundhill Memory(`DRAM`), iShares MSCI Korea(`EWY`), iShares Semiconductor(`SOXX`).
 
-삼성전자 보통주·우선주와 하이닉스 ADR 괴리율 종가는 GitHub Actions가 수집·저장하고 Git 배포로 반영합니다. 한국 시세는 거래일 16:00 KST에 KRX Open API와 네이버의 KRX 정규장 15:30 종가 이력을 대조하고, ADR·환율은 07:00 KST에 별도로 수집합니다. 화면은 저장 JSON만 읽으며 각 기준일·수집 시각을 표시합니다. 실패 시 기존 정상 파일을 유지합니다. 자세한 설정은 `docs/vercel-daily-refresh.md`를 참고하세요.
+삼성전자 보통주·우선주와 하이닉스 ADR 괴리율 종가는 GitHub Actions가 수집·저장하고 Git 배포로 반영합니다. 한국 시세는 거래일 16:00 KST에 KRX Open API와 네이버의 KRX 정규장 15:30 종가 이력을 대조하고, KRX가 미발표거나 접속 실패이면 명시적인 네이버 KRX 정규장 종가만 사용하며, ADR·환율은 07:00 KST에 별도로 수집합니다. 화면은 저장 JSON만 읽으며 각 기준일·수집 시각을 표시합니다. 실패 시 기존 정상 파일을 유지합니다. 자세한 설정은 `docs/vercel-daily-refresh.md`를 참고하세요.
 
 프리미엄과 원화 환산은 장중 환율을 씁니다. 환율이 없으면 마지막 유효 환율을 쓰고, 카드에 기준 시각을 남깁니다.
 
@@ -93,14 +93,14 @@ S&P 500, NASDAQ, KOSPI, KOSDAQ의 연간 수익률 표입니다. **배당은 제
 - 토스 조회에는 `TOSS_CLIENT_ID`와 `TOSS_CLIENT_SECRET` (또는 `toss_API_KEY`와 `toss_API_SECRET`), KRX 시세에는 `KRX_API_KEY`를 서버 환경변수에 설정합니다. 투자자별 수급은 토스 API로 조회하며 KRX 웹 로그인은 사용하지 않습니다.
 - 결측 수급은 0으로 바꾸지 않고 합산·누적을 결측 처리합니다. 토스 외국인은 등록외국인 기준입니다. 토스 수급은 KRX·NXT 합산이므로 KRX 15:30 가격과 거래 범위가 다릅니다.
 
-수급분석은 **거래일 16:00 KST에 하루 한 번 일괄 수집**합니다. 화면 진입·탭 전환·저장 자료 새로고침은 배포된 `data/investor-flow/board.json`(로컬 미배포 시 SQLite의 `investor_flow_daily_snapshots`)만 조회하며 토스·KRX 외부 API를 호출하지 않습니다. 가격은 KRX 정규장 **15:30 종가**이며, 원본 수급 갱신 시각과 실제 수집 시각은 별도 표시합니다. 16시에 저장한 토스 수급은 이후 NXT 거래·원본 정정 내용을 당일 추가 반영하지 않습니다.
+수급분석은 **이 PC의 Windows 작업 스케줄러에서 거래일 16:00 KST 이후 수집**합니다. PC가 켜져 있고 사용자 세션에 로그인되어 있어야 하며, 네트워크·자료 미발표 등 실패 시 15분 간격으로 실패 화면만 재시도합니다. 성공한 화면은 같은 거래일에 다시 수집하지 않습니다. 화면 진입·탭 전환·저장 자료 새로고침은 배포된 `data/investor-flow/board.json`(로컬 미배포 시 SQLite의 `investor_flow_daily_snapshots`)만 조회하며 토스·KRX 외부 API를 호출하지 않습니다. 가격은 KRX 정규장 **15:30 종가**이며, 원본 수급 갱신 시각과 실제 수집 시각은 별도 표시합니다. 16시에 저장한 토스 수급은 이후 NXT 거래·원본 정정 내용을 당일 추가 반영하지 않습니다.
 
 - `npm run job:investor-flow`로 네 탭을 일괄 수집합니다. `job:daily`·`job:poll`에도 연결했습니다. 16시 전·주말·등록된 휴장일에는 수집하지 않으며 미확인 캘린더는 오류로 보류합니다. `job:poll`이 실행 중이면 16시 이후 첫 확인 때 수집하고, 늦게 시작하면 당일 미실행분을 한 번 수집합니다.
-- SQLite `investor_flow_daily_runs`의 거래일 고유 키로 동일 DB의 중복 실행·동시 실행을 차단합니다. 실패·미발표도 당일 실행으로 기록하며 자동 재시도하지 않습니다. 수집은 여러 종목·이력 API 요청으로 구성되는 한 번의 배치입니다. 중단된 실행도 당일 자동 재실행하지 않습니다.
+- SQLite `investor_flow_daily_runs`의 거래일 고유 키로 동일 DB의 중복 실행·동시 실행을 차단합니다. 실패·미발표는 기록하며 PC 예약 작업이 15분 간격으로 실패한 화면을 다시 수집합니다. 수집은 여러 종목·이력 API 요청으로 구성되는 한 번의 배치입니다. 중단된 실행도 당일 자동 재실행하지 않습니다.
 - 저장 자료가 없으면 대기 안내를 표시합니다. 다음 거래일 수집이 누락되면 마지막 저장 자료와 실제 기준일을 표시합니다. 새 기준일의 가격을 이전 날짜 가격으로 대체하지 않습니다.
-- GitHub Actions의 기존 `.github/workflows/sector-daily.yml`에서 섹터와 수급을 평일 **UTC 07:00 = KST 16:00**에 함께 수집합니다. 수급은 `npm run investor-flow:export`를 한 번 실행하고, 두 결과 파일을 한 커밋으로 반영해 기존 Vercel Git 배포를 유발합니다. GitHub 예약 실행은 혼잡 시 지연될 수 있어 16:00 정각 실행을 보장하지 않습니다.
-- 저장소 Actions Secrets에 `KRX_API_KEY`, `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET`이 필요합니다. API 키는 JSON·로그·Git 커밋에 포함하지 않습니다. 토스의 IP 제한이 적용되는 계정이면 Actions 실행 IP도 허용되어야 합니다.
-- `data/investor-flow/board.json`에 최근 30개 수집일의 스냅샷과 실행 기록을 보존합니다. 새 Actions 러너에서도 이전 실행 기록을 복원해 같은 거래일의 중복·실패 재시도를 막습니다. 수급의 수동 `force` 재수집은 제공하지 않으며 기존 워크플로의 `force` 옵션은 섹터에만 적용합니다. 수급 실패 기록·성공한 다른 자료는 배포한 뒤 워크플로를 실패로 표시합니다.
+- 이 PC의 `Dashboard Investor Flow` 작업이 평일 16:00부터 15분 간격으로 실패분을 재시도합니다. 별도 `tmp/investor-flow-runner` 체크아웃에서 수집하고 결과 파일만 GitHub에 커밋·푸시해 Vercel 배포를 유발합니다. 토스는 허용 IP에서만 호출되며 PC의 공인 IP가 바뀌면 허용 IP를 갱신해야 합니다. 성공 후 같은 거래일 중복 수집은 하지 않습니다.
+- PC의 `C:\dashboard\.env`에서 KRX·토스 키를 읽습니다. 키는 JSON·로그·Git 커밋에 포함하지 않습니다.
+- `data/investor-flow/board.json`에 최근 30개 수집일의 스냅샷과 실행 기록을 보존합니다. 실패한 화면의 재시도에서도 성공한 화면은 보존합니다. 동일 거래일 실패 기록을 재시도하려면 `npm run investor-flow:export -- --retry-failed`를 사용합니다.
 - 배포 화면은 공통 JSON을 읽으므로 Vercel의 인스턴스별 임시 SQLite에 의존하지 않습니다. `/api/investor-flow`와 `/api/investor-flow/toss`에 파일 추적을 지정했습니다. 별도의 Vercel 수급 cron은 등록하지 않습니다.
 - 로컬에서는 영구 SQLite와 상시 `npm run job:poll`을 사용하거나, Windows 작업 스케줄러에서 작업 폴더 `C:\dashboard`로 매일 16:00에 `npm.cmd run job:investor-flow`를 실행합니다. 코드 변경만으로 OS 예약 작업이나 배포 설정이 활성화되지는 않습니다.
 
@@ -283,7 +283,7 @@ DEFAULT_FX_PAIR=USDKRW
 
 한국시간 **16:00**을 일별 경계로 사용합니다. 가격은 KRX 정규장 **15:30 종가**이며, 주말·휴장일과 16:00 전에는 직전 완료 거래일을 사용합니다. 특별 운영시간 미확인일·미등록 연도는 수집을 보류합니다.
 
-- GitHub Actions `.github/workflows/sector-daily.yml`에서 수급·섹터와 함께 평일 **16:00 KST**에 `npm run minervini:export`를 실행하고, `data/minervini/board.json`의 변경을 커밋하여 Vercel Git 배포를 시작합니다. GitHub 예약과 배포는 지연될 수 있습니다. 별도의 Vercel 미너비니 cron은 사용하지 않습니다.
+- GitHub Actions `.github/workflows/sector-daily.yml`에서 섹터와 함께 평일 **16:00 KST**에 `npm run minervini:export`를 실행하고, `data/minervini/board.json`의 변경을 커밋하여 Vercel Git 배포를 시작합니다. GitHub 예약과 배포는 지연될 수 있습니다. 별도의 Vercel 미너비니 cron은 사용하지 않습니다.
 - 두 지수는 각각 검증합니다. 한 지수 수집이 실패하면 해당 지수의 이전 정상 결과를 유지하고 다른 지수의 성공 결과를 배포합니다. 실패한 경우 Actions 실행은 실패로 표시되며, 재실행하면 같은 날짜에 성공한 지수는 재수집하지 않고 실패한 지수만 수집합니다.
 - 화면의 결과 새로고침 및 1분 확인은 배포된 결과만 읽습니다. 수집이나 배포가 지연되면 직전 결과와 기준일·지연을 표시합니다. 배포 결과가 없으면 수집 대기 상태를 표시합니다.
 - `npm run minervini:export`는 로컬에서 배포 파일을 수집할 때 사용합니다. 기존 `job:minervini`, `job:daily`, `job:poll`은 별도 로컬 SQLite 수집용이며 배포 파일을 갱신하지 않습니다.
