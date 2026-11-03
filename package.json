@@ -15,6 +15,7 @@
     "investor-flow:export": "tsx jobs/investor-flow-export.ts",
     "job:investor-flow": "tsx jobs/investor-flow.ts",
     "job:daily": "tsx jobs/daily.ts",
+    "minervini:export": "tsx jobs/minervini-export.ts",
     "job:minervini": "tsx jobs/minervini.ts",
     "job:sectors": "tsx jobs/sectors.ts",
     "sectors:export": "tsx jobs/sector-publish-export.ts",

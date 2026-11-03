@@ -6,7 +6,7 @@ export default function SingleStockPage() {
     <div>
       <PageHeader
         title="단일종목 레버리지·인버스"
-        description="삼성전자와 SK하이닉스 단일종목 ETF의 현재가, 전일 대비, iNAV 괴리율. 20초마다 다시 조회합니다."
+        description="삼성전자와 SK하이닉스 단일종목 ETF의 현재가, 전일 대비, iNAV 괴리율. 1분마다 다시 조회합니다."
       />
       <SingleStockBoard />
     </div>

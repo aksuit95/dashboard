@@ -1,4 +1,4 @@
-name: Collect sectors and investor flows and deploy to Vercel
+name: Collect daily Korean market data and deploy to Vercel
 
 on:
   schedule:
@@ -20,7 +20,7 @@ concurrency:
 jobs:
   collect-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,6 +38,10 @@ jobs:
           TOSS_CLIENT_ID: ${{ secrets.TOSS_CLIENT_ID }}
           TOSS_CLIENT_SECRET: ${{ secrets.TOSS_CLIENT_SECRET }}
         run: npm run investor-flow:export
+      - name: Collect Minervini analysis
+        id: minervini
+        continue-on-error: true
+        run: npm run minervini:export
       - name: Collect and validate both indices
         id: sectors
         continue-on-error: true
@@ -62,6 +66,9 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json
+          if [ -f data/minervini/board.json ]; then
+            git add -- data/minervini/board.json
+          fi
           if [ -f data/investor-flow/board.json ]; then
             git add -- data/investor-flow/board.json
           fi
@@ -71,10 +78,10 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish daily sectors and investor flows'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish daily Korean market snapshots'
           git fetch origin "$BRANCH"
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure'
+        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure'
         run: exit 1
