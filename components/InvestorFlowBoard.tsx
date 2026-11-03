@@ -91,7 +91,7 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
   useEffect(() => {
     const controller = new AbortController();
     setData(null); setFailure(null);
-    fetch(`/api/investor-flow/toss?universe=${universe}&view=index`, { signal: controller.signal, cache: "no-store" }).then(async response => {
+    fetch(`/api/investor-flow/toss?universe=${universe}&view=index&asOf=${board.asOf}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
       const body = await response.json(); if (!response.ok) throw new Error(body.error ?? "시장 수급 조회 실패"); setData(body);
     }).catch(error => { if (!controller.signal.aborted) setFailure(error.message); });
     return () => controller.abort();
@@ -108,8 +108,8 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
   return <section className={`${box} space-y-4`}><h2 className="font-semibold">{universe === "kospi200" ? "코스피" : "코스닥"} 시장 전체 · 투자자별 순매수 대금</h2>
     <p className="text-xs leading-relaxed text-zinc-400">토스증권 KRX 시장 전체 · 매수대금 − 매도대금 · 억 원 · 외국인에는 등록·미등록 외국인이 포함됩니다. 비교 차트는 {universe === "kospi200" ? "코스피" : "코스닥"} KRX 15:30 종가입니다.</p>
     {failure && <Notice>{failure}</Notice>}
-    {!failure && !data && <p className="text-sm text-zinc-400">시장 수급을 수집하고 있습니다…</p>}
-    {data && <><p className="text-xs text-zinc-500">수급 기준일 {latest ?? "없음"} · 원본 갱신 {data.latestUpdatedAt ? `${kst(data.latestUpdatedAt)} KST` : "미제공"} · 조회 {kst(data.collectedAt)} KST</p>
+    {!failure && !data && <p className="text-sm text-zinc-400">저장된 시장 수급을 불러오고 있습니다…</p>}
+    {data && <><p className="text-xs text-zinc-500">수급 기준일 {latest ?? "없음"} · 원본 갱신 {data.latestUpdatedAt ? `${kst(data.latestUpdatedAt)} KST` : "미제공"} · 수집 {kst(data.collectedAt)} KST</p>
       {latest !== board.asOf && <Notice>{board.asOf} 시장 수급이 아직 제공되지 않아 해당 거래일은 결측으로 표시합니다.</Notice>}
       {data.priceError && <Notice>일부 비교 지수 이력을 불러오지 못했습니다: {data.priceError}. 수급 이력은 그대로 표시합니다.</Notice>}
       <div className="flex flex-wrap gap-1"><button type="button" aria-pressed={cumulative} onClick={() => setCumulative(true)} className={`rounded-md px-3 py-2 text-xs ${cumulative ? "bg-rose-950 text-rose-100" : "bg-white/5 text-zinc-400 hover:bg-white/10"}`}>구간 누적</button><Buttons period={period} active={!cumulative} setPeriod={value => { setCumulative(false); setPeriod(value); }} /></div><Summary points={points} />
@@ -125,7 +125,7 @@ function TossFlow({ board, universe, view }: { board: InvestorBoard; universe: M
   useEffect(() => {
     const controller = new AbortController();
     setData(null); setFailure(null);
-    fetch(`/api/investor-flow/toss?universe=${universe}&view=${view}`, { signal: controller.signal, cache: "no-store" }).then(async r => { const body = await r.json(); if (!r.ok) throw new Error(body.error); setData(body); }).catch(e => { if (!controller.signal.aborted) setFailure(e.message); });
+    fetch(`/api/investor-flow/toss?universe=${universe}&view=${view}&asOf=${board.asOf}`, { signal: controller.signal, cache: "no-store" }).then(async r => { const body = await r.json(); if (!r.ok) throw new Error(body.error); setData(body); }).catch(e => { if (!controller.signal.aborted) setFailure(e.message); });
     return () => controller.abort();
   }, [universe, view, board.asOf]);
   const sessions = board.equity?.sessions ?? [];
@@ -133,7 +133,7 @@ function TossFlow({ board, universe, view }: { board: InvestorBoard; universe: M
   return <section className={`${box} space-y-4`}><h2 className="font-semibold">토스증권 투자자별 순매수</h2>
     <p className="text-xs leading-relaxed text-zinc-400">KRX·NXT 합산 · 단위: 주 · 외국인은 등록외국인 기준. 거래대금은 제공되지 않습니다. {view === "index" && "현재 구성종목을 고정해 과거를 합산하며 편입·편출을 소급하지 않습니다."}</p>
     {failure && <Notice>{failure}</Notice>}
-    {!failure && !data && <p className="text-sm text-zinc-400">토스 수급을 수집하고 있습니다…</p>}
+    {!failure && !data && <p className="text-sm text-zinc-400">저장된 토스 수급을 불러오고 있습니다…</p>}
     {data && <><p className="text-xs text-zinc-500">{board.asOf} 기준 · {data.rows.filter(r => !r.error).length}/{data.rows.length}개 수신 · 누락된 날의 합산은 결측입니다.</p>
       <Buttons period={period} setPeriod={setPeriod} />
       <>
@@ -161,13 +161,15 @@ export function InvestorFlowBoard({ universe, view }: { universe: MinerviniUnive
     <PageHeader title={view === "index" ? `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 수급` : `${spec.name} 종목 수급`} description={view === "index" ? `시장 전체의 투자자별 순매수 대금과 ${spec.market === "KOSPI" ? "코스피" : "코스닥"} 지수를 비교합니다.` : `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 시가총액 상위 10개 종목으로 먼저 테스트합니다.`} />
     <div className="flex flex-wrap gap-2">{(["kospi200", "kosdaq150"] as const).flatMap(u => (["index", "stocks"] as const).map(v => <Link key={`${u}-${v}`} href={`/investor-flow/${u}${v === "stocks" ? "/stocks" : ""}`} aria-current={u === universe && v === view ? "page" : undefined} className={`rounded-lg border px-3 py-2 text-xs ${u === universe && v === view ? "border-rose-500/40 bg-rose-950 text-rose-100" : "border-white/10 text-zinc-400 hover:bg-white/5"}`}>{v === "index" ? `${u === "kospi200" ? "코스피" : "코스닥"} 시장` : `${minerviniUniverses[u].name} 종목`}</Link>))}</div>
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 px-4 py-3 text-xs text-zinc-400">
-      <div className="space-y-1"><p>현물 기준 {board?.asOf ?? "확인 중"} · KRX 정규장 15:30 KST</p><p>수집 {board ? kst(board.fetchedAt) : "—"} KST</p></div>
-      <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)} className="rounded-md bg-white/10 px-3 py-2 text-zinc-200 disabled:opacity-40">{loading ? "수집 중…" : "새로고침"}</button>
+      <div className="space-y-1"><p>현물 기준 {board?.asOf ?? "확인 중"} · KRX 정규장 15:30 KST</p><p>거래일 16:00 KST 하루 한 번 수집 · 최근 수집 {board ? kst(board.fetchedAt) : "—"} KST</p></div>
+      <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)} className="rounded-md bg-white/10 px-3 py-2 text-zinc-200 disabled:opacity-40">{loading ? "조회 중…" : "저장 자료 새로고침"}</button>
     </div>
     {loading && <div className={`${box} animate-pulse text-sm text-zinc-400`} role="status">{view === "index" ? "기준일 지수 종가를 불러오고 있습니다." : "시총 상위 10개 종목의 자료를 불러오고 있습니다."}</div>}
     {error && <Notice>{error}</Notice>}
+    {board?.stale && <Notice>새 기준일 자료가 없어 마지막 저장 결과를 표시합니다. 기준일을 확인해 주세요.</Notice>}
+    {board?.collectionError && <Notice>예약 수집 안내: {board.collectionError} · 다음 거래일 16:00에 다시 수집합니다.</Notice>}
     {board?.equityError && <Notice>현물 데이터 수신 불가: {board.equityError}</Notice>}
-    {board && (view === "index" ? <TossMarketFlow board={board} universe={universe} /> : <TossFlow board={board} universe={universe} view={view} />)}
+    {board && (view === "index" ? <TossMarketFlow key={refresh} board={board} universe={universe} /> : <TossFlow key={refresh} board={board} universe={universe} view={view} />)}
     {equity && view === "stocks" && <>
       <div className={`${box} flex flex-wrap items-center justify-between gap-3`}><div><p className="text-xs text-zinc-500">{spec.name} · KRX 15:30 종가</p><p className="mt-1 font-mono text-2xl font-semibold">{equity.prices.at(-1)?.value.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) ?? "—"}<span className="ml-2 text-xs font-normal text-zinc-500">pt</span></p></div><p className="text-xs text-zinc-400">{board?.asOf} 기준 · {equity.prices.length}거래일 시세 수신</p></div>
       {view === "stocks" && <section className={box}><h2 className="mb-4 font-semibold">시총 상위 10개 · KRX 종가</h2><div className="overflow-x-auto"><table className="w-full text-right text-sm"><thead className="text-xs text-zinc-500"><tr><th className="p-2 text-left">종목</th><th className="p-2">KRX 종가 (원)</th><th className="p-2">시총 (조 원)</th></tr></thead><tbody>{equity.stocks.map(stock => <tr key={stock.code} className="border-t border-white/5"><td className="p-2 text-left">{stock.name} <span className="text-xs text-zinc-500">{stock.code}</span></td><td className="p-2">{stock.price?.toLocaleString("ko-KR") ?? "—"}</td><td className="p-2">{(stock.marketCap / 1e12).toFixed(2)}</td></tr>)}</tbody></table></div></section>}

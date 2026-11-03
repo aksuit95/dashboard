@@ -12,6 +12,8 @@
     "test": "vitest run",
     "lint": "tsc --noEmit",
     "job:ingest": "tsx jobs/ingest.ts",
+    "investor-flow:export": "tsx jobs/investor-flow-export.ts",
+    "job:investor-flow": "tsx jobs/investor-flow.ts",
     "job:daily": "tsx jobs/daily.ts",
     "job:minervini": "tsx jobs/minervini.ts",
     "job:sectors": "tsx jobs/sectors.ts",

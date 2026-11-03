@@ -1,4 +1,4 @@
-name: Collect sectors and deploy to Vercel
+name: Collect sectors and investor flows and deploy to Vercel
 
 on:
   schedule:
@@ -30,7 +30,17 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Collect investor flows once per KRX session
+        id: investor-flow
+        continue-on-error: true
+        env:
+          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
+          TOSS_CLIENT_ID: ${{ secrets.TOSS_CLIENT_ID }}
+          TOSS_CLIENT_SECRET: ${{ secrets.TOSS_CLIENT_SECRET }}
+        run: npm run investor-flow:export
       - name: Collect and validate both indices
+        id: sectors
+        continue-on-error: true
         shell: bash
         env:
           FORCE: ${{ inputs.force || 'false' }}
@@ -44,7 +54,7 @@ jobs:
             if [ "$attempt" = "3" ]; then exit 1; fi
             sleep 60
           done
-      - name: Commit only validated sector snapshots and trigger Vercel Git deployment
+      - name: Commit daily snapshots and trigger Vercel Git deployment
         shell: bash
         env:
           OWNER: ${{ github.repository_owner }}
@@ -52,13 +62,19 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json
+          if [ -f data/investor-flow/board.json ]; then
+            git add -- data/investor-flow/board.json
+          fi
           if git diff --cached --quiet; then
             echo "Already published for the latest completed KRX session."
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish KRX 15:30 sector snapshots'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish daily sectors and investor flows'
           git fetch origin "$BRANCH"
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
+      - name: Report collection failures after publishing available results
+        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure'
+        run: exit 1

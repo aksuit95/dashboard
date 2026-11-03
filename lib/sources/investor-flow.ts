@@ -10,7 +10,7 @@ type Query = (bld: string, params: Record<string, string>) => Promise<Row>;
 export type FlowStock = { code: string; name: string; marketCap: number; price?: number; points: InvestorPoint[]; error: string | null };
 export type EquityFlow = { sessions: string[]; prices: { date: string; value: number }[]; points: InvestorPoint[]; stocks: FlowStock[]; memberCount: number; collectedCount: number; error: string | null };
 export type FuturesFlow = { asOf: string; flowDate: string | null; contract: { code: string; name: string; close: number } | null; points: InvestorPoint[]; error: string | null; scope: "ALL_CONTRACTS"; session: "KRX_DAY" };
-export type InvestorBoard = { version: 1; universe: MinerviniUniverse; view: "index" | "stocks"; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; quoteSource?: "KRX_OPEN_API" | "KRX_WEB"; equity: EquityFlow | null; equityError: string | null };
+export type InvestorBoard = { version: 1; universe: MinerviniUniverse; view: "index" | "stocks"; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; collectionError?: string | null; stale?: boolean; quoteSource?: "KRX_OPEN_API" | "KRX_WEB"; equity: EquityFlow | null; equityError: string | null };
 export const indexParams = { kospi200: { indIdx: "1", indIdx2: "028", product: "KR___FUK2I", market: "STK" }, kosdaq150: { indIdx: "2", indIdx2: "203", product: "KR___FUKQI", market: "KSQ" } };
 export function krxNumber(raw: unknown): number {
   if (typeof raw !== "string" && typeof raw !== "number") throw new Error("KRX 숫자 결측");

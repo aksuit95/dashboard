@@ -91,6 +91,17 @@ S&P 500, NASDAQ, KOSPI, KOSDAQ의 연간 수익률 표입니다. **배당은 제
 - 토스 조회에는 `TOSS_CLIENT_ID`와 `TOSS_CLIENT_SECRET` (또는 `toss_API_KEY`와 `toss_API_SECRET`), KRX 시세에는 `KRX_API_KEY`를 서버 환경변수에 설정합니다. 투자자별 수급은 토스 API로 조회하며 KRX 웹 로그인은 사용하지 않습니다.
 - 결측 수급은 0으로 바꾸지 않고 합산·누적을 결측 처리합니다. 토스 외국인은 등록외국인 기준입니다. 토스 수급은 KRX·NXT 합산이므로 KRX 15:30 가격과 거래 범위가 다릅니다.
 
+수급분석은 **거래일 16:00 KST에 하루 한 번 일괄 수집**합니다. 화면 진입·탭 전환·저장 자료 새로고침은 배포된 `data/investor-flow/board.json`(로컬 미배포 시 SQLite의 `investor_flow_daily_snapshots`)만 조회하며 토스·KRX 외부 API를 호출하지 않습니다. 가격은 KRX 정규장 **15:30 종가**이며, 원본 수급 갱신 시각과 실제 수집 시각은 별도 표시합니다. 16시에 저장한 토스 수급은 이후 NXT 거래·원본 정정 내용을 당일 추가 반영하지 않습니다.
+
+- `npm run job:investor-flow`로 네 탭을 일괄 수집합니다. `job:daily`·`job:poll`에도 연결했습니다. 16시 전·주말·등록된 휴장일에는 수집하지 않으며 미확인 캘린더는 오류로 보류합니다. `job:poll`이 실행 중이면 16시 이후 첫 확인 때 수집하고, 늦게 시작하면 당일 미실행분을 한 번 수집합니다.
+- SQLite `investor_flow_daily_runs`의 거래일 고유 키로 동일 DB의 중복 실행·동시 실행을 차단합니다. 실패·미발표도 당일 실행으로 기록하며 자동 재시도하지 않습니다. 수집은 여러 종목·이력 API 요청으로 구성되는 한 번의 배치입니다. 중단된 실행도 당일 자동 재실행하지 않습니다.
+- 저장 자료가 없으면 대기 안내를 표시합니다. 다음 거래일 수집이 누락되면 마지막 저장 자료와 실제 기준일을 표시합니다. 새 기준일의 가격을 이전 날짜 가격으로 대체하지 않습니다.
+- GitHub Actions의 기존 `.github/workflows/sector-daily.yml`에서 섹터와 수급을 평일 **UTC 07:00 = KST 16:00**에 함께 수집합니다. 수급은 `npm run investor-flow:export`를 한 번 실행하고, 두 결과 파일을 한 커밋으로 반영해 기존 Vercel Git 배포를 유발합니다. GitHub 예약 실행은 혼잡 시 지연될 수 있어 16:00 정각 실행을 보장하지 않습니다.
+- 저장소 Actions Secrets에 `KRX_API_KEY`, `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET`이 필요합니다. API 키는 JSON·로그·Git 커밋에 포함하지 않습니다. 토스의 IP 제한이 적용되는 계정이면 Actions 실행 IP도 허용되어야 합니다.
+- `data/investor-flow/board.json`에 최근 30개 수집일의 스냅샷과 실행 기록을 보존합니다. 새 Actions 러너에서도 이전 실행 기록을 복원해 같은 거래일의 중복·실패 재시도를 막습니다. 수급의 수동 `force` 재수집은 제공하지 않으며 기존 워크플로의 `force` 옵션은 섹터에만 적용합니다. 수급 실패 기록·성공한 다른 자료는 배포한 뒤 워크플로를 실패로 표시합니다.
+- 배포 화면은 공통 JSON을 읽으므로 Vercel의 인스턴스별 임시 SQLite에 의존하지 않습니다. `/api/investor-flow`와 `/api/investor-flow/toss`에 파일 추적을 지정했습니다. 별도의 Vercel 수급 cron은 등록하지 않습니다.
+- 로컬에서는 영구 SQLite와 상시 `npm run job:poll`을 사용하거나, Windows 작업 스케줄러에서 작업 폴더 `C:\dashboard`로 매일 16:00에 `npm.cmd run job:investor-flow`를 실행합니다. 코드 변경만으로 OS 예약 작업이나 배포 설정이 활성화되지는 않습니다.
+
 ### Fund Flow (`/fund-flow`)
 
 증시 대기 자금과 거래대금을 봅니다.

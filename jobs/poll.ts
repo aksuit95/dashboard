@@ -1,3 +1,4 @@
+import { collectInvestorDaily } from "@/lib/sources/investor-flow-daily";
 import { getDb } from "@/lib/db/client";
 import { loadEnv } from "@/lib/env";
 import { ingestQuotes } from "@/lib/ingest/run";
@@ -14,6 +15,8 @@ async function tick(): Promise<void> {
   if (running) return;
   running = true;
   try {
+    const investorFlow = await collectInvestorDaily(getDb());
+    if (!investorFlow.ok) console.error("investor-flow", investorFlow.error);
     const reports = await ingestQuotes(getDb());
     console.log(new Date().toISOString(), reports.map((report) => `${report.source}:${report.status}`).join(" "));
     for (const universe of minerviniUniverseIds) {
