@@ -7,8 +7,8 @@ Production 배포 후 Vercel Cron이 방문자 없이도 아래 API를 호출합
 | 항목 | 한국시간 | UTC cron | API |
 | --- | --- | --- | --- |
 | 미국 ADR 종가 | 오전 7시 | `0 22 * * *` | `/api/cron/proxy-close/us` |
-| 삼성전자·하이닉스 한국 종가 | 오후 3시 30분 | `30 6 * * *` | `/api/cron/proxy-close/kr` |
-| 미너비니 분석 | 오후 4시 40분 | `40 7 * * *` | `/api/cron/minervini` |
+| 삼성전자·하이닉스 한국 종가 | 오후 4시 | `0 7 * * *` | `/api/cron/proxy-close/kr` |
+| 미너비니 분석 | 오후 4시 | `0 7 * * *` | `/api/cron/minervini` |
 | 공포·탐욕 지수 | 오전 10시 | `0 1 * * *` | `/api/cron/fear-greed` |
 
 미국 오전 7시 작업의 UTC 날짜는 한국 날짜보다 하루 전입니다.

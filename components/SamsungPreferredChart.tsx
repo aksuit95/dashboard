@@ -60,7 +60,7 @@ export function SamsungPreferredChart() {
           {latest.date} 15:30 KST · 보통주 ₩{formatNumber(latest.commonKrw, 0)} · 우선주 ₩{formatNumber(latest.preferredKrw, 0)}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 매일 15:30 이후 1회 갱신 · 휴장일은 직전 종가 유지</p>
+      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 매일 16:00 이후 1회 갱신 · 휴장일은 직전 종가 유지</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

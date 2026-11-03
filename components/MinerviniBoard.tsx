@@ -51,7 +51,7 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
       finally { if (!controller.signal.aborted) setBusy(false); }
     }
     void load();
-    // Check the daily cache on visibility and after 16:40, with retry on collection failure.
+    // Check the daily cache on visibility and after 16:00, with retry on collection failure.
     // These requests never force a second successful scan for the same session.
     const timer = window.setInterval(() => { if (!document.hidden) void load(); }, 60_000);
     const onVisible = () => { if (!document.hidden) void load(); };
@@ -73,7 +73,7 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
   return <section aria-label={`${spec.name} 미너비니 스크리너`}>
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
       <div className="space-y-1">
-        <p><span className="mr-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-emerald-300">{spec.label}</span>매일 16:40 KST · 완료된 정규장 일봉 기준</p>
+        <p><span className="mr-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-emerald-300">{spec.label}</span>매일 16:00 KST · 완료된 정규장 일봉 기준</p>
         <p className="pt-1">분석 기준일 {snapshot?.asOf ?? "—"} · 수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} · RS 산정 {snapshot?.rankedSize ?? 0}/{snapshot?.universeSize ?? 0}종목</p>
       </div>
       <button type="button" disabled={busy} onClick={() => setReload(n => n + 1)} className="rounded-md border border-white/15 px-3 py-2 disabled:opacity-40">{busy ? "불러오는 중…" : "결과 새로고침"}</button>

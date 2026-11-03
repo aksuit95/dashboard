@@ -69,9 +69,9 @@ describe("미너비니 계산", () => {
   });
 });
 describe("서울 장 마감 일별 경계", () => {
-  it("16:40 전에는 이전 거래일, 이후에는 당일", () => {
-    expect(minerviniSession(new Date("2026-11-02T07:39:59Z"))).toBe("2026-10-30");
-    expect(minerviniSession(new Date("2026-11-02T07:40:00Z"))).toBe("2026-11-02");
+  it("16:00 전에는 이전 거래일, 이후에는 당일", () => {
+    expect(minerviniSession(new Date("2026-11-02T06:59:59Z"))).toBe("2026-10-30");
+    expect(minerviniSession(new Date("2026-11-02T07:00:00Z"))).toBe("2026-11-02");
   });
   it("주말·휴일은 이전 거래일, 특별 운영·미검증 연도는 보류", () => {
     expect(minerviniSession(new Date("2026-11-01T08:00:00Z"))).toBe("2026-10-30");

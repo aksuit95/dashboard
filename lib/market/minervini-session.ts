@@ -1,9 +1,9 @@
 import { CALENDAR_YEAR, KR_HOLIDAYS, KR_UNCONFIRMED } from "@/config/market-calendar";
 
-/** Wait until 16:40 Seoul for daily publication. Exceptional/unreviewed calendars fail closed. */
+/** Wait until 16:00 Seoul for daily publication. Exceptional/unreviewed calendars fail closed. */
 export function minerviniSession(now = new Date()): string {
   const clock = new Date(now.getTime() + 9 * 3_600_000);
-  if (clock.getUTCHours() * 60 + clock.getUTCMinutes() < 1000) clock.setUTCDate(clock.getUTCDate() - 1);
+  if (clock.getUTCHours() * 60 + clock.getUTCMinutes() < 16 * 60) clock.setUTCDate(clock.getUTCDate() - 1);
   for (let i = 0; i < 15; i++) {
     const date = clock.toISOString().slice(0, 10);
     if (+date.slice(0, 4) !== CALENDAR_YEAR) throw new Error("한국 거래 캘린더 업데이트 필요");

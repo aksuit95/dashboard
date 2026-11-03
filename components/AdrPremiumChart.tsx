@@ -70,7 +70,7 @@ export function AdrPremiumChart() {
           {latest.adrDate ? ` · ADR ${latest.adrDate} 미국장 종가 · 환율 ${latest.fxDate}` : ""}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 한국 종가 15:30 이후, 미국 종가 오전 7시 이후 각 1회 갱신 (한국시간) · 휴장일은 직전 종가 유지</p>
+      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 한국 종가 16:00 이후, 미국 종가 오전 7시 이후 각 1회 갱신 (한국시간) · 휴장일은 직전 종가 유지</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

@@ -28,14 +28,14 @@ describe("미너비니 공통 일별 캐시와 예약 수집", () => {
     expect(state.load).toHaveBeenCalledTimes(1);
     expect(state.save).toHaveBeenCalledWith({}, snapshot, "kospi200");
   });
-  it("다음 거래일 16:40 이전에는 이전 결과, 이후에는 새 결과를 수집한다", async () => {
+  it("다음 거래일 16:00 이전에는 이전 결과, 이후에는 새 결과를 수집한다", async () => {
     const { loadDailyMinervini } = await import("./minervini-cache");
     await loadDailyMinervini();
-    vi.setSystemTime(new Date("2026-11-03T07:39:59Z"));
+    vi.setSystemTime(new Date("2026-11-03T06:59:59Z"));
     await loadDailyMinervini();
     expect(state.load).toHaveBeenCalledTimes(1);
     state.load.mockResolvedValue({ ...success, snapshot: { ...snapshot, asOf: "2026-11-03" }, expectedDate: "2026-11-03" });
-    vi.setSystemTime(new Date("2026-11-03T07:40:00Z"));
+    vi.setSystemTime(new Date("2026-11-03T07:00:00Z"));
     expect((await loadDailyMinervini()).snapshot?.asOf).toBe("2026-11-03");
     expect(state.load).toHaveBeenCalledTimes(2);
   });

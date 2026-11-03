@@ -17,8 +17,8 @@ describe("Vercel daily close cron", () => {
   it("registers the four requested Korean-time schedules in UTC", () => {
     expect(vercel.crons).toEqual(expect.arrayContaining([
       { path: "/api/cron/proxy-close/us", schedule: "0 22 * * *" },
-      { path: "/api/cron/proxy-close/kr", schedule: "30 6 * * *" },
-      { path: "/api/cron/minervini", schedule: "40 7 * * *" },
+      { path: "/api/cron/proxy-close/kr", schedule: "0 7 * * *" },
+      { path: "/api/cron/minervini", schedule: "0 7 * * *" },
       { path: "/api/cron/fear-greed", schedule: "0 1 * * *" },
     ]));
   });
