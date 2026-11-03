@@ -19,6 +19,8 @@ function isBook(value: unknown): value is { points: Point[] } {
 export function AdrPremiumChart() {
   const dailyClose = useDailyClose(true);
   const [points, setPoints] = useState<Point[] | null>(null);
+  const [krFetchedAt, setKrFetchedAt] = useState<string | null>(null);
+  const [usFetchedAt, setUsFetchedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,6 +43,10 @@ export function AdrPremiumChart() {
         if (controller.signal.aborted) return;
         setError(null);
         setPoints(payload.points);
+        const collected = (payload as { krFetchedAt?: unknown }).krFetchedAt;
+        if (typeof collected === "string") setKrFetchedAt(collected);
+        const usCollected = (payload as { usFetchedAt?: unknown }).usFetchedAt;
+        if (typeof usCollected === "string") setUsFetchedAt(usCollected);
       } catch (reason) {
         if (reason instanceof DOMException && reason.name === "AbortError") return;
         setError("괴리율을 불러오지 못했습니다.");
@@ -70,7 +76,7 @@ export function AdrPremiumChart() {
           {latest.adrDate ? ` · ADR ${latest.adrDate} 미국장 종가 · 환율 ${latest.fxDate}` : ""}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 한국 종가 16:00 이후, 미국 종가 오전 7시 이후 각 1회 갱신 (한국시간) · 휴장일은 직전 종가 유지</p>
+      <p className="mt-2 text-xs text-zinc-500">한국 KRX 15:30 종가 · ADR 미국 정규장 종가 · 환율 Yahoo 일별 값 · 한국 16:00, 미국 07:00 이후 수집 · 휴장일은 직전 종가 유지{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}{usFetchedAt ? ` · 미국·환율 수집 ${new Date(usFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

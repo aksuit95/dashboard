@@ -1,0 +1,43 @@
+name: Publish US proxy close
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sector-daily-production
+  cancel-in-progress: false
+jobs:
+  collect-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Collect completed close
+        env:
+          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
+        run: npm run proxy-close:export
+      - name: Publish snapshot
+        shell: bash
+        env:
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          if [ ! -f data/proxy-close/board.json ]; then exit 1; fi
+          git add -- data/proxy-close/board.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish US proxy close'
+          git fetch origin "$BRANCH"
+          git rebase "origin/$BRANCH"
+          git push origin "HEAD:$BRANCH"

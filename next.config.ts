@@ -3,7 +3,7 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["node:sqlite"],
-  outputFileTracingIncludes: { "/api/minervini": ["./data/minervini/board.json"], "/api/valuation/sectors": ["./data/sectors/board.json"],
+  outputFileTracingIncludes: { "/api/proxy/adr-premium": ["./data/proxy-close/board.json"], "/api/proxy/samsung-preferred": ["./data/proxy-close/board.json"], "/api/minervini": ["./data/minervini/board.json"], "/api/valuation/sectors": ["./data/sectors/board.json"],
     "/api/investor-flow": ["./data/investor-flow/board.json"],
     "/api/investor-flow/toss": ["./data/investor-flow/board.json"] },
 };

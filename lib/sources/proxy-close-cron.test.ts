@@ -14,11 +14,8 @@ const invoke = (market: string, authorization?: string) => GET(
 );
 
 describe("Vercel daily close cron", () => {
-  it("registers the four requested Korean-time schedules in UTC", () => {
+  it("retains the CNN schedule after proxy close jobs move to GitHub Actions", () => {
     expect(vercel.crons).toEqual(expect.arrayContaining([
-      { path: "/api/cron/proxy-close/us", schedule: "0 22 * * *" },
-      { path: "/api/cron/proxy-close/kr", schedule: "0 7 * * *" },
-      { path: "/api/cron/minervini", schedule: "0 7 * * *" },
       { path: "/api/cron/fear-greed", schedule: "0 1 * * *" },
     ]));
   });

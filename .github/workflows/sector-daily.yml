@@ -38,6 +38,12 @@ jobs:
           TOSS_CLIENT_ID: ${{ secrets.TOSS_CLIENT_ID }}
           TOSS_CLIENT_SECRET: ${{ secrets.TOSS_CLIENT_SECRET }}
         run: npm run investor-flow:export
+      - name: Collect proxy closes
+        id: proxy-close
+        continue-on-error: true
+        env:
+          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
+        run: npm run proxy-close:export
       - name: Collect Minervini analysis
         id: minervini
         continue-on-error: true
@@ -66,6 +72,9 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json
+          if [ -f data/proxy-close/board.json ]; then
+            git add -- data/proxy-close/board.json
+          fi
           if [ -f data/minervini/board.json ]; then
             git add -- data/minervini/board.json
           fi
@@ -83,5 +92,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure'
+        if: steps.investor-flow.outcome == 'failure' || steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure'
         run: exit 1

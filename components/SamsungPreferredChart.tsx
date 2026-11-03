@@ -18,6 +18,7 @@ function isBook(value: unknown): value is { points: PreferredDiscountPoint[] } {
 export function SamsungPreferredChart() {
   const dailyClose = useDailyClose();
   const [points, setPoints] = useState<PreferredDiscountPoint[] | null>(null);
+  const [krFetchedAt, setKrFetchedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,6 +34,8 @@ export function SamsungPreferredChart() {
         if (controller.signal.aborted) return;
         setError(null);
         setPoints(payload.points);
+        const collected = (payload as { krFetchedAt?: unknown }).krFetchedAt;
+        if (typeof collected === "string") setKrFetchedAt(collected);
       } catch (reason) {
         if (reason instanceof DOMException && reason.name === "AbortError") return;
         setError("삼성전자 보통주·우선주 괴리율을 불러오지 못했습니다.");
@@ -54,13 +57,13 @@ export function SamsungPreferredChart() {
         </div>
         {latest ? <p className={`text-2xl font-semibold tabular-nums ${tone}`}>{formatSigned(latest.value)}%</p> : null}
       </div>
-      <p className="mt-2 text-xs text-zinc-500">005930 / 005935 · Yahoo Finance · 동일 거래일 종가 기준</p>
+      <p className="mt-2 text-xs text-zinc-500">005930 / 005935 · KRX 정규장 15:30 종가 · 과거 이력 네이버 정규장 종가</p>
       {latest ? (
         <p className="mt-2 text-xs text-zinc-400">
           {latest.date} 15:30 KST · 보통주 ₩{formatNumber(latest.commonKrw, 0)} · 우선주 ₩{formatNumber(latest.preferredKrw, 0)}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">정규장 종가 기준 · 매일 16:00 이후 1회 갱신 · 휴장일은 직전 종가 유지</p>
+      <p className="mt-2 text-xs text-zinc-500">거래일 16:00 이후 수집 · 휴장일은 직전 종가 유지{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}
