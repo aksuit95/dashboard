@@ -11,7 +11,7 @@ for (const [name, source] of [['sample', 'examples/short-selling'], ['live', 'da
   if (!existsSync(resolve(from, 'summary.json'))) continue;
   const target = resolve(output, name);
   await mkdir(target, { recursive: true });
-  for (const file of ['summary.json', 'stocks.json', 'market_history.json']) {
+  for (const file of ['summary.json', 'stocks.json', 'market_history.json', 'market_alerts.json']) {
     if (existsSync(resolve(from, file))) await cp(resolve(from, file), resolve(target, file));
   }
   if (existsSync(resolve(from, 'history'))) await cp(resolve(from, 'history'), resolve(target, 'history'), { recursive: true });

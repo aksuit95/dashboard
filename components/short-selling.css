@@ -4,3 +4,16 @@
 .ss-chart { width: 100%; min-width: 0; }
 .short-board .ss-card-description { margin-top: 9px; font-size: 12px; line-height: 1.6; color: var(--muted); }
 .ss-guide{margin-top:20px;color:var(--muted);font-size:12px;line-height:1.7}.ss-guide h3{color:var(--text);margin:0 0 8px}.ss-guide ol{padding-left:18px;margin:0}.ss-guide li{margin:0 0 9px}.ss-guide strong{color:var(--text)}.short-board .ss-guide p{margin-top:12px}
+.ss-alert-info { margin-top: 4px !important; }
+.ss-alert-badge { display: inline-block; vertical-align: middle; margin-left: 5px; padding: 2px 4px; border-radius: 4px; font-size: 10px; line-height: 1.4; white-space: nowrap; background: #a9751c35; color: #f2bf67; }
+.ss-alert-투자경고, .ss-alert-투자위험, .ss-alert-거래정지 { background: #c64f6435; color: #fa8c9e; }
+.ss-light .ss-alert-badge { color: #815308; }
+.ss-light .ss-alert-투자경고, .ss-light .ss-alert-투자위험, .ss-light .ss-alert-거래정지 { color: #a6233c; }
+@media (min-width: 700px) {
+ .ss-scroll { overflow-x: visible; }
+ .ss-scroll table { min-width: 0; table-layout: fixed; }
+ .ss-scroll th, .ss-scroll td { white-space: normal; overflow-wrap: anywhere; padding: 11px 3px; font-size: 11px; }
+ .ss-scroll th:first-child, .ss-scroll td:first-child { width: 18%; }
+ .ss-scroll th button { line-height: 1.35; }
+ .ss-scroll td small { line-height: 1.35; }
+}
