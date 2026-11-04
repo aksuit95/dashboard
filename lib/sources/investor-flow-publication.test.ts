@@ -70,4 +70,17 @@ describe("investor flow Actions publication", () => {
     await expect(fs.stat(file)).rejects.toMatchObject({ code: "ENOENT" });
     expect(loadInvestorBoard).not.toHaveBeenCalled();
   });
+  it("uses the previous complete session when today's quotes failed, preserving its date", async () => {
+    await exportInvestorPublication(db, now, file);
+    const publication = JSON.parse(await fs.readFile(file, "utf8"));
+    const older = publication.snapshots.find((s: { universe: string; view: string }) => s.universe === "kospi200" && s.view === "index");
+    const oldBoard = JSON.parse(older.board); oldBoard.equity = { sessions: ["2026-11-03"] }; older.board = JSON.stringify(oldBoard);
+    const newerBoard = { ...oldBoard, asOf: "2026-11-04", equity: null };
+    publication.runs.unshift({ as_of: "2026-11-04", started_at: "2026-11-04T07:00:00Z", finished_at: "2026-11-04T07:01:00Z", error: "KRX 미발표" });
+    publication.snapshots.push({ ...older, as_of: "2026-11-04", board: JSON.stringify(newerBoard), toss: null, error: "KRX 미발표" });
+    await fs.writeFile(file, JSON.stringify(publication));
+    const result = await readPublishedInvestorDaily("kospi200", "index", new Date("2026-11-04T16:00:00+09:00"), undefined, file);
+    expect(result).toMatchObject({ expected: "2026-11-04", board: { asOf: "2026-11-03" } });
+    expect((await readPublishedInvestorDaily("kospi200", "index", new Date("2026-11-04T16:00:00+09:00"), "2026-11-03", file)).toss.asOf).toBe("2026-11-03");
+  });
 });

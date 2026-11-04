@@ -41,7 +41,9 @@ export async function readPublishedInvestorDaily(universe: MinerviniUniverse, vi
   const data = await readInvestorPublication(file);
   if (!data) return readInvestorDaily(getDb(), universe, view, now, date);
   const expected = minerviniSession(now);
-  const row = data.snapshots.filter(s => s.universe === universe && s.view === view && s.as_of <= expected && (!date || s.as_of === date)).sort((a, b) => b.as_of.localeCompare(a.as_of))[0];
+  const candidates = data.snapshots.filter(s => s.universe === universe && s.view === view && s.as_of <= expected && (!date || s.as_of === date)).sort((a, b) => b.as_of.localeCompare(a.as_of));
+  // When today's quotes are missing, prefer a complete older snapshot and keep its actual date.
+  const row = candidates.find(s => !s.error && s.toss && (JSON.parse(s.board) as InvestorBoard).equity) ?? candidates[0];
   if (!row) throw new Error("저장된 수급 자료가 없습니다. 거래일 16:00 KST 예약 수집 후 제공됩니다.");
   return { board: JSON.parse(row.board) as InvestorBoard, toss: row.toss ? JSON.parse(row.toss) : null, error: row.error, expected };
 }
