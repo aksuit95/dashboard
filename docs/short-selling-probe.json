@@ -1,0 +1,178 @@
+{
+  "checked_at": "2026-11-04T13:35:31.804512+09:00",
+  "requested_date": "20261103",
+  "production_data_modified": false,
+  "results": [
+    {
+      "item": "members",
+      "status": "ok",
+      "rows": 201,
+      "sample": [
+        "000080",
+        "000100"
+      ]
+    },
+    {
+      "item": "short",
+      "status": "ok",
+      "rows": 939,
+      "sample": [
+        {
+          "ISU_CD": "095570",
+          "ISU_ABBRV": "AJ네트웍스",
+          "SECUGRP_NM": "주권",
+          "CVSRTSELL_TRDVOL": "580",
+          "UPTICKRULE_APPL_TRDVOL": "391",
+          "UPTICKRULE_EXCPT_TRDVOL": "189",
+          "ACC_TRDVOL": "37,968",
+          "TRDVOL_WT": "1.53",
+          "CVSRTSELL_TRDVAL": "2,345,620",
+          "UPTICKRULE_APPL_TRDVAL": "1,580,170",
+          "UPTICKRULE_EXCPT_TRDVAL": "765,450",
+          "ACC_TRDVAL": "152,636,240",
+          "TRDVAL_WT": "1.54"
+        },
+        {
+          "ISU_CD": "006840",
+          "ISU_ABBRV": "AK홀딩스",
+          "SECUGRP_NM": "주권",
+          "CVSRTSELL_TRDVOL": "96",
+          "UPTICKRULE_APPL_TRDVOL": "96",
+          "UPTICKRULE_EXCPT_TRDVOL": "0",
+          "ACC_TRDVOL": "4,071",
+          "TRDVOL_WT": "2.36",
+          "CVSRTSELL_TRDVAL": "592,130",
+          "UPTICKRULE_APPL_TRDVAL": "592,130",
+          "UPTICKRULE_EXCPT_TRDVAL": "0",
+          "ACC_TRDVAL": "25,157,950",
+          "TRDVAL_WT": "2.35"
+        }
+      ]
+    },
+    {
+      "item": "balance",
+      "status": "ok",
+      "rows": 0,
+      "sample": []
+    },
+    {
+      "item": "prices",
+      "status": "ok",
+      "rows": 939,
+      "sample": [
+        {
+          "BAS_DD": "20261103",
+          "ISU_CD": "095570",
+          "ISU_NM": "AJ네트웍스",
+          "MKT_NM": "KOSPI",
+          "SECT_TP_NM": "",
+          "TDD_CLSPRC": "4050",
+          "CMPPREVDD_PRC": "-10",
+          "FLUC_RT": "-0.25",
+          "TDD_OPNPRC": "4060",
+          "TDD_HGPRC": "4060",
+          "TDD_LWPRC": "3995",
+          "ACC_TRDVOL": "37968",
+          "ACC_TRDVAL": "152636240",
+          "MKTCAP": "183273673950",
+          "LIST_SHRS": "45252759"
+        },
+        {
+          "BAS_DD": "20261103",
+          "ISU_CD": "006840",
+          "ISU_NM": "AK홀딩스",
+          "MKT_NM": "KOSPI",
+          "SECT_TP_NM": "",
+          "TDD_CLSPRC": "6300",
+          "CMPPREVDD_PRC": "140",
+          "FLUC_RT": "2.27",
+          "TDD_OPNPRC": "6300",
+          "TDD_HGPRC": "6300",
+          "TDD_LWPRC": "6010",
+          "ACC_TRDVOL": "4071",
+          "ACC_TRDVAL": "25157950",
+          "MKTCAP": "83459634300",
+          "LIST_SHRS": "13247561"
+        }
+      ]
+    },
+    {
+      "item": "pykrx_prices",
+      "status": "ok",
+      "rows": 939,
+      "sample": {
+        "rows": 939,
+        "columns": [
+          "시가",
+          "고가",
+          "저가",
+          "종가",
+          "거래량",
+          "거래대금",
+          "등락률",
+          "시가총액"
+        ]
+      }
+    },
+    {
+      "item": "index",
+      "status": "ok",
+      "rows": 11,
+      "sample": [
+        {
+          "TRD_DD": "2026/11/03",
+          "CLSPRC_IDX": "885.67",
+          "FLUC_TP_CD": "2",
+          "PRV_DD_CMPR": "-34.96",
+          "UPDN_RATE": "-3.80",
+          "OPNPRC_IDX": "894.87",
+          "HGPRC_IDX": "900.31",
+          "LWPRC_IDX": "879.94",
+          "ACC_TRDVOL": "103,613,747",
+          "ACC_TRDVAL": "13,068,463,480,076",
+          "MKTCAP": "4,307,262,855,216,400"
+        },
+        {
+          "TRD_DD": "2026/11/02",
+          "CLSPRC_IDX": "920.63",
+          "FLUC_TP_CD": "1",
+          "PRV_DD_CMPR": "20.85",
+          "UPDN_RATE": "2.32",
+          "OPNPRC_IDX": "885.06",
+          "HGPRC_IDX": "929.81",
+          "LWPRC_IDX": "880.12",
+          "ACC_TRDVOL": "104,629,841",
+          "ACC_TRDVAL": "14,103,490,829,896",
+          "MKTCAP": "4,470,224,240,031,760"
+        }
+      ]
+    },
+    {
+      "item": "official_index",
+      "status": "ok",
+      "rows": 1,
+      "sample": [
+        {
+          "BAS_DD": "20261103",
+          "IDX_CLSS": "KOSPI",
+          "IDX_NM": "코스피 200",
+          "CLSPRC_IDX": "885.67",
+          "CMPPREVDD_IDX": "-34.96",
+          "FLUC_RT": "-3.80",
+          "OPNPRC_IDX": "894.87",
+          "HGPRC_IDX": "900.31",
+          "LWPRC_IDX": "879.94",
+          "ACC_TRDVOL": "103613747",
+          "ACC_TRDVAL": "13068463480076",
+          "MKTCAP": "4307262855216400"
+        }
+      ]
+    },
+    {
+      "item": "seibro_lending",
+      "status": "unsupported",
+      "message": "No verified automated endpoint/schema. Keep null; use SEIBro export import adapter."
+    }
+  ],
+  "market_aggregate": "Requires validated constituent membership + short-flow denominators on each historical session; not KOSPI-wide proxy."
+}

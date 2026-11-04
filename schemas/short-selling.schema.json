@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dashboard:short-selling:v1",
+  "title": "KOSPI200 short-selling static JSON v1",
+  "type": "object",
+  "required": ["schema_version", "dataset_id", "as_of", "collected_at", "price_basis", "is_sample", "period_start", "flow_scope", "membership_basis", "units"],
+  "properties": {
+    "schema_version": {"const": "short-selling.krx-close.v1"},
+    "dataset_id": {"type": "string", "pattern": "^[0-9a-f]{20}$"},
+    "as_of": {"type": "string", "format": "date"},
+    "period_start": {"type": "string", "format": "date"},
+    "collected_at": {"type": "string", "format": "date-time"},
+    "is_sample": {"type": "boolean"},
+    "flow_scope": {"type": "string", "minLength": 1},
+    "membership_basis": {"const": "point_in_time"},
+    "units": {"const": {"money": "KRW", "quantity": "shares", "ratio": "percent_0_100"}},
+    "price_basis": {"const": {"exchange": "KRX", "session": "regular", "price_time": "15:30:00", "timezone": "Asia/Seoul", "adjusted": false}}
+  },
+  "oneOf": [
+    {"required": ["market", "rankings", "warnings", "config", "short_value_change_1d_pct", "short_value_mean_20", "short_value_vs_mean_20_pct", "short_ratio_change_1d_pp", "short_ratio_mean_20"],
+     "properties": {"market": {"$ref": "#/$defs/marketRow"}, "rankings": {"$ref": "#/$defs/rankings"}, "warnings": {"type": "array", "minItems": 3, "items": {"type": "string"}}, "config": {"type": "object"}, "short_value_change_1d_pct": {"$ref": "#/$defs/nullableNumber"}, "short_value_mean_20": {"$ref": "#/$defs/nonnegative"}, "short_value_vs_mean_20_pct": {"$ref": "#/$defs/nullableNumber"}, "short_ratio_change_1d_pp": {"$ref": "#/$defs/nullableNumber"}, "short_ratio_mean_20": {"$ref": "#/$defs/percentage"}}},
+    {"required": ["stocks", "config"], "properties": {"stocks": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/stockRow"}, {"required": ["code", "sector", "sector_presets", "surge", "short_cover_signal", "latest_disclosed_balance", "short_value_ratio_pct_mean_5", "short_value_ratio_pct_mean_20", "short_value_ratio_pct_vs_mean_20_pct"], "properties": {"code": {"$ref": "#/$defs/code"}, "sector": {"type": ["string", "null"]}, "sector_presets": {"type": "array", "items": {"type": "string"}}, "surge": {"type": ["boolean", "null"]}, "short_cover_signal": {"type": ["boolean", "null"]}, "latest_disclosed_balance": {"type": ["object", "null"]}, "short_value_ratio_pct_mean_5": {"$ref": "#/$defs/percentage"}, "short_value_ratio_pct_mean_20": {"$ref": "#/$defs/percentage"}, "short_value_ratio_pct_vs_mean_20_pct": {"$ref": "#/$defs/nullableNumber"}}}]}}, "config": {"type": "object"}}},
+    {"required": ["code", "rows"], "properties": {"code": {"$ref": "#/$defs/code"}, "rows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stockRow"}}}},
+    {"required": ["rows"], "not": {"required": ["code"]}, "properties": {"rows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/marketRow"}}}},
+    {"required": ["rows"], "not": {"required": ["code"]}, "properties": {"rows": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["date", "codes"], "properties": {"date": {"type": "string", "format": "date"}, "codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/code"}}}, "additionalProperties": false}}}}
+  ],
+  "$defs": {
+    "code": {"type": "string", "pattern": "^[0-9A-Z]{6}$"},
+    "nullableNumber": {"type": ["number", "null"]},
+    "nonnegative": {"type": ["number", "null"], "minimum": 0},
+    "percentage": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+    "stockRow": {
+      "type": "object",
+      "required": ["date", "session_status", "close", "market_cap", "listed_shares", "volume", "trading_value", "short_volume", "short_value", "short_volume_ratio_pct", "short_value_ratio_pct", "balance_quantity", "balance_value", "balance_ratio_pct", "balance_status", "lending_quantity", "lending_change", "lending_status", "lending_published_at", "return_pct"],
+      "properties": {
+        "date": {"type": "string", "format": "date"},
+        "session_status": {"enum": ["trading", "no_observation"]},
+        "close": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "market_cap": {"$ref": "#/$defs/nonnegative"}, "listed_shares": {"$ref": "#/$defs/nonnegative"},
+        "volume": {"$ref": "#/$defs/nonnegative"}, "trading_value": {"$ref": "#/$defs/nonnegative"},
+        "short_volume": {"$ref": "#/$defs/nonnegative"}, "short_value": {"$ref": "#/$defs/nonnegative"},
+        "short_volume_ratio_pct": {"$ref": "#/$defs/percentage"}, "short_value_ratio_pct": {"$ref": "#/$defs/percentage"},
+        "balance_quantity": {"$ref": "#/$defs/nonnegative"}, "balance_value": {"$ref": "#/$defs/nonnegative"}, "balance_ratio_pct": {"$ref": "#/$defs/percentage"},
+        "balance_status": {"enum": ["reported", "not_disclosed", "publication_pending", "unavailable"]},
+        "lending_quantity": {"$ref": "#/$defs/nonnegative"}, "lending_change": {"$ref": "#/$defs/nullableNumber"},
+        "lending_status": {"enum": ["reported", "unavailable"]}, "lending_published_at": {"type": ["string", "null"], "format": "date-time"},
+        "return_pct": {"$ref": "#/$defs/nullableNumber"}
+      }
+    },
+    "marketRow": {
+      "type": "object", "required": ["date", "session_status", "index_close", "short_value", "trading_value", "short_volume", "volume", "short_value_ratio_pct", "short_volume_ratio_pct", "expected_count", "observed_count", "coverage"],
+      "properties": {
+        "date": {"type": "string", "format": "date"}, "session_status": {"enum": ["trading", "no_observation"]},
+        "index_close": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "short_value": {"$ref": "#/$defs/nonnegative"}, "trading_value": {"$ref": "#/$defs/nonnegative"},
+        "short_volume": {"$ref": "#/$defs/nonnegative"}, "volume": {"$ref": "#/$defs/nonnegative"},
+        "short_value_ratio_pct": {"$ref": "#/$defs/percentage"}, "short_volume_ratio_pct": {"$ref": "#/$defs/percentage"},
+        "expected_count": {"type": ["integer", "null"], "minimum": 1}, "observed_count": {"type": ["integer", "null"], "minimum": 0},
+        "coverage": {"enum": ["complete", "incomplete", "unavailable"]}
+      }, "additionalProperties": false
+    },
+    "ranking": {"type": "array", "maxItems": 10, "items": {"type": "object", "required": ["code", "name", "value"], "properties": {"code": {"$ref": "#/$defs/code"}, "name": {"type": ["string", "null"]}, "value": {"type": "number"}}}},
+    "rankings": {"type": "object", "required": ["short_ratio", "surge", "balance_ratio", "lending_increase"], "properties": {"short_ratio": {"$ref": "#/$defs/ranking"}, "surge": {"$ref": "#/$defs/ranking"}, "balance_ratio": {"$ref": "#/$defs/ranking"}, "lending_increase": {"$ref": "#/$defs/ranking"}}, "additionalProperties": false}
+  }
+}

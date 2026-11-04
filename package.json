@@ -6,6 +6,8 @@
     "node": "24.x"
   },
   "scripts": {
+    "predev": "node scripts/short-selling-assets.mjs",
+    "prebuild": "node scripts/short-selling-assets.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

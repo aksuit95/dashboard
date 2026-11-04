@@ -1,0 +1,172 @@
+{
+  "schema_version": "short-selling.krx-close.v1",
+  "dataset_id": "886327cf88066fe10404",
+  "as_of": "2026-10-19",
+  "collected_at": "2026-11-04T10:27:52.802879+09:00",
+  "price_basis": {
+    "exchange": "KRX",
+    "session": "regular",
+    "price_time": "15:30:00",
+    "timezone": "Asia/Seoul",
+    "adjusted": false
+  },
+  "is_sample": true,
+  "period_start": "2026-09-01",
+  "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
+  "membership_basis": "point_in_time",
+  "units": {
+    "money": "KRW",
+    "quantity": "shares",
+    "ratio": "percent_0_100"
+  },
+  "config": {
+    "surge_multiple": 2.0,
+    "cover_lookback_sessions": 20,
+    "cover_drop_from_peak_pct": 50,
+    "cover_price_rise_pct": 3,
+    "refresh_sessions": 10,
+    "request_interval_seconds": 1.0,
+    "sector_presets": {
+      "통신": [
+        "017670",
+        "030200",
+        "032640"
+      ],
+      "인터넷": [
+        "035420",
+        "035720"
+      ],
+      "게임": [
+        "036570",
+        "251270",
+        "259960",
+        "263750"
+      ],
+      "미디어": [
+        "030000",
+        "034120"
+      ],
+      "엔터": [
+        "352820",
+        "041510",
+        "035900",
+        "122870"
+      ],
+      "레저": [
+        "008770",
+        "035250",
+        "114090",
+        "032350"
+      ]
+    },
+    "sector_preset_note": "수동 연구 분류. 실제 최신 KOSPI200 구성종목과 교집합만 사용. 공식 업종 분류가 아님."
+  },
+  "stocks": [
+    {
+      "close": 63400,
+      "market_cap": 400000000000000,
+      "listed_shares": 5000000000,
+      "volume": 1000000,
+      "trading_value": 100000000000,
+      "short_volume": 180000,
+      "short_value": 18000000000.0,
+      "short_volume_ratio_pct": 18,
+      "short_value_ratio_pct": 18,
+      "balance_quantity": null,
+      "balance_value": null,
+      "balance_ratio_pct": null,
+      "lending_quantity": null,
+      "lending_change": null,
+      "return_pct": 0.15797788309637895,
+      "date": "2026-10-19",
+      "name": "삼성전자 (합성 샘플)",
+      "session_status": "trading",
+      "balance_status": "publication_pending",
+      "lending_status": "unavailable",
+      "lending_published_at": null,
+      "short_value_ratio_pct_mean_5": 5.4,
+      "short_value_ratio_pct_vs_mean_5_pct": 233.33333333333331,
+      "short_value_ratio_pct_mean_20": 5.5,
+      "short_value_ratio_pct_vs_mean_20_pct": 227.2727272727273,
+      "short_value_ratio_pct_change_1d": 13,
+      "short_value_mean_5": 5400000000.0,
+      "short_value_vs_mean_5_pct": 233.33333333333337,
+      "short_value_mean_20": 5500000000.0,
+      "short_value_vs_mean_20_pct": 227.2727272727273,
+      "short_value_change_1d": 13000000000.0,
+      "short_volume_ratio_pct_mean_5": 5.4,
+      "short_volume_ratio_pct_vs_mean_5_pct": 233.33333333333331,
+      "short_volume_ratio_pct_mean_20": 5.5,
+      "short_volume_ratio_pct_vs_mean_20_pct": 227.2727272727273,
+      "short_volume_ratio_pct_change_1d": 13,
+      "surge": true,
+      "cover_peak_ratio_pct": 7,
+      "cover_drop_pct": -157.14285714285717,
+      "cover_price_rise_pct": 3.257328990228018,
+      "short_cover_signal": false,
+      "code": "005930",
+      "sector": null,
+      "sector_presets": [],
+      "latest_disclosed_balance": {
+        "as_of": "2026-10-14",
+        "balance_quantity": 10000000,
+        "balance_value": 600000000000,
+        "balance_ratio_pct": 0.2
+      }
+    },
+    {
+      "close": 163400,
+      "market_cap": 400000000000000,
+      "listed_shares": 5000000000,
+      "volume": 1000000,
+      "trading_value": 200000000000,
+      "short_volume": 190000,
+      "short_value": 38000000000.0,
+      "short_volume_ratio_pct": 19,
+      "short_value_ratio_pct": 19,
+      "balance_quantity": null,
+      "balance_value": null,
+      "balance_ratio_pct": null,
+      "lending_quantity": null,
+      "lending_change": null,
+      "return_pct": 0.06123698714021941,
+      "date": "2026-10-19",
+      "name": "NAVER (합성 샘플)",
+      "session_status": "trading",
+      "balance_status": "publication_pending",
+      "lending_status": "unavailable",
+      "lending_published_at": null,
+      "short_value_ratio_pct_mean_5": 6.4,
+      "short_value_ratio_pct_vs_mean_5_pct": 196.875,
+      "short_value_ratio_pct_mean_20": 6.5,
+      "short_value_ratio_pct_vs_mean_20_pct": 192.30769230769226,
+      "short_value_ratio_pct_change_1d": 13,
+      "short_value_mean_5": 12800000000.0,
+      "short_value_vs_mean_5_pct": 196.875,
+      "short_value_mean_20": 13000000000.0,
+      "short_value_vs_mean_20_pct": 192.30769230769226,
+      "short_value_change_1d": 26000000000.0,
+      "short_volume_ratio_pct_mean_5": 6.4,
+      "short_volume_ratio_pct_vs_mean_5_pct": 196.875,
+      "short_volume_ratio_pct_mean_20": 6.5,
+      "short_volume_ratio_pct_vs_mean_20_pct": 192.30769230769226,
+      "short_volume_ratio_pct_change_1d": 13,
+      "surge": true,
+      "cover_peak_ratio_pct": 8,
+      "cover_drop_pct": -137.5,
+      "cover_price_rise_pct": 1.2391573729863694,
+      "short_cover_signal": false,
+      "code": "035420",
+      "sector": null,
+      "sector_presets": [
+        "인터넷"
+      ],
+      "latest_disclosed_balance": {
+        "as_of": "2026-10-14",
+        "balance_quantity": 10000000,
+        "balance_value": 600000000000,
+        "balance_ratio_pct": 0.2
+      }
+    }
+  ]
+}

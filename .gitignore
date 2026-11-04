@@ -8,3 +8,8 @@ tmp/
 data/*.sqlite
 data/*.sqlite-wal
 data/*.sqlite-shm
+.venv-shorting/
+__pycache__/
+.shorting-cache/
+logs/short-selling/
+public/short-selling-data/

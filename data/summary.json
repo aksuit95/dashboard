@@ -1,0 +1,279 @@
+{
+  "schema_version": "short-selling.krx-close.v1",
+  "dataset_id": "6a5114cc7906cdedf596",
+  "as_of": "2026-11-03",
+  "collected_at": "2026-11-04T14:01:33.692058+09:00",
+  "price_basis": {
+    "exchange": "KRX",
+    "session": "regular",
+    "price_time": "15:30:00",
+    "timezone": "Asia/Seoul",
+    "adjusted": false
+  },
+  "is_sample": false,
+  "period_start": "2025-11-03",
+  "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
+  "membership_basis": "point_in_time",
+  "units": {
+    "money": "KRW",
+    "quantity": "shares",
+    "ratio": "percent_0_100"
+  },
+  "market": {
+    "date": "2026-11-03",
+    "session_status": "trading",
+    "index_close": 885.67,
+    "short_value": 1328119809735,
+    "trading_value": 17502350174476,
+    "short_volume": 13352455,
+    "volume": 124650186,
+    "short_value_ratio_pct": 7.588236988149292,
+    "short_volume_ratio_pct": 10.711941496822154,
+    "expected_count": 201,
+    "observed_count": 201,
+    "coverage": "complete"
+  },
+  "short_value_change_1d_pct": 33.59298283272838,
+  "short_value_mean_20": 1204993689837.7,
+  "short_value_vs_mean_20_pct": 10.217988769209569,
+  "short_ratio_change_1d_pp": 2.5849819962611313,
+  "short_ratio_mean_20": 4.863189837912734,
+  "short_ratio_vs_mean_20_pp": 2.7250471502365583,
+  "rankings": {
+    "short_ratio": [
+      {
+        "code": "000240",
+        "name": "한국앤컴퍼니",
+        "value": 49.00075391051647,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "161390",
+        "name": "한국타이어앤테크놀로지",
+        "value": 39.14519113571116,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "454910",
+        "name": "두산로보틱스",
+        "value": 36.66321477108169,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "047040",
+        "name": "대우건설",
+        "value": 35.25840714483647,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "014820",
+        "name": "동원시스템즈",
+        "value": 32.515771226100846,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "005380",
+        "name": "현대차",
+        "value": 30.41633584790202,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "373220",
+        "name": "LG에너지솔루션",
+        "value": 30.024089366123274,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "042700",
+        "name": "한미반도체",
+        "value": 29.98042942401227,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "007070",
+        "name": "GS리테일",
+        "value": 29.317683782384396,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "003090",
+        "name": "대웅",
+        "value": 28.432028669646904,
+        "as_of": "2026-11-03"
+      }
+    ],
+    "surge": [
+      {
+        "code": "012330",
+        "name": "현대모비스",
+        "value": 370.8567326349063,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "000150",
+        "name": "두산",
+        "value": 256.9082484461642,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "017670",
+        "name": "SK텔레콤",
+        "value": 256.7599763940481,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "047040",
+        "name": "대우건설",
+        "value": 242.33645900165567,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "017960",
+        "name": "한국카본",
+        "value": 202.01381610367093,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "005380",
+        "name": "현대차",
+        "value": 195.3204724587655,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "071970",
+        "name": "HD현대마린엔진",
+        "value": 179.34603471205355,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "011790",
+        "name": "SKC",
+        "value": 177.23869478903504,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "454910",
+        "name": "두산로보틱스",
+        "value": 167.98290282566524,
+        "as_of": "2026-11-03"
+      },
+      {
+        "code": "007660",
+        "name": "이수페타시스",
+        "value": 165.62024413262372,
+        "as_of": "2026-11-03"
+      }
+    ],
+    "balance_ratio": [
+      {
+        "code": "042700",
+        "name": "한미반도체",
+        "value": 7.36,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "457190",
+        "name": "이수스페셜티케미컬",
+        "value": 5.15,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "003670",
+        "name": "포스코퓨처엠",
+        "value": 4.39,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "066970",
+        "name": "엘앤에프",
+        "value": 3.94,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "483650",
+        "name": "달바글로벌",
+        "value": 3.67,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "047810",
+        "name": "한국항공우주",
+        "value": 3.43,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "112610",
+        "name": "씨에스윈드",
+        "value": 2.85,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "005420",
+        "name": "코스모화학",
+        "value": 2.66,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "003230",
+        "name": "삼양식품",
+        "value": 2.58,
+        "as_of": "2026-10-30"
+      },
+      {
+        "code": "454910",
+        "name": "두산로보틱스",
+        "value": 2.5,
+        "as_of": "2026-10-30"
+      }
+    ],
+    "lending_increase": []
+  },
+  "warnings": [
+    "공매도 거래비중은 플로우, 순보유잔고는 스톡이며 서로 다른 지표입니다.",
+    "순보유잔고는 공시 기준 초과 보유자만 집계되어 종목 전체 숏 합계가 아닙니다.",
+    "대차잔고는 공매도 선행지표일 뿐 실제 공매도 포지션과 같지 않습니다.",
+    "숏커버링 표시는 설정 조건에 따른 보조 지표이며 실제 상환을 확인한 매매 신호가 아닙니다."
+  ],
+  "config": {
+    "surge_multiple": 2.0,
+    "cover_lookback_sessions": 20,
+    "cover_drop_from_peak_pct": 50,
+    "cover_price_rise_pct": 3,
+    "refresh_sessions": 10,
+    "request_interval_seconds": 1.0,
+    "sector_presets": {
+      "통신": [
+        "017670",
+        "030200",
+        "032640"
+      ],
+      "인터넷": [
+        "035420",
+        "035720"
+      ],
+      "게임": [
+        "036570",
+        "251270",
+        "259960",
+        "263750"
+      ],
+      "미디어": [
+        "030000",
+        "034120"
+      ],
+      "엔터": [
+        "352820",
+        "041510",
+        "035900",
+        "122870"
+      ],
+      "레저": [
+        "008770",
+        "035250",
+        "114090",
+        "032350"
+      ]
+    },
+    "sector_preset_note": "수동 연구 분류. 실제 최신 KOSPI200 구성종목과 교집합만 사용. 공식 업종 분류가 아님."
+  }
+}

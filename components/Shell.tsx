@@ -9,6 +9,7 @@ const groups = [
     title: { ko: "수급분석", en: "Investor Flows" },
     items: [
       { href: "/investor-flow/kospi200", ko: "수급분석", en: "Investor Flows" },
+      { href: "/short-selling", ko: "코스피200 공매도", en: "KOSPI 200 Short Selling" },
     ],
   },
   {
