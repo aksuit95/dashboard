@@ -28,7 +28,6 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
   const [board, setBoard] = useState<Board | null>(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [reload, setReload] = useState(0);
   const [filter, setFilter] = useState<Filter>("candidates");
   const [query, setQuery] = useState("");
   const [minRs, setMinRs] = useState(70);
@@ -51,13 +50,8 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
       finally { if (!controller.signal.aborted) setBusy(false); }
     }
     void load();
-    // Check the daily cache on visibility and after 16:00, with retry on collection failure.
-    // These requests never force a second successful scan for the same session.
-    const timer = window.setInterval(() => { if (!document.hidden) void load(); }, 60_000);
-    const onVisible = () => { if (!document.hidden) void load(); };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => { controller.abort(); window.clearInterval(timer); document.removeEventListener("visibilitychange", onVisible); };
-  }, [reload, universe]);
+    return () => controller.abort();
+  }, [universe]);
 
   const snapshot = board?.snapshot?.priceBasis === "KRX_REGULAR_CLOSE" ? board.snapshot : undefined;
   const rows = snapshot?.rows ?? [];
@@ -76,9 +70,9 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
         <p><span className="mr-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-emerald-300">{spec.label}</span>KRX 15:30 정규장 종가 기준 · 매일 16:00 KST 이후 갱신</p>
         <p className="pt-1">분석 기준일 {snapshot?.asOf ?? "—"} · 수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} · RS 산정 {snapshot?.rankedSize ?? 0}/{snapshot?.universeSize ?? 0}종목</p>
       </div>
-      <button type="button" disabled={busy} onClick={() => setReload(n => n + 1)} className="rounded-md border border-white/15 px-3 py-2 disabled:opacity-40">{busy ? "불러오는 중…" : "결과 새로고침"}</button>
+      {busy ? <span>결과를 불러오는 중…</span> : null}
     </div>
-    {error || board?.stale ? <p role="status" className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-200">{snapshot ? `이전 결과 표시 중 (${snapshot.asOf}). ` : "분석 결과를 아직 수집하지 못했습니다. "}{error ?? board?.error} · 실패 시 재시도합니다.</p> : null}
+    {error || board?.stale ? <p role="status" className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-200">{snapshot ? `이전 결과 표시 중 (${snapshot.asOf}). ` : "분석 결과를 아직 수집하지 못했습니다. "}{error ?? board?.error}</p> : null}
     <div className="mb-6 grid grid-cols-2 gap-2 md:grid-cols-5">
       {stages.map(s => <button type="button" key={s.label} onClick={() => setFilter(s.filter)} className="rounded-xl border border-white/10 bg-[#151a22] p-3 text-left hover:border-white/25">
         <p className="text-xs text-zinc-400">{s.label}</p><p className="my-2 text-3xl font-semibold tabular-nums">{snapshot ? s.count : "—"}<span className="ml-1 text-xs font-normal text-zinc-500">종목</span></p><p className="text-[11px] text-zinc-500">{s.note}</p>

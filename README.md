@@ -145,7 +145,9 @@ KOSPI, KOSDAQ, 미국 시장 탭과 52주 신고가 / 등락률 탭, 일간 / �
 
 ### 현금·재무건전성 (`/financials`)
 
-코스피200 기업의 공시 현금 잔액, 최근 5개년·TTM FCF와 유동성 비율을 비교합니다. DART·KRX API 수집 작업은 `npm run financials:export`, 실패 기업 이어받기는 `npm run financials:export -- --retry-failed`입니다. 화면에서는 저장 자료만 읽고, 사용자 가정을 입력하면 12·24개월 현금 시나리오·자금 부족액·워터폴을 계산합니다. 금융업은 일반기업 평가에서 제외합니다. 주석이 필요한 가용 유동성·총차입금·순현금은 검증 전까지 결측입니다. 기존 QuantiWise FCF는 별도 참고값으로만 표시합니다. [재무 분석 문서](docs/financial-health.md)에 데이터 재사용 범위, 계산식, 실행 방법과 제한 사항을 정리했습니다.
+코스피200 기업의 공시 현금 잔액, 최근 5개년·TTM FCF와 유동성 비율을 비교합니다. DART 공시 수집 작업은 `npm run financials:export`, 실패 기업 이어받기는 `npm run financials:export -- --retry-failed`입니다. 화면에서는 저장 자료만 읽고, 사용자 가정을 입력하면 12·24개월 현금 시나리오·자금 부족액·워터폴을 계산합니다. 금융업은 일반기업 평가에서 제외합니다. 주석이 필요한 가용 유동성·총차입금·순현금은 검증 전까지 결측입니다. 기존 QuantiWise FCF는 별도 참고값으로만 표시합니다. [재무 분석 문서](docs/financial-health.md)에 데이터 재사용 범위, 계산식, 실행 방법과 제한 사항을 정리했습니다.
+
+개별종목 밸류에이션과 현금·재무건전성의 시가총액은 평일 16시 GitHub Actions가 KRX 웹 통계에서 수집한 공통 파일을 사용합니다. KRX 정규장 15:30 종가와 상장주식수·시총의 관계를 검증하고 상위 종목의 네이버 정규장 종가와 대조합니다. 시총 갱신과 별개로 재무 공시 및 QuantiWise 엑셀은 수동 수집합니다.
 
 ### Relative Market Cap (`/rel-mcap`)
 
@@ -291,7 +293,7 @@ DEFAULT_FX_PAIR=USDKRW
 
 - GitHub Actions `.github/workflows/sector-daily.yml`에서 섹터와 함께 평일 **16:00 KST**에 `npm run minervini:export`를 실행하고, `data/minervini/board.json`의 변경을 커밋하여 Vercel Git 배포를 시작합니다. GitHub 예약과 배포는 지연될 수 있습니다. 별도의 Vercel 미너비니 cron은 사용하지 않습니다.
 - 두 지수는 각각 검증합니다. 한 지수 수집이 실패하면 해당 지수의 이전 정상 결과를 유지하고 다른 지수의 성공 결과를 배포합니다. 실패한 경우 Actions 실행은 실패로 표시되며, 재실행하면 같은 날짜에 성공한 지수는 재수집하지 않고 실패한 지수만 수집합니다.
-- 화면의 결과 새로고침 및 1분 확인은 배포된 결과만 읽습니다. 수집이나 배포가 지연되면 직전 결과와 기준일·지연을 표시합니다. 배포 결과가 없으면 수집 대기 상태를 표시합니다.
+- 화면을 열 때 배포된 일별 결과를 읽고 유지합니다. 수집이나 배포가 지연되면 직전 결과와 기준일·지연을 표시합니다. 배포 결과가 없으면 수집 대기 상태를 표시합니다.
 - `npm run minervini:export`는 로컬에서 배포 파일을 수집할 때 사용합니다. 기존 `job:minervini`, `job:daily`, `job:poll`은 별도 로컬 SQLite 수집용이며 배포 파일을 갱신하지 않습니다.
 
 ### 코스피200 밸류에이션 (`/valuation`)

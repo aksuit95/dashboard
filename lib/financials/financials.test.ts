@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { analyzeCompany, defaultForecast, discreteQuarters, flowSummary, forecastCash, ratio, type ForecastInputs } from "./analyze";
 import { classifyFinancial, parseAmount, parseFinancialReport, type DartAccount } from "./parse";
-import { atomicJson, dartRequest, readFinancialPublication } from "./source";
+import { applyFinancialMarketCaps, atomicJson, dartRequest, readFinancialPublication } from "./source";
 import { metricLabels, type FinancialCompany, type FinancialReport, type Metric } from "./types";
 
 const now = new Date("2026-11-04T12:00:00+09:00");
@@ -19,6 +19,12 @@ function company(reports: FinancialReport[], financial: boolean | null = false):
   return { code: "005930", name: "테스트", corpCode: "00126380", industry: "제조업", financial, fiscalMonth: "12", reports, errors: [], attemptedAt: now.toISOString(), referenceFcf: null, market: null };
 }
 const inputs: ForecastInputs = { ocf: 100, capex: 30, dividends: 10, buybacks: 0, repayments: 20, newBorrowing: 0, assetSales: 0, acquisitions: 0, financialAssetNet: -5, other: 0 };
+it("공통 KRX 시총을 재무 자료에 적용하고 자료가 없으면 이전 가격을 사용하지 않는다", () => {
+  const publication = { schemaVersion: 1 as const, publishedAt: now.toISOString(), membershipAt: now.toISOString(), membershipSource: "test", companies: [{ ...company([]), market: { date: "2026-11-02", exchange: "KRX" as const, priceTime: "15:30" as const, close: 80, marketCap: 800, fetchedAt: now.toISOString() } }] };
+  const caps = { version: 1 as const, source: "KRX_WEB_VERIFIED" as const, asOf: "2026-11-03", fetchedAt: now.toISOString(), exchange: "KRX" as const, priceTime: "15:30 KST" as const, priceBasis: "KRX_REGULAR_CLOSE" as const, values: { "005930": 1000 }, closes: { "005930": 100 } };
+  expect(applyFinancialMarketCaps(publication, caps).companies[0].market).toMatchObject({ date: "2026-11-03", close: 100, marketCap: 1000 });
+  expect(applyFinancialMarketCaps(publication, null).companies[0].market).toBeNull();
+});
 afterEach(() => vi.unstubAllEnvs());
 describe("DART 계정과 누적 기간", () => {
   it("결측을 0으로 만들지 않고 실제 0은 보존", () => {

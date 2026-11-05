@@ -2,8 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { inflateRawSync, crc32 } from "node:zlib";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
-import { requestKrxOpenApi } from "@/lib/sources/krx-openapi";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { readMarketCaps, type ValuationMarketCaps } from "@/lib/valuation/market-caps";
 import { classifyFinancial, parseFinancialReport, type DartAccount } from "./parse";
 import { metricLabels, type FinancialCompany, type FinancialPublication } from "./types";
 
@@ -144,7 +143,13 @@ async function collectReport(corpCode: string, year: number, quarter: 1 | 2 | 3 
     return null;
   });
 }
-function number(value: unknown) { const n = Number(String(value ?? "").replaceAll(",", "")); return value != null && String(value).trim() && Number.isFinite(n) && n > 0 ? n : null; }
+export function applyFinancialMarketCaps(publication: FinancialPublication, caps: ValuationMarketCaps | null): FinancialPublication {
+  return { ...publication, companies: publication.companies.map(company => {
+    const close = caps?.closes[company.code], marketCap = caps?.values[company.code];
+    const market = caps && close != null && marketCap != null ? { date: caps.asOf, exchange: "KRX" as const, priceTime: "15:30" as const, close, marketCap, fetchedAt: caps.fetchedAt } : null;
+    return { ...company, market };
+  }) };
+}
 export async function collectFinancials(options: { refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; onProgress?: (text: string) => void } = {}) {
   const now = new Date(), refresh = options.refresh ?? false;
   const previous = await readFinancialPublication();
@@ -155,9 +160,8 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
   try { references = JSON.parse(await fs.readFile(path.join(process.cwd(), "data/valuation/stocks.json"), "utf8")); } catch { /* optional */ }
   let sectors: Record<string, string> = {};
   try { const s = JSON.parse(await fs.readFile(path.join(process.cwd(), "data/sectors/board.json"), "utf8")); sectors = Object.fromEntries(s.snapshots.kospi200[s.latestDate].rows.map((r: { code: string; industry: string }) => [r.code, r.industry])); } catch { /* DART profile still classifies finance */ }
-  let priceRows: Record<string, unknown>[] = [], priceDate: string | null = null, priceError: string | null = null;
-  try { priceDate = minerviniSession(now); priceRows = await requestKrxOpenApi("sto/stk_bydd_trd", priceDate.replaceAll("-", "")); }
-  catch (e) { priceDate = null; priceError = e instanceof Error ? e.message : "KRX 가격 수집 실패"; }
+  let caps: ValuationMarketCaps | null = null;
+  try { caps = await readMarketCaps(); } catch { /* failed market data remains missing */ }
   const companies: FinancialCompany[] = [];
   const oldByCode = new Map(previous?.companies.map(c => [c.code, c]) ?? []);
   const candidates = members.filter(m => (!options.codes || options.codes.includes(m.code)) && (!options.retryFailed || !oldByCode.get(m.code)?.reports.length || oldByCode.get(m.code)!.errors.length > 0));
@@ -171,10 +175,9 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
       const company: FinancialCompany = { code: member.code, name: member.name, corpCode: codes[member.code] ?? null, industry: sectors[member.code] ?? old?.industry ?? "미확인", financial: sameCorp ? old?.financial ?? null : null, fiscalMonth: sameCorp ? old?.fiscalMonth ?? null : null, reports: sameCorp ? old?.reports ?? [] : [], errors: [], attemptedAt: now.toISOString(), referenceFcf: null, market: null };
       const ref = references.data?.stocks.find(s => s.code === member.code);
       if (ref && references.data) company.referenceFcf = { value: ref.values.fcf == null ? null : ref.values.fcf * 1e8, source: "QuantiWise E124260.M", compositionDate: references.data.compositionDate, sourceUpdatedAt: references.data.sourceUpdatedAt, definition: "기존 12개월 선행 조회표의 공급자 FCF. 상세 산식·예상기간 미검증. 공시 FCF와 혼합하지 않음" };
-      const price = priceRows.find(r => r.ISU_CD === member.code);
-      const close = number(price?.TDD_CLSPRC), marketCap = number(price?.MKTCAP);
-      if (price && close && marketCap && priceDate) company.market = { date: priceDate, exchange: "KRX", priceTime: "15:30", close, marketCap, fetchedAt: now.toISOString() };
-      else company.errors.push(priceError ?? "해당 기준일 KRX 종가·시가총액 없음");
+      const close = caps?.closes[member.code], marketCap = caps?.values[member.code];
+      if (caps && close != null && marketCap != null) company.market = { date: caps.asOf, exchange: "KRX", priceTime: "15:30", close, marketCap, fetchedAt: caps.fetchedAt };
+      else company.errors.push("KRX 종가·시가총액 저장 자료 없음");
       if (!company.corpCode) { company.errors.push("DART 고유번호 매핑 없음"); return company; }
       try {
         const profile = await cached(`profile-${company.corpCode}`, 7, refresh, () => dartRequest("company.json", { corp_code: company.corpCode! }));

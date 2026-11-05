@@ -1,18 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchValuationMarketCaps } from "./market-caps";
-
-const row = { BAS_DD: "20261103", ISU_CD: "005930", MKTCAP: "1,000,000,000,000", TDD_CLSPRC: "100,000" };
-describe("밸류에이션 KRX 시가총액", () => {
-  it("요청 거래일의 KRX 시총을 원 단위로 읽고 가격 결측은 보존한다", async () => {
-    const request = vi.fn(async () => [row, { ...row, ISU_CD: "000660", TDD_CLSPRC: "-" }]);
-    const result = await fetchValuationMarketCaps("2026-11-03", request);
-    expect(request).toHaveBeenCalledWith("sto/stk_bydd_trd", "20261103");
-    expect(result).toMatchObject({ asOf: "2026-11-03", exchange: "KRX", priceTime: "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", values: { "005930": 1e12, "000660": null } });
+import { fetchValuationMarketCaps, validateMarketCaps } from "./market-caps";
+const rows = (market: string) => Array.from({ length: 10 }, (_, i) => ({ ISU_SRT_CD: `${market === "STK" ? "1" : "2"}${String(i).padStart(5, "0")}`, MKT_ID: market, TDD_CLSPRC: "100", LIST_SHRS: "1000", MKTCAP: "100000" }));
+describe("KRX 웹 시가총액", () => {
+  it("같은 기준일에 양 시장을 조회하고 종가와 시총을 보존한다", async () => {
+    const query = vi.fn(async (_bld: string, p: Record<string, string>) => ({ OutBlock_1: rows(p.mktId) }));
+    const data = await fetchValuationMarketCaps("2026-11-03", query);
+    expect(data).toMatchObject({ asOf: "2026-11-03", source: "KRX_WEB_VERIFIED", values: { "100000": 100000 }, closes: { "100000": 100 } });
+    expect(query).toHaveBeenCalledWith("MDCSTAT01501", { trdDd: "20261103", mktId: "STK" });
+    expect(query).toHaveBeenCalledWith("MDCSTAT01501", { trdDd: "20261103", mktId: "KSQ" });
   });
-  it("다른 거래일·중복 종목·빈 결과와 수집 실패는 대체하지 않는다", async () => {
-    for (const rows of [[], [{ ...row, BAS_DD: "20261102" }], [row, row]]) {
-      await expect(fetchValuationMarketCaps("2026-11-03", async () => rows)).rejects.toThrow();
-    }
-    await expect(fetchValuationMarketCaps("2026-11-03", async () => { throw new Error("수집 실패"); })).rejects.toThrow("수집 실패");
+  it("잘못된 시총과 이전 통합 종가 스냅샷을 거부한다", async () => {
+    await expect(fetchValuationMarketCaps("2026-11-03", async (_bld, p) => ({ OutBlock_1: rows(p.mktId).map((r, i) => i ? r : { ...r, MKTCAP: "1" }) }))).rejects.toThrow();
+    expect(() => validateMarketCaps({ priceBasis: "KRX_REGULAR_CLOSE", values: {} })).toThrow();
   });
 });
