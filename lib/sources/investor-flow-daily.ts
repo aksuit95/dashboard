@@ -26,11 +26,11 @@ export function readInvestorDaily(db: AppDatabase, universe: MinerviniUniverse, 
 }
 
 /** Keep completed successes; scheduled recovery can retry only a finished failed run. */
-export async function collectInvestorDaily(db: AppDatabase, now = new Date(), retryFailed = false) {
+export async function collectInvestorDaily(db: AppDatabase, now = new Date(), retryFailed = false, recoverPreviousSession = false) {
   initInvestorDaily(db);
   const asOf = minerviniSession(now);
   const today = new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
-  if (asOf !== today) return { ok: true, skipped: true, asOf };
+  if (asOf !== today && !recoverPreviousSession) return { ok: true, skipped: true, asOf };
   if (retryFailed) db.prepare("DELETE FROM investor_flow_daily_runs WHERE as_of = ? AND finished_at IS NOT NULL AND error IS NOT NULL").run(asOf);
   const claim = db.prepare("INSERT OR IGNORE INTO investor_flow_daily_runs(as_of, started_at) VALUES (?, ?)").run(asOf, now.toISOString());
   if (!claim.changes) {

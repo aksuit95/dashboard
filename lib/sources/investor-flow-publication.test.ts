@@ -46,6 +46,14 @@ describe("investor flow Actions publication", () => {
     expect(await fs.readFile(file, "utf8")).toBe(original);
     expect(loadInvestorBoard).toHaveBeenCalledTimes(4);
   });
+  it("restores a published recovery over an older failed local snapshot", async () => {
+    await exportInvestorPublication(db, now, file);
+    db.prepare("UPDATE investor_flow_daily_runs SET error = ?").run("old failure");
+    db.prepare("UPDATE investor_flow_daily_snapshots SET error = ?, toss = NULL").run("old failure");
+    expect((await exportInvestorPublication(db, now, file)).ok).toBe(true);
+    expect((await readPublishedInvestorDaily("kospi200", "stocks", now, undefined, file)).error).toBeNull();
+    expect(collectInvestorToss).toHaveBeenCalledTimes(4);
+  });
   it("publishes failed attempts too, preventing retries on fresh runners", async () => {
     vi.mocked(collectInvestorToss).mockRejectedValue(new Error("미발표"));
     expect((await exportInvestorPublication(db, now, file)).ok).toBe(false);

@@ -52,8 +52,12 @@ export async function exportInvestorPublication(db: AppDatabase, now = new Date(
   initInvestorDaily(db);
   const previous = await readInvestorPublication(file);
   // Restore the daily claims on a fresh Actions runner, including failures.
-  for (const run of previous?.runs ?? []) db.prepare("INSERT OR IGNORE INTO investor_flow_daily_runs(as_of, started_at, finished_at, error) VALUES (?, ?, ?, ?)").run(run.as_of, run.started_at, run.finished_at, run.error);
-  for (const row of previous?.snapshots ?? []) db.prepare("INSERT OR IGNORE INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)").run(row.as_of, row.universe, row.view, row.board, row.toss, row.error);
+  for (const run of previous?.runs ?? []) db.prepare(`INSERT INTO investor_flow_daily_runs(as_of, started_at, finished_at, error) VALUES (?, ?, ?, ?)
+    ON CONFLICT(as_of) DO UPDATE SET started_at=excluded.started_at, finished_at=excluded.finished_at, error=excluded.error
+    WHERE investor_flow_daily_runs.error IS NOT NULL AND excluded.error IS NULL`).run(run.as_of, run.started_at, run.finished_at, run.error);
+  for (const row of previous?.snapshots ?? []) db.prepare(`INSERT INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)
+    ON CONFLICT(as_of, universe, view) DO UPDATE SET board=excluded.board, toss=excluded.toss, error=excluded.error
+    WHERE (investor_flow_daily_snapshots.error IS NOT NULL OR investor_flow_daily_snapshots.toss IS NULL) AND excluded.error IS NULL AND excluded.toss IS NOT NULL`).run(row.as_of, row.universe, row.view, row.board, row.toss, row.error);
   const result = await collect(db, now, retryFailed);
   const runs = db.prepare("SELECT * FROM investor_flow_daily_runs ORDER BY as_of DESC LIMIT 30").all() as Run[];
   if (!runs.length) return { ...result, changed: false };

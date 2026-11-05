@@ -39,6 +39,13 @@ describe("scheduled investor flow snapshots", () => {
     expect(saved.board.priceBasis).toBe("KRX_REGULAR_CLOSE");
     expect(saved.toss.asOf).toBe(saved.board.asOf);
   });
+  it("can explicitly recover the last session while recording the actual collection time", async () => {
+    const morning = new Date("2026-11-04T09:30:00+09:00");
+    expect((await collectInvestorDaily(db, morning, true, true)).asOf).toBe("2026-11-03");
+    expect(loadInvestorBoard).toHaveBeenCalledTimes(4);
+    const run = db.prepare("SELECT started_at FROM investor_flow_daily_runs WHERE as_of = ?").get("2026-11-03") as { started_at: string };
+    expect(run.started_at).toBe(morning.toISOString());
+  });
   it("reads saved results without invoking sources; no snapshot means no live fallback", async () => {
     expect(() => readInvestorDaily(db, "kospi200", "index", at("16:00"))).toThrow("저장된 수급");
     expect(loadInvestorBoard).not.toHaveBeenCalled();
