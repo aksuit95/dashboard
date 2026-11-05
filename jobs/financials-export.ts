@@ -1,12 +1,12 @@
 import fs from "node:fs";
-import { collectFinancials, reclassifySavedFinancials } from "@/lib/financials/source";
+import { collectFinancials, enrichFinancialAccounts, reclassifySavedFinancials } from "@/lib/financials/source";
 for (const name of [".env.local", ".env"]) if (fs.existsSync(name)) process.loadEnvFile(name);
 const codesArg = process.argv.find(a => a.startsWith("--codes="));
 const codes = codesArg?.slice(8).split(",");
 const limitArg = process.argv.find(a => a.startsWith("--limit="));
 const limit = limitArg ? Number(limitArg.slice(8)) : undefined;
 if (limit != null && (!Number.isInteger(limit) || limit < 1 || limit > 210)) throw new Error("--limit는 1~210 정수여야 합니다.");
-const work = process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, onProgress: console.log });
+const work = process.argv.includes("--enrich") ? enrichFinancialAccounts().then(r => { if (r.failed) process.exitCode = 1; return r.publication; }) : process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, onProgress: console.log });
 work.then(p => {
   console.log(`재무 데이터 저장 완료: ${p.companies.filter(c => c.reports.length).length}/${p.companies.length}개 기업 · data/financials/board.json`);
   const errors = p.companies.filter(c => c.errors.length);

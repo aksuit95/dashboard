@@ -43,11 +43,17 @@ export function analyzeCompany(company: FinancialCompany) {
   // Sum only non-overlapping, separately disclosed loan/bond buckets. This is not a verified total:
   // embedded lease debt, current bonds within currentLongDebt and note-only financing remain unknown.
   const debtKeys: Metric[] = ["shortDebt", "currentLongDebt", "longDebt", "bonds"];
-  const knownDebt = v ? debtKeys.flatMap(k => v[k] == null ? [] : [v[k]!]) : [];
-  const reportedDebt = knownDebt.length ? knownDebt.reduce((s, n) => s + n, 0) : null;
+  const knownDebt = v ? debtKeys.flatMap(k => {
+    if (v[k] == null) return [];
+    // A generic "사채" balance may include current bonds already in another line.
+    // Include it only if the source explicitly identifies the noncurrent portion.
+    if (k === "bonds" && !latest?.evidence.bonds?.some(e => /NoncurrentPortionOfNoncurrentBondsIssued/.test(e.id) || /비유동사채/.test(e.name.replace(/\s/g, "")))) return [];
+    return [v[k]!];
+  }) : [];
+  const reportedDebt = company.financial === false && knownDebt.length ? knownDebt.reduce((s, n) => s + n, 0) : null;
   const reportedCurrentDebt = v ? completeSum(v.shortDebt, v.currentLongDebt) : null;
   const signals: { severity: "warning" | "info"; text: string }[] = [];
-  if (company.financial !== false) signals.push({ severity: "info", text: company.financial ? "금융업: 일반기업 FCF·유동성 순위와 전망 제외. 자본적정성·LCR·지급여력은 별도 공시 확인 필요" : "업종 미확인: 일반기업 평가 보류" });
+  if (company.financial !== false) signals.push({ severity: "info", text: company.financial ? "금융업: 일반기업 FCF·유동성 순위 제외. 자본적정성·LCR·지급여력은 별도 공시 확인 필요" : "업종 미확인: 일반기업 평가 보류" });
   if (company.financial === false) {
     if (ttm?.fcf != null && ttm.fcf < 0) signals.push({ severity: "warning", text: `${ttm.label} FCF 적자 ${Math.round(ttm.fcf / 1e8).toLocaleString("ko-KR")}억원` });
     if (consecutive && last3.every(r => r.fcf != null && r.fcf < 0)) signals.push({ severity: "warning", text: `최근 3개 연도 FCF 연속 적자 (${last3.at(-1)!.periodEnd.slice(0, 4)}~${last3[0].periodEnd.slice(0, 4)})` });
@@ -77,47 +83,8 @@ export function analyzeCompany(company: FinancialCompany) {
     interestCoverage: ttm ? ratio(ttm.values.operatingProfit, ttm.values.interest) : null,
     debtToOcf: ttm ? ratio(reportedDebt, ttm.values.ocf) : null,
     fcfYield: yieldValue, residual,
-    runway: v?.cash != null && residual != null && residual < 0 ? v.cash / -residual * 12 : null,
     profitableYears: comparableAnnual.filter(r => r.fcf != null && r.fcf > 0).length,
     coveredYears: comparableAnnual.filter(r => r.fcf != null).length,
     signals,
   };
-}
-
-export type ForecastInputs = {
-  ocf: number | null; capex: number | null; dividends: number | null; buybacks: number | null;
-  repayments: number | null; newBorrowing: number | null; assetSales: number | null;
-  acquisitions: number | null; financialAssetNet: number | null; other: number | null;
-};
-export const forecastLabels: Record<keyof ForecastInputs, string> = {
-  ocf: "연간 영업현금흐름", capex: "연간 CAPEX", dividends: "연간 배당 지급", buybacks: "연간 자사주 취득",
-  repayments: "연간 차입금 상환", newBorrowing: "연간 신규 차입·차환", assetSales: "연간 자산 매각 유입",
-  acquisitions: "연간 기업 인수 지출", financialAssetNet: "연간 금융상품 회수−취득", other: "연간 기타 순유입·환율효과",
-};
-export function defaultForecast(company: FinancialCompany): ForecastInputs {
-  const ttm = analyzeCompany(company).ttm;
-  return {
-    ocf: ttm?.values.ocf ?? null, capex: ttm?.capex ?? null,
-    dividends: ttm?.values.dividends ?? null, buybacks: ttm?.values.buybacks ?? null,
-    // No automatic zero or assumed refinancing. User explicitly enters unknown future flows.
-    repayments: null, newBorrowing: null, assetSales: null, acquisitions: null, financialAssetNet: null, other: null,
-  };
-}
-export function forecastCash(cash: number | null, inputs: ForecastInputs, scenario: "base" | "bear" | "bull" = "base") {
-  const missing = (Object.keys(inputs) as (keyof ForecastInputs)[]).filter(k => inputs[k] == null || !Number.isFinite(inputs[k]));
-  const invalid = (Object.keys(inputs) as (keyof ForecastInputs)[]).filter(k => k !== "ocf" && k !== "financialAssetNet" && k !== "other" && inputs[k] != null && inputs[k]! < 0);
-  if (cash == null || !Number.isFinite(cash) || missing.length || invalid.length) return { cash12: null, cash24: null, gap12: null, gap24: null, steps: [] as { label: string; value: number }[], missing, invalid };
-  const flow = inputs as Record<keyof ForecastInputs, number>;
-  // Stress an OCF loss by making it larger, never making a loss look better in the bear case.
-  const ocf = flow.ocf + (scenario === "bear" ? -0.2 : scenario === "bull" ? 0.2 : 0) * Math.abs(flow.ocf);
-  const capex = flow.capex * (scenario === "bear" ? 1.1 : scenario === "bull" ? 0.9 : 1);
-  const steps = [
-    { label: "기초 현금", value: cash }, { label: "영업현금흐름", value: ocf }, { label: "CAPEX", value: -capex },
-    { label: "배당·자사주", value: -flow.dividends - flow.buybacks },
-    { label: "차입−상환", value: flow.newBorrowing - flow.repayments },
-    { label: "매각−인수", value: flow.assetSales - flow.acquisitions },
-    { label: "금융상품 순회수", value: flow.financialAssetNet }, { label: "기타·환율", value: flow.other },
-  ];
-  const delta = steps.slice(1).reduce((s, x) => s + x.value, 0), cash12 = cash + delta, cash24 = cash + delta * 2;
-  return { cash12, cash24, gap12: Math.max(0, -cash12), gap24: Math.max(0, -cash24), steps: [...steps, { label: "12개월 말", value: cash12 }], missing, invalid };
 }

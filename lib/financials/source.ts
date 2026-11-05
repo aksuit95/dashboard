@@ -150,6 +150,14 @@ export function applyFinancialMarketCaps(publication: FinancialPublication, caps
     return { ...company, market };
   }) };
 }
+/** Omit detailed evidence from the comparison response; fetch it per company. */
+export function financialSummary(publication: FinancialPublication): FinancialPublication {
+  return { ...publication, companies: publication.companies.map(company => ({ ...company, reports: company.reports.map(report => {
+    const { accounts: _accounts, evidence: _evidence, ...rest } = report;
+    // The comparison's partial-debt calculation needs the bonds classification evidence.
+    return { ...rest, evidence: _evidence.bonds ? { bonds: _evidence.bonds } : {} };
+  }) })) };
+}
 export async function collectFinancials(options: { refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; onProgress?: (text: string) => void } = {}) {
   const now = new Date(), refresh = options.refresh ?? false;
   const previous = await readFinancialPublication();
@@ -192,7 +200,12 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
         for (const period of reportRequests(now)) {
           try {
             const report = await collectReport(company.corpCode, period.year, period.quarter, now, refresh);
-            if (report) reports.set(`${report.year}-${report.quarter}`, report);
+            if (report) {
+              const key = `${report.year}-${report.quarter}`, existing = reports.get(key);
+              // Old parsed caches predate raw-account collection. Do not discard a richer copy
+              // of the same filing; a changed receipt must still replace the previous report.
+              reports.set(key, existing?.receipt === report.receipt && existing.accounts?.length && !report.accounts?.length ? existing : report);
+            }
           } catch (e) {
             if (e instanceof DartApiError && ["010", "011", "012", "020", "800", "901"].includes(e.status)) throw e;
             company.errors.push(`${period.year} Q${period.quarter}: ${e instanceof Error ? e.message : "수집 실패"}`);
@@ -229,4 +242,31 @@ export async function reclassifySavedFinancials() {
   }
   publication.publishedAt = new Date().toISOString();
   await atomicJson(financialPublicationPath, publication); return publication;
+}
+
+/** Enrich the latest saved report only, preserving every company if a request fails. */
+export async function enrichFinancialAccounts(onProgress: (message: string) => void = console.log) {
+  const publication = await readFinancialPublication();
+  if (!publication) throw new Error("저장된 재무 자료가 없습니다.");
+  let success = 0, failed = 0;
+  for (let i = 0; i < publication.companies.length; i += 4) {
+    await Promise.all(publication.companies.slice(i, i + 4).map(async company => {
+      const latest = [...company.reports].sort((a, b) => b.periodEnd.localeCompare(a.periodEnd))[0];
+      if (!latest || !company.corpCode) return;
+      if (latest.accounts?.length) { success++; return; }
+      try {
+        const result = await dartRequest("fnlttSinglAcntAll.json", { corp_code: company.corpCode, bsns_year: String(latest.year), reprt_code: latest.reportCode, fs_div: latest.scope });
+        if (!Array.isArray(result.list)) throw new Error("DART 계정 목록 형식 오류");
+        const parsed = parseFinancialReport(result.list as DartAccount[], { corpCode: company.corpCode, year: latest.year, quarter: latest.quarter, scope: latest.scope, now: new Date() });
+        if (parsed.receipt !== latest.receipt) throw new Error("공시 접수번호 변경 · 전체 재수집 필요");
+        const index = company.reports.indexOf(latest);
+        company.reports[index] = parsed;
+        success++;
+      } catch (error) { failed++; onProgress(`${company.code} ${company.name}: ${error instanceof Error ? error.message : "수집 실패"}`); }
+    }));
+    publication.publishedAt = new Date().toISOString();
+    await atomicJson(financialPublicationPath, publication);
+    onProgress(`원문 계정 확인 ${Math.min(i + 4, publication.companies.length)}/${publication.companies.length} · 성공 ${success} · 실패 ${failed}`);
+  }
+  return { publication, success, failed };
 }

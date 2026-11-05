@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "/api/investor-flow": ["./data/investor-flow/board.json"],
     "/api/investor-flow/toss": ["./data/investor-flow/board.json"],
     "/api/financials": ["./data/financials/board.json", "./data/valuation/market-caps.json"],
+    "/api/financials/[code]": ["./data/financials/board.json"],
     "/api/valuation/stocks/market-caps": ["./data/valuation/market-caps.json"] },
 };
 

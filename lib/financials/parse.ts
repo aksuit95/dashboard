@@ -30,7 +30,7 @@ export const mappings: Record<Metric, Mapping> = {
   financing: cf(["CashFlowsFromUsedInFinancingActivities"], ["재무활동현금흐름", "재무활동으로인한현금흐름"]),
   fx: cf(["EffectOfExchangeRateChangesOnCashAndCashEquivalents"], ["환율변동효과", "외화환산으로인한현금의변동"]),
   openingCash: cf(["CashAndCashEquivalentsAtBeginningOfPeriodCf"], ["기초의현금및현금성자산", "기초현금및현금성자산"]),
-  endingCash: cf(["CashAndCashEquivalentsAtEndOfPeriodCf"], ["기말의현금및현금성자산", "기말현금및현금성자산"]),
+  endingCash: cf(["CashAndCashEquivalentsAtEndOfPeriodCf"], ["기말의현금및현금성자산", "기말현금및현금성자산", "반기말현금및현금성자산", "분기말현금및현금성자산", "당기말현금및현금성자산"]),
   acquisitions: cf(["CashFlowsUsedInObtainingControlOfSubsidiariesOrOtherBusinessesClassifiedAsInvestingActivities"], ["사업결합으로인한순현금유출액"]),
   assetSales: cf(["ProceedsFromSalesOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities"], ["유형자산의처분", "유형자산처분"]),
 };
@@ -41,7 +41,7 @@ export function parseAmount(raw: unknown): number | null {
   if (!/^-?\d+(?:\.\d+)?$/.test(value)) return null;
   const n = Number(value); return Number.isFinite(n) ? n : null;
 }
-const outflows = new Set<Metric>(["ppe", "intangible", "dividends", "buybacks", "acquisitions", "interest"]);
+const outflows = new Set<Metric>(["ppe", "intangible", "dividends", "buybacks", "interest"]);
 /** Holding company code 64992 covers industrial as well as financial groups. */
 export function classifyFinancial(industryCode: string, industryName: string): boolean | null {
   if (/은행|증권|보험|카드|금융/.test(industryName)) return true;
@@ -83,5 +83,6 @@ export function parseFinancialReport(rows: DartAccount[], input: { corpCode: str
     if (Math.abs(diff) > Math.max(1, Math.abs(end!) * 1e-8)) warnings.push(`현금흐름표 조정 불일치: ${Math.round(diff)}원 · 기타 변동 원문 확인`);
   } else warnings.push("현금흐름표 조정 검증에 필요한 계정 일부 누락");
   if (end != null && cash != null && Math.abs(end - cash) > Math.max(1, Math.abs(cash) * 1e-8)) warnings.push("재무상태표·현금흐름표 현금 잔액 불일치");
-  return { year: input.year, quarter: input.quarter, periodEnd, reportCode: codes[input.quarter], scope: input.scope, receipt, filedAt, fetchedAt: input.now.toISOString(), currency: "KRW", values, evidence, warnings };
+  const accounts = rows.filter(r => ["BS", "CF", "IS", "CIS"].includes(r.sj_div) && typeof r.account_nm === "string").map(r => ({ id: r.account_id, name: r.account_nm, statement: r.sj_div, amount: input.quarter !== 4 && ["IS", "CIS"].includes(r.sj_div) ? r.thstrm_add_amount ?? "" : r.thstrm_amount ?? "", currency: r.currency }));
+  return { year: input.year, quarter: input.quarter, periodEnd, reportCode: codes[input.quarter], scope: input.scope, receipt, filedAt, fetchedAt: input.now.toISOString(), currency: "KRW", values, evidence, warnings, accounts };
 }
