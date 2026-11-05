@@ -11,7 +11,7 @@ try {
   $locked = $taskMutex.WaitOne(0)
   if (-not $locked) { Write-Output 'Another collector is running.'; exit 0 }
   foreach ($line in [System.IO.File]::ReadLines((Join-Path $projectRoot '.env'))) {
-    if ($line -match '^\s*(KRX_API_KEY|TOSS_CLIENT_ID|TOSS_CLIENT_SECRET|toss_API_KEY|toss_API_SECRET)\s*=(.*)$') {
+    if ($line -match '^\s*(KRX_ID|KRX_PW|TOSS_CLIENT_ID|TOSS_CLIENT_SECRET|toss_API_KEY|toss_API_SECRET)\s*=(.*)$') {
       [System.Environment]::SetEnvironmentVariable($Matches[1], $Matches[2].Trim(), 'Process')
     }
   }

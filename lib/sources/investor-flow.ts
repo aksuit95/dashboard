@@ -3,7 +3,7 @@ import { minerviniUniverses } from "@/config/minervini";
 import { minerviniSession } from "@/lib/market/minervini-session";
 import { aggregateFlows, alignFlows, type InvestorPoint } from "@/lib/market/investor-flow";
 import type { AppDatabase } from "@/lib/db/client";
-import { createOpenApiQuery } from "./krx-openapi";
+import { createInvestorKrxWebQuery } from "./investor-flow-krx-web";
 
 type Row = Record<string, unknown>;
 type Query = (bld: string, params: Record<string, string>) => Promise<Row>;
@@ -137,12 +137,11 @@ export async function fetchFuturesFlow(universe: MinerviniUniverse, asOf: string
 const pending = new Map<string, Promise<InvestorBoard>>();
 const failed = new Map<string, { until: number; board: InvestorBoard }>();
 export async function loadInvestorBoard(db: AppDatabase, universe: MinerviniUniverse, view: InvestorBoard["view"], now = new Date()): Promise<InvestorBoard> {
-  const asOf = minerviniSession(now), key = `${universe}:${view}:${asOf}:quotes-v3`;
+  const asOf = minerviniSession(now), key = `${universe}:${view}:${asOf}:quotes-krx-web-v4`;
   db.exec("CREATE TABLE IF NOT EXISTS investor_flow_cache (cache_key TEXT PRIMARY KEY, payload TEXT NOT NULL)");
-  const useOpenApi = true;
-  const sourceQuery = createOpenApiQuery(db, async () => { throw new Error("지원하지 않는 시세 조회"); });
+  const sourceQuery = createInvestorKrxWebQuery();
   const query: Query = async (bld, params) => {
-    const cacheKey = JSON.stringify([2, useOpenApi ? "KRX_OPEN_API" : "KRX_WEB", asOf, bld, params, "KRX_REGULAR_CLOSE"]);
+    const cacheKey = JSON.stringify([3, "KRX_WEB_VERIFIED", asOf, bld, params, "KRX_REGULAR_CLOSE"]);
     const saved = db.prepare("SELECT payload FROM investor_flow_cache WHERE cache_key = ?").get(cacheKey) as { payload: string } | undefined;
     if (saved) return JSON.parse(saved.payload) as Row;
     const result = await sourceQuery(bld, params);
@@ -164,7 +163,7 @@ export async function loadInvestorBoard(db: AppDatabase, universe: MinerviniUniv
   const work = (async () => {
     const [equity] = await Promise.allSettled([fetchEquityFlow(universe, view, asOf, query, true)]);
     const board: InvestorBoard = { version: 1, universe, view, asOf, fetchedAt: new Date().toISOString(), priceBasis: "KRX_REGULAR_CLOSE",
-      quoteSource: useOpenApi ? "KRX_OPEN_API" : "KRX_WEB", equity: equity.status === "fulfilled" ? equity.value : null, equityError: equity.status === "rejected" ? message(equity.reason) : null };
+      quoteSource: "KRX_WEB", equity: equity.status === "fulfilled" ? equity.value : null, equityError: equity.status === "rejected" ? message(equity.reason) : null };
     if (board.equityError || board.equity?.error) failed.set(key, { until: Date.now() + 60_000, board });
     return board;
   })();
