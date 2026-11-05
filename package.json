@@ -25,7 +25,8 @@
     "job:backfill": "tsx jobs/backfill.ts",
     "job:poll": "tsx jobs/poll.ts",
     "valuation:export": "tsx jobs/valuation-export.ts",
-    "valuation:stocks:export": "tsx jobs/stock-valuation-export.ts"
+    "valuation:stocks:export": "tsx jobs/stock-valuation-export.ts",
+    "financials:export": "tsx jobs/financials-export.ts"
   },
   "dependencies": {
     "exceljs": "^4.4.0",

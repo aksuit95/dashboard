@@ -22,7 +22,10 @@ const groups = [
   },
   {
     title: { ko: "종목 분석", en: "Stock Analysis" },
-    items: [{ href: "/minervini", ko: "마크 미너비니 기술적분석", en: "Mark Minervini" }],
+    items: [
+      { href: "/financials", ko: "현금·재무건전성", en: "Cash & Financial Health" },
+      { href: "/minervini", ko: "마크 미너비니 기술적분석", en: "Mark Minervini" },
+    ],
   },
   {
     title: { ko: "야간 프록시", en: "Global Proxy" },
