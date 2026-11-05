@@ -17,7 +17,8 @@ const spanColor: Record<Exclude<SessionKind, "closed">, string> = {
 
 function isBoard(value: unknown): value is SingleStockBoard {
   if (!value || typeof value !== "object") return false;
-  return Array.isArray((value as SingleStockBoard).names);
+  const names = (value as SingleStockBoard).names;
+  return Array.isArray(names) && names.every(group => ["KRX_REGULAR_CLOSE", "KRX_REGULAR_LIVE"].includes(group.priceBasis) && /^\d{4}-\d{2}-\d{2}$/.test(group.priceAsOf));
 }
 
 function tone(value: number | null): string {
@@ -128,11 +129,14 @@ function Legend({ kind, text }: { kind: Exclude<SessionKind, "closed">; text: st
 function NameColumn({ group }: { group: SingleStockGroup }) {
   return (
     <section>
-      <div className="mb-3 flex items-baseline justify-between gap-3">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <h2 className="text-lg font-medium">{group.name}</h2>
-        <p className={`text-sm font-medium tabular-nums ${tone(group.changePct)}`}>
-          {group.changePct == null ? "—" : `${formatSigned(group.changePct)}%`}
-        </p>
+        <div className="text-right">
+          <p className={`text-sm font-medium tabular-nums ${tone(group.changePct)}`}>
+            {group.price == null ? "—" : `₩${formatNumber(group.price, 0)}`} · {group.changePct == null ? "—" : `${formatSigned(group.changePct)}%`}
+          </p>
+          <p className="mt-1 text-[11px] text-zinc-500">{group.priceAsOf} · {group.priceBasis === "KRX_REGULAR_LIVE" ? `KRX 정규장 현재가${group.priceTime ? ` (${group.priceTime.slice(11, 19)} KST)` : " · 확인 중"}` : "KRX 15:30 종가"} · 전일 대비</p>
+        </div>
       </div>
       <div className="space-y-3">
         {group.products.map((card) => (
