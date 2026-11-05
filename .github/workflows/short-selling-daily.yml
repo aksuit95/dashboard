@@ -4,6 +4,10 @@ on:
   schedule:
     # UTC 13:40 = KST 22:40. Disclosure delay is handled separately by a 10-session refresh.
     - cron: '40 13 * * 1-5'
+    # 01:00 KST on the following day: retry only if the latest session is missing.
+    - cron: '0 16 * * 1-5'
+    # 09:00 KST on the following day: final retry if data is still missing.
+    - cron: '0 0 * * 2-6'
   workflow_dispatch:
     inputs:
       backfill:
@@ -32,20 +36,44 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-shorting.txt
       - run: python -m pip install -r requirements-shorting.txt
+      - name: Check whether retry is needed
+        id: retry-gate
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        shell: bash
+        run: |
+          if [ "$SCHEDULE" != '0 16 * * 1-5' ] && [ "$SCHEDULE" != '0 0 * * 2-6' ]; then
+            echo 'collect=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          from scripts.short_selling.sources import completed_day
+          path = Path('data/summary.json')
+          latest = completed_day().isoformat()
+          previous = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+          complete = previous.get('as_of') == latest and previous.get('is_sample') is False and previous.get('schema_version') == 'short-selling.krx-close.v1'
+          print('collect=' + ('false' if complete else 'true'))
+          PY
       - name: Verify transforms and failure preservation
+        if: steps.retry-gate.outputs.collect == 'true'
         run: python -m unittest discover -s scripts/short_selling/tests -v
       - uses: actions/cache@v4
+        if: steps.retry-gate.outputs.collect == 'true'
         with:
           path: .shorting-cache
           key: shorting-v1-${{ github.run_id }}
           restore-keys: shorting-v1-
       - name: Probe available sources
+        if: steps.retry-gate.outputs.collect == 'true'
         env:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
           KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
         run: python -m scripts.short_selling.probe --output logs/short-selling/probe.json
       - name: Collect and validate
+        if: steps.retry-gate.outputs.collect == 'true'
         env:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
@@ -59,10 +87,12 @@ jobs:
             python -m scripts.short_selling.collect
           fi
       - name: Collect market-alert snapshot
+        if: steps.retry-gate.outputs.collect == 'true'
         id: market-alerts
         continue-on-error: true
         run: python -m scripts.short_selling.market_alerts
       - name: Commit validated generation
+        if: steps.retry-gate.outputs.collect == 'true'
         env:
           BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash

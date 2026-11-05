@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from scripts.short_selling.collect import collect, publish, read_previous, sample, validate
 from scripts.short_selling.model import FIELDS, PRICE, aggregate, derive, normalize, ratio, strict_mean
-from scripts.short_selling.sources import KST, ROOT, completed_day, known_calendar, number
+from scripts.short_selling.sources import KST, ROOT, Source, KrxPriceNotPublished, KrxPriceSchemaMismatch, completed_day, known_calendar, number
 
 
 class PipelineTests(unittest.TestCase):
@@ -33,6 +33,22 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(ratio(None, 100))
         self.assertIsNone(ratio(0, 0))
         self.assertIsNone(strict_mean([{'v': 0}, {'v': None}], 'v', 2))
+
+    def test_official_price_empty_and_invalid_response_are_distinct(self):
+        class Response:
+            def __init__(self, payload): self.payload = payload
+            def raise_for_status(self): pass
+            def json(self): return self.payload
+        class Session:
+            def __init__(self, payload): self.payload = payload
+            def get(self, *args, **kwargs): return Response(self.payload)
+        source = Source.__new__(Source)
+        source.interval = 0
+        with patch.dict('os.environ', {'KRX_API_KEY': 'test-only'}):
+            source.session = Session({'OutBlock_1': []})
+            with self.assertRaises(KrxPriceNotPublished): source.prices('20261104')
+            source.session = Session({'OutBlock_1': [{'BAS_DD': '20261103'}]})
+            with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
 
     def test_market_is_weighted_and_incomplete_never_understates(self):
         rows = {'a': {'short_value': 20, 'trading_value': 100, 'short_volume': 2, 'volume': 10},

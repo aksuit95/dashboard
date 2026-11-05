@@ -14,6 +14,14 @@ KST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class KrxPriceNotPublished(ValueError):
+    """The official endpoint returned a valid but empty observation list."""
+
+
+class KrxPriceSchemaMismatch(ValueError):
+    """The official endpoint changed its envelope, fields, or date."""
+
+
 def load_env():
     from dotenv import load_dotenv
     load_dotenv(ROOT / ".env.local", override=False)
@@ -98,10 +106,16 @@ class Source:
                                     params={"basDd": day}, headers={"AUTH_KEY": key}, timeout=30)
         response.raise_for_status()
         payload = response.json()
+        if not isinstance(payload, dict):
+            raise KrxPriceSchemaMismatch("KRX Open API payload is not an object")
         rows = payload.get("OutBlock_1")
         fields = {"BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "ACC_TRDVAL", "ACC_TRDVOL", "MKTCAP", "LIST_SHRS"}
-        if not isinstance(rows, list) or not rows or any(not fields.issubset(r) or r["BAS_DD"] != day for r in rows):
-            raise ValueError("KRX Open API schema/date mismatch")
+        if not isinstance(rows, list):
+            raise KrxPriceSchemaMismatch("KRX Open API missing observation list")
+        if not rows:
+            raise KrxPriceNotPublished("KRX Open API observation list is empty")
+        if any(not isinstance(r, dict) or not fields.issubset(r) or r["BAS_DD"] != day for r in rows):
+            raise KrxPriceSchemaMismatch("KRX Open API schema/date mismatch")
         return rows
 
     def pykrx_prices(self, day):

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "6a5114cc7906cdedf596",
-  "as_of": "2026-11-03",
-  "collected_at": "2026-11-04T14:01:33.692058+09:00",
+  "dataset_id": "ae2a3b07571e4c3ab450",
+  "as_of": "2026-11-04",
+  "collected_at": "2026-11-05T09:13:09.143627+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -11,7 +11,7 @@
     "adjusted": false
   },
   "is_sample": false,
-  "period_start": "2025-11-03",
+  "period_start": "2025-11-04",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
   "membership_basis": "point_in_time",
   "units": {
@@ -20,20 +20,6 @@
     "ratio": "percent_0_100"
   },
   "rows": [
-    {
-      "date": "2025-11-03",
-      "session_status": "trading",
-      "index_close": 599.03,
-      "short_value": 1190802920103,
-      "trading_value": 28297140115749,
-      "short_volume": 11604396,
-      "volume": 257654889,
-      "short_value_ratio_pct": 4.208209434706262,
-      "short_volume_ratio_pct": 4.503852438057172,
-      "expected_count": 200,
-      "observed_count": 200,
-      "coverage": "complete"
-    },
     {
       "date": "2025-11-04",
       "session_status": "trading",
@@ -163,7 +149,7 @@
     {
       "date": "2025-11-13",
       "session_status": "trading",
-      "index_close": null,
+      "index_close": 588.65,
       "short_value": 978380851502,
       "trading_value": 19244570864556,
       "short_volume": 10615518,
@@ -863,7 +849,7 @@
     {
       "date": "2026-01-02",
       "session_status": "trading",
-      "index_close": null,
+      "index_close": 624.17,
       "short_value": 640365057776,
       "trading_value": 19599235257940,
       "short_volume": 6762614,
@@ -5140,6 +5126,20 @@
       "volume": 124650186,
       "short_value_ratio_pct": 7.588236988149292,
       "short_volume_ratio_pct": 10.711941496822154,
+      "expected_count": 201,
+      "observed_count": 201,
+      "coverage": "complete"
+    },
+    {
+      "date": "2026-11-04",
+      "session_status": "trading",
+      "index_close": 889.25,
+      "short_value": 1898307425605,
+      "trading_value": 30530638465108,
+      "short_volume": 13596757,
+      "volume": 194412218,
+      "short_value_ratio_pct": 6.2177128322242075,
+      "short_volume_ratio_pct": 6.993777006340209,
       "expected_count": 201,
       "observed_count": 201,
       "coverage": "complete"

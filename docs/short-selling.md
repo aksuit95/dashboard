@@ -18,7 +18,7 @@
 
 KRX 웹 계정 환경변수와 Open API 키를 설정한 뒤 구성종목, 공매도 거래·잔고, 지수와 가격의 최소 조회를 확인했다. 키와 웹 로그인 계정은 서로 다른 인증 방식이다.
 
-인증 전 백필은 지수 응답 실패로 중단됐다. 인증 후 2025-11-03부터 2026-11-03까지 245거래일의 백필을 완료했다. 최신 구성종목 201개와 거래일별 시장 집계가 생성됐으며 GitHub Actions 환경에서의 수집 성공은 아직 확인되지 않았다.
+인증 전 백필은 지수 응답 실패로 중단됐다. 인증 후 2025-11-03부터 2026-11-03까지 245거래일의 백필을 완료했다. 최신 구성종목 201개와 거래일별 시장 집계가 생성됐으며 2026-11-04 예약 실행에서는 KRX 공식 가격 응답 검증 실패가 발생해 기존 JSON을 보존했다. 다음 날 재수집으로 복구했으며, 당시 로그에는 빈 데이터·스키마 불일치 중 어떤 원인이었는지 기록되지 않았다.
 
 참고한 1차 문서: [pykrx 공식 README](https://github.com/sharebook-kr/pykrx/blob/master/README.md), [pykrx 1.2.8 릴리스](https://github.com/sharebook-kr/pykrx/releases/tag/v1.2.8), [원본 KRX 어댑터](https://github.com/sharebook-kr/pykrx/blob/master/pykrx/website/krx/market/core.py), [KRX Open API](https://openapi.krx.co.kr/contents/OPP/MAIN/main/index.cmd), [KRX 공매도 통계](https://data.krx.co.kr/contents/MDC/MAIN/main/index.cmd?locale=ko_KR), [SEIBro 메뉴](https://m.seibro.or.kr/cmmn/allView.do), [키움 REST API 가이드](https://openapi.kiwoom.com/m/guide/apiguide). 키움 API와 SEIBro 대체 수집은 이번에 실호출 검증하지 않았다.
 
@@ -107,7 +107,7 @@ python -m scripts.short_selling.collect --lending-csv path/to/verified-seibro.cs
 
 ## 배치·실패·배포
 
-GitHub Actions는 **평일 22:40 KST(13:40 UTC)** 에 실행한다. 장 마감 후 원본 반영을 기다리는 운영 시간이며 가격 기준은 여전히 15:30이다. 공시 지연은 늦은 cron만으로 해소되지 않으므로 최근 10거래일을 갱신한다. GitHub 예약 실행은 지연될 수 있다.
+GitHub Actions의 기본 수집은 **평일 22:40 KST(13:40 UTC)** 에 실행한다. 최신 완료 거래일 데이터가 빠진 경우에만 다음 날 01:00과 09:00 KST에 자동 재시도하며, 이미 완료됐으면 재시도 실행은 수집을 건너뛴다. 장 마감 후 원본 반영을 기다리는 운영 시간이며 가격 기준은 여전히 15:30이다. 공시 지연은 늦은 cron만으로 해소되지 않으므로 최근 10거래일을 갱신한다. GitHub 예약 실행은 지연될 수 있다.
 
 저장소 Secrets에 `KRX_ID`, `KRX_PW`, `KRX_API_KEY`가 필요하다. 공식 API는 유가증권 일별매매정보 이용 승인이 필요하며, 별도로 검증한 공식 지수 API 사용 시 KOSPI 시리즈 일별시세정보 승인도 필요하다. workflow 추가만으로 원격 예약 실행이 활성화되는 것은 아니며 기본 브랜치에 반영되어야 한다. 이번 작업에서 커밋·push·배포는 실행하지 않았다.
 
