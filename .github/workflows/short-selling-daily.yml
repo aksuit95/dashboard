@@ -95,6 +95,8 @@ jobs:
         if: steps.retry-gate.outputs.collect == 'true'
         env:
           BRANCH: ${{ github.event.repository.default_branch }}
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
         shell: bash
         run: |
           git add -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
@@ -102,7 +104,7 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore(data): update KOSPI200 short-selling JSON'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): update KOSPI200 short-selling JSON'
           git fetch origin "$BRANCH"
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
