@@ -11,8 +11,8 @@
 | 코스피200 구성종목 | pykrx `get_index_portfolio_deposit_file("1028", date=...)` | 성공: 201개 | 계속 실패하면 KRX 지수구성종목 공식 다운로드를 기준일별로 확보하거나 라이선스 데이터 공급자 사용. ETF 편입종목으로 대체하지 않음 |
 | 종목별 공매도 거래량·대금·분모 | pykrx 원본 `MDCSTAT30101` | 성공: 코스피 전체 939행 | 대안은 KRX 공매도 통계 다운로드 또는 키움 등 증권사 공매도 추이 API. 거래소 범위·과거 조회 범위·단위가 일치하는지 별도 검증 필요 |
 | 순보유잔고 | pykrx 원본 `MDCSTAT30501` | 성공: 10월 29일 940행, 11월 3일 0행 | 공시 지연과 보고 대상 범위를 유지해야 하며 공매도 거래량 누적으로 추정하지 않음 |
-| 종가·거래대금·시총 | pykrx OHLCV | 성공 | **KRX 공식 Open API `sto/stk_bydd_trd` 성공, 939행**. 생산 수집기는 이 공식 API를 사용 |
-| 코스피200 지수 | pykrx 원본 `MDCSTAT00301` | 성공 | **KRX 공식 Open API `idx/kospi_dd_trd` 성공**. 지수명 `코스피 200`, `BAS_DD`, `CLSPRC_IDX` 확인. 현재 배치의 지수 기간 수집은 pykrx 경로이며 공식 API 기간 수집 fallback은 아직 연결하지 않음 |
+| 종가·거래대금·시총 | KRX 정보데이터시스템 `MDCSTAT01501` | 코스피 전종목 조회 및 시총 상위 10개 종목의 네이버 명시적 KRX 정규장 종가 대조. 개별 시총과 종가×상장주식수가 불일치하면 해당 시총은 결측 처리 |
+| 코스피200 지수 | pykrx 원본 `MDCSTAT00301` | 성공 | KRX 웹 통계의 코스피200 지수 기간 시계열 사용 |
 | 코스피200 시장 합계 | 거래일별 구성종목과 공매도 응답 조합 | 최신일 검증: 201종목 모두 관측 | 과거 전체 구간은 백필 후 검증. 코스피 전체 비중을 대신 넣지 않음 |
 | SEIBro 대차잔고 | 검증된 자동 수집 endpoint 없음 | 자동 수집 미구현, null | SEIBro 종목별 대차거래현황 공식 내보내기를 정규화해 `--lending-csv`로 입력 가능. 실응답 자동 수집 성공을 주장하지 않음 |
 
@@ -28,7 +28,7 @@ KRX 웹 계정 환경변수와 Open API 키를 설정한 뒤 구성종목, 공�
 requirements-shorting.txt
 config/short-selling.json           # 급증·숏커버 조건과 수동 섹터 프리셋
 scripts/short_selling/
-  sources.py                       # pykrx 원본 응답 + 공식 KRX 가격
+  sources.py                       # pykrx를 통한 KRX 웹 통계 및 정규장 종가 검증
   probe.py                         # 항목별 독립 프로세스·100초 제한 최소 검증
   collect.py                       # 백필·증분·출력 검증·교체/복구
   model.py                         # 합산·5/20일 평균·신호·랭킹
@@ -62,7 +62,7 @@ python -m scripts.short_selling.probe
 python -m scripts.short_selling.collect --sample
 python -m unittest discover -s scripts/short_selling/tests -v
 
-# 실제 수집: .env.local / .env 또는 환경변수의 KRX_ID, KRX_PW, KRX_API_KEY 사용
+# 실제 수집: .env.local / .env 또는 환경변수의 KRX_ID, KRX_PW 사용
 python -m scripts.short_selling.collect --backfill
 python -m scripts.short_selling.collect
 ```
@@ -93,7 +93,7 @@ python -m scripts.short_selling.collect --lending-csv path/to/verified-seibro.cs
 모든 파일은 `schema_version`, `dataset_id`, `as_of`, `collected_at`, `period_start`, `price_basis`, `is_sample`, 단위 정보를 공유한다. `as_of`는 가격 기준 거래일, `collected_at`은 실제 수집 시각이다. `price_basis`는 **KRX / regular / 15:30:00 / Asia/Seoul / 비수정 종가**다. 기존 통합 종가 캐시는 이 버전에서 읽지 않는다. 서로 다른 `dataset_id` 파일을 프론트가 동시에 받으면 다시 읽어 일관성을 확보해야 한다.
 
 - 금액은 원, 수량은 주, 비중은 0~100의 퍼센트다. JSON은 계산 정밀도를 유지하고 소수점 2자리·천 단위 표시는 프론트에서 적용한다.
-- 공매도 거래비중은 공매도 원본 응답의 거래량/거래대금 분모로 계산한다. 공식 시세 API의 거래대금과 임의로 섞지 않는다. 공매도 원본의 KRX/NXT 거래 범위는 이번 응답 실패로 확인하지 못했으며 `flow_scope`에 미검증임을 기록했다. 공식 가격 필드의 KRX 15:30 기준과는 별개다.
+- 공매도 거래비중은 공매도 원본 응답의 거래량/거래대금 분모로 계산하며 다른 시세 응답의 거래대금과 섞지 않는다. 공매도 원본의 KRX/NXT 거래 범위는 미검증으로 기록했다. KRX 15:30 종가 기준과는 별개다.
 - 시장 거래대금 비중 = 당시 구성종목 공매도 거래대금 합 / 당시 구성종목 전체 거래대금 합 × 100. 종목 비중의 단순평균을 사용하지 않는다. 하나라도 필요한 분자·분모가 누락되면 전체 값은 null이고 `coverage: incomplete`, 기대/관측 종목 수를 기록한다.
 - `short_value_ratio_pct_mean_5/20`은 **당일을 제외한 직전 5/20거래일 비중의 산술평균**이다. 중간 결측이나 거래일 수 부족이면 null이다. `*_vs_mean_N_pct`는 `(당일/평균 − 1) × 100`, `*_change_1d`는 원래 단위의 차이다. 0인 평균과의 배율은 null이다.
 - 일간 등락률은 두 날짜 모두 KRX 비수정 종가로 계산한다. 기업행사에 따른 가격 단절을 포함하므로 수정 수익률로 해석하지 않는다. 중간 거래일 가격이 없으면 null이며 다른 날짜로 건너뛰지 않는다.
@@ -109,7 +109,7 @@ python -m scripts.short_selling.collect --lending-csv path/to/verified-seibro.cs
 
 GitHub Actions 수집은 **평일 22:40 KST(13:40 UTC)** 에 실행한다. 실패해도 다음 날 자동 재시도하지 않으며 필요한 경우 수동 실행한다. 가격 기준은 15:30이다. 공시 지연을 반영하도록 최근 10거래일을 갱신한다. GitHub 예약 실행은 지연될 수 있다.
 
-저장소 Secrets에 `KRX_ID`, `KRX_PW`, `KRX_API_KEY`가 필요하다. 공식 API는 유가증권 일별매매정보 이용 승인이 필요하며, 별도로 검증한 공식 지수 API 사용 시 KOSPI 시리즈 일별시세정보 승인도 필요하다. workflow 추가만으로 원격 예약 실행이 활성화되는 것은 아니며 기본 브랜치에 반영되어야 한다. 이번 작업에서 커밋·push·배포는 실행하지 않았다.
+저장소 Secrets에 KRX 웹 로그인 `KRX_ID`, `KRX_PW`가 필요하다. 공매도 배치는 KRX Open API 키를 사용하지 않는다. workflow가 기본 브랜치에 반영되어야 원격 예약 실행에 적용된다.
 
 필수 API 실패·빈 필수 응답·스키마 변경·최신 지수 미발표 시 배치는 실패하고 기존 JSON을 보존한다. 정상 응답의 개별 종목 누락은 null로 저장한다. 원본 예외 메시지/HTTP 본문을 로그에 쓰지 않고 오류 클래스·단계·날짜만 남긴다. 로그와 probe 결과는 Actions artifact로 14일 보관한다. 모든 JSON의 스키마·세대 검증을 통과한 뒤 교체하며 로컬 쓰기 오류 시 이미 바꾼 파일도 복원한다. 프로세스 강제 종료/전원 장애의 여러 파일 교체까지 원자적으로 보장하지는 않으며 공개 배포의 일관성 경계는 Git 커밋이다.
 

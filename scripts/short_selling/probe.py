@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .sources import KST, Source, completed_day, load_env
 
-ITEMS = ("members", "short", "balance", "prices", "pykrx_prices", "index", "official_index")
+ITEMS = ("members", "short", "balance", "prices", "pykrx_prices", "index")
 
 
 def one(item, day):

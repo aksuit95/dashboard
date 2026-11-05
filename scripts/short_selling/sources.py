@@ -4,7 +4,6 @@ from __future__ import annotations
 import contextlib
 import io
 import math
-import os
 import re
 import time
 from datetime import date, datetime, timedelta, timezone
@@ -98,47 +97,44 @@ class Source:
         return rows
 
     def prices(self, day):
-        key = os.environ.get("KRX_API_KEY")
-        if not key:
-            raise RuntimeError("KRX_API_KEY required for exchange-identified closing prices")
-        time.sleep(self.interval)
-        response = self.session.get("https://data-dbg.krx.co.kr/svc/apis/sto/stk_bydd_trd",
-                                    params={"basDd": day}, headers={"AUTH_KEY": key}, timeout=30)
-        response.raise_for_status()
-        payload = response.json()
-        if not isinstance(payload, dict):
-            raise KrxPriceSchemaMismatch("KRX Open API payload is not an object")
-        rows = payload.get("OutBlock_1")
-        fields = {"BAS_DD", "ISU_CD", "ISU_NM", "TDD_CLSPRC", "ACC_TRDVAL", "ACC_TRDVOL", "MKTCAP", "LIST_SHRS"}
-        if not isinstance(rows, list):
-            raise KrxPriceSchemaMismatch("KRX Open API missing observation list")
-        if not rows:
-            raise KrxPriceNotPublished("KRX Open API observation list is empty")
-        if any(not isinstance(r, dict) or not fields.issubset(r) or r["BAS_DD"] != day for r in rows):
-            raise KrxPriceSchemaMismatch("KRX Open API schema/date mismatch")
+        if not re.fullmatch(r"\d{8}", day):
+            raise KrxPriceSchemaMismatch("Invalid requested session")
+        frame = self.call(self.core.전종목시세().fetch, day, "STK")
+        fields = ["ISU_SRT_CD", "ISU_ABBRV", "MKT_ID", "TDD_CLSPRC", "ACC_TRDVAL", "ACC_TRDVOL", "MKTCAP", "LIST_SHRS"]
+        raw = records(frame, fields)
+        if len(raw) < 190:
+            raise KrxPriceNotPublished("KRX web market observation incomplete")
+        rows, seen = [], set()
+        for item in raw:
+            code = str(item["ISU_SRT_CD"])
+            if not re.fullmatch(r"[0-9A-Z]{6}", code) or code in seen or item["MKT_ID"] != "STK":
+                raise KrxPriceSchemaMismatch("KRX web ticker or market mismatch")
+            seen.add(code)
+            close, cap, shares = (number(item[k]) for k in ("TDD_CLSPRC", "MKTCAP", "LIST_SHRS"))
+            # Some corporate actions make capitalization inconsistent on the
+            # reference date. Keep that individual metric missing, not zero.
+            if not close or not cap or not shares or close * shares != cap:
+                cap = None
+            rows.append({**item, "ISU_CD": code, "ISU_NM": item["ISU_ABBRV"], "MKTCAP": cap})
+        candidates = sorted((r for r in rows if r["MKTCAP"] is not None and number(r["TDD_CLSPRC"]) > 0), key=lambda r: r["MKTCAP"], reverse=True)[:10]
+        if len(candidates) < 10:
+            raise KrxPriceNotPublished("KRX web verification candidates missing")
+        iso = f"{day[:4]}-{day[4:6]}-{day[6:]}"
+        for row in candidates:
+            response = self.session.get(f"https://stock.naver.com/api/stockSecurity/items/v2/domestic/{row['ISU_CD']}/daily-prices/paged?size=100&index=0", headers={"user-agent": "Mozilla/5.0"}, timeout=25)
+            response.raise_for_status()
+            data = response.json()
+            items = data.get("items") if isinstance(data, dict) else None
+            matches = [r for r in items if isinstance(r, dict) and r.get("tradingDateKst") == iso] if isinstance(items, list) else []
+            if len(matches) != 1 or number(matches[0].get("regularMarketClosingPrice")) != number(row["TDD_CLSPRC"]):
+                raise KrxPriceSchemaMismatch("KRX regular closing price cross-check failed")
         return rows
 
     def pykrx_prices(self, day):
-        # Probe only. Production prices use the exchange-identified official API.
+        # Independent probe for the pykrx convenience adapter.
         frame = self.call(self.stock.get_market_ohlcv_by_ticker, day, market="KOSPI")
         records(frame, ["종가", "거래대금"])
         return {"rows": len(frame), "columns": list(frame.columns)}
-
-    def official_index(self, day):
-        key = os.environ.get("KRX_API_KEY")
-        if not key:
-            raise RuntimeError("KRX_API_KEY required")
-        response = self.session.get("https://data-dbg.krx.co.kr/svc/apis/idx/kospi_dd_trd",
-                                    params={"basDd": day}, headers={"AUTH_KEY": key}, timeout=30)
-        response.raise_for_status()
-        rows = response.json().get("OutBlock_1")
-        if not isinstance(rows, list):
-            raise ValueError("Index Open API schema mismatch")
-        found = [r for r in rows if str(r.get("IDX_NM", "")).replace(" ", "") == "코스피200" and r.get("BAS_DD") == day]
-        if len(found) != 1 or number(found[0].get("CLSPRC_IDX")) is None:
-            raise ValueError("Index Open API date/field mismatch")
-        return found
-
 
 def known_calendar():
     """Share the repository's explicitly reviewed calendar, including uncertain dates."""

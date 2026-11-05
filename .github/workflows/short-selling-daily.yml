@@ -43,13 +43,11 @@ jobs:
         env:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
-          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
         run: python -m scripts.short_selling.probe --output logs/short-selling/probe.json
       - name: Collect and validate
         env:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
-          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
           BACKFILL: ${{ inputs.backfill || 'false' }}
         shell: bash
         run: |

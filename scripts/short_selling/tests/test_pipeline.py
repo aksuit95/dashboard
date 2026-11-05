@@ -34,21 +34,24 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(ratio(0, 0))
         self.assertIsNone(strict_mean([{'v': 0}, {'v': None}], 'v', 2))
 
-    def test_official_price_empty_and_invalid_response_are_distinct(self):
+    def test_web_prices_validate_market_and_crosscheck_regular_close(self):
+        import pandas as pd
         class Response:
-            def __init__(self, payload): self.payload = payload
             def raise_for_status(self): pass
-            def json(self): return self.payload
+            def json(self): return {'items': [{'tradingDateKst': '2026-11-04', 'regularMarketClosingPrice': '100', 'closingPrice': '120'}]}
         class Session:
-            def __init__(self, payload): self.payload = payload
-            def get(self, *args, **kwargs): return Response(self.payload)
+            def get(self, *args, **kwargs): return Response()
         source = Source.__new__(Source)
         source.interval = 0
-        with patch.dict('os.environ', {'KRX_API_KEY': 'test-only'}):
-            source.session = Session({'OutBlock_1': []})
-            with self.assertRaises(KrxPriceNotPublished): source.prices('20261104')
-            source.session = Session({'OutBlock_1': [{'BAS_DD': '20261103'}]})
-            with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
+        source.session = Session()
+        rows = [{'ISU_SRT_CD': str(i).zfill(6), 'ISU_ABBRV': 'test', 'MKT_ID': 'STK', 'TDD_CLSPRC': '100', 'ACC_TRDVAL': '1', 'ACC_TRDVOL': '1', 'MKTCAP': '100000', 'LIST_SHRS': '1000'} for i in range(200)]
+        source.core = SimpleNamespace(전종목시세=lambda: SimpleNamespace(fetch=lambda *args: pd.DataFrame(rows)))
+        self.assertEqual(len(source.prices('20261104')), 200)
+        rows[0]['MKT_ID'] = 'KSQ'
+        with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
+        rows[0]['MKT_ID'] = 'STK'
+        source.session = SimpleNamespace(get=lambda *a, **kw: SimpleNamespace(raise_for_status=lambda: None, json=lambda: {'items': [{'tradingDateKst': '2026-11-04', 'regularMarketClosingPrice': '120'}]}))
+        with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
 
     def test_market_is_weighted_and_incomplete_never_understates(self):
         rows = {'a': {'short_value': 20, 'trading_value': 100, 'short_volume': 2, 'volume': 10},
