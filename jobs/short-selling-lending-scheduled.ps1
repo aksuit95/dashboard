@@ -15,8 +15,12 @@ try {
     & $git -c "safe.directory=$runnerRoot" pull --rebase origin $branch
     if ($LASTEXITCODE -ne 0) { throw 'Cannot update collector checkout.' }
     $env:PYTHONPATH = $projectRoot
-    & $python -c 'from pathlib import Path; from scripts.short_selling.sources import load_env; from scripts.short_selling.toss_lending import update; load_env(); update(Path(r"C:\dashboard\tmp\short-selling-runner\data"))'
-    if ($LASTEXITCODE -ne 0) { throw 'Toss lending collection failed; no files published.' }
+    Push-Location -LiteralPath $projectRoot
+    try {
+      & $python -c 'from pathlib import Path; from scripts.short_selling.sources import load_env; from scripts.short_selling.toss_lending import update; load_env(); update(Path(r"C:\dashboard\tmp\short-selling-runner\data"))'
+      $collectExit = $LASTEXITCODE
+    } finally { Pop-Location }
+    if ($collectExit -ne 0) { throw 'Toss lending collection failed; no files published.' }
     & $git -c "safe.directory=$runnerRoot" add -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
     if ($LASTEXITCODE -ne 0) { throw 'Cannot stage data.' }
     & $git -c "safe.directory=$runnerRoot" diff --cached --quiet
