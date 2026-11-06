@@ -25,6 +25,10 @@ jobs:
       - name: Collect calendar sources
         id: events
         continue-on-error: true
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
         run: npm run events:export
       - name: Publish available data and source status
         shell: bash
@@ -48,4 +52,5 @@ jobs:
       - name: Report source failures
         if: steps.events.outcome == 'failure'
         run: exit 1
+
 

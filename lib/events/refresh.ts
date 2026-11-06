@@ -1,6 +1,6 @@
 import { addDays, type MarketEvent } from "./calendar";
 
-export type Feed = { updatedAt: string | null; error: string | null; events: MarketEvent[]; generatedAt?: string };
+export type Feed = { updatedAt: string | null; error: string | null; events: MarketEvent[]; generatedAt?: string; capAsOf?: string | null; companies?: import("./dart-earnings").EarningsCompany[] };
 export type Snapshot = { feeds: Record<string, Feed> };
 export const BLS_URL = "https://www.bls.gov/schedule/2026/home.htm";
 export const ISM_URL = "https://www.ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/";
@@ -59,4 +59,5 @@ export async function refreshFeed(old: Feed | undefined, load: () => Promise<Mar
   catch (error) { return {updatedAt:old?.updatedAt ?? null, error:error instanceof Error ? error.message : String(error), events:old?.events ?? []}; }
 }
 export function relevantYears(today: string): number[] { return [...new Set([Number(today.slice(0,4)), Number(addDays(today,27).slice(0,4))])]; }
+
 
