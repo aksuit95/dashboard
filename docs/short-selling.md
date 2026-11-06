@@ -14,13 +14,13 @@
 | 종가·거래대금·시총 | KRX 정보데이터시스템 `MDCSTAT01501` | 코스피 전종목 조회 및 시총 상위 10개 종목의 네이버 명시적 KRX 정규장 종가 대조. 개별 시총과 종가×상장주식수가 불일치하면 해당 시총은 결측 처리 |
 | 코스피200 지수 | pykrx 원본 `MDCSTAT00301` | 성공 | KRX 웹 통계의 코스피200 지수 기간 시계열 사용 |
 | 코스피200 시장 합계 | 거래일별 구성종목과 공매도 응답 조합 | 최신일 검증: 201종목 모두 관측 | 과거 전체 구간은 백필 후 검증. 코스피 전체 비중을 대신 넣지 않음 |
-| SEIBro 대차잔고 | 검증된 자동 수집 endpoint 없음 | 자동 수집 미구현, null | SEIBro 종목별 대차거래현황 공식 내보내기를 정규화해 `--lending-csv`로 입력 가능. 실응답 자동 수집 성공을 주장하지 않음 |
+| 대차잔고 | 토스증권 종목별 대차거래 API | 별도 수집기로 일별 잔고 수집 | 기존 SEIBro CSV 입력도 지원 |
 
 KRX 웹 계정 환경변수와 Open API 키를 설정한 뒤 구성종목, 공매도 거래·잔고, 지수와 가격의 최소 조회를 확인했다. 키와 웹 로그인 계정은 서로 다른 인증 방식이다.
 
 인증 전 백필은 지수 응답 실패로 중단됐다. 인증 후 2025-11-03부터 2026-11-03까지 245거래일의 백필을 완료했다. 최신 구성종목 201개와 거래일별 시장 집계가 생성됐으며 2026-11-04 예약 실행에서는 KRX 공식 가격 응답 검증 실패가 발생해 기존 JSON을 보존했다. 다음 날 재수집으로 복구했으며, 당시 로그에는 빈 데이터·스키마 불일치 중 어떤 원인이었는지 기록되지 않았다.
 
-참고한 1차 문서: [pykrx 공식 README](https://github.com/sharebook-kr/pykrx/blob/master/README.md), [pykrx 1.2.8 릴리스](https://github.com/sharebook-kr/pykrx/releases/tag/v1.2.8), [원본 KRX 어댑터](https://github.com/sharebook-kr/pykrx/blob/master/pykrx/website/krx/market/core.py), [KRX Open API](https://openapi.krx.co.kr/contents/OPP/MAIN/main/index.cmd), [KRX 공매도 통계](https://data.krx.co.kr/contents/MDC/MAIN/main/index.cmd?locale=ko_KR), [SEIBro 메뉴](https://m.seibro.or.kr/cmmn/allView.do), [키움 REST API 가이드](https://openapi.kiwoom.com/m/guide/apiguide). 키움 API와 SEIBro 대체 수집은 이번에 실호출 검증하지 않았다.
+참고한 1차 문서: [pykrx 공식 README](https://github.com/sharebook-kr/pykrx/blob/master/README.md), [pykrx 1.2.8 릴리스](https://github.com/sharebook-kr/pykrx/releases/tag/v1.2.8), [원본 KRX 어댑터](https://github.com/sharebook-kr/pykrx/blob/master/pykrx/website/krx/market/core.py), [KRX Open API](https://openapi.krx.co.kr/contents/OPP/MAIN/main/index.cmd), [KRX 공매도 통계](https://data.krx.co.kr/contents/MDC/MAIN/main/index.cmd?locale=ko_KR), [SEIBro 메뉴](https://m.seibro.or.kr/cmmn/allView.do), [키움 REST API 가이드](https://openapi.kiwoom.com/m/guide/apiguide). 키움 API와 SEIBro 자동 수집은 실호출 검증하지 않았다.
 
 ## 파일 구조
 
@@ -118,3 +118,9 @@ GitHub Actions 수집은 **평일 22:40 KST(13:40 UTC)** 에 실행한다. 실�
 화면에 표시할 세 가지 필수 해석 주의사항은 `summary.json.warnings`에 포함한다. 프론트 구현 시 기준일·실제 수집 시각·잔고 자체 기준일·부족한 수집 범위도 함께 표시한다.
 
 종목명 옆 관리·거래정지·투자주의·투자경고·투자위험은 네이버페이 증권의 관리·거래정지·시장경보 목록을 22:40 배치에서 별도로 수집한 `data/market_alerts.json`을 사용한다. 이 값은 가격 종가나 과거 기준일의 판정이 아니라 파일에 표시된 조회 시각에 확인한 경보 상태이며, 가격 기준일과 다를 수 있다. 종목 목록의 `marketAlertType`과 코드·페이지를 확인하고 가격 필드는 사용하지 않는다. 수집 실패 시 이전 스냅샷과 조회 시각을 유지하고 Actions 실패를 표시한다. 자료 자체를 읽지 못하면 화면에 확인 불가를 표시한다. 실시간 목록의 변경과 제공자의 응답 방식 변경에 따라 상태가 달라질 수 있다.
+
+## 토스증권 대차잔고 수집
+
+기존 토스 Open API 인증을 사용해 종목별 `/securities-lending`의 일별 잔고 주수와 원본 갱신 시각을 수집한다. 기존 공매도 JSON을 먼저 수집한 뒤 `python -m scripts.short_selling.toss_lending`을 실행한다. `TOSS_CLIENT_ID`와 `TOSS_CLIENT_SECRET` 또는 기존 `toss_API_KEY`와 `toss_API_SECRET`이 필요하며, 토스의 허용 IP 설정이 실행 환경에 맞아야 한다. 1년 이력을 페이지 단위로 조회하며, 실패 시 기존 JSON을 유지한다. 404 종목은 건너뛴다.
+
+대차 관측일은 KRX 종가 기준일과 별도다. 화면의 최근 대차잔고와 증감은 실제 대차 기준일을 표시하며, 증감은 직전 거래일에도 잔고가 있을 때만 계산한다. 상세에는 토스 원본 갱신 시각과 별도의 수집 시각을 표시한다. API가 원본 발표시각을 제공한다고 가정하지 않는다. 이 PC의 `Dashboard Short Selling Lending` 예약작업이 매일 23:30 KST에 별도 체크아웃에서 토스 대차 이력을 갱신하고 수급 작업과 같은 브랜치로 게시한다. PC가 꺼져 있거나 절전 중이면 실행이 지연될 수 있다. 실행 로그는 `tmp/short-selling-lending-scheduled.log`이며, 토스 허용 IP와 Git 인증이 필요하다. GitHub의 공매도 기본 수집은 토스 호출 없이 유지한다.

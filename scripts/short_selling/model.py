@@ -169,6 +169,8 @@ def build(snapshots, index, start, end, config, collected_at, sample=False):
         current.update(code=code, sector=None, sector_presets=[name for name, codes in config["sector_presets"].items() if code in codes])
         disclosed = [r for r in sessions if r["balance_ratio_pct"] is not None]
         current["latest_disclosed_balance"] = ({"as_of": disclosed[-1]["date"], **{k: disclosed[-1][k] for k in ("balance_quantity", "balance_value", "balance_ratio_pct")}} if disclosed else None)
+        loans = [r for r in sessions if r.get("lending_quantity") is not None]
+        current["latest_lending"] = ({"as_of": loans[-1]["date"], "quantity": loans[-1]["lending_quantity"], "change": loans[-1]["lending_change"], "source": loans[-1].get("lending_source"), "updated_at": loans[-1].get("lending_updated_at"), "collected_at": loans[-1].get("lending_collected_at")} if loans else None)
         stocks.append(current)
     def rank(field, positive=False):
         return [{"code": s["code"], "name": s.get("name"), "value": s[field], "as_of": end} for s in sorted((s for s in stocks if s.get(field) is not None and (not positive or s[field] > 0)), key=lambda s: s[field], reverse=True)[:10]]

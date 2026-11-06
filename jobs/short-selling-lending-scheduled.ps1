@@ -1,0 +1,37 @@
+$ErrorActionPreference = 'Stop'
+$projectRoot = 'C:\dashboard'
+$runnerRoot = 'C:\dashboard\tmp\short-selling-runner'
+$git = 'C:\Program Files\Git\cmd\git.exe'
+$python = 'C:\dashboard\tmp\short-selling-python\Scripts\python.exe'
+$branch = 'cursor/personal-dashboard-readme'
+Start-Transcript -LiteralPath 'C:\dashboard\tmp\short-selling-lending-scheduled.log' -Append | Out-Null
+$mutex = [System.Threading.Mutex]::new($false, 'Local\DashboardShortSellingLending')
+$locked = $false
+try {
+  $locked = $mutex.WaitOne(0)
+  if (-not $locked) { Write-Output 'Another lending collector is running.'; exit 0 }
+  Push-Location -LiteralPath $runnerRoot
+  try {
+    & $git -c "safe.directory=$runnerRoot" pull --rebase origin $branch
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot update collector checkout.' }
+    $env:PYTHONPATH = $projectRoot
+    & $python -c 'from pathlib import Path; from scripts.short_selling.sources import load_env; from scripts.short_selling.toss_lending import update; load_env(); update(Path(r"C:\dashboard\tmp\short-selling-runner\data"))'
+    if ($LASTEXITCODE -ne 0) { throw 'Toss lending collection failed; no files published.' }
+    & $git -c "safe.directory=$runnerRoot" add -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot stage data.' }
+    & $git -c "safe.directory=$runnerRoot" diff --cached --quiet
+    if ($LASTEXITCODE -eq 1) {
+      & $git -c "safe.directory=$runnerRoot" -c user.name='Dashboard Collector' -c user.email='dashboard-collector@users.noreply.github.com' commit -m 'chore(data): update lending balances'
+      if ($LASTEXITCODE -ne 0) { throw 'Cannot commit data.' }
+    } elseif ($LASTEXITCODE -ne 0) { throw 'Cannot inspect changes.' }
+    & $git -c "safe.directory=$runnerRoot" pull --rebase origin $branch
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot reconcile remote changes.' }
+    & $git -c "safe.directory=$runnerRoot" push origin "HEAD:$branch"
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot publish data.' }
+  } finally { Pop-Location }
+} catch { Write-Error $_; exit 1 }
+finally {
+  if ($locked) { $mutex.ReleaseMutex() }
+  $mutex.Dispose()
+  Stop-Transcript | Out-Null
+}

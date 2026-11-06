@@ -197,6 +197,13 @@ def collect(args, config):
         # Latest constituents get a full stock history before index inclusion too.
         # Market totals below still use only each session's actual constituents.
         normalized = normalize(day, {**raw, "members": sorted(set(raw["members"]) | set(latest_members))}, lending)
+        # Refreshing KRX data must not erase independently collected lending data.
+        for code, row in normalized.items():
+            prior = old.get(day, {}).get("normalized", {}).get(code, {})
+            if row["lending_quantity"] is None and prior.get("lending_quantity") is not None:
+                for key in ("lending_quantity", "lending_status", "lending_published_at", "lending_source", "lending_updated_at", "lending_collected_at"):
+                    if key in prior:
+                        row[key] = prior[key]
         if not raw["balance"] and day in dates[-3:]:
             for row in normalized.values():
                 row["balance_status"] = "publication_pending"
