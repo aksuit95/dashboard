@@ -122,9 +122,14 @@ async function document(f:Filing,key:string):Promise<string> {
 export async function collectDartEarnings(now=new Date(), key=process.env.DART_API_KEY?.trim()):Promise<DartEarnings> {
   if(!key)throw new Error("DART_API_KEY 설정 필요");
   const asOf=minerviniSession(now), today=seoulDate(now);
-  const corpResponse=await dartFetch("corpCode.xml",{},key);
-  const codes=parseCorpCodes(extractCorpXml(Buffer.from(await corpResponse.arrayBuffer())));
-  const payload=await createInvestorKrxWebQuery()("MDCSTAT01501",{trdDd:asOf.replaceAll("-",""),mktId:"STK"});
+  let codes:Record<string,string>;
+  try {
+    const corpResponse=await dartFetch("corpCode.xml",{},key);
+    codes=parseCorpCodes(extractCorpXml(Buffer.from(await corpResponse.arrayBuffer())));
+  } catch (error) { throw new Error(`DART 기업 목록 수집 실패: ${error instanceof Error ? error.message : "알 수 없는 오류"}`); }
+  let payload:Record<string,unknown>;
+  try { payload=await createInvestorKrxWebQuery()("MDCSTAT01501",{trdDd:asOf.replaceAll("-",""),mktId:"STK"}); }
+  catch (error) { throw new Error(`KRX 코스피 시총 수집·검증 실패: ${error instanceof Error ? error.message : "알 수 없는 오류"}`); }
   if(!Array.isArray(payload.OutBlock_1))throw new Error("KRX 코스피 시총 누락");
   const top=selectTopCompanies(payload.OutBlock_1 as Record<string,unknown>[],codes);
   const companies:EarningsCompany[]=[], events:MarketEvent[]=[];
