@@ -6,7 +6,7 @@ import { addDays, seoulDate, type MarketEvent } from "./calendar";
 
 export type EarningsCompany = { code: string; corpCode: string; name: string; marketCap: number; status: "예정" | "발표완료" | "확인되지 않음" | "공시 확인 필요"; note?: string; source?: string };
 export type DartEarnings = { updatedAt: string | null; error: string | null; capAsOf: string | null; companies: EarningsCompany[]; events: MarketEvent[] };
-type Filing = { corp_code: string; report_nm: string; rcept_no: string; rcept_dt: string };
+export type Filing = { corp_code: string; report_nm: string; rcept_no: string; rcept_dt: string };
 type Company = Omit<EarningsCompany, "status">;
 const API = "https://opendart.fss.or.kr/api/";
 
@@ -64,6 +64,21 @@ export function parseEarningsIR(xml:string): {date:string|null;time:string|null}
   const tail=matches.length ? text.slice(matches.at(-1)!.index! + matches.at(-1)![0].length, matches.at(-1)!.index!+130).split(/장소|참가\s*대상/)[0] : "";
   const date=dateParts(tail); const time=tail.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);
   return {date,time:time ? `${time[1].padStart(2,"0")}:${time[2]}` : null};
+}
+export async function findLatestEarningsIR(filings:Filing[], read:(filing:Filing)=>Promise<string>, today:string):Promise<{filing:Filing; date:string; time:string|null}|null> {
+  for(const filing of filings.filter(f=>/기업\s*설명회.*개최/.test(f.report_nm)).sort((a,b)=>b.rcept_no.localeCompare(a.rcept_no))) {
+    const parsed=parseEarningsIR(await read(filing));
+    if(!parsed) {
+      if(/철회|취소/.test(filing.report_nm)) throw new Error("설명회 취소 공시 확인 필요");
+      continue;
+    }
+    // The newest earnings-related IR supersedes older ones. Never revive a
+    // superseded original after a correction or unparseable amendment.
+    if(!parsed.date) throw new Error("실적 설명회 일시 확인 필요");
+    if(parsed.date<today)return null;
+    return {filing,date:parsed.date,time:parsed.time};
+  }
+  return null;
 }
 export function selectTopCompanies(rows:Record<string,unknown>[], codes:Record<string,string>): Company[] {
   const list:Company[]=[];
@@ -132,11 +147,13 @@ export async function collectDartEarnings(now=new Date(), key=process.env.DART_A
       // A recent actual release without a newer notice is already published.
       state="발표완료";
     }
-    const ir=ordered.find(f=>/기업\s*설명회.*개최/.test(f.report_nm));
-    if(ir) {
-      try {const p=parseEarningsIR(await document(ir,key));if(p?.date && p.date>=today){events.push({id:`dart-${company.code}-ir`,date:p.date,time:p.time,country:"KR",category:"실적",title:`${company.name} 실적 설명회`,detail:`${/정정/.test(ir.report_nm)?"정정 공시 반영 · ":""}실적 공시 시각과 다를 수 있음`,source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${ir.rcept_no}`,sourceName:"DART"}); if(state==="확인되지 않음" || state==="발표완료")state="예정";}}
-      catch {if(state==="확인되지 않음"){state="공시 확인 필요";note="설명회 원문을 읽지 못했습니다.";}}
-    }
+    try {
+      const ir=await findLatestEarningsIR(ordered, filing=>document(filing,key), today);
+      if(ir) {
+        events.push({id:`dart-${company.code}-ir`,date:ir.date,time:ir.time,country:"KR",category:"실적",title:`${company.name} 실적 설명회`,detail:`${/정정/.test(ir.filing.report_nm)?"정정 공시 반영 · ":""}실적 공시 시각과 다를 수 있음`,source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${ir.filing.rcept_no}`,sourceName:"DART"});
+        if(state==="확인되지 않음" || state==="발표완료")state="예정";
+      }
+    } catch { if(state!=="예정"){state="공시 확인 필요";note="설명회 원문 또는 일정 확인 필요";} }
     companies.push({...company,status:state,...(note?{note}:{}),...(notice?{source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${notice.rcept_no}`}:{})});
   }
   return {updatedAt:now.toISOString(),error:null,capAsOf:asOf,companies,events};

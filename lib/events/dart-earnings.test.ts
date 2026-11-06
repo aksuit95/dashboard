@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseEarningsNotice, parseEarningsIR, selectTopCompanies } from "./dart-earnings";
+import { parseEarningsNotice, parseEarningsIR, selectTopCompanies, findLatestEarningsIR, type Filing } from "./dart-earnings";
 const row = (...cells:string[]) => `<TR>${cells.map(c=>`<TE>${c}</TE>`).join("")}</TR>`;
 describe("DART earnings notices", () => {
   it("uses the amended notice body instead of old correction dates and leaves time unknown", () => {
@@ -23,5 +23,14 @@ describe("DART earnings notices", () => {
     rows.push({ISU_SRT_CD:"999999",ISU_ABBRV:"우선주",MKT_ID:"STK",MKTCAP:"9999999",TDD_CLSPRC:"1",LIST_SHRS:"9999999"});
     const top=selectTopCompanies(rows,codes);
     expect(top).toHaveLength(30);expect(top[0].code).toBe("000031");expect(top.some(c=>c.code==="999999")).toBe(false);
+  });
+  it("finds earnings IR behind a newer unrelated conference", async () => {
+    const filings:Filing[]=[{corp_code:"001",report_nm:"기업설명회(IR)개최",rcept_no:"20261102800774",rcept_dt:"20261102"},{corp_code:"001",report_nm:"기업설명회(IR)개최",rcept_no:"20261020800455",rcept_dt:"20261020"}];
+    const result=await findLatestEarningsIR(filings,async f=>f.rcept_no===filings[0].rcept_no ? "<p>11월 컨퍼런스 참석</p>" : "<p>1. 일시 및 장소 일시 2026-11-12 09:00 장소 - 3. 개최목적 2026년 3분기 실적발표</p>","2026-11-06");
+    expect(result).toMatchObject({filing:filings[1],date:"2026-11-12",time:"09:00"});
+  });
+  it("does not resurrect an older IR when a correction has an unknown date", async () => {
+    const filings:Filing[]=[{corp_code:"001",report_nm:"[기재정정]기업설명회(IR)개최",rcept_no:"20261103800001",rcept_dt:"20261103"},{corp_code:"001",report_nm:"기업설명회(IR)개최",rcept_no:"20261020800455",rcept_dt:"20261020"}];
+    await expect(findLatestEarningsIR(filings,async f=>f===filings[0] ? "<p>3분기 실적발표 일시 미정</p>" : "<p>1. 일시 및 장소 일시 2026-11-12 09:00 장소 - 3분기 실적발표</p>","2026-11-06")).rejects.toThrow("일시 확인 필요");
   });
 });

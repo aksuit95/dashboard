@@ -1,9 +1,9 @@
 import { readFile, mkdir, writeFile, rename } from "node:fs/promises";
 import { addDays, seoulDate } from "@/lib/events/calendar";
-import { ISM_URL, parseIsm, refreshFeed, type Snapshot } from "@/lib/events/refresh";
+import { refreshFeed, type Snapshot } from "@/lib/events/refresh";
 import { loadEnv } from "@/lib/env";
 import { collectDartEarnings } from "@/lib/events/dart-earnings";
-import { parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
+import { headlineIsm, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
 
 const path = "data/events/board.json";
 async function download(url: string) {
@@ -17,12 +17,18 @@ async function main() {
   try { prior = JSON.parse(await readFile(path, "utf8")) as Snapshot; } catch (e) { if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e; }
   const current = new Date(), now = current.toISOString(), today = seoulDate(current);
   let generatedAt: string | undefined;
-  const [show, ism, dart] = await Promise.all([
+  const [show, dart] = await Promise.all([
     refreshFeed(prior.feeds.show, async () => { const parsed = parseShowMyTrades(JSON.parse(await download(SHOWMYTRADES_URL)), current); generatedAt = parsed.generatedAt; return parsed.events; }, now),
-    refreshFeed(prior.feeds.ism, async () => parseIsm(await download(ISM_URL)), now),
     collectDartEarnings(current).catch(error => ({updatedAt:prior.feeds.dart?.updatedAt ?? null, error:error instanceof Error ? error.message : "DART 수집 실패", capAsOf:prior.feeds.dart?.capAsOf ?? null, companies:prior.feeds.dart?.companies ?? [], events:prior.feeds.dart?.events ?? []})),
   ]);
   show.generatedAt = generatedAt ?? prior.feeds.show?.generatedAt;
+  const ism = await refreshFeed(prior.feeds.ism, async () => {
+    if(show.error) throw new Error("ShowMyTrades 일정 수집 실패");
+    const found = headlineIsm(show.events);
+    if(!found.length) throw new Error("제공처에서 ISM PMI 일정을 찾지 못했습니다");
+    return found;
+  }, now);
+  ism.generatedAt = show.generatedAt ?? prior.feeds.ism?.generatedAt;
   const snapshot: Snapshot = { feeds: { show, ism, dart } };
   await mkdir("data/events", { recursive:true });
   await writeFile(`${path}.tmp`, JSON.stringify(snapshot, null, 2) + "\n", "utf8");

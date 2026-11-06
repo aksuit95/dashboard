@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseShowMyTrades } from "./showmytrades";
+import { parseShowMyTrades, headlineIsm } from "./showmytrades";
 const now = new Date("2026-11-06T07:00:00Z");
 const row = { id:"usd-cpi.test", title:"CPI", time:"2026-11-10T13:30:00Z", currency:"USD", impact:"high", status:"scheduled", confidence:"official" };
 function payload(events: unknown[]) { return {generated_at:"2026-11-06T06:55:00Z", from:"2026-11-06T01:00:00Z", to:"2026-12-06T07:00:00Z", count:events.length, events}; }
@@ -16,5 +16,9 @@ describe("ShowMyTrades calendar", () => {
     expect(() => parseShowMyTrades({...payload([row]),generated_at:"2026-11-01T00:00:00Z"},now)).toThrow();
     expect(() => parseShowMyTrades({...payload([row]),to:"2026-11-07T00:00:00Z"},now)).toThrow();
     expect(() => parseShowMyTrades(payload([{...row,time:"2026-11-10T13:30:00"}]),now)).toThrow();
+  });
+  it("extracts only headline ISM PMI series and keeps provider attribution", () => {
+    const events=parseShowMyTrades(payload([{...row,id:"pmi",title:"ISM Manufacturing PMI",impact:"medium"},{...row,id:"price",title:"ISM Manufacturing Prices Paid",impact:"medium"}]),now).events;
+    expect(headlineIsm(events).map(e=>[e.id,e.sourceName])).toEqual([["smt-pmi","ShowMyTrades"]]);
   });
 });

@@ -19,7 +19,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
   const today=seoulDate(new Date()), end=addDays(today,27), snapshot=await loadSnapshot(), feeds=snapshot?.feeds ?? {};
   const manual=events.filter(e => !(e.country === "US" && e.category === "매크로" && feeds.show?.updatedAt) && !(e.sourceName === "ISM" && feeds.ism?.updatedAt));
   const ism=feeds.ism?.events ?? [];
-  const show=(feeds.show?.events ?? []).filter(e=>!ism.some(i=>i.date===e.date && /ism/i.test(e.title) && (/manufactur/i.test(e.title)===/제조업/.test(i.title)) && (/services?/i.test(e.title)===/서비스업/.test(i.title))));
+  const show=(feeds.show?.events ?? []).filter(e=>!ism.some(i=>i.id===e.id));
   const all=upcomingEvents(today,[...manual,...show,...ism,...(feeds.dart?.events ?? [])]).filter(e=>e.country===country);
   const items=all.filter(e=>!e.tentative), tentative=all.filter(e=>e.tentative);
   const unknown=(feeds.dart?.companies ?? []).filter(c=>c.status==="확인되지 않음" || c.status==="공시 확인 필요");
@@ -39,8 +39,8 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
         {feedStatus("DART · KRX",feeds.dart)}
         <p className="mt-2 text-xs leading-5 text-zinc-400">공시예고가 없으면 날짜를 추측하지 않습니다. 공시와 IR 설명회는 별개이며 정정·취소될 수 있습니다. 발표일이 4주 밖인 일정은 목록에 표시되지 않습니다.</p>
       </> : <>
-        <p className="mt-2 text-xs leading-5 text-zinc-400">미국 주요 매크로는 ShowMyTrades, ISM은 공식 일정에서 매일 16:00 KST 갱신을 시도합니다. 기업 실적은 수동 확인 ({reviewedAt}) 자료입니다.</p>
-        {feedStatus("ShowMyTrades",feeds.show)}{feedStatus("ISM",feeds.ism)}
+        <p className="mt-2 text-xs leading-5 text-zinc-400">미국 주요 매크로와 ISM 일정은 ShowMyTrades에서 매일 16:00 KST 갱신을 시도합니다. 기업 실적은 수동 확인 ({reviewedAt}) 자료입니다.</p>
+        {feedStatus("ShowMyTrades",feeds.show)}{feedStatus("ISM · ShowMyTrades",feeds.ism)}
         <p className="mt-2 text-xs text-zinc-400">미국 원본은 수집 시각의 6시간 전부터 제공하므로 이미 지난 일정이 빠질 수 있습니다. <a className="underline" href="https://showmytrades.com/tools/economic-calendar" target="_blank" rel="noreferrer">Economic calendar by ShowMyTrades ↗</a></p>
       </>}
       <p className="mt-2 text-xs text-amber-300">모든 일정이 포함되는 것은 아니며, 원문을 확인해 주세요.</p>

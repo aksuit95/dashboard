@@ -25,3 +25,8 @@ export function parseShowMyTrades(payload: unknown, now: Date): { events: Market
   }
   return { events, generatedAt: data.generated_at };
 }
+
+/** Only the headline ISM PMI series, preserving provider status and attribution. */
+export function headlineIsm(events: MarketEvent[]): MarketEvent[] {
+  return events.filter(event => /^ISM\s+(Manufacturing|Services)\s+PMI\b/i.test(event.title));
+}

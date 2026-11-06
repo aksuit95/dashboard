@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-06T04:44:53.268Z",
+      "updatedAt": "2026-11-06T04:52:41.588Z",
       "error": null,
       "events": [
         {
@@ -425,15 +425,41 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-06T04:42:15Z"
+      "generatedAt": "2026-11-06T04:52:43Z"
     },
     "ism": {
-      "updatedAt": null,
-      "error": "www.ismworld.org: HTTP 404",
-      "events": []
+      "updatedAt": "2026-11-06T04:52:41.588Z",
+      "error": null,
+      "events": [
+        {
+          "id": "smt-usd-ism-manufacturing-pmi.20261201T1500",
+          "date": "2026-12-02",
+          "time": "00:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "ISM Manufacturing PMI",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-ism-services-pmi.20261203T1500",
+          "date": "2026-12-04",
+          "time": "00:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "ISM Services PMI",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        }
+      ],
+      "generatedAt": "2026-11-06T04:52:43Z"
     },
     "dart": {
-      "updatedAt": "2026-11-06T04:44:53.268Z",
+      "updatedAt": "2026-11-06T04:52:41.588Z",
       "error": null,
       "capAsOf": "2026-11-05",
       "companies": [
@@ -565,7 +591,7 @@
           "corpCode": "00164788",
           "name": "현대모비스",
           "marketCap": 32694692940000,
-          "status": "발표완료"
+          "status": "예정"
         },
         {
           "code": "034020",
@@ -594,7 +620,7 @@
           "corpCode": "00266961",
           "name": "NAVER",
           "marketCap": 28124934130800,
-          "status": "확인되지 않음"
+          "status": "예정"
         },
         {
           "code": "316140",
@@ -667,6 +693,17 @@
           "sourceName": "DART"
         },
         {
+          "id": "dart-012330-ir",
+          "date": "2026-11-09",
+          "time": "09:00",
+          "country": "KR",
+          "category": "실적",
+          "title": "현대모비스 실적 설명회",
+          "detail": "실적 공시 시각과 다를 수 있음",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030800645",
+          "sourceName": "DART"
+        },
+        {
           "id": "dart-000810-ir",
           "date": "2026-11-12",
           "time": "10:00",
@@ -675,6 +712,17 @@
           "title": "삼성화재 실적 설명회",
           "detail": "실적 공시 시각과 다를 수 있음",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261030801167",
+          "sourceName": "DART"
+        },
+        {
+          "id": "dart-035420-ir",
+          "date": "2026-11-12",
+          "time": "09:00",
+          "country": "KR",
+          "category": "실적",
+          "title": "NAVER 실적 설명회",
+          "detail": "실적 공시 시각과 다를 수 있음",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261020800455",
           "sourceName": "DART"
         },
         {
