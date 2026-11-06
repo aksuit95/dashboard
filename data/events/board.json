@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-06T04:58:01.230Z",
+      "updatedAt": "2026-11-06T05:10:42.011Z",
       "error": null,
       "events": [
         {
@@ -14,7 +14,9 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "65K",
+          "previous": "29K"
         },
         {
           "id": "smt-usd-average-hourly-earnings-mom.20261106T1330",
@@ -26,7 +28,9 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "0.3%",
+          "previous": "0.1%"
         },
         {
           "id": "smt-usd-unemployment-rate.20261106T1330",
@@ -38,7 +42,9 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "4.2%",
+          "previous": "4.2%"
         },
         {
           "id": "smt-usd-michigan-consumer-sentiment-index.20261106T1500",
@@ -50,7 +56,9 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "48",
+          "previous": "48"
         },
         {
           "id": "smt-usd-cpi-yoy.20261110T1330",
@@ -62,7 +70,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "3.7%"
         },
         {
           "id": "smt-usd-cpi-mom.20261110T1330",
@@ -74,7 +83,9 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "0.3%",
+          "previous": "0.6%"
         },
         {
           "id": "smt-usd-core-cpi-mom.20261110T1330",
@@ -86,7 +97,9 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "forecast": "0.2%",
+          "previous": "0.3%"
         },
         {
           "id": "smt-usd-core-cpi-yoy.20261110T1330",
@@ -98,7 +111,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "2.6%"
         },
         {
           "id": "smt-usd-ppi-mom.20261113T1330",
@@ -110,7 +124,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "1.3%"
         },
         {
           "id": "smt-usd-core-ppi-mom.20261113T1330",
@@ -122,7 +137,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.7%"
         },
         {
           "id": "smt-usd-retail-sales-control-group.20261117T1330",
@@ -134,7 +150,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.1%"
         },
         {
           "id": "smt-usd-retail-sales-mom.20261117T1330",
@@ -146,7 +163,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.8%"
         },
         {
           "id": "smt-usd-fomc-minutes.20261118T1900",
@@ -170,7 +188,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "54.9"
         },
         {
           "id": "smt-usd-services-pmi.20261123T1445",
@@ -182,7 +201,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "56.1"
         },
         {
           "id": "smt-usd-gdp-annualized.20261125T1330",
@@ -194,7 +214,8 @@
           "detail": "대상 기간 2026-07",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "3.4%"
         },
         {
           "id": "smt-usd-durable-goods-orders.20261125T1330",
@@ -206,7 +227,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "1.8%"
         },
         {
           "id": "smt-usd-durable-goods-orders-ex-transportation.20261125T1330",
@@ -218,7 +240,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.5%"
         },
         {
           "id": "smt-usd-core-pce-yoy.20261127T1330",
@@ -230,7 +253,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "3.1%"
         },
         {
           "id": "smt-usd-core-pce-mom.20261127T1330",
@@ -242,7 +266,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.3%"
         },
         {
           "id": "smt-usd-chicago-pmi.20261130T1445",
@@ -254,7 +279,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "55.3"
         },
         {
           "id": "smt-usd-jolts-job-openings.20261201T1500",
@@ -266,7 +292,8 @@
           "detail": "대상 기간 2026-10",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "7.523M"
         },
         {
           "id": "smt-usd-ism-manufacturing-prices-paid.20261201T1500",
@@ -278,7 +305,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "75.2"
         },
         {
           "id": "smt-usd-ism-manufacturing-employment-index.20261201T1500",
@@ -290,7 +318,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "52.4"
         },
         {
           "id": "smt-usd-ism-manufacturing-pmi.20261201T1500",
@@ -302,7 +331,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "55.5"
         },
         {
           "id": "smt-usd-ism-manufacturing-new-orders-index.20261201T1500",
@@ -314,7 +344,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "55.5"
         },
         {
           "id": "smt-usd-adp-employment-change.20261202T1315",
@@ -326,7 +357,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "86K"
         },
         {
           "id": "smt-usd-ism-services-employment-index.20261203T1500",
@@ -338,7 +370,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "51.4"
         },
         {
           "id": "smt-usd-ism-services-prices-paid.20261203T1500",
@@ -350,7 +383,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "73"
         },
         {
           "id": "smt-usd-ism-services-new-orders-index.20261203T1500",
@@ -362,7 +396,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "55.9"
         },
         {
           "id": "smt-usd-ism-services-pmi.20261203T1500",
@@ -374,7 +409,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "54.5"
         },
         {
           "id": "smt-usd-average-hourly-earnings-mom.20261204T1330",
@@ -425,10 +461,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-06T04:56:51Z"
+      "generatedAt": "2026-11-06T05:10:43Z"
     },
     "ism": {
-      "updatedAt": "2026-11-06T04:58:01.230Z",
+      "updatedAt": "2026-11-06T05:10:42.011Z",
       "error": null,
       "events": [
         {
@@ -441,7 +477,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "55.5"
         },
         {
           "id": "smt-usd-ism-services-pmi.20261203T1500",
@@ -453,10 +490,11 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-06T04:56:51Z"
+      "generatedAt": "2026-11-06T05:10:43Z"
     },
     "dart": {
       "updatedAt": "2026-11-06T04:58:01.230Z",

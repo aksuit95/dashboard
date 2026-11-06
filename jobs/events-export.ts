@@ -3,7 +3,7 @@ import { addDays, seoulDate } from "@/lib/events/calendar";
 import { refreshFeed, type Snapshot } from "@/lib/events/refresh";
 import { loadEnv } from "@/lib/env";
 import { collectDartEarnings } from "@/lib/events/dart-earnings";
-import { headlineIsm, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
+import { headlineIsm, mergeRecentEvents, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
 
 const path = "data/events/board.json";
 async function download(url: string) {
@@ -16,10 +16,11 @@ async function main() {
   let prior: Snapshot = { feeds: {} };
   try { prior = JSON.parse(await readFile(path, "utf8")) as Snapshot; } catch (e) { if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e; }
   const current = new Date(), now = current.toISOString(), today = seoulDate(current);
+  const macroOnly = process.argv.includes("--macro-only");
   let generatedAt: string | undefined;
   const [show, dart] = await Promise.all([
-    refreshFeed(prior.feeds.show, async () => { const parsed = parseShowMyTrades(JSON.parse(await download(SHOWMYTRADES_URL)), current); generatedAt = parsed.generatedAt; return parsed.events; }, now),
-    collectDartEarnings(current).catch(error => ({updatedAt:prior.feeds.dart?.updatedAt ?? null, error:error instanceof Error ? error.message : "DART 수집 실패", capAsOf:prior.feeds.dart?.capAsOf ?? null, companies:prior.feeds.dart?.companies ?? [], events:prior.feeds.dart?.events ?? []})),
+    refreshFeed(prior.feeds.show, async () => { const parsed = parseShowMyTrades(JSON.parse(await download(SHOWMYTRADES_URL)), current); generatedAt = parsed.generatedAt; return mergeRecentEvents(prior.feeds.show?.events ?? [], parsed.events, current); }, now),
+    macroOnly ? Promise.resolve(prior.feeds.dart ?? {updatedAt:null,error:null,capAsOf:null,companies:[],events:[]}) : collectDartEarnings(current).catch(error => ({updatedAt:prior.feeds.dart?.updatedAt ?? null, error:error instanceof Error ? error.message : "DART 수집 실패", capAsOf:prior.feeds.dart?.capAsOf ?? null, companies:prior.feeds.dart?.companies ?? [], events:prior.feeds.dart?.events ?? []})),
   ]);
   show.generatedAt = generatedAt ?? prior.feeds.show?.generatedAt;
   const ism = await refreshFeed(prior.feeds.ism, async () => {
@@ -29,12 +30,12 @@ async function main() {
     return found;
   }, now);
   ism.generatedAt = show.generatedAt ?? prior.feeds.ism?.generatedAt;
-  const snapshot: Snapshot = { feeds: { show, ism, dart } };
+  const snapshot: Snapshot = { feeds: { ...prior.feeds, show, ism, dart } };
   await mkdir("data/events", { recursive:true });
   await writeFile(`${path}.tmp`, JSON.stringify(snapshot, null, 2) + "\n", "utf8");
   await rename(`${path}.tmp`, path);
-  console.log(JSON.stringify({ period:[today, addDays(today,27)], show:{count:show.events.length,error:show.error}, ism:{count:ism.events.length,error:ism.error}, dart:{count:dart.events.length,error:dart.error,companies:dart.companies.length,capAsOf:dart.capAsOf} }));
-  if (show.error || ism.error || dart.error) process.exitCode = 1;
+  console.log(JSON.stringify({ period:[today, addDays(today,27)], show:{count:show.events.length,error:show.error}, ism:{count:ism.events.length,error:ism.error}, dart:{count:dart.events.length,error:dart.error,companies:dart.companies?.length ?? 0,capAsOf:dart.capAsOf} }));
+  if (show.error || ism.error || (!macroOnly && dart.error)) process.exitCode = 1;
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });
 
