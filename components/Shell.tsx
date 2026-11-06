@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const groups = [
+  { title: { ko: "시장 일정", en: "Market Calendar" }, items: [{ href: "/events", ko: "매크로 · 실적 캘린더", en: "Macro & Earnings" }] },
   {
     title: { ko: "수급분석", en: "Investor Flows" },
     items: [
@@ -106,3 +107,4 @@ export function Shell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

@@ -27,7 +27,8 @@
     "valuation:export": "tsx jobs/valuation-export.ts",
     "valuation:market-caps:export": "tsx jobs/market-caps-export.ts",
     "valuation:stocks:export": "tsx jobs/stock-valuation-export.ts",
-    "financials:export": "tsx jobs/financials-export.ts"
+    "financials:export": "tsx jobs/financials-export.ts",
+    "events:export": "tsx jobs/events-export.ts"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
