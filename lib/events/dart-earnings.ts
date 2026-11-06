@@ -128,10 +128,13 @@ export async function collectDartEarnings(now=new Date(), key=process.env.DART_A
         else if(parsed.date<today){state="공시 확인 필요";note="예정일이 지났으나 발표 여부 확인 필요";}
         else {state="예정";events.push({id:`dart-${company.code}-notice`,date:parsed.date,time:parsed.time,country:"KR",category:"실적",title:`${company.name} 실적 공시 예정`,detail:`${/정정/.test(notice.report_nm)?"정정 공시 반영 · ":""}DART 접수 ${notice.rcept_dt.slice(0,4)}-${notice.rcept_dt.slice(4,6)}-${notice.rcept_dt.slice(6,8)} · 공시 예정일`,source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${notice.rcept_no}`,sourceName:"DART"});}
       } catch {state="공시 확인 필요";note="공시 원문을 읽지 못했습니다.";}
+    } else if(result && result.rcept_dt>=addDays(today,-45).replaceAll("-","")) {
+      // A recent actual release without a newer notice is already published.
+      state="발표완료";
     }
     const ir=ordered.find(f=>/기업\s*설명회.*개최/.test(f.report_nm));
     if(ir) {
-      try {const p=parseEarningsIR(await document(ir,key));if(p?.date && p.date>=today){events.push({id:`dart-${company.code}-ir`,date:p.date,time:p.time,country:"KR",category:"실적",title:`${company.name} 실적 설명회`,detail:`${/정정/.test(ir.report_nm)?"정정 공시 반영 · ":""}실적 공시 시각과 다를 수 있음`,source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${ir.rcept_no}`,sourceName:"DART"}); if(state==="확인되지 않음")state="예정";}}
+      try {const p=parseEarningsIR(await document(ir,key));if(p?.date && p.date>=today){events.push({id:`dart-${company.code}-ir`,date:p.date,time:p.time,country:"KR",category:"실적",title:`${company.name} 실적 설명회`,detail:`${/정정/.test(ir.report_nm)?"정정 공시 반영 · ":""}실적 공시 시각과 다를 수 있음`,source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${ir.rcept_no}`,sourceName:"DART"}); if(state==="확인되지 않음" || state==="발표완료")state="예정";}}
       catch {if(state==="확인되지 않음"){state="공시 확인 필요";note="설명회 원문을 읽지 못했습니다.";}}
     }
     companies.push({...company,status:state,...(note?{note}:{}),...(notice?{source:`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${notice.rcept_no}`}:{})});

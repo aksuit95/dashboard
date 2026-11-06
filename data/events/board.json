@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-06T04:36:14.283Z",
+      "updatedAt": "2026-11-06T04:44:53.268Z",
       "error": null,
       "events": [
         {
@@ -425,15 +425,15 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-06T04:36:15Z"
+      "generatedAt": "2026-11-06T04:42:15Z"
     },
     "ism": {
       "updatedAt": null,
-      "error": "ISM 일정 구조를 읽지 못했습니다",
+      "error": "www.ismworld.org: HTTP 404",
       "events": []
     },
     "dart": {
-      "updatedAt": "2026-11-06T04:36:14.283Z",
+      "updatedAt": "2026-11-06T04:44:53.268Z",
       "error": null,
       "capAsOf": "2026-11-05",
       "companies": [
@@ -442,14 +442,14 @@
           "corpCode": "00126380",
           "name": "삼성전자",
           "marketCap": 1178025139512000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "000660",
           "corpCode": "00164779",
           "name": "SK하이닉스",
           "marketCap": 923342349360000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "402340",
@@ -463,7 +463,7 @@
           "corpCode": "01515323",
           "name": "LG에너지솔루션",
           "marketCap": 80964000000000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "009150",
@@ -486,21 +486,21 @@
           "corpCode": "00164742",
           "name": "현대차",
           "marketCap": 59717415402000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "105560",
           "corpCode": "00688996",
           "name": "KB금융",
           "marketCap": 55685974238000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "068270",
           "corpCode": "00413046",
           "name": "셀트리온",
           "marketCap": 49895668555000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "032830",
@@ -522,21 +522,21 @@
           "corpCode": "00382199",
           "name": "신한지주",
           "marketCap": 41640236199300,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "006400",
           "corpCode": "00126362",
           "name": "삼성SDI",
           "marketCap": 41018034770000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "000270",
           "corpCode": "00106641",
           "name": "기아",
           "marketCap": 39353630198400,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "012450",
@@ -558,14 +558,14 @@
           "corpCode": "00547583",
           "name": "하나금융지주",
           "marketCap": 32733165128000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "012330",
           "corpCode": "00164788",
           "name": "현대모비스",
           "marketCap": 32694692940000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "034020",
@@ -587,7 +587,7 @@
           "corpCode": "01390344",
           "name": "HD현대중공업",
           "marketCap": 28444491975000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "035420",
@@ -601,14 +601,14 @@
           "corpCode": "01350869",
           "name": "우리금융지주",
           "marketCap": 23540330496150,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "066570",
           "corpCode": "00401731",
           "name": "LG전자",
           "marketCap": 23259926306400,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "138040",
@@ -622,7 +622,7 @@
           "corpCode": "00155319",
           "name": "POSCO홀딩스",
           "marketCap": 21672557634500,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "011200",
@@ -636,14 +636,14 @@
           "corpCode": "00102858",
           "name": "고려아연",
           "marketCap": 20643366341000,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "033780",
           "corpCode": "00244455",
           "name": "KT&G",
           "marketCap": 20159990555200,
-          "status": "확인되지 않음"
+          "status": "발표완료"
         },
         {
           "code": "015760",
