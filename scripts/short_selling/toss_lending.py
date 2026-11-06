@@ -1,11 +1,13 @@
 """Update saved short-selling snapshots with Toss securities-lending records."""
 import json
+import argparse
 import os
 import time
 import urllib.parse
 import urllib.request
 import urllib.error
 from datetime import date, datetime
+from pathlib import Path
 
 from .collect import log, publish, read_previous
 from .model import build
@@ -111,8 +113,11 @@ def update(target=ROOT / "data"):
 
 if __name__ == "__main__":
     try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--output", type=Path, default=ROOT / "data")
+        args = parser.parse_args()
         load_env()
-        update()
+        update(args.output)
     except Exception as exc:
         log("toss_lending_failed_previous_json_preserved", error_type=type(exc).__name__)
         raise SystemExit(1)

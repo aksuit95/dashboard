@@ -17,7 +17,7 @@ try {
     $env:PYTHONPATH = $projectRoot
     Push-Location -LiteralPath $projectRoot
     try {
-      & $python -c 'from pathlib import Path; from scripts.short_selling.sources import load_env; from scripts.short_selling.toss_lending import update; load_env(); update(Path(r"C:\dashboard\tmp\short-selling-runner\data"))'
+      & $python -m scripts.short_selling.toss_lending --output (Join-Path $runnerRoot 'data')
       $collectExit = $LASTEXITCODE
     } finally { Pop-Location }
     if ($collectExit -ne 0) { throw 'Toss lending collection failed; no files published.' }
