@@ -9,8 +9,12 @@ describe("KRX 웹 시가총액", () => {
     expect(query).toHaveBeenCalledWith("MDCSTAT01501", { trdDd: "20261103", mktId: "STK" });
     expect(query).toHaveBeenCalledWith("MDCSTAT01501", { trdDd: "20261103", mktId: "KSQ" });
   });
-  it("잘못된 시총과 이전 통합 종가 스냅샷을 거부한다", async () => {
-    await expect(fetchValuationMarketCaps("2026-11-03", async (_bld, p) => ({ OutBlock_1: rows(p.mktId).map((r, i) => i ? r : { ...r, MKTCAP: "1" }) }))).rejects.toThrow();
+  it("일부 시총 오류는 해당 종목만 결측으로 보존하고 대량 오류는 거부한다", async () => {
+    const data = await fetchValuationMarketCaps("2026-11-03", async (_bld, p) => ({ OutBlock_1: rows(p.mktId).map((r, i) => p.mktId === "STK" && i === 0 ? { ...r, MKTCAP: "1" } : r) }));
+    expect(data.values["100000"]).toBeNull();
+    expect(data.closes["100000"]).toBeNull();
+    expect(data.values["100001"]).toBe(100000);
+    await expect(fetchValuationMarketCaps("2026-11-03", async (_bld, p) => ({ OutBlock_1: rows(p.mktId).map((r, i) => i < 2 ? { ...r, MKTCAP: "1" } : r) }))).rejects.toThrow("유효 자료 부족");
     expect(() => validateMarketCaps({ priceBasis: "KRX_REGULAR_CLOSE", values: {} })).toThrow();
   });
 });

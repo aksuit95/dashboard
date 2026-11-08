@@ -32,4 +32,11 @@ describe("수급분석 KRX 웹 시세", () => {
     await collect("MDCSTAT00301", { indIdx: "2", indIdx2: "203", marketIndex: "KOSDAQ", sessionDates: "[]", strtDd: "20251104", endDd: "20261104" });
     expect(query).toHaveBeenCalledWith("MDCSTAT00301", { indIdx: "2", indIdx2: "001", strtDd: "20251104", endDd: "20261104" });
   });
+  it("allows an isolated invalid market-cap row for the valuation snapshot only", async () => {
+    const data = records(); data[0].MKTCAP = "99";
+    const closes = vi.fn(async (_code: string, date: string) => [{ date, close: 1000 }]);
+    const query = createInvestorKrxWebQuery(async () => ({ OutBlock_1: data }), closes, { allowInvalidRows: true });
+    expect((await query("MDCSTAT01501", params)).OutBlock_1).toHaveLength(12);
+    expect(closes).toHaveBeenCalledTimes(10);
+  });
 });

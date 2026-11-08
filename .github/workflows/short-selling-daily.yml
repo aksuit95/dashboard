@@ -65,16 +65,39 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
           OWNER: ${{ github.repository_owner }}
           OWNER_ID: ${{ github.event.repository.owner.id }}
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
+          BACKFILL: ${{ inputs.backfill || 'false' }}
         shell: bash
         run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # The PC lending job can publish the same generation while this run
+          # is collecting. Rebuild from the newest version so lending survives.
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            if [ "$(git rev-parse HEAD)" = "$(git rev-parse "origin/$BRANCH")" ]; then break; fi
+            git stash push --include-untracked -m 'short-selling pre-refresh' -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history data/market_alerts.json
+            git merge --ff-only "origin/$BRANCH"
+            if [ "$BACKFILL" = "true" ]; then
+              python -m scripts.short_selling.collect --backfill
+            else
+              python -m scripts.short_selling.collect
+            fi
+            python -m scripts.short_selling.market_alerts
+            if [ "$attempt" = "3" ]; then
+              git fetch origin "$BRANCH"
+              if [ "$(git rev-parse HEAD)" != "$(git rev-parse "origin/$BRANCH")" ]; then
+                echo 'Remote changed repeatedly; refusing to overwrite.' >&2
+                exit 1
+              fi
+            fi
+          done
           git add -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
           if [ -f data/market_alerts.json ]; then git add -- data/market_alerts.json; fi
           if git diff --cached --quiet; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): update KOSPI200 short-selling JSON'
-          git fetch origin "$BRANCH"
-          git rebase "origin/$BRANCH"
+          # A final concurrent push is rejected rather than overwriting data.
           git push origin "HEAD:$BRANCH"
       - name: Report market-alert collection failure
         if: steps.market-alerts.outcome == 'failure'

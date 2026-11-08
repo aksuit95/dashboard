@@ -14,6 +14,7 @@ function number(value: unknown): number {
 export function createInvestorKrxWebQuery(
   query: Query = (bld, params) => krxClient.query(bld, params),
   closes: Close = (code, through) => fetchKrxDailyCloses(code, through, fetch, 1),
+  options: { allowInvalidRows?: boolean } = {},
 ): Query {
   return async (bld, params) => {
     if (bld !== "MDCSTAT01501" && bld !== "MDCSTAT00301") throw new Error("수급분석 KRX 웹 미지원 조회");
@@ -28,14 +29,20 @@ export function createInvestorKrxWebQuery(
     if (!Array.isArray(payload.OutBlock_1) || payload.OutBlock_1.length < 10) throw new Error("KRX 웹 전종목 시세 미반영");
     const market = params.mktId;
     const seen = new Set<string>();
-    const candidates = (payload.OutBlock_1 as Row[]).map(row => {
+    const candidates = (payload.OutBlock_1 as Row[]).flatMap(row => {
       const code = String(row.ISU_SRT_CD ?? "");
       if (!/^[0-9A-Z]{6}$/.test(code) || seen.has(code) || row.MKT_ID !== market) throw new Error("KRX 웹 종목·시장 확인 실패");
       seen.add(code);
-      const close = number(row.TDD_CLSPRC), shares = number(row.LIST_SHRS), cap = number(row.MKTCAP);
-      if (close <= 0 || shares <= 0 || cap <= 0 || close * shares !== cap) throw new Error(`${code} KRX 웹 종가·시총 확인 실패`);
-      return { code, close, cap };
+      try {
+        const close = number(row.TDD_CLSPRC), shares = number(row.LIST_SHRS), cap = number(row.MKTCAP);
+        if (close <= 0 || shares <= 0 || cap <= 0 || close * shares !== cap) throw new Error();
+        return [{ code, close, cap }];
+      } catch {
+        if (options.allowInvalidRows) return [];
+        throw new Error(`${code} KRX 웹 종가·시총 확인 실패`);
+      }
     }).sort((a, b) => b.cap - a.cap).slice(0, 10);
+    if (candidates.length < 10) throw new Error("KRX 웹 교차검증 대상 부족");
     const day = `${params.trdDd.slice(0, 4)}-${params.trdDd.slice(4, 6)}-${params.trdDd.slice(6)}`;
     for (let i = 0; i < candidates.length; i += 4) {
       await Promise.all(candidates.slice(i, i + 4).map(async item => {

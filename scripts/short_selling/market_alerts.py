@@ -38,7 +38,9 @@ def fetch(session):
                     raise ValueError("Invalid or duplicate alert row")
                 if order == "marketAlertType" and row.get("marketAlertType") != kind:
                     raise ValueError("Market alert filter mismatch")
-                if order == "statusTag" and row.get("manageStatusGb") not in ("1", "3"):
+                # KRX KIND lists the preferred-share codes returned with status 2
+                # (e.g. 001527) as designated administrative issues as well.
+                if order == "statusTag" and row.get("manageStatusGb") not in ("1", "2", "3"):
                     raise ValueError("Management filter mismatch")
                 if order == "tradeStopYn" and row.get("tradeStopYn") != "Y":
                     raise ValueError("Trading halt filter mismatch")

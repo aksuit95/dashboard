@@ -149,9 +149,16 @@ class PipelineTests(unittest.TestCase):
                 collect(args, self.config)
                 self.assertEqual(source.prices.call_count, len(days))
                 args.backfill = False
+                lending = root / 'lending.csv'
+                lending.write_text('date,code,source,published_at,quantity\n2026-11-03,005930,SEIBro,2026-11-03T18:00:00+09:00,12345\n', encoding='utf-8')
+                args.lending_csv = str(lending)
+                collect(args, self.config)
+                args.lending_csv = None
                 source.reset_mock()
                 collect(args, self.config)
                 self.assertEqual(source.prices.call_count, self.config['refresh_sessions'])
+                stock = json.loads((root / 'data/stocks.json').read_text(encoding='utf-8'))['stocks'][0]
+                self.assertEqual(stock['lending_quantity'], 12345)
                 summary = json.loads((root / 'data/summary.json').read_text(encoding='utf-8'))
                 self.assertFalse(summary['is_sample'])
                 self.assertEqual(summary['market']['short_value_ratio_pct'], 10)

@@ -21,6 +21,32 @@ try {
       $collectExit = $LASTEXITCODE
     } finally { Pop-Location }
     if ($collectExit -ne 0) { throw 'Toss lending collection failed; no files published.' }
+    # The GitHub collector may publish the same files during this request.
+    # Rebuild lending on its latest generation rather than merging JSON lines.
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+      & $git -c "safe.directory=$runnerRoot" fetch origin $branch
+      if ($LASTEXITCODE -ne 0) { throw 'Cannot check latest remote data.' }
+      $localHead = & $git -c "safe.directory=$runnerRoot" rev-parse HEAD
+      $remoteHead = & $git -c "safe.directory=$runnerRoot" rev-parse "origin/$branch"
+      if ($localHead -eq $remoteHead) { break }
+      & $git -c "safe.directory=$runnerRoot" -c user.name='Dashboard Collector' -c user.email='dashboard-collector@users.noreply.github.com' stash push --include-untracked -m 'lending pre-refresh' -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
+      if ($LASTEXITCODE -ne 0) { throw 'Cannot preserve collected lending data.' }
+      & $git -c "safe.directory=$runnerRoot" merge --ff-only "origin/$branch"
+      if ($LASTEXITCODE -ne 0) { throw 'Cannot update to latest short-selling data.' }
+      Push-Location -LiteralPath $projectRoot
+      try {
+        & $python -m scripts.short_selling.toss_lending --output (Join-Path $runnerRoot 'data')
+        $collectExit = $LASTEXITCODE
+      } finally { Pop-Location }
+      if ($collectExit -ne 0) { throw 'Toss lending refresh failed; no files published.' }
+      if ($attempt -eq 3) {
+        & $git -c "safe.directory=$runnerRoot" fetch origin $branch
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot check latest remote data.' }
+        $localHead = & $git -c "safe.directory=$runnerRoot" rev-parse HEAD
+        $remoteHead = & $git -c "safe.directory=$runnerRoot" rev-parse "origin/$branch"
+        if ($localHead -ne $remoteHead) { throw 'Remote changed repeatedly; no files published.' }
+      }
+    }
     & $git -c "safe.directory=$runnerRoot" add -- data/summary.json data/stocks.json data/market_history.json data/constituents.json data/history
     if ($LASTEXITCODE -ne 0) { throw 'Cannot stage data.' }
     & $git -c "safe.directory=$runnerRoot" diff --cached --quiet
@@ -28,8 +54,7 @@ try {
       & $git -c "safe.directory=$runnerRoot" -c user.name='Dashboard Collector' -c user.email='dashboard-collector@users.noreply.github.com' commit -m 'chore(data): update lending balances'
       if ($LASTEXITCODE -ne 0) { throw 'Cannot commit data.' }
     } elseif ($LASTEXITCODE -ne 0) { throw 'Cannot inspect changes.' }
-    & $git -c "safe.directory=$runnerRoot" pull --rebase origin $branch
-    if ($LASTEXITCODE -ne 0) { throw 'Cannot reconcile remote changes.' }
+    # A final concurrent push is rejected rather than overwriting data.
     & $git -c "safe.directory=$runnerRoot" push origin "HEAD:$branch"
     if ($LASTEXITCODE -ne 0) { throw 'Cannot publish data.' }
   } finally { Pop-Location }
