@@ -52,5 +52,5 @@ def collect(start, end, market, root, request=None):
             out[day.isoformat()] = value
         cursor = through + dt.timedelta(days=1)
     points = [{'date': day,'value': value} for day,value in sorted(out.items())]
-    if len(points) < 20 or points[-1]['date'] != end.isoformat(): raise ValueError(f'{market} 최신 정규장 지수 누락')
+    if not points or points[-1]['date'] != end.isoformat(): raise ValueError(f'{market} 최신 정규장 지수 누락')
     return points

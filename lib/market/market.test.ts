@@ -111,6 +111,11 @@ describe("ADR, 이격도, ETF, 연간 수익률", () => {
     expect(rows).toEqual([]);
   });
 
+  it("5년 구간은 윤년을 포함해 달력 기준으로 계산한다", () => {
+    const points = ["2021-11-05", "2021-11-06", "2026-11-06"].map(date => ({ date, value: 1 }));
+    expect(sliceByRange(points, "5Y").map(point => point.date)).toEqual(["2021-11-06", "2026-11-06"]);
+  });
+
   it("구간 슬라이스", () => {
     const points = [
       { date: "2024-01-01", value: 1 },

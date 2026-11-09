@@ -1,25 +1,28 @@
 import { PageHeader } from "@/components/PageHeader";
+import { DisparityHelp } from "@/components/DisparityHelp";
+import { loadDisparityIndicators } from "@/lib/sources/disparity-indicators";
 import { FearGreedBoard } from "@/components/FearGreedBoard";
-import { QuoteCard } from "@/components/QuoteCard";
+import { loadRiskCharts } from "@/lib/sources/risk-charts";
 import { RangeChart } from "@/components/RangeChart";
-import { getDb } from "@/lib/db/client";
 import { formatPlain } from "@/lib/view/read";
-import { loadRiskIndicators } from "@/lib/sources/risk-indicators";
 
 export default async function RiskPage() {
-  const data = await loadRiskIndicators(getDb());
+  const [charts, disparity] = await Promise.all([loadRiskCharts(), loadDisparityIndicators()]);
   return (
     <div>
       <PageHeader
         title="위험 지표"
-        description="이격도 = 종가 / N일 이동평균 × 100. 금리차는 10년물에서 2년 금리 선물을 뺀 값입니다."
+        description="이격도와 변동성, 반도체 지수 및 미국 국채 금리차의 흐름을 확인합니다."
       />
       <FearGreedBoard />
-      {data.errors.length ? <p role="status" className="mb-4 text-xs text-amber-300">{data.errors.join(" ")}</p> : null}
+      <DisparityHelp />
       <div className="grid gap-4 lg:grid-cols-2">
-        {data.disparity.map((item) => (
+        {disparity.map((item) => (
           <section key={item.id} className="rounded-xl border border-white/10 bg-[#151a22] p-4">
             <h2 className="font-medium">{item.name}</h2>
+            <p className="mt-1 text-xs text-zinc-500">{item.asOf ? `기준일 ${item.asOf} · ${item.basis}` : `데이터 없음 · ${item.basis}`}</p>
+            {item.fetchedAt ? <p className="mt-1 text-xs text-zinc-500">수집 시각 {new Date(item.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })} KST</p> : null}
+            {item.error ? <p role="status" className="mt-1 text-xs text-amber-300">종가 데이터를 불러오지 못했습니다.</p> : null}
             <p className="mt-1 text-sm text-zinc-400">25일 {formatPlain(item.latest25)} · 50일 {formatPlain(item.latest50)}</p>
             <div className="mt-3">
               <p className="mb-1 text-xs text-zinc-500">50일 이격도</p>
@@ -29,16 +32,15 @@ export default async function RiskPage() {
         ))}
       </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        {data.vix ? <QuoteCard card={data.vix} /> : null}
-        {data.sox ? <QuoteCard card={data.sox} /> : null}
-        <section className="rounded-xl border border-white/10 bg-[#151a22] p-4">
-          <h2 className="font-medium">금리차</h2>
-          <p className="mt-2 text-3xl font-semibold tabular-nums">{formatPlain(data.spread?.value ?? null)}%p</p>
-          <p className="mt-2 text-sm text-zinc-400">
-            10년 {formatPlain(data.spread?.ten ?? null)} · 2년 선물 {formatPlain(data.spread?.two ?? null)}
-          </p>
-          <p className="mt-2 text-xs text-zinc-500">{data.spread?.note}</p>
-        </section>
+        {charts.map(item => <section key={item.id} className="rounded-xl border border-white/10 bg-[#151a22] p-4">
+          <h2 className="font-medium">{item.name}</h2>
+          <p className="mt-1 text-xs text-zinc-500">{item.source}</p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums">{formatPlain(item.points.at(-1)?.value ?? null)}{item.points.length && item.id === "spread" ? "%p" : ""}</p>
+          <p className="mt-1 text-xs text-zinc-500">{item.asOf ? `기준일 ${item.asOf} · ${item.basis}` : `데이터 없음 · ${item.basis}`}</p>
+          {item.fetchedAt ? <p className="mt-1 text-xs text-zinc-500">수집 시각 {new Date(item.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })} KST</p> : null}
+          {item.error ? <p role="status" className="mt-2 text-xs text-amber-300">{item.error}</p> : null}
+          <div className="mt-3"><RangeChart points={item.points} color="#38bdf8" /></div>
+        </section>)}
       </div>
     </div>
   );

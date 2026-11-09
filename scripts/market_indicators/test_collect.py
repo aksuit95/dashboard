@@ -53,11 +53,22 @@ class TestMarketIndicators(unittest.TestCase):
                 self.assertEqual(json.loads((target/'kospi.json').read_text())[0]['value'],100)
                 meta=json.loads((target/'kospi.meta.json').read_text(encoding='utf-8'))
                 self.assertEqual(meta['status'],'error'); self.assertEqual(meta['asOf'],'2026-11-05')
+    def test_index_collection_only_appends_to_existing_krx_history(self):
+        original = json.loads((collect.DEST/'kospi.json').read_text(encoding='utf-8'))
+        last = original[-1]
+        later = {'date':'2026-11-09','value':last['value']+1}
+        with patch.object(collect.krx,'collect',return_value=[last,later]) as source, patch.object(collect,'atomic') as write:
+            self.assertEqual(collect.run(now=dt.datetime(2026,11,9,8,tzinfo=dt.timezone.utc),only={'kospi'}),[])
+            self.assertEqual(source.call_args.args[0],dt.date.fromisoformat(last['date']))
+            self.assertEqual(write.call_args_list[0].args[1], original+[later])
+
     def test_us_only_does_not_depend_on_krx_calendar_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as temp:
             target = Path(temp)
             now = dt.datetime(2026,11,9,0,0,tzinfo=dt.timezone.utc)
             points = [{'date':'2026-11-06','value':25000}]
+            (target/'nasdaq.json').write_text(json.dumps(points),encoding='utf-8')
+            (target/'nasdaq.meta.json').write_text(json.dumps({'status':'ok','source':'Yahoo Finance ^IXIC','basis':'미국 정규장 종가 · 뉴욕 거래일 (ET)','asOf':'2026-11-06'}),encoding='utf-8')
             with patch.object(collect,'DEST',target), patch.object(session,'latest_session',side_effect=ValueError('KRX calendar')), patch.object(us,'collect_index',return_value=points):
                 self.assertEqual(collect.run(now=now,only={'nasdaq'}),[])
                 before = (target/'nasdaq.meta.json').read_bytes()

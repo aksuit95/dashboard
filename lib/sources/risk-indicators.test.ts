@@ -17,7 +17,6 @@ describe("Vercel risk indicators", () => {
     try {
       const data = await loadRiskIndicators(db);
       expect(data.errors).toEqual([]);
-      expect(data.disparity.every(item => item.latest25 != null && item.latest50 != null && item.series50.length === 11)).toBe(true);
       expect(data.vix?.session).not.toBe("missing");
       expect(data.sox?.session).not.toBe("missing");
       expect(data.spread).toMatchObject({ ten: 4, two: 3, value: 1 });
@@ -35,7 +34,6 @@ describe("Vercel risk indicators", () => {
       expect(data.vix?.stale).toBe(true);
       expect(data.vix?.primary).not.toBe("데이터 없음");
       expect(data.sox?.stale).toBe(false);
-      expect(data.disparity[0].series50).toHaveLength(11);
     } finally { db.close(); }
   });
 });

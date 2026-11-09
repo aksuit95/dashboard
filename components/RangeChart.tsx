@@ -31,7 +31,7 @@ export function RangeChart({
       layout: { background: { type: ColorType.Solid, color: "#151a22" }, textColor: "#a1a1aa" },
       grid: { vertLines: { color: "#27272a" }, horzLines: { color: "#27272a" } },
       rightPriceScale: { borderColor: "#27272a" },
-      timeScale: { borderColor: "#27272a" },
+      timeScale: { borderColor: "#27272a", minBarSpacing: 0.05 },
     });
     const series: ISeriesApi<"Line"> = chart.addLineSeries({ color, lineWidth: 2, priceFormat: { type: "price", precision: digits, minMove: 0.01 } });
     for (const level of thresholds ?? []) series.createPriceLine({ price: level, color: level >= 100 ? "#fb7185" : "#60a5fa", lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true });
@@ -40,6 +40,7 @@ export function RangeChart({
     chart.timeScale().fitContent();
     const observer = new ResizeObserver(() => {
       chart.applyOptions({ width: element.clientWidth });
+      chart.timeScale().fitContent();
     });
     observer.observe(element);
     return () => {
@@ -62,7 +63,10 @@ export function RangeChart({
           </button>
         ))}
       </div>
-      {sliced.length ? <div ref={host} className="w-full" /> : <p className="text-sm text-zinc-500">이 구간의 데이터가 없습니다.</p>}
+      {sliced.length ? <>
+        <div ref={host} className="w-full" />
+        <p className="mt-1 text-xs text-zinc-500">표시 기간 {sliced[0].date} ~ {sliced[sliced.length - 1].date}</p>
+      </> : <p className="text-sm text-zinc-500">이 구간의 데이터가 없습니다.</p>}
     </div>
   );
 }

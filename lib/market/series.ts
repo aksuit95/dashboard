@@ -124,7 +124,14 @@ export function sliceByRange<T extends { date: string }>(points: T[], range: Ran
   if (!points.length) return [];
   const end = points[points.length - 1].date;
   const endMs = Date.parse(`${end}T00:00:00Z`);
-  const startMs = endMs - RANGE_DAYS[range] * 24 * 60 * 60 * 1000;
+  const cutoff = new Date(endMs);
+  if (range === "6M") cutoff.setUTCDate(cutoff.getUTCDate() - RANGE_DAYS[range]);
+  else {
+    const month = cutoff.getUTCMonth();
+    cutoff.setUTCFullYear(cutoff.getUTCFullYear() - Number(range.slice(0, -1)));
+    if (cutoff.getUTCMonth() !== month) cutoff.setUTCDate(0);
+  }
+  const startMs = cutoff.getTime();
   return points.filter((point) => Date.parse(`${point.date}T00:00:00Z`) >= startMs);
 }
 

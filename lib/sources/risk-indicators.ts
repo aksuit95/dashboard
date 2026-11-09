@@ -1,11 +1,11 @@
 import { unstable_cache } from "next/cache";
 import { activeInstruments } from "@/config/universe";
 import type { AppDatabase } from "@/lib/db/client";
-import { applyQuote, syncInstruments, upsertDailyBars } from "@/lib/db/quotes";
+import { applyQuote, syncInstruments } from "@/lib/db/quotes";
 import { parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
 import { loadRisk } from "@/lib/view/read";
 
-const symbols = ["^KS11", "^KQ11", "^VIX", "^SOX", "^TNX", "2YY=F"];
+const symbols = ["^VIX", "^SOX", "^TNX", "2YY=F"];
 type Chart = {
   meta?: { gmtoffset?: number };
   timestamp?: number[];
@@ -14,7 +14,7 @@ type Chart = {
 
 // Cache successful source responses across Vercel instances, rather than relying on /tmp.
 const chart = unstable_cache(async (symbol: string) => {
-  const range = symbol === "^KS11" || symbol === "^KQ11" ? "5y" : "5d";
+  const range = "5d";
   const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=${range}`, {
     cache: "no-store", signal: AbortSignal.timeout(12_000), headers: { "user-agent": "Mozilla/5.0" },
   });
@@ -29,7 +29,6 @@ const chart = unstable_cache(async (symbol: string) => {
     if (close == null || !Number.isFinite(close) || close <= 0) return [];
     return [{ date: new Date((stamp + (result.meta?.gmtoffset ?? 0)) * 1000).toISOString().slice(0, 10), close }];
   });
-  if (range === "5y" && bars.length < 50) throw new Error(`${symbol}: 이격도 계산에 필요한 이력이 부족합니다.`);
   return { quote, bars };
 }, ["risk-indicator-chart-v1"], { revalidate: 60 });
 
@@ -45,7 +44,6 @@ export async function loadRiskIndicators(db: AppDatabase, now = new Date()) {
       session: usCashSession(now), fundingHourly: null,
       sharesOutstanding: null, marketCap: null, marketCapCurrency: null, nav: null,
     } }, now.toISOString());
-    if (symbol === "^KS11" || symbol === "^KQ11") upsertDailyBars(db, symbol, result.bars, null);
   }));
   const errors = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return [];
