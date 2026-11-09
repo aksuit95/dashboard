@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-09T02:12:31.479Z",
+      "updatedAt": "2026-11-09T05:09:25.634Z",
       "error": null,
       "events": [
         {
@@ -469,10 +469,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-09T02:12:31Z"
+      "generatedAt": "2026-11-09T05:09:26Z"
     },
     "ism": {
-      "updatedAt": "2026-11-09T02:12:31.479Z",
+      "updatedAt": "2026-11-09T05:09:25.634Z",
       "error": null,
       "events": [
         {
@@ -502,11 +502,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-09T02:12:31Z"
+      "generatedAt": "2026-11-09T05:09:26Z"
     },
     "dart": {
-      "updatedAt": "2026-11-07T13:46:46.954Z",
-      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패",
+      "updatedAt": "2026-11-09T05:09:25.634Z",
+      "error": null,
       "capAsOf": "2026-11-06",
       "companies": [
         {
@@ -722,8 +722,9 @@
           "corpCode": "00159193",
           "name": "한국전력",
           "marketCap": 19515707940800,
-          "status": "발표완료",
-          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260807800302"
+          "status": "공시 확인 필요",
+          "note": "설명회 원문 또는 일정 확인 필요",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109800305"
         }
       ],
       "events": [

@@ -93,14 +93,28 @@ export function selectTopCompanies(rows:Record<string,unknown>[], codes:Record<s
   if(list.length<30 || new Set(list.slice(0,30).map(c=>c.corpCode)).size!==30) throw new Error("코스피 상위 30개 기업 확인 실패");
   return list.slice(0,30);
 }
-async function dartFetch(endpoint:string, params:Record<string,string>, key:string):Promise<Response> {
-  let response:Response|undefined;
+export async function dartFetch(endpoint:string, params:Record<string,string>, key:string, request:typeof fetch=fetch, wait:(ms:number)=>Promise<void>=ms=>new Promise(r=>setTimeout(r,ms))):Promise<Response> {
+  let failure = "DART 네트워크 연결 실패";
   for(let i=0;i<3;i++) {
-    try { response=await fetch(`${API}${endpoint}?${new URLSearchParams({...params,crtfc_key:key})}`,{signal:AbortSignal.timeout(25000)}); if(response.ok || (response.status!==429 && response.status<500))break; }
-    catch { if(i===2)throw new Error("DART 네트워크 연결 실패"); }
-    await new Promise(r=>setTimeout(r,400*(i+1)));
+    try {
+      const response=await request(`${API}${endpoint}?${new URLSearchParams({...params,crtfc_key:key})}`,{signal:AbortSignal.timeout(25000)});
+      if(!response.ok) {
+        failure=`DART HTTP ${response.status}`;
+        if(response.status!==429 && response.status<500) throw new Error(failure);
+      } else {
+        // Reading the response body can also fail after headers have arrived.
+        const bytes=await response.arrayBuffer();
+        return new Response(bytes,{status:response.status,headers:response.headers});
+      }
+    } catch(error) {
+      if(error instanceof Error && /^DART HTTP 4\d\d$/.test(error.message) && error.message!=="DART HTTP 429") throw error;
+      const cause=error instanceof Error ? error.cause as {code?:unknown} | undefined : undefined;
+      const code=typeof cause?.code==="string" && /^[A-Z0-9_]{1,40}$/.test(cause.code) ? cause.code : error instanceof Error && (error.name==="AbortError" || error.name==="TimeoutError") ? error.name : null;
+      failure=`DART 네트워크 연결 실패${code ? ` (${code})` : ""}`;
+    }
+    if(i<2) await wait(1000 * (i+1));
   }
-  if(!response?.ok)throw new Error(`DART HTTP ${response?.status ?? "실패"}`); return response;
+  throw new Error(`${failure} · 3회 시도`);
 }
 async function listFilings(c:Company, today:string,key:string):Promise<Filing[]> {
   const result:Filing[]=[];

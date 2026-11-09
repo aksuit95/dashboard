@@ -2,6 +2,9 @@ import { addDays, type MarketEvent } from "./calendar";
 
 export type Feed = { updatedAt: string | null; error: string | null; events: MarketEvent[]; generatedAt?: string; capAsOf?: string | null; companies?: import("./dart-earnings").EarningsCompany[] };
 export type Snapshot = { feeds: Record<string, Feed> };
+export function shouldRefreshDart(macroOnly: boolean, previous: Feed | undefined): boolean {
+  return !macroOnly || !previous?.updatedAt || !!previous.error;
+}
 export const BLS_URL = "https://www.bls.gov/schedule/2026/home.htm";
 export const ISM_URL = "https://www.ismworld.org/supply-management-news-and-reports/reports/rob-report-calendar/";
 

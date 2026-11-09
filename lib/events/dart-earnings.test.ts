@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseEarningsNotice, parseEarningsIR, selectTopCompanies, findLatestEarningsIR, type Filing } from "./dart-earnings";
+import { dartFetch, parseEarningsNotice, parseEarningsIR, selectTopCompanies, findLatestEarningsIR, type Filing } from "./dart-earnings";
+import { shouldRefreshDart } from "./refresh";
 const row = (...cells:string[]) => `<TR>${cells.map(c=>`<TE>${c}</TE>`).join("")}</TR>`;
 describe("DART earnings notices", () => {
   it("uses the amended notice body instead of old correction dates and leaves time unknown", () => {
@@ -32,5 +33,32 @@ describe("DART earnings notices", () => {
   it("does not resurrect an older IR when a correction has an unknown date", async () => {
     const filings:Filing[]=[{corp_code:"001",report_nm:"[기재정정]기업설명회(IR)개최",rcept_no:"20261103800001",rcept_dt:"20261103"},{corp_code:"001",report_nm:"기업설명회(IR)개최",rcept_no:"20261020800455",rcept_dt:"20261020"}];
     await expect(findLatestEarningsIR(filings,async f=>f===filings[0] ? "<p>3분기 실적발표 일시 미정</p>" : "<p>1. 일시 및 장소 일시 2026-11-12 09:00 장소 - 3분기 실적발표</p>","2026-11-06")).rejects.toThrow("일시 확인 필요");
+  });
+});
+
+describe("DART connection recovery", () => {
+  it("retries a network failure and accepts the next response", async () => {
+    let attempts=0;
+    const request:typeof fetch=async () => { if(++attempts===1) throw new TypeError("fetch failed",{cause:{code:"ECONNRESET"}}); return new Response("ok"); };
+    expect(await (await dartFetch("corpCode.xml",{},"secret",request,async()=>{})).text()).toBe("ok");
+    expect(attempts).toBe(2);
+  });
+  it("retries a response body failure", async () => {
+    let attempts=0;
+    const request:typeof fetch=async () => ++attempts===1 ? new Response(new ReadableStream({start(controller){controller.error(new Error("broken body"));}})) : new Response("ok");
+    expect(await (await dartFetch("corpCode.xml",{},"secret",request,async()=>{})).text()).toBe("ok");
+    expect(attempts).toBe(2);
+  });
+  it("records a safe cause without exposing credentials", async () => {
+    const request:typeof fetch=async () => {throw new TypeError("secret",{cause:{code:"UND_ERR_CONNECT_TIMEOUT"}});};
+    await expect(dartFetch("corpCode.xml",{},"secret",request,async()=>{})).rejects.toThrow("UND_ERR_CONNECT_TIMEOUT");
+    await expect(dartFetch("corpCode.xml",{},"secret",request,async()=>{})).rejects.not.toThrow("secret");
+  });
+  it("retries a failed or missing DART feed during a macro refresh", () => {
+    const old={updatedAt:"2026-11-06T00:00:00Z",error:null,events:[]};
+    expect(shouldRefreshDart(true,old)).toBe(false);
+    expect(shouldRefreshDart(true,{...old,error:"연결 실패"})).toBe(true);
+    expect(shouldRefreshDart(true,undefined)).toBe(true);
+    expect(shouldRefreshDart(false,old)).toBe(true);
   });
 });
