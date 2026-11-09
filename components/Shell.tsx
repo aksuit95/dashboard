@@ -40,6 +40,7 @@ const groups = [
   {
     title: { ko: "시장 심리", en: "Market Sentiment" },
     items: [
+      { href: "/adr", ko: "코스피·코스닥 ADR", en: "KOSPI · KOSDAQ ADR" },
       { href: "/risk", ko: "CNN 공포·탐욕 지수", en: "CNN Fear & Greed" },
     ],
   },

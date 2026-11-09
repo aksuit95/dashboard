@@ -1,19 +1,23 @@
 "use client";
 
-import { ColorType, createChart, type IChartApi, type ISeriesApi, type LineData } from "lightweight-charts";
+import { ColorType, createChart, LineStyle, type IChartApi, type ISeriesApi, type LineData } from "lightweight-charts";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sliceByRange, type RangeKey } from "@/lib/market/series";
 
-const ranges: RangeKey[] = ["6M", "1Y", "3Y", "5Y"];
+const defaultRanges: RangeKey[] = ["6M", "1Y", "3Y", "5Y"];
 
 export function RangeChart({
   points,
   color = "#e11d48",
   digits = 2,
+  thresholds,
+  ranges = defaultRanges,
 }: {
   points: { date: string; value: number }[];
   color?: string;
   digits?: number;
+  thresholds?: number[];
+  ranges?: RangeKey[];
 }) {
   const [range, setRange] = useState<RangeKey>("1Y");
   const sliced = useMemo(() => sliceByRange(points, range), [points, range]);
@@ -30,6 +34,7 @@ export function RangeChart({
       timeScale: { borderColor: "#27272a" },
     });
     const series: ISeriesApi<"Line"> = chart.addLineSeries({ color, lineWidth: 2, priceFormat: { type: "price", precision: digits, minMove: 0.01 } });
+    for (const level of thresholds ?? []) series.createPriceLine({ price: level, color: level >= 100 ? "#fb7185" : "#60a5fa", lineWidth: 1, lineStyle: LineStyle.Dashed, axisLabelVisible: true });
     const data: LineData[] = sliced.map((point) => ({ time: point.date, value: point.value }));
     series.setData(data);
     chart.timeScale().fitContent();
@@ -41,7 +46,7 @@ export function RangeChart({
       observer.disconnect();
       chart.remove();
     };
-  }, [sliced, color, digits]);
+  }, [sliced, color, digits, thresholds]);
 
   return (
     <div>

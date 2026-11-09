@@ -22,6 +22,7 @@
     "job:minervini": "tsx jobs/minervini.ts",
     "job:sectors": "tsx jobs/sectors.ts",
     "sectors:export": "tsx jobs/sector-publish-export.ts",
+    "adr:export": "tsx jobs/adr-export.ts",
     "job:backfill": "tsx jobs/backfill.ts",
     "job:poll": "tsx jobs/poll.ts",
     "valuation:export": "tsx jobs/valuation-export.ts",

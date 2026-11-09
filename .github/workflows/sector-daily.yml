@@ -20,7 +20,7 @@ concurrency:
 jobs:
   collect-and-publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,6 +47,10 @@ jobs:
         id: minervini
         continue-on-error: true
         run: npm run minervini:export
+      - name: Collect ADR from Naver KRX closes
+        id: adr
+        continue-on-error: true
+        run: npm run adr:export
       - name: Collect and validate both indices
         id: sectors
         continue-on-error: true
@@ -71,6 +75,9 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json
+          if [ -f data/adr/board.json ]; then
+            git add -- data/adr/board.json
+          fi
           if [ -f data/valuation/market-caps.json ]; then
             git add -- data/valuation/market-caps.json
           fi
@@ -94,5 +101,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.adr.outcome == 'failure'
         run: exit 1
