@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-09T05:09:25.634Z",
+      "updatedAt": "2026-11-09T05:12:27.594Z",
       "error": null,
       "events": [
         {
@@ -469,10 +469,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-09T05:09:26Z"
+      "generatedAt": "2026-11-09T05:12:28Z"
     },
     "ism": {
-      "updatedAt": "2026-11-09T05:09:25.634Z",
+      "updatedAt": "2026-11-09T05:12:27.594Z",
       "error": null,
       "events": [
         {
@@ -502,10 +502,10 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-09T05:09:26Z"
+      "generatedAt": "2026-11-09T05:12:28Z"
     },
     "dart": {
-      "updatedAt": "2026-11-09T05:09:25.634Z",
+      "updatedAt": "2026-11-09T05:12:27.594Z",
       "error": null,
       "capAsOf": "2026-11-06",
       "companies": [
@@ -722,8 +722,7 @@
           "corpCode": "00159193",
           "name": "한국전력",
           "marketCap": 19515707940800,
-          "status": "공시 확인 필요",
-          "note": "설명회 원문 또는 일정 확인 필요",
+          "status": "예정",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109800305"
         }
       ],
@@ -792,6 +791,28 @@
           "title": "메리츠금융지주 실적 설명회",
           "detail": "실적 공시 시각과 다를 수 있음",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022800519",
+          "sourceName": "DART"
+        },
+        {
+          "id": "dart-015760-notice",
+          "date": "2026-11-12",
+          "time": null,
+          "country": "KR",
+          "category": "실적",
+          "title": "한국전력 실적 공시 예정",
+          "detail": "DART 접수 2026-11-09 · 공시 예정일",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109800305",
+          "sourceName": "DART"
+        },
+        {
+          "id": "dart-015760-ir",
+          "date": "2026-11-12",
+          "time": "17:00",
+          "country": "KR",
+          "category": "실적",
+          "title": "한국전력 실적 설명회",
+          "detail": "실적 공시 시각과 다를 수 있음",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261109800307",
           "sourceName": "DART"
         }
       ]
