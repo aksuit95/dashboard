@@ -6,8 +6,7 @@ import { seoulToday } from "@/lib/format";
 import { replaceEtfHoldings } from "@/lib/db/etf";
 import { upsertFlows } from "@/lib/db/flow";
 import { upsertMonthly } from "@/lib/db/monthly";
-import { replaceNaverRanks, upsertNaverBreadth, upsertNaverIndex } from "@/lib/db/naver";
-import { fetchMarketBreadthHistory, fetchQuoteBreadth } from "@/lib/sources/breadth-history";
+import { replaceNaverRanks, upsertNaverIndex } from "@/lib/db/naver";
 import { fetchDartList } from "@/lib/sources/dart";
 import { fetchNaverEtf } from "@/lib/sources/etf";
 import { fetchTrendDeposits, type FlowPoint } from "@/lib/sources/flow";
@@ -83,12 +82,8 @@ export async function ingestQuotes(db: AppDatabase, now = new Date()): Promise<J
   }
 
   snapshotToday(db, seoulToday(now));
-  reports.push(await ingestDart(db, now));
   reports.push(await ingestNaver(db));
-  reports.push(await ingestFlow(db));
   reports.push(await ingestEtf(db, now));
-  reports.push(await ingestBreadthHistory(db, now));
-  reports.push(await ingestTaiwan(db));
   return reports;
 }
 
@@ -99,7 +94,6 @@ async function ingestNaver(db: AppDatabase): Promise<JobReport> {
   const asOf = stamp();
   for (const market of result.data.ranks) replaceNaverRanks(db, market.market, market.rows, asOf);
   for (const index of result.data.indexes) upsertNaverIndex(db, index, asOf);
-  for (const row of result.data.breadth) upsertNaverBreadth(db, row);
   const trading = new Map<string, FlowPoint>();
   for (const item of result.data.trading) {
     const current = trading.get(item.date) ?? { date: item.date, deposits: null, credit: null, creditPct: null, kospi: null, kosdaq: null };
@@ -114,26 +108,6 @@ async function ingestNaver(db: AppDatabase): Promise<JobReport> {
   const breadth = result.data.breadth.map((row) => `${row.market} ${row.advancers}/${row.decliners}/${row.unchanged}`).join(", ");
   const value = result.data.trading.map((row) => `${row.market} ${Math.round(row.valueEok)}억`).join(", ");
   return logRun(db, "naver", started, "ok", `${counts || "순위 없음"}, 지수 ${result.data.indexes.length}, 등락 ${breadth || "없음"}, 거래대금 ${value || "없음"}.${missing}${breadthNote}`);
-}
-
-async function ingestBreadthHistory(db: AppDatabase, now: Date): Promise<JobReport> {
-  const started = stamp();
-  const digest = await fetchMarketBreadthHistory("2026-09-15", seoulToday(now));
-  const stored = new Set(
-    (db.prepare("SELECT date FROM breadth_daily WHERE market = 'KOSPI'").all() as { date: string }[])
-      .map((row) => row.date.replaceAll("-", "")),
-  );
-  const quotes = await fetchQuoteBreadth(stored);
-  if (digest.status !== "ok" && quotes.status !== "ok") {
-    return logRun(db, "breadth", started, "stale", `${digest.message} ${quotes.message}`);
-  }
-  if (digest.status === "ok") for (const row of digest.data) upsertNaverBreadth(db, row);
-  if (quotes.status === "ok") for (const row of quotes.data) upsertNaverBreadth(db, row);
-  const allLatest = digest.status === "ok" ? digest.data.at(-1) : undefined;
-  const quoteDays = quotes.status === "ok" ? new Set(quotes.data.map((row) => row.date)).size : 0;
-  const allNote = allLatest ? `전 시장 ${digest.status === "ok" ? digest.data.length : 0}거래일, 최근 ${allLatest.date}` : "전 시장 유지";
-  const quoteNote = quotes.status === "ok" ? `KOSPI·KOSDAQ 시세 ${quoteDays}거래일` : "KOSPI·KOSDAQ 시세 유지";
-  return logRun(db, "breadth", started, "ok", `${allNote}. ${quoteNote}.`);
 }
 
 async function ingestTaiwan(db: AppDatabase): Promise<JobReport> {
