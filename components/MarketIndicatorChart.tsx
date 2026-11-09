@@ -30,7 +30,7 @@ function ChartPanel({ title, description, lines, onHover, thresholds = false }: 
     const element = host.current;
     if (!element || !lines.length) return;
     const chart = createChart(element, {
-      width: element.clientWidth, height: 290,
+      width: element.clientWidth, height: element.clientHeight,
       layout: { background: { type: ColorType.Solid, color: "#151a22" }, textColor: "#a1a1aa" },
       grid: { vertLines: { color: "#242b35" }, horzLines: { color: "#242b35" } },
       leftPriceScale: { visible: lines.some(line => line.axis === "left"), borderColor: "#333b46" },
@@ -51,13 +51,13 @@ function ChartPanel({ title, description, lines, onHover, thresholds = false }: 
     });
     chart.timeScale().fitContent();
     chart.subscribeCrosshairMove(param => onHover(dateString(param.time)));
-    const observer = new ResizeObserver(() => chart.applyOptions({ width: element.clientWidth }));
+    const observer = new ResizeObserver(() => chart.applyOptions({ width: element.clientWidth, height: element.clientHeight }));
     observer.observe(element);
     return () => { observer.disconnect(); chart.remove(); };
   }, [lines, onHover, thresholds]);
   return <div className="mt-4 border-t border-white/5 pt-3">
     <div className="flex flex-wrap items-baseline justify-between gap-1"><h3 className="text-sm font-medium text-zinc-200">{title}</h3><p className="text-xs text-zinc-500">{description}</p></div>
-    <div ref={host} className="mt-2 w-full" aria-label={`${title} 차트`} />
+    <div ref={host} className="mt-2 h-[360px] w-full sm:h-[460px]" aria-label={`${title} 차트`} />
   </div>;
 }
 
