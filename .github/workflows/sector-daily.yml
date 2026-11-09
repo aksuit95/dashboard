@@ -29,6 +29,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - run: npm ci
       - name: Collect KRX market capitalizations
         id: market-caps
@@ -51,6 +54,13 @@ jobs:
         id: adr
         continue-on-error: true
         run: npm run adr:export
+      - name: Collect long-term Korean indicators and exchange rate
+        id: market-indicators
+        continue-on-error: true
+        env:
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
+        run: python scripts/market_indicators/collect.py --only kospi kosdaq adr_kospi adr_kosdaq usdkrw
       - name: Collect and validate both indices
         id: sectors
         continue-on-error: true
@@ -74,7 +84,7 @@ jobs:
           OWNER_ID: ${{ github.event.repository.owner.id }}
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          git add -- data/sectors/board.json
+          git add -- data/sectors/board.json public/data/market-indicators-live
           if [ -f data/adr/board.json ]; then
             git add -- data/adr/board.json
           fi
@@ -101,5 +111,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.adr.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
         run: exit 1

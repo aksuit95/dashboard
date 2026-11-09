@@ -1,0 +1,51 @@
+name: Collect US market indicators
+
+on:
+  schedule:
+    # 09:00 KST, after the US close and Treasury's usual publication time.
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sector-daily-production
+  cancel-in-progress: false
+
+jobs:
+  collect-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect independent US series
+        id: indicators
+        continue-on-error: true
+        run: python scripts/market_indicators/collect.py --only nasdaq sp500 us10y us2y
+      - name: Publish available results and trigger Vercel deployment
+        shell: bash
+        env:
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git add -- public/data/market-indicators-live/nasdaq.json public/data/market-indicators-live/nasdaq.meta.json public/data/market-indicators-live/sp500.json public/data/market-indicators-live/sp500.meta.json public/data/market-indicators-live/us10y.json public/data/market-indicators-live/us10y.meta.json public/data/market-indicators-live/us2y.json public/data/market-indicators-live/us2y.meta.json
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish US market indicators'
+          git fetch origin "$BRANCH"
+          git rebase "origin/$BRANCH"
+          git push origin "HEAD:$BRANCH"
+      - name: Report collection failures after publishing available results
+        if: steps.indicators.outcome == 'failure'
+        run: exit 1
