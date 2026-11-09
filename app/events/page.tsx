@@ -52,16 +52,6 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
     </nav>
     <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-zinc-300">
       <p className="font-medium text-white">{today} ~ {end} <span className="ml-2 text-xs font-normal text-zinc-400">오늘 포함 28일</span></p>
-      {country==="KR" ? <>
-        <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 15:30 종가` : "확인되지 않음"}. 한국 매크로는 수동 확인 ({reviewedAt}) 자료입니다.</p>
-        {feedStatus("DART · KRX",feeds.dart)}
-        <p className="mt-2 text-xs leading-5 text-zinc-400">공시예고가 없으면 날짜를 추측하지 않습니다. 공시와 IR 설명회는 별개이며 정정·취소될 수 있습니다. 발표일이 4주 밖인 일정은 목록에 표시되지 않습니다.</p>
-      </> : <>
-        <p className="mt-2 text-xs leading-5 text-zinc-400">미국 주요 매크로와 ISM은 ShowMyTrades에서 4시간마다 수집하며, 화면을 열 때도 최신값을 확인합니다. 기업 실적은 수동 확인 ({reviewedAt}) 자료이며 실적 예상치·실제치는 아직 자동 제공하지 않습니다.</p>
-        {feedStatus("ShowMyTrades",feeds.show)}{feedStatus("ISM · ShowMyTrades",feeds.ism)}
-        <p className="mt-2 text-xs text-zinc-400">예상치는 제공처의 컨센서스입니다. 실제치는 발표 후 갱신되며 일부 값은 제공되지 않을 수 있습니다. 최근 7일 결과는 수집 성공분만 보관합니다. <a className="underline" href="https://showmytrades.com/tools/economic-calendar" target="_blank" rel="noreferrer">Economic calendar by ShowMyTrades ↗</a></p>
-      </>}
-      <p className="mt-2 text-xs text-amber-300">모든 일정이 포함되는 것은 아니며, 원문을 확인해 주세요.</p>
     </div>
     <div className="space-y-3">
       {items.length===0 && <p className="rounded-xl border border-white/10 p-5 text-sm text-zinc-400">이 기간에 확인된 일정이 없습니다. 실제 일정이 없다는 뜻은 아닙니다.</p>}
@@ -82,5 +72,17 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
         <div className="mt-4 space-y-2">{tentative.length===0 ? <p className="text-sm text-zinc-400">현재 확인된 미확정 예정 일정이 없습니다.</p> : tentative.map(event=><div key={event.id} className="rounded-md border border-white/10 p-3 text-sm"><span className="font-medium text-white">{title(event)}</span><span className="ml-2 text-amber-300">미확정</span><p className="mt-1 text-zinc-400">예상 {event.date} {event.time} KST · {event.detail}</p><a className="mt-1 inline-block text-xs text-zinc-400 underline" href={event.source} target="_blank" rel="noreferrer">출처 확인 ↗</a></div>)}</div>
       </>}
     </section>
+    <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-zinc-300">
+      {country==="KR" ? <>
+        <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 15:30 종가` : "확인되지 않음"}. 한국 매크로는 수동 확인 ({reviewedAt}) 자료입니다.</p>
+        {feedStatus("DART · KRX",feeds.dart)}
+        <p className="mt-2 text-xs leading-5 text-zinc-400">공시예고가 없으면 날짜를 추측하지 않습니다. 공시와 IR 설명회는 별개이며 정정·취소될 수 있습니다. 발표일이 4주 밖인 일정은 목록에 표시되지 않습니다.</p>
+      </> : <>
+        <p className="mt-2 text-xs leading-5 text-zinc-400">미국 주요 매크로와 ISM은 ShowMyTrades에서 4시간마다 수집하며, 화면을 열 때도 최신값을 확인합니다. 기업 실적은 수동 확인 ({reviewedAt}) 자료이며 실적 예상치·실제치는 아직 자동 제공하지 않습니다.</p>
+        {feedStatus("ShowMyTrades",feeds.show)}{feedStatus("ISM · ShowMyTrades",feeds.ism)}
+        <p className="mt-2 text-xs text-zinc-400">예상치는 제공처의 컨센서스입니다. 실제치는 발표 후 갱신되며 일부 값은 제공되지 않을 수 있습니다. 최근 7일 결과는 수집 성공분만 보관합니다. <a className="underline" href="https://showmytrades.com/tools/economic-calendar" target="_blank" rel="noreferrer">Economic calendar by ShowMyTrades ↗</a></p>
+      </>}
+      <p className="mt-2 text-xs text-amber-300">모든 일정이 포함되는 것은 아니며, 원문을 확인해 주세요.</p>
+    </div>
   </div>;
 }
