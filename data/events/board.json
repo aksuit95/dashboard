@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-09T10:33:35.408Z",
+      "updatedAt": "2026-11-09T17:14:44.365Z",
       "error": null,
       "events": [
         {
@@ -469,10 +469,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-09T10:32:14Z"
+      "generatedAt": "2026-11-09T17:12:04Z"
     },
     "ism": {
-      "updatedAt": "2026-11-09T10:33:35.408Z",
+      "updatedAt": "2026-11-09T17:14:44.365Z",
       "error": null,
       "events": [
         {
@@ -502,11 +502,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-09T10:32:14Z"
+      "generatedAt": "2026-11-09T17:12:04Z"
     },
     "dart": {
       "updatedAt": "2026-11-09T05:12:27.594Z",
-      "error": null,
+      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
       "capAsOf": "2026-11-06",
       "companies": [
         {
