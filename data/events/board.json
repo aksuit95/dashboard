@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-09T17:14:44.365Z",
+      "updatedAt": "2026-11-09T21:11:14.074Z",
       "error": null,
       "events": [
         {
@@ -467,12 +467,126 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false
+        },
+        {
+          "id": "smt-usd-interest-rate-projections-3rd-year.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Interest Rate Projections - 3rd year",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "3.6%"
+        },
+        {
+          "id": "smt-usd-fomc-projections.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "FOMC Economic Projections",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-interest-rate-projections-1st-year.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Interest Rate Projections - 1st year",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "4.1%"
+        },
+        {
+          "id": "smt-usd-interest-rate-projections-longer.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Interest Rate Projections - Longer",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "3.2%"
+        },
+        {
+          "id": "smt-usd-fomc-statement.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Fed's Monetary Policy Statement",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-interest-rate-projections-2nd-year.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Interest Rate Projections - 2nd year",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "3.9%"
+        },
+        {
+          "id": "smt-usd-interest-rate-projections-current.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Interest Rate Projections - Current",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "4.1%"
+        },
+        {
+          "id": "smt-usd-fed-rate-decision.20261209T1900",
+          "date": "2026-12-10",
+          "time": "04:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Fed Interest Rate Decision",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false,
+          "previous": "4%"
+        },
+        {
+          "id": "smt-usd-fomc-press-conference.20261209T1930",
+          "date": "2026-12-10",
+          "time": "04:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "FOMC Press Conference",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
         }
       ],
-      "generatedAt": "2026-11-09T17:12:04Z"
+      "generatedAt": "2026-11-09T21:11:14Z"
     },
     "ism": {
-      "updatedAt": "2026-11-09T17:14:44.365Z",
+      "updatedAt": "2026-11-09T21:11:14.074Z",
       "error": null,
       "events": [
         {
@@ -502,7 +616,7 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-09T17:12:04Z"
+      "generatedAt": "2026-11-09T21:11:14Z"
     },
     "dart": {
       "updatedAt": "2026-11-09T05:12:27.594Z",
