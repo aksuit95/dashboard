@@ -134,12 +134,12 @@ export function MarketIndicatorChart({ expectedKrxDate }: { expectedKrxDate: str
       <div className="flex rounded-lg border border-white/10 p-1" aria-label="차트 표시 방식">{([ ["normalized","정규화"], ["raw","원시값"] ] as const).map(([value,label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => { setMode(value); setHoverDate(null); }} className={`rounded px-3 py-1 text-xs ${mode === value ? "bg-white/15 text-white" : "text-zinc-400"}`}>{label}</button>)}</div>
     </div>
     <p className="mt-2 text-xs text-zinc-500">차트 끝 날짜 {endDate ?? "—"} · {mode === "normalized" ? "지수·환율 시작점 100 / ADR·금리 시작 대비 %p" : "서로 다른 단위는 패널을 분리"}</p>
-    <div className="mt-3 rounded-lg bg-black/15 p-3 text-xs leading-6 text-zinc-300" aria-live="polite">
-      {loading ? "데이터를 불러오는 중입니다." : selectedItems.length ? <><p className="mb-1 font-medium text-zinc-200">{currentDate ?? "—"} · 값 / 기간 시작 대비</p><div className="flex flex-wrap gap-x-4 gap-y-1">{selectedItems.map(item => {
+    <div className="mt-3 h-[104px] overflow-hidden rounded-lg bg-black/15 p-3 text-xs leading-6 text-zinc-300" aria-live="polite">
+      {loading ? "데이터를 불러오는 중입니다." : selectedItems.length ? <><p className="mb-1 font-medium text-zinc-200">{currentDate ?? "—"} · 값 / 기간 시작 대비</p><div className="flex h-12 flex-wrap content-start gap-x-4 overflow-auto">{selectedItems.map(item => {
         const points = windowed[item.id] ?? []; const point = currentDate ? points.find(p => p.date === currentDate) : undefined; const base = points.find(p => p.value !== null);
         const delta = point?.value != null && base?.value != null ? indicatorChange(point.value, base.value, item.change as ChangeMethod, item.differenceUnit as "bp" | "pp" | null) : "—";
         const unavailable = data[item.id]?.meta.status === "not_configured" ? "출처 미설정" : "—";
-        return <span key={item.id}><span style={{color:item.color}}>●</span> {item.label} {point?.value != null ? formatValue(item, point.value) : unavailable} <span className="text-zinc-500">({delta}{base?.sourceDate ? ` · 시작 ${base.sourceDate}` : ""}{point?.sourceDate && point.sourceDate !== point.date ? ` · ${point.sourceDate} 값` : ""})</span></span>;
+        return <span key={item.id} className="shrink-0 whitespace-nowrap"><span style={{color:item.color}}>●</span> {item.label} {point?.value != null ? formatValue(item, point.value) : unavailable} <span className="text-zinc-500">({delta}{base?.sourceDate ? ` · 시작 ${base.sourceDate}` : ""}{point?.sourceDate && point.sourceDate !== point.date ? ` · ${point.sourceDate} 값` : ""})</span></span>;
       })}</div></> : "표시할 지표를 선택해 주세요."}
     </div>
     {mode === "normalized" && chartLines.length > 0 && <ChartPanel title="정규화 비교" description="왼쪽: 시작점 100 · 오른쪽: 시작 대비 %p" lines={chartLines} onHover={setHoverDate} />}
