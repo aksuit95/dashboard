@@ -2,7 +2,7 @@
   "schema_version": "market-alerts.v2",
   "source": "네이버페이 증권 관리·거래정지·시장경보 목록",
   "source_url": "https://stock.naver.com/market/stock/kr/management/investmentAlert",
-  "observed_at": "2026-11-10T08:10:34.297727+09:00",
+  "observed_at": "2026-11-11T05:37:58.332229+09:00",
   "alerts": {
     "002995": [
       "투자주의"
@@ -790,6 +790,9 @@
       "거래정지"
     ],
     "265690": [
+      "거래정지"
+    ],
+    "115160": [
       "거래정지"
     ]
   }
