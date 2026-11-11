@@ -1,8 +1,9 @@
 import { minerviniSession } from "@/lib/market/minervini-session";
 
 export type Holding = { code: string; name: string; quantity: number; weight: number };
-export type Snapshot = { asOf: string; collectedAt: string; source: "KRX_PDF"; holdings: Holding[]; market: Record<string, { close: number; cap: number }> };
-export type Publication = { version: 1; snapshots: Snapshot[]; lastAttempt: { at: string; expected: string; error: string | null } | null };
+export type FundMetrics = { asOf: string; sharesOutstanding: number | null; netAssetsKrw: number | null; source: "KRX_ETF_DAILY"; fetchedAt: string };
+export type Snapshot = { fundMetrics?: FundMetrics; etfCode?: string; asOf: string; collectedAt: string; source: "KRX_PDF"; holdings: Holding[]; market: Record<string, { close: number; cap: number }> };
+export type Publication = { version: 1 | 2; snapshots: Snapshot[]; lastAttempt: { at: string; expected: string; error: string | null } | null };
 export const emptyPublication: Publication = { version: 1, snapshots: [], lastAttempt: null };
 export function previousSession(date: string) { return minerviniSession(new Date(`${date}T06:00:00Z`)); }
 function numeric(value: unknown) { const s = String(value ?? "").replaceAll(",", "").trim(); return s && /^\d+(?:\.\d+)?$/.test(s) ? Number(s) : NaN; }
@@ -26,13 +27,14 @@ export function parseKrxHoldings(payload: Record<string, unknown>): Holding[] {
   if (result.length < 5 || result.reduce((s, r) => s + r.weight, 0) > 101) throw new Error("KRX 구성종목 불완전");
   return result.sort((a, b) => b.weight - a.weight);
 }
-export function selectComparison(publication: Publication, expected: string) {
-  const latest = [...publication.snapshots].filter(s => s.asOf <= expected).sort((a,b) => b.asOf.localeCompare(a.asOf))[0] ?? null;
-  const previous = latest ? publication.snapshots.find(s => s.asOf === previousSession(latest.asOf)) ?? null : null;
+export function selectComparison(publication: Publication, expected: string, etfCode = "396500") {
+  const latest = [...publication.snapshots].filter(s => (s.etfCode ?? "396500") === etfCode && s.asOf <= expected).sort((a,b) => b.asOf.localeCompare(a.asOf))[0] ?? null;
+  const previous = latest ? publication.snapshots.find(s => (s.etfCode ?? "396500") === etfCode && s.asOf === previousSession(latest.asOf)) ?? null : null;
   return { latest, previous, stale: !!latest && latest.asOf !== expected };
 }
 
-export type Period = "1d" | "1w" | "1m";
+export type Period = "1d" | "1w" | "1m" | "3m" | "6m";
+export const periodOptions = [["1d", "1D · 전 거래일"], ["1w", "1W · 1주"], ["1m", "1M · 1개월"], ["3m", "3M · 3개월"], ["6m", "6M · 6개월"]] as const;
 /** Calendar week/month anchor, adjusted back to the last KRX session on or before it. */
 export function comparisonDate(date: string, period: Period): string {
   if (period === "1d") return previousSession(date);
@@ -41,9 +43,11 @@ export function comparisonDate(date: string, period: Period): string {
   else {
     const day = d.getUTCDate();
     d.setUTCDate(1);
-    d.setUTCMonth(d.getUTCMonth() - 1);
+    d.setUTCMonth(d.getUTCMonth() - ({"1m": 1, "3m": 3, "6m": 6} as const)[period]);
     const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
     d.setUTCDate(Math.min(day, lastDay));
   }
   return minerviniSession(new Date(`${d.toISOString().slice(0, 10)}T08:00:00Z`));
 }
+
+

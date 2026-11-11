@@ -271,3 +271,6 @@ QuantiWise Refresh 후 저장하고 `npm run valuation:stocks:export`를 실행�
 
 `.github/workflows/etf-holdings-daily.yml`은 매일 20:00 KST에 한 번 실행하여 검증된 이력과 수집 상태를 기본 브랜치에 게시한다. GitHub Actions의 `KRX_ID`와 `KRX_PW` 시크릿 및 저장소 쓰기 권한이 필요하며, 워크플로가 기본 브랜치에 반영된 뒤부터 동작한다. 휴장일에는 마지막 완료 거래일을 재확인한다.
 
+
+ETF 보유종목 화면의 반도체 섹터에는 TIGER 반도체TOP10, SOL AI반도체TOP2플러스, KODEX AI반도체TOP2플러스, KODEX AI반도체핵심장비, SOL AI반도체소부장, HANARO Fn K-반도체를 포함한다. 동일 기준일 쌍의 KRX 구성자료가 확보된 ETF 중 2개 이상에서 1CU당 수량이 같은 방향으로 변한 종목을 공통 증가·감소로 표시한다. 1CU 수량 변화는 실제 매매 체결량이 아니다. 누락 ETF와 비교 가능 ETF 수는 화면에 표시하며 다른 날짜로 대체하지 않는다.
+반도체 ETF별 KRX ETF 일별 통계의 상장 좌수(`LIST_SHRS`)와 순자산총액(`INVSTASST_NETASST_TOTAMT`)을 각 구성 스냅샷의 정확한 기준일에 연결한다. 시가총액 또는 NAV를 순자산으로 대체하지 않으며, 설정·환매와 가격 변동이 순자산총액에 함께 반영된다. 비교기간은 1D·1W·1M·3M·6M이며, 월 단위는 해당 월의 같은 날짜 또는 그 이전 최근 거래일이다. 과거 1CU 설정단위나 액면분할·병합의 영향은 별도 검증하지 못하므로 수량 변화를 실제 매매량으로 해석하지 않는다.

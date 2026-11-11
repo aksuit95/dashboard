@@ -33,3 +33,15 @@ describe("ETF comparison periods", () => {
     expect(comparisonDate("2026-03-31", "1m")).toBe("2026-02-27");
   });
 });
+
+
+describe("three and six month periods", () => {
+  it("uses the corresponding calendar month and preceding session on holidays", () => {
+    expect(comparisonDate("2026-11-10", "3m")).toBe("2026-08-10");
+    expect(comparisonDate("2026-11-10", "6m")).toBe("2026-05-08");
+    expect(comparisonDate("2026-05-31", "3m")).toBe("2026-02-27");
+  });
+  it("rejects periods beyond the reviewed trading calendar", () => {
+    expect(() => comparisonDate("2026-03-31", "6m")).toThrow();
+  });
+});
