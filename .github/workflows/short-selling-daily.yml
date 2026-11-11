@@ -2,8 +2,8 @@ name: KOSPI200 short-selling daily JSON
 
 on:
   schedule:
-    # UTC 13:40 = KST 22:40. Disclosure delay is handled separately by a 10-session refresh.
-    - cron: '40 13 * * 1-5'
+    # UTC 11:00 = KST 20:00. Disclosure delay is handled separately by a 10-session refresh.
+    - cron: '0 11 * * 1-5'
   workflow_dispatch:
     inputs:
       backfill:
