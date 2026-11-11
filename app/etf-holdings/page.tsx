@@ -1,11 +1,18 @@
 import { EtfHoldingsBoard } from "@/components/EtfHoldingsBoard";
-import caps from "@/data/valuation/market-caps.json";
-
-export default function EtfHoldingsPage() {
-  const codes = ["005930", "000660", "402340", "042700", "036930", "007660", "000990", "039030", "058470", "240810"];
-  const values = caps.values as Record<string, number | null>;
-  const closes = caps.closes as Record<string, number | null>;
-  const verified = caps.source === "KRX_WEB_VERIFIED" && caps.priceBasis === "KRX_REGULAR_CLOSE" && caps.exchange === "KRX" && caps.priceTime === "15:30 KST" && caps.asOf === "2026-11-10";
-  const market = Object.fromEntries(codes.map(code => [code, { close: verified ? closes[code] ?? null : null, cap: verified ? values[code] ?? null : null }]));
-  return <EtfHoldingsBoard market={market} />;
+import { readEtfPublication } from "@/lib/etf/publication";
+import { minerviniSession } from "@/lib/market/minervini-session";
+import { comparisonDate, selectComparison, type Period } from "@/lib/etf/holdings";
+export const dynamic = "force-dynamic";
+export default async function EtfHoldingsPage() {
+  const publication = await readEtfPublication();
+  let expected: string | null = null;
+  try { expected = minerviniSession(); } catch { /* calendar not verified */ }
+  const selected = expected ? selectComparison(publication, expected) : { latest: null, previous: null, stale: false };
+  const periods: Record<Period, { date: string | null; snapshot: typeof selected.latest }> = {
+    "1d": {date: null, snapshot: null}, "1w": {date: null, snapshot: null}, "1m": {date: null, snapshot: null},
+  };
+  if (selected.latest) for (const period of ["1d", "1w", "1m"] as const) {
+    try { const date = comparisonDate(selected.latest.asOf, period); periods[period] = { date, snapshot: publication.snapshots.find(s => s.asOf === date) ?? null }; } catch { /* unverified calendar */ }
+  }
+  return <EtfHoldingsBoard latest={selected.latest} stale={selected.stale} periods={periods} expected={expected} lastAttempt={publication.lastAttempt} />;
 }

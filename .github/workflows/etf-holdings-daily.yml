@@ -1,0 +1,52 @@
+name: Publish ETF holdings history
+on:
+  schedule:
+    - cron: '0 11 * * *' # 20:00 KST daily
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: etf-holdings-publication
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Collect KRX holdings and prices
+        id: collect
+        continue-on-error: true
+        env:
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
+        run: npm run etf-holdings:export
+      - name: Publish snapshots and collection status
+        env:
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+          BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git add -- data/etf/holdings.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish ETF holdings'
+          for attempt in 1 2 3; do
+            git fetch origin "$BRANCH"
+            git rebase "origin/$BRANCH"
+            git push origin "HEAD:$BRANCH" && exit 0
+          done
+          exit 1
+      - name: Report collection failure
+        if: steps.collect.outcome == 'failure'
+        run: exit 1
+
+
