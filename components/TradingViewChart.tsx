@@ -3,6 +3,7 @@
 import { ColorType, createChart, type CandlestickData } from "lightweight-charts";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MinerviniBar } from "@/lib/market/minervini";
+import { StockBandDialog } from "./StockBandDialog";
 
 const ranges = { "1M": 31, "3M": 92, "6M": 183, "1Y": 366, "3Y": 1096, "5Y": 1827, ALL: Infinity };
 type Range = keyof typeof ranges;
@@ -15,6 +16,7 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
   const [attempt, setAttempt] = useState(0);
   const [range, setRange] = useState<Range>("1Y");
   const [hover, setHover] = useState<MinerviniBar | null>(null);
+  const [bandOpen, setBandOpen] = useState(false);
   const url = `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(`KRX:${code}`)}`;
   const bars = book?.code === code && book.priceBasis === "KRX_REGULAR_CLOSE" ? book.bars : null;
   const selected = useMemo(() => {
@@ -67,7 +69,7 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
   return <section className="overflow-hidden rounded-xl border border-white/10 bg-[#151a22] p-4 sm:p-6" aria-label={`${name} 트레이딩뷰 주가 차트`}>
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div><h2 className="font-semibold">{name} 주가 차트</h2><p className="mt-1 text-xs text-zinc-500">{code} · TradingView Lightweight Charts™ · KRX 15:30 정규장 종가</p></div>
-      <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-sky-400 hover:underline">트레이딩뷰에서 열기 ↗</a>
+      <div className="flex items-center gap-4"><button type="button" onClick={() => setBandOpen(true)} className="rounded-md border border-sky-400/30 px-3 py-2 text-xs text-sky-300 hover:bg-sky-400/10">PER · PBR 밴드</button><a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-sky-400 hover:underline">트레이딩뷰에서 열기 ↗</a></div>
     </div>
     <div className="my-4 flex flex-wrap items-center justify-between gap-3">
       <p className="text-xs tabular-nums text-zinc-400">{detail ? `${detail.date} · 시 ${number(detail.open)} · 고 ${number(detail.high)} · 저 ${number(detail.low)} · 종 ${number(detail.close)}원 · 거래량 ${number(detail.volume)}` : error ? "일봉 데이터 없음" : "일봉을 불러오고 있습니다…"}</p>
@@ -78,5 +80,6 @@ export function TradingViewChart({ code, name }: { code: string; name: string })
     <p className="mt-4 text-[11px] text-zinc-500">차트: <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" className="text-sky-400">TradingView</a> · 시세: 네이버 · {selected.length}개 일봉{selected.length ? ` · ${selected[0].date} ~ ${selected.at(-1)!.date}` : ""}</p>
     <p className="mt-1 text-[11px] text-zinc-500">장중에는 직전 완료 거래일의 KRX 일봉을 표시합니다. NXT·시간외 종가는 포함하지 않습니다. QuantiWise 밸류에이션의 기준일은 별도입니다.</p>
     {bars && book && <p className="mt-1 text-[11px] text-zinc-500">기준일 {book.asOf} · 가격 기준 KRX 15:30 · 수집 {new Date(book.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST</p>}
+    {bandOpen && <StockBandDialog key={code} code={code} name={name} bars={bars ?? []} onClose={() => setBandOpen(false)} />}
   </section>;
 }

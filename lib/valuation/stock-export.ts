@@ -2,6 +2,25 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { readWorkbookSheets } from "./xlsx";
 import { parseStockValuation, type StockValuationSnapshot } from "./stocks";
+import { addStockSnapshot, type StockHistory } from "./stock-history";
+import { resolveHistoryDates, type SessionPublication } from "./stock-history-dates";
+
+async function saveHistory(output: string, data: StockValuationSnapshot["data"]) {
+  if (!data.sourceUpdatedAt) return;
+  const historyPath = path.join(path.dirname(output), "stock-history.json");
+  let history: StockHistory = { schemaVersion: 1, records: {} };
+  try { history = JSON.parse(await fs.readFile(historyPath, "utf8")) as StockHistory; }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+  if (history.schemaVersion !== 1 || !history.records) throw new Error("개별종목 이력 JSON 형식 오류");
+  let publication: SessionPublication = {};
+  try { publication = JSON.parse(await fs.readFile(path.resolve('data/sectors/board.json'), 'utf8')) as SessionPublication; }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+  const historyTemp = `${historyPath}.${process.pid}.tmp`;
+  try {
+    await fs.writeFile(historyTemp, JSON.stringify(resolveHistoryDates(addStockSnapshot(history, data), publication)), { encoding: "utf8", flag: "wx" });
+    await fs.rename(historyTemp, historyPath);
+  } finally { await fs.unlink(historyTemp).catch(() => undefined); }
+}
 
 export async function exportStockValuation(input: string, output: string, now = new Date()) {
   const before = await fs.stat(input);
@@ -21,10 +40,14 @@ export async function exportStockValuation(input: string, output: string, now = 
       if (!data.metrics.some(next => next.id === metric.id)) throw new Error(`${metric.id} 항목이 누락됐습니다. 기존 JSON을 유지합니다.`);
     }
     if (data.compositionDate === previous.data.compositionDate && previous.data.stocks.some(stock => !data.stocks.some(next => next.code === stock.code))) throw new Error("동일 구성일의 종목이 누락됐습니다. 기존 JSON을 유지합니다.");
-    if (JSON.stringify(previous.data) === JSON.stringify(data)) return { changed: false, snapshot: previous };
+    if (JSON.stringify(previous.data) === JSON.stringify(data)) {
+      await saveHistory(output, data);
+      return { changed: false, snapshot: previous };
+    }
   }
   const snapshot: StockValuationSnapshot = { schemaVersion: 1, exportedAt: now.toISOString(), data };
   await fs.mkdir(path.dirname(output), { recursive: true });
+  await saveHistory(output, data);
   const temporary = `${output}.${process.pid}.tmp`;
   try {
     await fs.writeFile(temporary, `${JSON.stringify(snapshot, null, 2)}\n`, { encoding: "utf8", flag: "wx" });

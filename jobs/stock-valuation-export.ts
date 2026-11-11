@@ -11,5 +11,6 @@ async function main() {
   const { changed, snapshot } = await exportStockValuation(path.resolve(input), path.resolve("data/valuation/stocks.json"));
   console.log(changed ? "개별종목 밸류에이션 JSON을 갱신했습니다." : "변경된 데이터가 없습니다. 기존 JSON을 유지합니다.");
   console.log(`출력: data/valuation/stocks.json · ${snapshot.data.stocks.length}종목 · 구성일 ${snapshot.data.compositionDate}`);
+  console.log("조회일 이력: data/valuation/stock-history.json · 배포 시 stocks.json과 함께 반영하세요.");
 }
 main().catch((error: unknown) => { console.error(error instanceof Error ? error.message : "내보내기에 실패했습니다."); process.exitCode = 1; });

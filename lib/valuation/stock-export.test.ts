@@ -12,6 +12,7 @@ it("개별종목 XLSX를 내보내고 반복 내보내기와 오류 발생 시 �
     const workbook = new ExcelJS.Workbook();
     workbook.addWorksheet("종목별 밸류에이션").addRows([
       ["Composition Date", "CPD [20261102]"],
+      ["Last Update: 2026-11-02 15:00:00"],
       [null, "Account", "E382160.M"],
       [null, "Unit", "X"],
       [null, "Base Date", "CPD-1TD"],
@@ -24,6 +25,10 @@ it("개별종목 XLSX를 내보내고 반복 내보내기와 오류 발생 시 �
     const bytes = await fs.readFile(output, "utf8");
     expect((await exportStockValuation(file, output)).changed).toBe(false);
     expect(await fs.readFile(output, "utf8")).toBe(bytes);
+    const historyPath = path.join(directory, "stock-history.json");
+    await fs.unlink(historyPath);
+    expect((await exportStockValuation(file, output)).changed).toBe(false);
+    expect(JSON.parse(await fs.readFile(historyPath, "utf8")).records["005930"][0].date).toBe("2026-11-02");
     workbook.worksheets[0].getCell("B1").value = "CPD [20261030]";
     await workbook.xlsx.writeFile(file);
     await expect(exportStockValuation(file, output)).rejects.toThrow("과거");
@@ -33,6 +38,7 @@ it("개별종목 XLSX를 내보내고 반복 내보내기와 오류 발생 시 �
   } finally {
     await fs.unlink(file).catch(() => undefined);
     await fs.unlink(output).catch(() => undefined);
+    await fs.unlink(path.join(directory, "stock-history.json")).catch(() => undefined);
     await fs.rmdir(directory);
   }
 });

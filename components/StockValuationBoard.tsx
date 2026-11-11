@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { stockMetrics, type StockMetric, type StockValuationData, type StockValuationSnapshot } from "@/lib/valuation/stocks";
 import type { ValuationMarketCaps } from "@/lib/valuation/market-caps";
 import { TradingViewChart } from "./TradingViewChart";
+import { StockValuationHistory } from "./StockValuationHistory";
 
 const timestamp = (value: string) => new Date(value).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false });
 const format = (value: number | null | undefined, digits: number) => value == null ? "—" : value.toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -79,6 +80,7 @@ export function StockValuationBoard() {
         <p className="mt-2 text-[11px] text-zinc-500">Fwd.12M · {data?.metrics.find(item => item.id === metric.id)?.baseDate || "원본 기준일 미제공"}</p>
       </div>)}</div>
       <TradingViewChart code={active.code} name={active.name} />
+      <StockValuationHistory code={active.code} />
     </>}
     {data && <section className="overflow-hidden rounded-xl border border-white/10 bg-[#151a22]">
       <div className="flex flex-wrap items-center justify-between gap-4 p-4"><div><h2 className="font-semibold">개별종목 밸류에이션 비교</h2><p className="mt-1 text-xs text-zinc-500">{rows.length} / {data.stocks.length}종목 · 종목을 누르면 상세와 차트가 바뀝니다.</p></div>
@@ -106,7 +108,7 @@ export function StockValuationBoard() {
     <div className="space-y-1 text-xs leading-relaxed text-zinc-500">
       <p>밸류에이션 출처: QuantiWise Peer Analysis · Fwd.12M. CPD-1TD는 원본 조회일의 직전 거래일 기준입니다.</p>
       <p>시가총액 출처: KRX 일별매매정보 · 표시 기준일의 15:30 정규장 종가 기준입니다. 시총 열을 누르면 큰 순·작은 순으로 정렬하며 결측은 마지막에 표시합니다.</p>
-      <p>현재 파일은 종목별 스냅샷입니다. 밸류에이션 과거 시계열은 포함되어 있지 않습니다. 결측은 —로, 0과 음수는 원본대로 표시합니다.</p>
+      <p>밸류에이션 이력은 저장된 조회일의 스냅샷입니다. 원본 지표의 실제 기준일과 가격 거래소는 확인되지 않았습니다. 결측은 —로, 0과 음수는 원본대로 표시합니다.</p>
       <p>영업이익·FCF는 천원에서 억원으로 환산합니다. 로컬 내보내기 후 배포하고 ‘데이터 반영’을 눌러 주세요.</p>
     </div>
   </div>;
