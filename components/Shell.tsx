@@ -10,7 +10,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
     icon: "market", title: { ko: "시장 한눈에", en: "Market overview" },
     items: [
       { href: "/events", ko: "매크로 · 실적 캘린더", en: "Macro & earnings" },
-      { href: "/valuation/sectors", ko: "섹터별 등락률", en: "Sector performance" },
+      { href: "/valuation/sectors", ko: "섹터/종목 등락률", en: "Sector & stock performance" },
       { href: "/adr", ko: "코스피 · 코스닥 ADR", en: "KOSPI · KOSDAQ ADR" },
       { href: "/risk", ko: "공포 · 탐욕 지수", en: "Fear & greed" },
     ],
