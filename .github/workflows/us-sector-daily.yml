@@ -1,0 +1,34 @@
+name: Collect US sector returns
+on:
+  schedule:
+    - cron: '30 23 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: us-sector-publication
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/us-sectors/collect.py
+      - name: Publish US sector data
+        env:
+          BRANCH: ${{ github.event.repository.default_branch }}
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+        run: |
+          git add data/us-sectors/board.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --author="$OWNER <$OWNER_ID+$OWNER@users.noreply.github.com>" -m 'chore(data): publish US sector returns'
+          git fetch origin "$BRANCH"
+          git rebase "origin/$BRANCH"
+          git push origin "HEAD:$BRANCH"
