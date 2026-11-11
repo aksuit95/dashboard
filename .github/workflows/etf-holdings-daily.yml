@@ -27,6 +27,7 @@ jobs:
         env:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
+          ETF_VERIFY_SOURCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: npm run etf-holdings:export
       - name: Publish snapshots and collection status
         env:
@@ -48,5 +49,6 @@ jobs:
       - name: Report collection failure
         if: steps.collect.outcome == 'failure'
         run: exit 1
+
 
 

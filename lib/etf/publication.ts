@@ -18,11 +18,15 @@ export async function collectEtf(now = new Date()) {
     try { dates.push(comparisonDate(expected, period)); } catch { errors.push(`${period} 거래일 확인 실패`); }
   }
   for (const day of new Set(dates)) {
-    if (p.snapshots.some(s => s.asOf === day)) continue;
+    const existing = p.snapshots.find(s => s.asOf === day);
+    const verify = day === expected && process.env.ETF_VERIFY_SOURCE === "1";
+    if (existing && !verify) continue;
     try {
       const payload = await krxClient.query("MDCSTAT05001", { isuCd: "KR7396500001", trdDd: day.replaceAll("-", "") });
       const holdings = parseKrxHoldings(payload);
-      p.snapshots.push({ asOf: day, collectedAt: new Date().toISOString(), source: "KRX_PDF", holdings, market: {} });
+      if (existing) { existing.holdings = holdings; existing.collectedAt = new Date().toISOString(); }
+      else p.snapshots.push({ asOf: day, collectedAt: new Date().toISOString(), source: "KRX_PDF", holdings, market: {} });
+      console.log(`KRX ETF 구성 조회 성공: ${day}, ${holdings.length}종목`);
       p.snapshots.sort((a,b) => a.asOf.localeCompare(b.asOf));
       await save(p);
     } catch (e) { errors.push(`${day}: ${e instanceof Error ? e.message : "구성 수집 실패"}`); }
@@ -41,3 +45,4 @@ export async function collectEtf(now = new Date()) {
   if (errors.length) throw new Error(errors.join("; "));
   return p;
 }
+
