@@ -40,6 +40,10 @@ export function FinancialHealthBoard() {
   const [kind, setKind] = useState("nonfinancial"), [filter, setFilter] = useState("all"), [sort, setSort] = useState<SortKey>("cash"), [desc, setDesc] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
   useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("code");
+    if (code && /^[0-9A-Z]{6}$/.test(code)) { setKind("all"); setQuery(code); setSelected(code); }
+  }, []);
+  useEffect(() => {
     const controller = new AbortController(); setBusy(true); setError(null);
     fetch("/api/financials", { cache: "no-store", signal: controller.signal }).then(async r => {
       const data = await r.json(); if (!r.ok) throw new Error(data.error ?? "저장 자료 조회 실패");

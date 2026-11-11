@@ -10,6 +10,7 @@ const groups = [
     title: { ko: "수급분석", en: "Investor Flows" },
     items: [
       { href: "/investor-flow/kospi200", ko: "수급분석", en: "Investor Flows" },
+      { href: "/etf-holdings", ko: "ETF 보유 종목", en: "ETF Holdings" },
       { href: "/short-selling", ko: "코스피200 공매도", en: "KOSPI 200 Short Selling" },
     ],
   },
@@ -25,6 +26,7 @@ const groups = [
     title: { ko: "종목 분석", en: "Stock Analysis" },
     items: [
       { href: "/financials", ko: "현금·재무건전성", en: "Cash & Financial Health" },
+      { href: "/investment-risk", ko: "투자위험", en: "Investment Risk" },
       { href: "/minervini", ko: "마크 미너비니 기술적분석", en: "Mark Minervini" },
     ],
   },
@@ -108,4 +110,3 @@ export function Shell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-

@@ -6,6 +6,7 @@ type Query = (bld: string, params: Record<string, string>) => Promise<Row>;
 export type ValuationMarketCaps = {
   version: 1; source: "KRX_WEB_VERIFIED"; asOf: string; fetchedAt: string; exchange: "KRX"; priceTime: "15:30 KST";
   priceBasis: "KRX_REGULAR_CLOSE"; values: Record<string, number | null>; closes: Record<string, number | null>;
+  securities?: Record<string, { name: string; market: "KOSPI" | "KOSDAQ" }>;
 };
 export const marketCapsPath = path.join(process.cwd(), "data", "valuation", "market-caps.json");
 export function validateMarketCaps(value: unknown): ValuationMarketCaps {
@@ -24,6 +25,7 @@ export async function readMarketCaps(file = marketCapsPath): Promise<ValuationMa
 }
 export async function fetchValuationMarketCaps(asOf: string, query: Query = createInvestorKrxWebQuery(undefined, undefined, { allowInvalidRows: true }), now = new Date()): Promise<ValuationMarketCaps> {
   const values: ValuationMarketCaps["values"] = {}, closes: ValuationMarketCaps["closes"] = {};
+  const securities: NonNullable<ValuationMarketCaps["securities"]> = {};
   for (const market of ["STK", "KSQ"]) {
     const payload = await query("MDCSTAT01501", { trdDd: asOf.replaceAll("-", ""), mktId: market });
     if (!Array.isArray(payload.OutBlock_1) || payload.OutBlock_1.length < 10) throw new Error("KRX 시장별 시총 누락");
@@ -33,7 +35,8 @@ export async function fetchValuationMarketCaps(asOf: string, query: Query = crea
       if (!/^[0-9A-Z]{6}$/.test(code) || row.MKT_ID !== market || Object.hasOwn(values, code)) throw new Error("KRX 시총 종목·시장 검증 오류");
       const valid = [close, cap, shares].every(Number.isSafeInteger) && close > 0 && cap > 0 && shares > 0 && close * shares === cap;
       values[code] = valid ? cap : null; closes[code] = valid ? close : null;
+      if (typeof row.ISU_ABBRV === "string" && row.ISU_ABBRV.trim()) securities[code] = { name: row.ISU_ABBRV.trim(), market: market === "STK" ? "KOSPI" : "KOSDAQ" };
     }
   }
-  return validateMarketCaps({ version: 1, source: "KRX_WEB_VERIFIED", asOf, fetchedAt: now.toISOString(), exchange: "KRX", priceTime: "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", values, closes });
+  return validateMarketCaps({ version: 1, source: "KRX_WEB_VERIFIED", asOf, fetchedAt: now.toISOString(), exchange: "KRX", priceTime: "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", values, closes, securities });
 }

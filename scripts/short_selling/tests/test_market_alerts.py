@@ -28,14 +28,16 @@ class MarketAlertTests(unittest.TestCase):
     def test_collects_all_alert_levels_and_pages(self, _sleep):
         first = [{'itemcode': f'{i:06d}', 'marketAlertType': '01'} for i in range(100)]
         pages = {('marketAlertType', '01', 0): first, ('marketAlertType', '01', 1): [{'itemcode': '000100', 'marketAlertType': '01'}],
-                 ('marketAlertType', '02', 0): [{'itemcode': '0126Z0', 'marketAlertType': '02'}],
-                 ('statusTag', None, 0): [{'itemcode': '0126Z0', 'manageStatusGb': '1'}, {'itemcode': '001527', 'manageStatusGb': '2'}],
+                 ('marketAlertType', '02', 0): [{'itemcode': '0126Z0', 'marketAlertType': '02', 'itemname': '테스트', 'sosok': '1'}],
+                 ('statusTag', None, 0): [{'itemcode': '0126Z0', 'manageStatusGb': '1'}, {'itemcode': '001527', 'manageStatusGb': '2', 'itemname': '우선주', 'sosok': '0'}],
                  ('tradeStopYn', None, 0): [{'itemcode': '0126Z0', 'tradeStopYn': 'Y'}]}
         snapshot = fetch(Session(pages))
         self.assertEqual(len(snapshot['alerts']), 103)
         self.assertEqual(snapshot['alerts']['000100'], ['투자주의'])
         self.assertEqual(snapshot['alerts']['0126Z0'], ['투자경고', '관리', '거래정지'])
         self.assertEqual(snapshot['alerts']['001527'], ['관리'])
+        self.assertEqual(snapshot['securities']['001527'], {'name': '우선주', 'market': 'KOSPI'})
+        self.assertEqual(snapshot['securities']['0126Z0'], {'name': '테스트', 'market': 'KOSDAQ'})
         self.assertTrue(snapshot['observed_at'].endswith('+09:00'))
 
     @patch('scripts.short_selling.market_alerts.time.sleep')

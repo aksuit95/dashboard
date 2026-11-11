@@ -18,6 +18,7 @@ LABELS = {"01": "투자주의", "02": "투자경고", "03": "투자위험"}
 
 def fetch(session):
     alerts = {}
+    securities = {}
     queries = [("marketAlertType", kind, label) for kind, label in LABELS.items()]
     queries += [("statusTag", None, "관리"), ("tradeStopYn", None, "거래정지")]
     for order, kind, label in queries:
@@ -44,13 +45,20 @@ def fetch(session):
                     raise ValueError("Management filter mismatch")
                 if order == "tradeStopYn" and row.get("tradeStopYn") != "Y":
                     raise ValueError("Trading halt filter mismatch")
+                name = row.get("itemname")
+                market = {"0": "KOSPI", "1": "KOSDAQ"}.get(row.get("sosok"))
+                entry = securities.setdefault(code, {"name": None, "market": None})
+                if isinstance(name, str) and name.strip():
+                    entry["name"] = name.strip()
+                if market:
+                    entry["market"] = market
                 seen.add(code)
                 alerts.setdefault(code, []).append(label)
             if len(rows) < 100:
                 break
         else:
             raise ValueError("Incomplete market-alert pagination")
-    return {"schema_version": "market-alerts.v2", "source": "네이버페이 증권 관리·거래정지·시장경보 목록", "source_url": "https://stock.naver.com/market/stock/kr/management/investmentAlert", "observed_at": datetime.now(timezone(timedelta(hours=9))).isoformat(), "alerts": alerts}
+    return {"schema_version": "market-alerts.v2", "source": "네이버페이 증권 관리·거래정지·시장경보 목록", "source_url": "https://stock.naver.com/market/stock/kr/management/investmentAlert", "observed_at": datetime.now(timezone(timedelta(hours=9))).isoformat(), "alerts": alerts, "securities": securities}
 
 
 def main():
