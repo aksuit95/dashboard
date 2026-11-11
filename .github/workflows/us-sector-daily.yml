@@ -1,7 +1,7 @@
 name: Collect US sector returns
 on:
   schedule:
-    - cron: '30 23 * * 1-5'
+    - cron: '10 21 * * 1-5' # 06:10 KST, Tuesday–Saturday
   workflow_dispatch:
 permissions:
   contents: write

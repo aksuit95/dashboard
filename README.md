@@ -257,4 +257,4 @@ QuantiWise Refresh 후 저장하고 `npm run valuation:stocks:export`를 실행�
 
 `섹터별 등락률`의 미국 시장은 제3자 집계 S&P 500 구성종목과 NASDAQ 100 구성종목을 티커 기준으로 합칩니다. NASDAQ 전체 상장 종목을 뜻하지 않으며, 복수 주식 클래스는 각각 포함됩니다. 구성과 업종은 수집 시점 기준입니다. 원본 업종을 리서치용으로 재분류하며 공식 섹터 지수가 아닙니다. Yahoo Finance의 미국 정규장 일봉 종가를 사용하고, SPY 거래일을 기준으로 1·5·21·63·126·252거래일 전 가격과 비교합니다. 배당은 제외하고 가격 누락은 결측 처리합니다. 미국 거래일과 수집 시각을 별도로 표시합니다.
 
-`.github/workflows/us-sector-daily.yml`이 미국 평일 마감 후 수집하고 `data/us-sectors/board.json`을 배포합니다. 공휴일에는 마지막 완료 거래일을 사용합니다. 90% 미만의 최신 종가 수집 시 기존 배포 파일을 유지합니다. 수동 수집: `python scripts/us-sectors/collect.py`. 외부 원본과 네트워크가 필요합니다.
+`.github/workflows/us-sector-daily.yml`이 한국시간 화~토 오전 6시 10분에 수집을 시작하고 `data/us-sectors/board.json`을 배포합니다. GitHub Actions 예약 실행은 지연될 수 있습니다. 공휴일에는 마지막 완료 거래일을 사용합니다. 90% 미만의 최신 종가 수집 시 기존 배포 파일을 유지합니다. 수동 수집: `python scripts/us-sectors/collect.py`. 외부 원본과 네트워크가 필요합니다.

@@ -66,11 +66,14 @@ def chart(symbol):
     closes = result['indicators']['quote'][0]['close']
     return {eastern(datetime.fromtimestamp(t, timezone.utc)).date().isoformat(): c for t,c in zip(result['timestamp'], closes) if c is not None and c > 0}
 
+def is_completed_session(day, now_et):
+    return day < now_et.date().isoformat() or (day == now_et.date().isoformat() and (now_et.hour, now_et.minute) >= (16, 0))
+
 def main():
     now = datetime.now(timezone.utc)
     et = eastern(now)
     benchmark = chart('SPY')
-    dates = sorted(d for d in benchmark if d < et.date().isoformat() or (d == et.date().isoformat() and (et.hour,et.minute) >= (16, 15)))
+    dates = sorted(d for d in benchmark if is_completed_session(d, et))
     if len(dates) < 280: raise ValueError('미국 정규장 기준 이력 부족')
     members = universe()
     def collect(row):
