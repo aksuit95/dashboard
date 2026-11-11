@@ -77,6 +77,11 @@ jobs:
             if [ "$attempt" = "3" ]; then exit 1; fi
             sleep 60
           done
+      - name: Collect annual consensus estimates
+        id: annual-estimates
+        if: steps.sectors.outcome == 'success'
+        continue-on-error: true
+        run: npx tsx jobs/annual-estimates-export.ts
       - name: Commit daily snapshots and trigger Vercel Git deployment
         shell: bash
         env:
@@ -85,6 +90,9 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json public/data/market-indicators-live
+          if [ -f data/valuation/annual-estimates.json ]; then
+            git add -- data/valuation/annual-estimates.json
+          fi
           if [ -f data/adr/board.json ]; then
             git add -- data/adr/board.json
           fi
@@ -111,5 +119,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.sectors.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.annual-estimates.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
         run: exit 1

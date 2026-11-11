@@ -5,6 +5,7 @@ import { stockMetrics, type StockMetric, type StockValuationData, type StockValu
 import type { ValuationMarketCaps } from "@/lib/valuation/market-caps";
 import { TradingViewChart } from "./TradingViewChart";
 import { StockValuationHistory } from "./StockValuationHistory";
+import { AnnualEstimateChart } from "./AnnualEstimateChart";
 
 const timestamp = (value: string) => new Date(value).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false });
 const format = (value: number | null | undefined, digits: number) => value == null ? "—" : value.toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -79,6 +80,7 @@ export function StockValuationBoard() {
         <p className="mt-2 text-2xl font-semibold tabular-nums">{format(active.values[metric.id], metric.digits)} <span className="text-xs font-normal text-zinc-500">{metric.unit}</span></p>
         <p className="mt-2 text-[11px] text-zinc-500">Fwd.12M · {data?.metrics.find(item => item.id === metric.id)?.baseDate || "원본 기준일 미제공"}</p>
       </div>)}</div>
+      <AnnualEstimateChart code={active.code} />
       <TradingViewChart code={active.code} name={active.name} />
       <StockValuationHistory code={active.code} />
     </>}
