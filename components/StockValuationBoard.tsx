@@ -19,6 +19,8 @@ export function StockValuationBoard() {
   const [sort, setSort] = useState<Sort>("name");
   const [ascending, setAscending] = useState(true);
   const [positivePer, setPositivePer] = useState(false);
+  const [comparison, setComparison] = useState<string[]>([]);
+  const [comparisonOnly, setComparisonOnly] = useState(false);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [caps, setCaps] = useState<ValuationMarketCaps | null>(null);
@@ -49,14 +51,18 @@ export function StockValuationBoard() {
   const active = data?.stocks.find(stock => stock.code === selected) ?? data?.stocks[0];
   const rows = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
-    return (data?.stocks ?? []).filter(stock => (!term || `${stock.name} ${stock.code}`.toLocaleLowerCase().includes(term)) && (!positivePer || (stock.values.per != null && stock.values.per > 0))).sort((a, b) => {
+    return (data?.stocks ?? []).filter(stock => (!comparisonOnly || comparison.includes(stock.code)) && (!term || `${stock.name} ${stock.code}`.toLocaleLowerCase().includes(term)) && (!positivePer || (stock.values.per != null && stock.values.per > 0))).sort((a, b) => {
       if (sort === "name") return (ascending ? 1 : -1) * a.name.localeCompare(b.name, "ko");
       const left = sort === "marketCap" ? caps?.values[a.code] : a.values[sort], right = sort === "marketCap" ? caps?.values[b.code] : b.values[sort];
       if (left == null) return right == null ? a.code.localeCompare(b.code) : 1;
       if (right == null) return -1;
       return (ascending ? 1 : -1) * (left - right) || a.code.localeCompare(b.code);
     });
-  }, [data, caps, query, sort, ascending, positivePer]);
+  }, [data, caps, query, sort, ascending, positivePer, comparison, comparisonOnly]);
+  function toggleComparison(code: string) {
+    if (comparison.includes(code) && comparison.length === 1) setComparisonOnly(false);
+    setComparison(current => current.includes(code) ? current.filter(item => item !== code) : [...current, code]);
+  }
   function order(column: Sort) { if (sort === column) setAscending(value => !value); else { setSort(column); setAscending(column !== "marketCap"); } }
 
   return <div className="space-y-5">
@@ -85,21 +91,29 @@ export function StockValuationBoard() {
       <StockValuationHistory code={active.code} />
     </>}
     {data && <section className="overflow-hidden rounded-xl border border-white/10 bg-[#151a22]">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4"><div><h2 className="font-semibold">개별종목 밸류에이션 비교</h2><p className="mt-1 text-xs text-zinc-500">{rows.length} / {data.stocks.length}종목 · 종목을 누르면 상세와 차트가 바뀝니다.</p></div>
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4"><div><h2 className="font-semibold">개별종목 밸류에이션 비교</h2><p className="mt-1 text-xs text-zinc-500">{rows.length} / {data.stocks.length}종목 · 체크박스로 비교 종목을 선택하세요. 종목명을 누르면 상세와 차트가 바뀝니다.</p></div>
         <div className="flex flex-wrap items-center gap-3"><input type="search" aria-label="종목명 또는 코드 검색" placeholder="종목명 / 코드 검색" value={query} onChange={event => setQuery(event.target.value)} className="w-48 rounded-md border border-white/15 bg-[#10141b] px-3 py-2 text-sm" /><label className="flex items-center gap-2 text-xs text-zinc-400"><input type="checkbox" checked={positivePer} onChange={event => setPositivePer(event.target.checked)} />PER 양수만</label></div>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-4">
         <label className="text-xs text-zinc-400">시총 정렬 <select aria-label="시총 정렬" value={sort === "marketCap" ? ascending ? "asc" : "desc" : "none"} onChange={event => { if (event.target.value === "none") { setSort("name"); setAscending(true); } else { setSort("marketCap"); setAscending(event.target.value === "asc"); } }} className="ml-2 rounded-md border border-white/15 bg-[#10141b] px-3 py-2 text-sm"><option value="none">선택 안 함</option><option value="desc">시총 큰 순</option><option value="asc">시총 작은 순</option></select></label>
         {caps && <p className="text-xs text-zinc-500">시총 기준 {caps.asOf} · KRX 15:30 종가 · 수집 {timestamp(caps.fetchedAt)} KST</p>}
       </div>
+      <div className="flex flex-wrap items-center gap-2 px-4 pb-4" aria-label="비교 종목 선택">
+        <span className="mr-1 text-xs text-zinc-400">비교 종목 {comparison.length}개</span>
+        {comparison.map(code => { const stock = data.stocks.find(item => item.code === code); return <button key={code} type="button" onClick={() => toggleComparison(code)} aria-label={`${stock?.name ?? code} 비교에서 제외`} className="rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1 text-xs text-sky-200">{stock?.name ?? code} ×</button>; })}
+        <button type="button" disabled={!comparison.length} aria-pressed={comparisonOnly} onClick={() => { setComparisonOnly(value => !value); setQuery(''); setPositivePer(false); }} className="rounded-md border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-40">{comparisonOnly ? '전체 종목 보기' : '선택 종목만 비교'}</button>
+        {comparison.length > 0 && <button type="button" onClick={() => { setComparison([]); setComparisonOnly(false); }} className="text-xs text-zinc-400 hover:text-white">선택 초기화</button>}
+      </div>
       <div className="max-h-[600px] overflow-auto"><table className="w-full whitespace-nowrap text-right text-xs">
         <caption className="sr-only">QuantiWise 개별종목 12개월 선행 밸류에이션 및 KRX 종가 기준 시가총액. 열 제목을 누르면 정렬되며 결측은 마지막에 표시됩니다.</caption>
         <thead className="sticky top-0 z-10 bg-[#1b212c] text-zinc-400"><tr>
+          <th scope="col" className="px-3 py-3 text-center">비교</th>
           <th scope="col" aria-sort={sort === "name" ? ascending ? "ascending" : "descending" : "none"} className="px-4 py-3 text-left"><button type="button" onClick={() => order("name")}>종목 {sort === "name" ? ascending ? "↑" : "↓" : "↕"}</button></th>
           <th scope="col" aria-sort={sort === "marketCap" ? ascending ? "ascending" : "descending" : "none"} className="px-4 py-3"><button type="button" onClick={() => order("marketCap")}>시가총액 {sort === "marketCap" ? ascending ? "↑" : "↓" : "↕"}<span className="mt-1 block text-[10px] font-normal text-zinc-500">억원</span></button></th>
           {metrics.map(metric => <th scope="col" key={metric.id} aria-sort={sort === metric.id ? ascending ? "ascending" : "descending" : "none"} className="px-4 py-3"><button type="button" onClick={() => order(metric.id)}>{metric.name} {sort === metric.id ? ascending ? "↑" : "↓" : "↕"}<span className="mt-1 block text-[10px] font-normal text-zinc-500">{metric.unit}</span></button></th>)}
         </tr></thead>
         <tbody>{rows.map(stock => <tr key={stock.code} className={`border-t border-white/5 ${active?.code === stock.code ? "bg-sky-400/[0.08]" : "hover:bg-white/[0.03]"}`}>
+          <td className="px-3 py-3 text-center"><input type="checkbox" aria-label={`${stock.name} 비교에 선택`} checked={comparison.includes(stock.code)} onChange={() => toggleComparison(stock.code)} /></td>
           <th scope="row" className="px-4 py-3 text-left font-normal"><button type="button" aria-pressed={active?.code === stock.code} onClick={() => setSelected(stock.code)} className="text-left text-sm text-zinc-200 hover:text-sky-400"><span className="block">{stock.name}</span><span className="text-[10px] text-zinc-500">{stock.code}{active?.code === stock.code ? " · 선택됨" : ""}</span></button></th>
           <td className="px-4 py-3 tabular-nums text-zinc-300">{format(caps?.values[stock.code] == null ? null : caps.values[stock.code]! / 1e8, 0)}</td>
           {metrics.map(metric => <td key={metric.id} className={`px-4 py-3 tabular-nums ${stock.values[metric.id] == null ? "text-zinc-600" : stock.values[metric.id]! < 0 ? "text-sky-300" : "text-zinc-300"}`}>{format(stock.values[metric.id], metric.digits)}</td>)}
