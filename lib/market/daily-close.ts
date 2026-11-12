@@ -27,17 +27,17 @@ export function usCloseDate(now = new Date()): string {
   }
 }
 
-/** Publish completed US closes only at the daily 07:00 Seoul refresh. */
+/** Publish completed US closes with the daily 09:00 Seoul US indicators refresh. */
 export function usRefreshDate(now = new Date()): string {
   const seoulDate = localDate(now.getTime());
-  let refresh = zonedTime(seoulDate, 420, "Asia/Seoul");
-  if (refresh > now.getTime()) refresh = zonedTime(shiftDate(seoulDate, -1), 420, "Asia/Seoul");
+  let refresh = zonedTime(seoulDate, 540, "Asia/Seoul");
+  if (refresh > now.getTime()) refresh = zonedTime(shiftDate(seoulDate, -1), 540, "Asia/Seoul");
   return usCloseDate(new Date(refresh));
 }
 
 export function nextUsRefreshDelay(now = new Date()): number {
   const date = localDate(now.getTime());
-  let next = zonedTime(date, 420, "Asia/Seoul");
-  if (next <= now.getTime()) next = zonedTime(shiftDate(date, 1), 420, "Asia/Seoul");
+  let next = zonedTime(date, 540, "Asia/Seoul");
+  if (next <= now.getTime()) next = zonedTime(shiftDate(date, 1), 540, "Asia/Seoul");
   return next - now.getTime();
 }

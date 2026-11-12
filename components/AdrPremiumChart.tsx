@@ -79,7 +79,7 @@ export function AdrPremiumChart() {
           {latest.adrDate ? ` · ADR ${latest.adrDate} 미국장 종가 · 환율 ${latest.fxDate}` : ""}
         </p>
       ) : null}
-      <p className="mt-2 text-xs text-zinc-500">한국 KRX 15:30 종가 · ADR 미국 정규장 종가 · 환율 Yahoo 일별 값 · 한국 16:00, 미국 07:00 이후 수집 · 휴장일은 직전 종가 유지{krSource ? ` · 한국 종가 출처 ${krSource === "KRX_OPEN_API" ? "KRX Open API" : "네이버 KRX 정규장"}` : ""}{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}{usFetchedAt ? ` · 미국·환율 수집 ${new Date(usFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
+      <p className="mt-2 text-xs text-zinc-500">한국 KRX 15:30 종가 · ADR 미국 정규장 종가 · 환율 Yahoo 일별 값 · 한국 16:00, 미국 09:00 이후 미국 지표와 함께 수집 · 휴장일은 직전 종가 유지{krSource ? ` · 한국 종가 출처 ${krSource === "KRX_OPEN_API" ? "KRX Open API" : "네이버 KRX 정규장"}` : ""}{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}{usFetchedAt ? ` · 미국·환율 수집 ${new Date(usFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>
       <div className="mt-4">
         {points == null && !error ? <p className="py-8 text-sm text-zinc-500">괴리율 차트를 불러오는 중입니다.</p> : null}
         {error ? <p className="py-8 text-sm text-amber-300">{error}</p> : null}

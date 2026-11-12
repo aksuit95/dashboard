@@ -1,7 +1,6 @@
 name: Publish US proxy close
 on:
-  schedule:
-    - cron: '0 22 * * *'
+  # Scheduled collection is part of market-indicators-us.yml at 09:00 KST.
   workflow_dispatch:
 permissions:
   contents: write
@@ -21,10 +20,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Collect completed close
-        env:
-          KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
-        run: npm run proxy-close:export
+      - name: Collect completed US close using saved KRX closes
+        run: npm run proxy-close:export -- --us-only
       - name: Publish snapshot
         shell: bash
         env:

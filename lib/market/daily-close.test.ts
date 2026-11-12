@@ -2,18 +2,18 @@ import { describe, expect, it } from "vitest";
 import { closeDate, nextCloseDelay, nextUsRefreshDelay, usCloseDate, usRefreshDate } from "@/lib/market/daily-close";
 
 describe("괴리율 일별 종가 갱신", () => {
-  it("미국 종가는 서머타임 여부와 무관하게 한국 오전 7시에 반영한다", () => {
-    expect(usRefreshDate(new Date("2026-11-03T06:59:59+09:00"))).toBe("2026-10-30");
-    expect(usRefreshDate(new Date("2026-11-03T07:00:00+09:00"))).toBe("2026-11-02");
-    expect(usRefreshDate(new Date("2026-10-30T06:59:59+09:00"))).toBe("2026-10-28");
-    expect(usRefreshDate(new Date("2026-10-30T07:00:00+09:00"))).toBe("2026-10-29");
-    expect(usRefreshDate(new Date("2026-11-28T07:00:00+09:00"))).toBe("2026-11-27");
-    expect(usRefreshDate(new Date("2026-11-29T07:00:00+09:00"))).toBe("2026-11-27");
+  it("미국 종가는 서머타임 여부와 무관하게 한국 오전 9시에 반영한다", () => {
+    expect(usRefreshDate(new Date("2026-11-03T08:59:59+09:00"))).toBe("2026-10-30");
+    expect(usRefreshDate(new Date("2026-11-03T09:00:00+09:00"))).toBe("2026-11-02");
+    expect(usRefreshDate(new Date("2026-10-30T08:59:59+09:00"))).toBe("2026-10-28");
+    expect(usRefreshDate(new Date("2026-10-30T09:00:00+09:00"))).toBe("2026-10-29");
+    expect(usRefreshDate(new Date("2026-11-28T09:00:00+09:00"))).toBe("2026-11-27");
+    expect(usRefreshDate(new Date("2026-11-29T09:00:00+09:00"))).toBe("2026-11-27");
   });
-  it("다음 갱신은 1분 뒤가 아니라 다음 오전 7시다", () => {
-    const now = new Date("2026-11-03T07:00:00+09:00");
+  it("다음 갱신은 1분 뒤가 아니라 다음 오전 9시다", () => {
+    const now = new Date("2026-11-03T09:00:00+09:00");
     expect(nextUsRefreshDelay(now)).toBe(24 * 60 * 60 * 1000);
-    expect(nextUsRefreshDelay(new Date("2026-11-03T06:59:59+09:00"))).toBe(1000);
+    expect(nextUsRefreshDelay(new Date("2026-11-03T08:59:59+09:00"))).toBe(1000);
   });
   it("미국 본장 마감 전에는 직전 종가, 마감부터 당일 종가를 쓴다", () => {
     expect(usCloseDate(new Date("2026-11-03T05:59:59+09:00"))).toBe("2026-10-30");

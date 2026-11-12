@@ -7,6 +7,7 @@ import { preferredDiscountSeries } from "@/lib/market/preferred-discount";
 import { fetchKrxDailyCloses } from "./krx-daily-prices";
 import { requestKrxOpenApi } from "./krx-openapi";
 import { fetchYahooHistory } from "./yahoo";
+import { fetchUsRegularClose } from "./us-regular-close";
 
 type KrSymbol = "005930" | "005935" | "000660";
 const codes: KrSymbol[] = ["005930", "005935", "000660"];
@@ -37,10 +38,12 @@ export async function publishedProxyClose(file = proxyPublicationPath) {
   return { closeDate: p.krAsOf, usAsOf: p.usAsOf, fetchedAt: p.fetchedAt, krFetchedAt: p.krFetchedAt, usFetchedAt: p.usFetchedAt, priceBasis: p.priceBasis, krSource: p.krSource ?? "KRX_OPEN_API", samsung, adr: adr.map(point => ({ ...point, value: point.premium })) };
 }
 
-type Dependencies = { krx: typeof requestKrxOpenApi; history: typeof fetchKrxDailyCloses; yahoo: typeof fetchYahooHistory };
-const defaults: Dependencies = { krx: requestKrxOpenApi, history: fetchKrxDailyCloses, yahoo: fetchYahooHistory };
-export async function exportProxyPublication(file = proxyPublicationPath, now = new Date(), dep: Dependencies = defaults) {
-  const krAsOf = minerviniSession(now), usAsOf = usRefreshDate(now), previous = await readProxyPublication(file);
+type Dependencies = { krx: typeof requestKrxOpenApi; history: typeof fetchKrxDailyCloses; yahoo: typeof fetchYahooHistory; regularClose?: typeof fetchUsRegularClose };
+const defaults: Dependencies = { krx: requestKrxOpenApi, history: fetchKrxDailyCloses, yahoo: fetchYahooHistory, regularClose: fetchUsRegularClose };
+export async function exportProxyPublication(file = proxyPublicationPath, now = new Date(), dep: Dependencies = defaults, options: { usOnly?: boolean } = {}) {
+  const previous = await readProxyPublication(file);
+  if (options.usOnly && !previous) throw new Error("미국 ADR 수집 전에 검증된 KRX 종가 저장본이 필요합니다.");
+  const krAsOf = options.usOnly ? previous!.krAsOf : minerviniSession(now), usAsOf = usRefreshDate(now);
   if (previous && (previous.krAsOf > krAsOf || previous.usAsOf > usAsOf)) throw new Error("프록시 기준일 역행");
   if (previous?.krAsOf === krAsOf && previous.usAsOf === usAsOf) return { changed: false, krAsOf, usAsOf };
   let krFetchedAt = previous?.krFetchedAt, usFetchedAt = previous?.usFetchedAt;
@@ -81,6 +84,10 @@ export async function exportProxyPublication(file = proxyPublicationPath, now = 
     const [a, f] = await Promise.all([dep.yahoo("SKHY", "5y"), dep.yahoo("KRW=X", "5y")]);
     if (a.status !== "ok" || f.status !== "ok") throw new Error("미국 ADR·환율 이력 수집 실패");
     adr = a.data.filter(bar => bar.date <= usAsOf && bar.close > 0).map(({ date, close }) => ({ date, close }));
+    if (adr.at(-1)?.date !== usAsOf && dep.regularClose) {
+      const regular = await dep.regularClose("SKHY", usAsOf, now);
+      if (regular) adr.push(regular);
+    }
     fx = f.data.filter(bar => bar.date <= usAsOf && bar.close > 0).map(({ date, close }) => ({ date, close }));
     usFetchedAt = now.toISOString();
     if (adr.at(-1)?.date !== usAsOf) throw new Error(`${usAsOf} 미국 ADR 종가 미반영`);

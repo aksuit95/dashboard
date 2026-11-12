@@ -24,6 +24,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Collect US ADR and exchange rate using saved KRX closes
+        id: proxy-close
+        continue-on-error: true
+        run: npm run proxy-close:export -- --us-only
       - name: Collect independent US series
         id: indicators
         continue-on-error: true
@@ -35,6 +44,7 @@ jobs:
           OWNER_ID: ${{ github.event.repository.owner.id }}
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
+          git add -- data/proxy-close/board.json
           git add -- public/data/market-indicators-live/nasdaq.json public/data/market-indicators-live/nasdaq.meta.json public/data/market-indicators-live/sp500.json public/data/market-indicators-live/sp500.meta.json public/data/market-indicators-live/us10y.json public/data/market-indicators-live/us10y.meta.json public/data/market-indicators-live/us2y.json public/data/market-indicators-live/us2y.meta.json
           if git diff --cached --quiet; then
             echo "No changes to publish."
@@ -47,5 +57,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.indicators.outcome == 'failure'
+        if: steps.indicators.outcome == 'failure' || steps.proxy-close.outcome == 'failure'
         run: exit 1

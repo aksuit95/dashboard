@@ -46,7 +46,7 @@
 - **GDR.** 삼성전자 런던 GDR(`SMSN.IL`, 1 GDR = 보통주 25주, 1주 환산), SK하이닉스 프랑크푸르트(`HY9H.F`, 1주 환산).
 - **미국 ETF 프록시.** Roundhill Memory(`DRAM`), iShares MSCI Korea(`EWY`), iShares Semiconductor(`SOXX`).
 
-삼성전자 보통주·우선주와 하이닉스 ADR 괴리율 종가는 GitHub Actions가 수집·저장하고 Git 배포로 반영합니다. 한국 시세는 거래일 16:00 KST에 KRX Open API와 네이버의 KRX 정규장 15:30 종가 이력을 대조하고, KRX가 미발표거나 접속 실패이면 명시적인 네이버 KRX 정규장 종가만 사용하며, ADR·환율은 07:00 KST에 별도로 수집합니다. 화면은 저장 JSON만 읽으며 각 기준일·수집 시각을 표시합니다. 실패 시 기존 정상 파일을 유지합니다. 자세한 설정은 `docs/vercel-daily-refresh.md`를 참고하세요.
+삼성전자 보통주·우선주와 하이닉스 ADR 괴리율 종가는 GitHub Actions가 수집·저장하고 Git 배포로 반영합니다. 한국 시세는 거래일 16:00 KST에 KRX Open API와 네이버의 KRX 정규장 15:30 종가 이력을 대조하고, KRX가 미발표거나 접속 실패이면 명시적인 네이버 KRX 정규장 종가만 사용하며, ADR·환율은 09:00 KST 미국 지표 작업에서 함께 수집하며 저장된 KRX 15:30 본주 종가로 괴리율을 재계산합니다. 화면은 저장 JSON만 읽으며 각 기준일·수집 시각을 표시합니다. 실패 시 기존 정상 파일을 유지합니다. 자세한 설정은 `docs/vercel-daily-refresh.md`를 참고하세요.
 
 ### 시장 지표 장기 비교 (`/adr`)
 
