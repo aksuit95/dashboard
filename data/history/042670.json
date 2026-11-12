@@ -1,6 +1,6 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1dada7b252a2668011f9",
+  "dataset_id": "d7a58c7f384cd2268e30",
   "as_of": "2026-11-11",
   "collected_at": "2026-11-12T07:49:02.628829+09:00",
   "price_basis": {
@@ -13,6 +13,7 @@
   "is_sample": false,
   "period_start": "2025-11-11",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
+  "universe": "kospi200",
   "membership_basis": "point_in_time",
   "units": {
     "money": "KRW",

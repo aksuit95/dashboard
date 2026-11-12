@@ -1,6 +1,6 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1dada7b252a2668011f9",
+  "dataset_id": "d7a58c7f384cd2268e30",
   "as_of": "2026-11-11",
   "collected_at": "2026-11-12T07:49:02.628829+09:00",
   "price_basis": {
@@ -13,6 +13,7 @@
   "is_sample": false,
   "period_start": "2025-11-11",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
+  "universe": "kospi200",
   "membership_basis": "point_in_time",
   "units": {
     "money": "KRW",
@@ -45,7 +46,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-11T19:00:56+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": null
     },
     {
@@ -72,7 +73,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-12T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.008604154715545365
     },
     {
@@ -99,7 +100,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-13T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.02604479720782649
     },
     {
@@ -126,7 +127,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-16T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.1137544435329505
     },
     {
@@ -197,7 +198,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-17T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04216975584797325
     },
     {
@@ -224,7 +225,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-18T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0004281193487103884
     },
     {
@@ -251,7 +252,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-19T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.020421815030252245
     },
     {
@@ -278,7 +279,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-20T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.1943557423791819
     },
     {
@@ -305,7 +306,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-23T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.03332804710357029
     },
     {
@@ -376,7 +377,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-24T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06074334832403675
     },
     {
@@ -403,7 +404,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-25T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.028971149585292014
     },
     {
@@ -430,7 +431,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-26T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.010632500654252511
     },
     {
@@ -457,7 +458,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-27T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.007760968437292589
     },
     {
@@ -484,7 +485,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-11-30T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0014827548174847598
     },
     {
@@ -555,7 +556,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-01T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0010755193394431707
     },
     {
@@ -582,7 +583,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-02T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00813165714166378
     },
     {
@@ -609,7 +610,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-03T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.07144894252563005
     },
     {
@@ -636,7 +637,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-04T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0036729507538751003
     },
     {
@@ -663,7 +664,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-07T19:00:36+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0017072564271743535
     },
     {
@@ -734,7 +735,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-08T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.011261627258150093
     },
     {
@@ -761,7 +762,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-09T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.013363066744198035
     },
     {
@@ -788,7 +789,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-10T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02643375929903288
     },
     {
@@ -815,7 +816,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-11T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0022632894837311384
     },
     {
@@ -842,7 +843,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-14T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.007314575701747001
     },
     {
@@ -913,7 +914,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-15T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.014425533664473206
     },
     {
@@ -940,7 +941,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-16T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.03939742201669012
     },
     {
@@ -967,7 +968,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-17T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.08176557463601698
     },
     {
@@ -994,7 +995,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-18T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.006868182966201413
     },
     {
@@ -1021,7 +1022,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-21T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.05598704677921768
     },
     {
@@ -1092,7 +1093,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-22T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.17702212972407838
     },
     {
@@ -1119,7 +1120,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-23T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06919870546106692
     },
     {
@@ -1146,7 +1147,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-25T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.008236076495007776
     },
     {
@@ -1195,7 +1196,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-28T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.002161480614220741
     },
     {
@@ -1266,7 +1267,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2025-12-29T19:00:53+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06106443783556954
     },
     {
@@ -1293,7 +1294,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-01T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.13057118038900126
     },
     {
@@ -1364,7 +1365,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-04T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.016821957823717943
     },
     {
@@ -1435,7 +1436,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-05T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.015216510266053985
     },
     {
@@ -1462,7 +1463,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-06T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.08491903910700568
     },
     {
@@ -1489,7 +1490,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-07T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.07626528519862193
     },
     {
@@ -1516,7 +1517,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-08T19:00:53+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0773277521188971
     },
     {
@@ -1543,7 +1544,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-11T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.05174240006578419
     },
     {
@@ -1614,7 +1615,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-12T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.042141040525803655
     },
     {
@@ -1641,7 +1642,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-13T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.13343749163829396
     },
     {
@@ -1668,7 +1669,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-14T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.006152910395795032
     },
     {
@@ -1695,7 +1696,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-15T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.05670492983345766
     },
     {
@@ -1722,7 +1723,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-18T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.057508958854206434
     },
     {
@@ -1793,7 +1794,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-19T19:00:50+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.00879994100306536
     },
     {
@@ -1820,7 +1821,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-20T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.007620002310278193
     },
     {
@@ -1847,7 +1848,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-21T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0147152973700028
     },
     {
@@ -1874,7 +1875,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-22T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.006876014417702213
     },
     {
@@ -1901,7 +1902,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-25T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.003372745113011108
     },
     {
@@ -1972,7 +1973,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-26T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.032148108410783124
     },
     {
@@ -1999,7 +2000,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-27T19:01:00+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.017586829586962723
     },
     {
@@ -2026,7 +2027,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-28T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.021476450499026616
     },
     {
@@ -2053,7 +2054,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-01-29T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.2368622506416896
     },
     {
@@ -2080,7 +2081,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-01T19:00:55+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04727064125882752
     },
     {
@@ -2151,7 +2152,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-02T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.00475891202865267
     },
     {
@@ -2178,7 +2179,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-03T19:00:54+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.037658839783512574
     },
     {
@@ -2205,7 +2206,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-04T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.3573569634329951
     },
     {
@@ -2232,7 +2233,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-05T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0025295588347583314
     },
     {
@@ -2259,7 +2260,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-08T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.07063186108571329
     },
     {
@@ -2330,7 +2331,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-09T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.22741490964789143
     },
     {
@@ -2357,7 +2358,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-10T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.2896853910145841
     },
     {
@@ -2384,7 +2385,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-11T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.09943593970565488
     },
     {
@@ -2411,7 +2412,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-12T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.05848266932413921
     },
     {
@@ -2438,7 +2439,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-18T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.09477361557884542
     },
     {
@@ -2575,7 +2576,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-19T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0007622612794111793
     },
     {
@@ -2602,7 +2603,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-22T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04757084689969151
     },
     {
@@ -2673,7 +2674,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-23T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.03602467690367902
     },
     {
@@ -2700,7 +2701,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-24T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.040352859099787704
     },
     {
@@ -2727,7 +2728,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-25T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.011621874027186884
     },
     {
@@ -2754,7 +2755,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-02-26T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.10532258075042274
     },
     {
@@ -2781,7 +2782,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-02T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.06132548621892954
     },
     {
@@ -2874,7 +2875,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-03T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.22321725164346273
     },
     {
@@ -2901,7 +2902,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-04T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.07391323926454839
     },
     {
@@ -2928,7 +2929,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-05T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.33555159197093487
     },
     {
@@ -2955,7 +2956,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-08T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.009444730509964543
     },
     {
@@ -3026,7 +3027,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-09T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.023708414176754556
     },
     {
@@ -3053,7 +3054,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-10T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02033566906374345
     },
     {
@@ -3080,7 +3081,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-11T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.004907709607167867
     },
     {
@@ -3107,7 +3108,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-12T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.10578724687280353
     },
     {
@@ -3134,7 +3135,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-15T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.009243723254777349
     },
     {
@@ -3205,7 +3206,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-16T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.021204960180332223
     },
     {
@@ -3232,7 +3233,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-17T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00992767001918053
     },
     {
@@ -3259,7 +3260,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-18T19:00:50+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06052145719818076
     },
     {
@@ -3286,7 +3287,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-19T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.01541490703740758
     },
     {
@@ -3313,7 +3314,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-22T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.006179015234131032
     },
     {
@@ -3384,7 +3385,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-23T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.1763930031201808
     },
     {
@@ -3411,7 +3412,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-24T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0917585067510375
     },
     {
@@ -3438,7 +3439,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-25T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.004187216069094286
     },
     {
@@ -3465,7 +3466,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-26T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.09656962845636217
     },
     {
@@ -3492,7 +3493,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-29T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.02140335695168582
     },
     {
@@ -3563,7 +3564,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-30T19:00:55+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0009867628891007732
     },
     {
@@ -3590,7 +3591,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-03-31T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06651773856395979
     },
     {
@@ -3617,7 +3618,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-01T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04836704446893948
     },
     {
@@ -3644,7 +3645,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-02T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.009870239374841331
     },
     {
@@ -3671,7 +3672,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-05T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.07531245859935795
     },
     {
@@ -3742,7 +3743,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-06T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00043856128404478803
     },
     {
@@ -3769,7 +3770,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-07T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.11758663380067519
     },
     {
@@ -3796,7 +3797,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-08T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.03232823179530152
     },
     {
@@ -3823,7 +3824,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-09T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.07266020702442043
     },
     {
@@ -3850,7 +3851,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-12T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.07589720697808433
     },
     {
@@ -3921,7 +3922,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-13T19:00:57+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.10748667184847709
     },
     {
@@ -3948,7 +3949,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-14T19:01:01+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.18634416749386373
     },
     {
@@ -3975,7 +3976,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-15T19:01:00+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.26575247522813994
     },
     {
@@ -4002,7 +4003,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-17T08:50:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.23996611591983988
     },
     {
@@ -4029,7 +4030,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.2382144812674943
     },
     {
@@ -4100,7 +4101,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-20T19:01:05+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.014629151403494002
     },
     {
@@ -4127,7 +4128,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-21T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0005168757990527859
     },
     {
@@ -4154,7 +4155,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-22T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0038165273647230965
     },
     {
@@ -4181,7 +4182,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-23T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06724084258586698
     },
     {
@@ -4208,7 +4209,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-26T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.005774390239923042
     },
     {
@@ -4279,7 +4280,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-27T19:00:53+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.014900641722188395
     },
     {
@@ -4306,7 +4307,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-28T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.009295932931449346
     },
     {
@@ -4333,7 +4334,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-04-29T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0012373693371263664
     },
     {
@@ -4360,7 +4361,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-03T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0368130430214262
     },
     {
@@ -4453,7 +4454,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-05T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.012598194980953256
     },
     {
@@ -4502,7 +4503,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-06T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.019589070687333867
     },
     {
@@ -4529,7 +4530,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-07T19:00:50+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.030299885856594377
     },
     {
@@ -4556,7 +4557,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-10T19:00:48+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.007933260370310185
     },
     {
@@ -4627,7 +4628,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-11T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.016631392503865146
     },
     {
@@ -4654,7 +4655,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-12T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.05645693386926566
     },
     {
@@ -4681,7 +4682,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-13T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0007257145057407803
     },
     {
@@ -4708,7 +4709,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-14T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00879994100306536
     },
     {
@@ -4735,7 +4736,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-17T19:00:39+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.2493168690117948
     },
     {
@@ -4806,7 +4807,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-18T19:01:05+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0015610693324927575
     },
     {
@@ -4833,7 +4834,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-19T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.005450690244556652
     },
     {
@@ -4860,7 +4861,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-20T19:01:00+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.06424139666106066
     },
     {
@@ -4887,7 +4888,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-21T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.03868737041395095
     },
     {
@@ -4914,7 +4915,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-25T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.004996466057510264
     },
     {
@@ -5007,7 +5008,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-26T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.018229008610028304
     },
     {
@@ -5034,7 +5035,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-27T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.02392508433494335
     },
     {
@@ -5061,7 +5062,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-28T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.006567977325337422
     },
     {
@@ -5088,7 +5089,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-05-31T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.003918336234233493
     },
     {
@@ -5159,7 +5160,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-01T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04929637671370106
     },
     {
@@ -5186,7 +5187,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-03T19:00:54+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0009502161154303742
     },
     {
@@ -5235,7 +5236,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-04T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02394335772177855
     },
     {
@@ -5262,7 +5263,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-07T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.020082452131884254
     },
     {
@@ -5333,7 +5334,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-08T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.009739715183161335
     },
     {
@@ -5360,7 +5361,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-09T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0076095603749437935
     },
     {
@@ -5387,7 +5388,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-10T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.014357661084799609
     },
     {
@@ -5414,7 +5415,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-11T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0015897846546623566
     },
     {
@@ -5441,7 +5442,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-14T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0014201032054783614
     },
     {
@@ -5512,7 +5513,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-15T19:01:00+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.021411188403186617
     },
     {
@@ -5539,7 +5540,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-16T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.013553632064050832
     },
     {
@@ -5566,7 +5567,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-17T19:00:36+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.017826994099653916
     },
     {
@@ -5593,7 +5594,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-18T19:01:14+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.012311041759257265
     },
     {
@@ -5620,7 +5621,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-21T19:00:36+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.022306584358111396
     },
     {
@@ -5691,7 +5692,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-22T19:00:53+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.01949509326932427
     },
     {
@@ -5718,7 +5719,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-23T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.049993375897272235
     },
     {
@@ -5745,7 +5746,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-24T19:00:49+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.04750297432001791
     },
     {
@@ -5772,7 +5773,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-25T19:01:03+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.061369864444100725
     },
     {
@@ -5799,7 +5800,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-28T19:00:50+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00045944515471358754
     },
     {
@@ -5870,7 +5871,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-29T19:00:53+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.009765820021497335
     },
     {
@@ -5897,7 +5898,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-06-30T19:00:57+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.014208863506284414
     },
     {
@@ -5924,7 +5925,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-01T19:00:54+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.010958811133452501
     },
     {
@@ -5951,7 +5952,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-02T19:00:45+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.020771619863954635
     },
     {
@@ -5978,7 +5979,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-05T19:00:50+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 8.353548267519774e-05
     },
     {
@@ -6049,7 +6050,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-06T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0037382128497150985
     },
     {
@@ -6076,7 +6077,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-07T19:00:51+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0004959919283839865
     },
     {
@@ -6103,7 +6104,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-08T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.03336720436107429
     },
     {
@@ -6130,7 +6131,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-09T19:01:05+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0008327443429183774
     },
     {
@@ -6157,7 +6158,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-12T19:00:52+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.007888882145138986
     },
     {
@@ -6228,7 +6229,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-13T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.011230301452146894
     },
     {
@@ -6255,7 +6256,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-14T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.06082166283904475
     },
     {
@@ -6282,7 +6283,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-15T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02085254486279623
     },
     {
@@ -6309,7 +6310,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-19T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.004497863645292677
     },
     {
@@ -6402,7 +6403,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-20T19:00:42+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0017307507816767531
     },
     {
@@ -6429,7 +6430,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-21T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.01970915294367946
     },
     {
@@ -6456,7 +6457,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-22T19:00:46+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0038713475252286945
     },
     {
@@ -6483,7 +6484,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-23T19:01:02+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.04137877924639247
     },
     {
@@ -6510,7 +6511,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-26T19:01:03+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.031803524544747934
     },
     {
@@ -6581,7 +6582,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-27T19:01:00+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.005346270891212655
     },
     {
@@ -6608,7 +6609,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-28T19:00:44+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.008528450684370968
     },
     {
@@ -6635,7 +6636,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-29T19:00:47+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02462208351851453
     },
     {
@@ -6662,7 +6663,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-07-30T19:00:57+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.04454529613654919
     },
     {
@@ -6689,7 +6690,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-02T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.03642669141405341
     },
     {
@@ -6760,7 +6761,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-03T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.2205832734553604
     },
     {
@@ -6787,7 +6788,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-04T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0552143435644721
     },
     {
@@ -6814,7 +6815,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-05T19:00:26+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.002396424159244735
     },
     {
@@ -6841,7 +6842,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-06T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.000843186278252777
     },
     {
@@ -6868,7 +6869,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-09T19:00:28+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.012981936104492447
     },
     {
@@ -6939,7 +6940,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-10T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0027879967342847242
     },
     {
@@ -6966,7 +6967,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-11T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.05281008795372656
     },
     {
@@ -6993,7 +6994,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-12T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0
     },
     {
@@ -7020,7 +7021,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-13T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.09579692524161659
     },
     {
@@ -7047,7 +7048,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-17T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.01960212310650187
     },
     {
@@ -7140,7 +7141,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-18T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02250237064563139
     },
     {
@@ -7167,7 +7168,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-19T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.1642542532939411
     },
     {
@@ -7194,7 +7195,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-20T19:00:28+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.00985196598800613
     },
     {
@@ -7221,7 +7222,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-23T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.10172794451155562
     },
     {
@@ -7292,7 +7293,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-24T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04338363083059722
     },
     {
@@ -7319,7 +7320,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-25T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.027146421385605662
     },
     {
@@ -7346,7 +7347,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-26T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.006051101526284635
     },
     {
@@ -7373,7 +7374,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-27T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.026311066558853687
     },
     {
@@ -7400,7 +7401,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-30T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0017516346523455523
     },
     {
@@ -7471,7 +7472,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-08-31T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0005586435403903848
     },
     {
@@ -7498,7 +7499,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-01T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0004124564457087888
     },
     {
@@ -7525,7 +7526,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-02T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.04211754617130125
     },
     {
@@ -7552,7 +7553,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-03T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.010073857113862125
     },
     {
@@ -7579,7 +7580,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-06T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.003939220104902293
     },
     {
@@ -7650,7 +7651,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-07T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.023272463376543366
     },
     {
@@ -7677,7 +7678,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-08T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.017088227174745136
     },
     {
@@ -7704,7 +7705,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-09T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.008721626488057362
     },
     {
@@ -7731,7 +7732,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-10T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.004818953156825468
     },
     {
@@ -7758,7 +7759,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-13T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.004184605585260686
     },
     {
@@ -7829,7 +7830,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-14T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.1950866778525899
     },
     {
@@ -7856,7 +7857,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-15T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.011956015957887676
     },
     {
@@ -7883,7 +7884,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-16T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.004231594294265485
     },
     {
@@ -7910,7 +7911,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-17T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.008531061168204568
     },
     {
@@ -7937,7 +7938,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-20T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.01613017960781396
     },
     {
@@ -8008,7 +8009,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-21T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0005247072505535857
     },
     {
@@ -8035,7 +8036,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-22T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.06364359586316627
     },
     {
@@ -8062,7 +8063,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-27T19:00:26+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.013524916741881231
     },
     {
@@ -8177,7 +8178,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-28T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.01806193764467791
     },
     {
@@ -8204,7 +8205,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-29T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0010102572436031724
     },
     {
@@ -8231,7 +8232,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-09-30T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.07857817387519146
     },
     {
@@ -8258,7 +8259,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-01T19:00:33+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.07103387559608768
     },
     {
@@ -8285,7 +8286,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-05T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.00479284831848947
     },
     {
@@ -8378,7 +8379,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-06T19:00:43+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0002506064480255932
     },
     {
@@ -8405,7 +8406,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-07T19:00:34+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.027459679445637656
     },
     {
@@ -8432,7 +8433,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-11T19:00:28+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.007640886180946991
     },
     {
@@ -8525,7 +8526,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-12T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0007518193440767796
     },
     {
@@ -8552,7 +8553,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-13T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.00010441935334399716
     },
     {
@@ -8579,7 +8580,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-14T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.027135979450271262
     },
     {
@@ -8606,7 +8607,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-15T19:00:40+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.016665328793701948
     },
     {
@@ -8633,7 +8634,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-18T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.005693465241081446
     },
     {
@@ -8704,7 +8705,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-19T19:00:30+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.001576732235494357
     },
     {
@@ -8731,7 +8732,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-20T19:00:38+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02827153991788723
     },
     {
@@ -8758,7 +8759,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-21T19:00:28+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.023254189989708168
     },
     {
@@ -8785,7 +8786,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-22T19:00:37+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.01440987076147161
     },
     {
@@ -8812,7 +8813,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-25T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0050434547665150625
     },
     {
@@ -8883,7 +8884,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-26T19:00:41+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.0005821378948927842
     },
     {
@@ -8910,7 +8911,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-27T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.004228983810431885
     },
     {
@@ -8937,7 +8938,7 @@
       "lending_published_at": null,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-10-28T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.040846240544338094
     },
     {
@@ -8963,8 +8964,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-10-29T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-10-29T19:00:31+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.028328970562226427
     },
     {
@@ -8990,8 +8991,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-01T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-01T19:00:34+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.02546526979676731
     },
     {
@@ -9061,8 +9062,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-02T19:00:27+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-02T19:00:34+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 5.4820160505598504e-05
     },
     {
@@ -9088,8 +9089,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-03T19:00:36+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-03T19:00:32+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.04121953973254287
     },
     {
@@ -9115,8 +9116,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-04T19:00:31+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-04T19:00:30+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.09432461235946624
     },
     {
@@ -9142,8 +9143,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-05T19:00:26+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-05T19:00:34+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.01584563686995157
     },
     {
@@ -9169,8 +9170,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-08T19:00:29+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-08T19:00:32+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.09586218733745659
     },
     {
@@ -9240,8 +9241,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-09T19:00:35+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-09T19:00:31+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": -0.027091601225100063
     },
     {
@@ -9267,8 +9268,8 @@
       "name": "F&F",
       "lending_published_at": null,
       "lending_source": "토스증권",
-      "lending_updated_at": "2026-11-10T19:00:32+09:00",
-      "lending_collected_at": "2026-11-11T23:33:03.619998+09:00",
+      "lending_updated_at": "2026-11-10T19:00:28+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00",
       "lending_change_shares_pct": 0.0018821588440255488
     },
     {
@@ -9284,16 +9285,19 @@
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
-      "lending_quantity": null,
-      "lending_change": null,
+      "lending_quantity": 857686,
+      "lending_change": 11348,
       "return_pct": -4.472843450479232,
       "date": "2026-11-11",
       "session_status": "trading",
       "balance_status": "publication_pending",
-      "lending_status": "unavailable",
+      "lending_status": "reported",
       "name": "F&F",
       "lending_published_at": null,
-      "lending_change_shares_pct": null
+      "lending_change_shares_pct": 0.029623770543691995,
+      "lending_source": "토스증권",
+      "lending_updated_at": "2026-11-11T19:00:38+09:00",
+      "lending_collected_at": "2026-11-12T16:43:12.118964+09:00"
     }
   ]
 }
