@@ -6,6 +6,7 @@
   "required": ["schema_version", "dataset_id", "as_of", "collected_at", "price_basis", "is_sample", "period_start", "flow_scope", "membership_basis", "units"],
   "properties": {
     "schema_version": {"const": "short-selling.krx-close.v1"},
+    "universe": {"enum": ["kospi200", "kosdaq150"]},
     "dataset_id": {"type": "string", "pattern": "^[0-9a-f]{20}$"},
     "as_of": {"type": "string", "format": "date"},
     "period_start": {"type": "string", "format": "date"},

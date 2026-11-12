@@ -106,7 +106,7 @@ def update(target=ROOT / "data"):
             if loan:
                 row.update(lending_quantity=loan["quantity"], lending_status="reported", lending_published_at=None,
                            lending_source="토스증권", lending_updated_at=loan["updated_at"], lending_collected_at=collected)
-    files = build(snapshots, index, start, end, config, summary["collected_at"])
+    files = build(snapshots, index, start, end, config, summary["collected_at"], universe=summary.get("universe", "kospi200"))
     publish(files, target)
     log("toss_lending_published", records=len(observations), codes=len(codes), collected_at=collected)
 

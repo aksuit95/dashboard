@@ -54,6 +54,16 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(files['stocks.json']['stocks'][0]['latest_lending']['quantity_shares_pct'])
         self.assertEqual(files['summary.json']['rankings']['lending_increase'], [])
 
+    def test_universe_is_bound_to_every_dataset_file(self):
+        with tempfile.TemporaryDirectory(dir=ROOT / 'tmp') as tmp:
+            sample(self.config, tmp)
+            files = {str(p.relative_to(tmp)).replace('\\', '/'): json.loads(p.read_text(encoding='utf-8')) for p in Path(tmp).rglob('*.json')}
+            self.assertTrue(all(payload['universe'] == 'kospi200' for payload in files.values()))
+            altered = dict(files)
+            altered['stocks.json'] = {**files['stocks.json'], 'universe': 'kosdaq150'}
+            with self.assertRaises(ValueError):
+                validate(altered)
+
     def test_web_prices_validate_market_and_crosscheck_regular_close(self):
         import pandas as pd
         class Response:
@@ -70,8 +80,43 @@ class PipelineTests(unittest.TestCase):
         rows[0]['MKT_ID'] = 'KSQ'
         with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
         rows[0]['MKT_ID'] = 'STK'
+        source.daily_price_pages.clear()
         source.session = SimpleNamespace(get=lambda *a, **kw: SimpleNamespace(raise_for_status=lambda: None, json=lambda: {'items': [{'tradingDateKst': '2026-11-04', 'regularMarketClosingPrice': '120'}]}))
         with self.assertRaises(KrxPriceSchemaMismatch): source.prices('20261104')
+
+    def test_kosdaq_sources_use_correct_market_and_index(self):
+        import pandas as pd
+        source = Source.__new__(Source)
+        source.universe = 'kosdaq150'
+        calls = []
+        source.call = lambda fn, *args, **kwargs: (calls.append((args, kwargs)), fn(*args, **kwargs))[1]
+        source.stock = SimpleNamespace(get_index_portfolio_deposit_file=lambda ticker, date: [str(i).zfill(6) for i in range(150)])
+        self.assertEqual(len(source.members('20261111')), 150)
+        self.assertEqual(calls[-1][0], ('2203',))
+        source.core = SimpleNamespace(전종목_공매도_잔고=lambda: SimpleNamespace(read=lambda **kw: {'OutBlock_1': []}))
+        self.assertEqual(source.balance('20261109'), [])
+        self.assertEqual(calls[-1][1]['mktTpCd'], 2)
+        source.core.개별지수시세 = lambda: SimpleNamespace(fetch=lambda *args: pd.DataFrame([{'TRD_DD': '2026/11/11', 'CLSPRC_IDX': '1000'}]))
+        source.index('20261110', '20261111')
+        self.assertEqual(calls[-1][0], ('203', '2', '20261110', '20261111'))
+        source.core.개별종목_공매도_거래_전종목 = lambda: SimpleNamespace(fetch=lambda *args: pd.DataFrame([dict.fromkeys(['ISU_CD', 'ISU_ABBRV', 'CVSRTSELL_TRDVOL', 'ACC_TRDVOL', 'CVSRTSELL_TRDVAL', 'ACC_TRDVAL', 'TRDVOL_WT', 'TRDVAL_WT'], '1')]))
+        source.short('20261111')
+        self.assertEqual(calls[-1][0][1], 'KSQ')
+
+    def test_prior_close_crosscheck_fetches_older_page(self):
+        import pandas as pd
+        class Response:
+            def __init__(self, data): self.data = data
+            def raise_for_status(self): pass
+            def json(self): return {'items': self.data}
+        class Session:
+            def get(self, url, **kwargs):
+                return Response([{'tradingDateKst': '2026-11-04', 'regularMarketClosingPrice': '100'}] if 'index=0' in url else [{'tradingDateKst': '2026-01-05', 'regularMarketClosingPrice': '100'}])
+        source = Source.__new__(Source)
+        source.universe, source.interval, source.session = 'kosdaq150', 0, Session()
+        rows = [{'ISU_SRT_CD': str(i).zfill(6), 'ISU_ABBRV': 'test', 'MKT_ID': 'KSQ', 'TDD_CLSPRC': '100', 'ACC_TRDVAL': '1', 'ACC_TRDVOL': '1', 'MKTCAP': '100000', 'LIST_SHRS': '1000'} for i in range(200)]
+        source.core = SimpleNamespace(전종목시세=lambda: SimpleNamespace(fetch=lambda *args: pd.DataFrame(rows)))
+        self.assertEqual(len(source.prices('20260105')), 200)
 
     def test_market_is_weighted_and_incomplete_never_understates(self):
         rows = {'a': {'short_value': 20, 'trading_value': 100, 'short_volume': 2, 'volume': 10},

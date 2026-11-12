@@ -36,11 +36,13 @@ def validate(files):
     schema = json.loads((ROOT / "schemas/short-selling.schema.json").read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     ids = set()
+    universes = set()
     for name, payload in files.items():
         json.dumps(payload, allow_nan=False)
         validator.validate(payload)
         ids.add(payload["dataset_id"])
-    if len(ids) != 1:
+        universes.add(payload.get("universe", "kospi200"))
+    if len(ids) != 1 or len(universes) != 1:
         raise ValueError("Mixed dataset generations")
 
 
@@ -86,7 +88,7 @@ def read_previous(target):
     ident = summary["dataset_id"]
     def read(name):
         data = json.loads((target / name).read_text(encoding="utf-8"))
-        if data.get("dataset_id") != ident:
+        if data.get("dataset_id") != ident or data.get("universe", "kospi200") != summary.get("universe", "kospi200"):
             raise ValueError("Incomplete prior generation")
         return data
     members = read("constituents.json")["rows"]
@@ -133,6 +135,7 @@ def check_config(config):
 
 
 def collect(args, config):
+    universe = getattr(args, "universe", "kospi200")
     end = completed_day()
     if args.as_of:
         requested = date.fromisoformat(args.as_of)
@@ -146,10 +149,17 @@ def collect(args, config):
     uncertain = uncertain | {"2025-11-13"}
     if end.year != year or end.weekday() >= 5 or end.isoformat() in holidays | uncertain:
         raise ValueError("Requested date is not a verified regular KRX session")
-    start = end - timedelta(days=365)
+    period_days = getattr(args, "period_days", 365)
+    if not 30 <= period_days <= 365:
+        raise ValueError("Period must be between 30 and 365 days")
+    start = end - timedelta(days=period_days)
     target = Path(args.output)
+    if (target / "summary.json").exists():
+        saved = json.loads((target / "summary.json").read_text(encoding="utf-8"))
+        if saved.get("universe", "kospi200") != universe:
+            raise ValueError("Index universe does not match existing dataset")
     old, _ = ({}, {}) if args.backfill else read_previous(target)
-    source = Source(config["request_interval_seconds"])
+    source = Source(config["request_interval_seconds"], universe)
     log("fetch_index", start=start.isoformat(), end=end.isoformat())
     index_rows = source.index(start.strftime("%Y%m%d"), end.strftime("%Y%m%d"))
     index = {}
@@ -176,6 +186,8 @@ def collect(args, config):
     lending = read_lending(args.lending_csv)
     snapshots = {}
     cache = ROOT / ".shorting-cache" / VERSION
+    if universe != "kospi200":
+        cache = cache / universe
     for day in dates:
         if day in old and day not in refresh and set(latest_members).issubset(old[day]["normalized"]):
             snapshots[day] = old[day]
@@ -221,7 +233,7 @@ def collect(args, config):
             loan = lending.get((day, code))
             if loan:
                 row.update(lending_quantity=loan["quantity"], lending_published_at=loan["published_at"], lending_status="reported")
-    files = build(snapshots, index, start.isoformat(), end.isoformat(), config, datetime.now(KST).isoformat())
+    files = build(snapshots, index, start.isoformat(), end.isoformat(), config, datetime.now(KST).isoformat(), universe=universe)
     publish(files, target)
     log("published", as_of=end.isoformat(), files=len(files), output=str(target))
 
@@ -263,8 +275,12 @@ def main():
     parser.add_argument("--output", default=None)
     parser.add_argument("--config", default=str(ROOT / "config/short-selling.json"))
     parser.add_argument("--lending-csv")
+    parser.add_argument("--universe", choices=("kospi200", "kosdaq150"), default="kospi200")
+    parser.add_argument("--period-days", type=int, default=365, help="Calendar days of history (30-365)")
     args = parser.parse_args()
-    args.output = args.output or str(ROOT / ("examples/short-selling" if args.sample else "data"))
+    if args.sample and args.universe != "kospi200":
+        parser.error("Synthetic sample is available only for kospi200")
+    args.output = args.output or str(ROOT / ("examples/short-selling" if args.sample else "data/short-selling-kosdaq150" if args.universe == "kosdaq150" else "data"))
     # A synthetic example must never replace production JSON, even accidentally.
     if args.sample and Path(args.output).resolve().is_relative_to((ROOT / "data").resolve()):
         parser.error("Synthetic samples must be outside data/")

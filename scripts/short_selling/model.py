@@ -123,7 +123,7 @@ def derive(rows, config):
     return result
 
 
-def build(snapshots, index, start, end, config, collected_at, sample=False):
+def build(snapshots, index, start, end, config, collected_at, sample=False, universe="kospi200"):
     histories, market, memberships = {}, [], []
     all_codes = sorted({c for raw in snapshots.values() for c in raw["members"]})
     for day in sorted(snapshots):
@@ -140,11 +140,11 @@ def build(snapshots, index, start, end, config, collected_at, sample=False):
         day += timedelta(days=1)
     market_by_day = {r["date"]: r for r in market}
     market_rows = [market_by_day.get(d, {"date": d, "session_status": "no_observation", "index_close": None, "short_value": None, "trading_value": None, "short_volume": None, "volume": None, "short_value_ratio_pct": None, "short_volume_ratio_pct": None, "expected_count": None, "observed_count": None, "coverage": "unavailable"}) for d in days]
-    fingerprint = hashlib.sha256(json.dumps([snapshots, index, config, sample, "lending-listed-shares-v2"], sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:20]
+    fingerprint = hashlib.sha256(json.dumps([snapshots, index, config, sample, universe, "lending-listed-shares-v2"], sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:20]
     meta = {"schema_version": VERSION, "dataset_id": fingerprint, "as_of": end, "collected_at": collected_at,
             "price_basis": PRICE, "is_sample": sample, "period_start": start,
             "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
-            "membership_basis": "point_in_time", "units": {"money": "KRW", "quantity": "shares", "ratio": "percent_0_100"}}
+            "universe": universe, "membership_basis": "point_in_time", "units": {"money": "KRW", "quantity": "shares", "ratio": "percent_0_100"}}
     latest_codes = snapshots[end]["members"]
     files, stocks = {}, []
     for code in all_codes:

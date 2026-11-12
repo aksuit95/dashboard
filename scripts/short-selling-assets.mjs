@@ -6,7 +6,7 @@ const root = process.cwd();
 const output = resolve(root, 'public/short-selling-data');
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
-for (const [name, source] of [['sample', 'examples/short-selling'], ['live', 'data']]) {
+for (const [name, source] of [['sample', 'examples/short-selling'], ['live', 'data'], ['kosdaq150', 'data/short-selling-kosdaq150']]) {
   const from = resolve(root, source);
   if (!existsSync(resolve(from, 'summary.json'))) continue;
   const target = resolve(output, name);

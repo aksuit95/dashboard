@@ -45,7 +45,10 @@ def records(frame, required, allow_empty=False):
 
 
 class Source:
-    def __init__(self, interval=1):
+    def __init__(self, interval=1, universe="kospi200"):
+        if universe not in ("kospi200", "kosdaq150"):
+            raise ValueError("Unknown index universe")
+        self.universe = universe
         load_env()
         import requests
         # pykrx uses requests sessions internally, including its login requests.
@@ -62,6 +65,7 @@ class Source:
             from pykrx.website.krx.market import core
         self.stock, self.core = stock, core
         self.session = requests.Session()
+        self.daily_price_pages = {}
         self.interval = interval
 
     def call(self, fn, *args, **kwargs):
@@ -71,25 +75,29 @@ class Source:
             return fn(*args, **kwargs)
 
     def index(self, start, end):
-        frame = self.call(self.core.개별지수시세().fetch, "028", "1", start, end)
+        ticker = "2203" if getattr(self, "universe", "kospi200") == "kosdaq150" else "1028"
+        frame = self.call(self.core.개별지수시세().fetch, ticker[1:], ticker[0], start, end)
         return records(frame, ["TRD_DD", "CLSPRC_IDX"])
 
     def members(self, day):
-        codes = self.call(self.stock.get_index_portfolio_deposit_file, "1028", date=day)
-        if not 190 <= len(codes) <= 210 or len(set(codes)) != len(codes):
-            raise ValueError("Unexpected KOSPI200 membership")
+        is_kosdaq = getattr(self, "universe", "kospi200") == "kosdaq150"
+        codes = self.call(self.stock.get_index_portfolio_deposit_file, "2203" if is_kosdaq else "1028", date=day)
+        low, high = (140, 160) if is_kosdaq else (190, 210)
+        if not low <= len(codes) <= high or len(set(codes)) != len(codes):
+            raise ValueError("Unexpected index membership")
         if any(not re.fullmatch(r"[0-9A-Z]{6}", c) for c in codes):
             raise ValueError("Invalid ticker")
         return sorted(codes)
 
     def short(self, day):
-        frame = self.call(self.core.개별종목_공매도_거래_전종목().fetch, day, "STK", ["STMFRTSCIFDRFS"])
+        market = "KSQ" if getattr(self, "universe", "kospi200") == "kosdaq150" else "STK"
+        frame = self.call(self.core.개별종목_공매도_거래_전종목().fetch, day, market, ["STMFRTSCIFDRFS"])
         return records(frame, ["ISU_CD", "ISU_ABBRV", "CVSRTSELL_TRDVOL", "ACC_TRDVOL", "CVSRTSELL_TRDVAL", "ACC_TRDVAL", "TRDVOL_WT", "TRDVAL_WT"])
 
     def balance(self, day):
         # Retain the JSON envelope: a valid empty list differs from a blocked HTML
         # response or a renamed field. DataFrame wrappers lose that distinction.
-        payload = self.call(self.core.전종목_공매도_잔고().read, trdDd=day, mktTpCd=1)
+        payload = self.call(self.core.전종목_공매도_잔고().read, trdDd=day, mktTpCd=2 if getattr(self, "universe", "kospi200") == "kosdaq150" else 1)
         rows = payload.get("OutBlock_1")
         fields = {"ISU_CD", "BAL_QTY", "BAL_AMT", "BAL_RTO"}
         if not isinstance(rows, list) or any(not fields.issubset(r) for r in rows):
@@ -99,7 +107,8 @@ class Source:
     def prices(self, day):
         if not re.fullmatch(r"\d{8}", day):
             raise KrxPriceSchemaMismatch("Invalid requested session")
-        frame = self.call(self.core.전종목시세().fetch, day, "STK")
+        market = "KSQ" if getattr(self, "universe", "kospi200") == "kosdaq150" else "STK"
+        frame = self.call(self.core.전종목시세().fetch, day, market)
         fields = ["ISU_SRT_CD", "ISU_ABBRV", "MKT_ID", "TDD_CLSPRC", "ACC_TRDVAL", "ACC_TRDVOL", "MKTCAP", "LIST_SHRS"]
         raw = records(frame, fields)
         if len(raw) < 190:
@@ -107,7 +116,7 @@ class Source:
         rows, seen = [], set()
         for item in raw:
             code = str(item["ISU_SRT_CD"])
-            if not re.fullmatch(r"[0-9A-Z]{6}", code) or code in seen or item["MKT_ID"] != "STK":
+            if not re.fullmatch(r"[0-9A-Z]{6}", code) or code in seen or item["MKT_ID"] != market:
                 raise KrxPriceSchemaMismatch("KRX web ticker or market mismatch")
             seen.add(code)
             close, cap, shares = (number(item[k]) for k in ("TDD_CLSPRC", "MKTCAP", "LIST_SHRS"))
@@ -121,11 +130,25 @@ class Source:
             raise KrxPriceNotPublished("KRX web verification candidates missing")
         iso = f"{day[:4]}-{day[4:6]}-{day[6:]}"
         for row in candidates:
-            response = self.session.get(f"https://stock.naver.com/api/stockSecurity/items/v2/domestic/{row['ISU_CD']}/daily-prices/paged?size=100&index=0", headers={"user-agent": "Mozilla/5.0"}, timeout=25)
-            response.raise_for_status()
-            data = response.json()
-            items = data.get("items") if isinstance(data, dict) else None
-            matches = [r for r in items if isinstance(r, dict) and r.get("tradingDateKst") == iso] if isinstance(items, list) else []
+            matches = []
+            page_cache = getattr(self, "daily_price_pages", None)
+            if page_cache is None:
+                self.daily_price_pages = page_cache = {}
+            for page in range(10):
+                key = (row['ISU_CD'], page)
+                if key not in page_cache:
+                    response = self.session.get(f"https://stock.naver.com/api/stockSecurity/items/v2/domestic/{row['ISU_CD']}/daily-prices/paged?size=100&index={page}", headers={"user-agent": "Mozilla/5.0"}, timeout=25)
+                    response.raise_for_status()
+                    data = response.json()
+                    items = data.get("items") if isinstance(data, dict) else None
+                    if not isinstance(items, list):
+                        raise KrxPriceSchemaMismatch("Invalid regular close cross-check")
+                    page_cache[key] = items
+                items = page_cache[key]
+                matches = [r for r in items if isinstance(r, dict) and r.get("tradingDateKst") == iso]
+                dates = [r.get("tradingDateKst") for r in items if isinstance(r, dict) and isinstance(r.get("tradingDateKst"), str)]
+                if matches or not dates or min(dates) < iso:
+                    break
             if len(matches) != 1 or number(matches[0].get("regularMarketClosingPrice")) != number(row["TDD_CLSPRC"]):
                 raise KrxPriceSchemaMismatch("KRX regular closing price cross-check failed")
         return rows
