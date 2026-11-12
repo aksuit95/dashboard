@@ -3,7 +3,7 @@ import type { MinerviniUniverse } from "@/config/minervini";
 import { minerviniSession } from "@/lib/market/minervini-session";
 import { fetchSectorSnapshot, sectorSnapshotVersion, type SectorSnapshot } from "./sector-returns";
 
-export type SectorBoard = { snapshot: SectorSnapshot | null; indexDaily?: import("./sector-index").IndexDaily | null; stale: boolean; expectedDate: string | null; error: string | null; requestedDate?: string; latestDate?: string; earliestDate?: string };
+export type SectorBoard = { snapshot: SectorSnapshot | null; indexDaily?: import("./sector-index").IndexDaily | null; marketCaps?: Record<string, number>; stale: boolean; expectedDate: string | null; error: string | null; requestedDate?: string; latestDate?: string; earliestDate?: string };
 function ensureTable(db: AppDatabase) {
   db.exec("CREATE TABLE IF NOT EXISTS sector_return_snapshots (universe TEXT NOT NULL, as_of TEXT NOT NULL, payload TEXT NOT NULL, PRIMARY KEY (universe, as_of))");
 }

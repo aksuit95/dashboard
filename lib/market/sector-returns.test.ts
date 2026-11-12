@@ -20,6 +20,15 @@ describe("섹터별 기간 수익률", () => {
     expect(summary.find(s => s.sector === "자동차")!.returns["1d"]).toBeNull();
     expect(summary.reduce((sum, s) => sum + s.count, 0)).toBe(3);
   });
+  it("선택한 날짜의 시총으로 가중하고 수익률이나 시총이 없으면 제외한다", () => {
+    const stock = (code: string, bars: number[]): SectorStock => ({ code, name: code, marketCap: 999, tradable: true, sector: "반도체", industry: null, price: bars.at(-1)!, returns: calculateReturns(bars.map(close => ({ close }))) });
+    const rows = [stock("a", [100, 110]), stock("b", [100, 90]), stock("c", [100, 120]), stock("d", [100])];
+    const summary = summarizeSectors(rows, "marketCap", { a: 300, b: 100, d: 1000 }).find(s => s.sector === "반도체")!;
+    expect(summary.returns["1d"]).toBeCloseTo(5);
+    expect(summary.coverage["1d"]).toBe(2);
+    expect(summarizeSectors(rows, "marketCap", {}).find(s => s.sector === "반도체")!.returns["1d"]).toBeNull();
+    expect(summarizeSectors(rows, "equal").find(s => s.sector === "반도체")!.returns["1d"]).toBeCloseTo(20 / 3);
+  });
   it("장비·메모리·소재와 테마별 예외를 구분하고 모르는 업종은 미분류로 보존한다", () => {
     expect(classifySector("042700", "반도체와반도체장비")).toBe("반도체장비");
     expect(classifySector("232140", "반도체와반도체장비")).toBe("반도체장비");

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
 import type { Sector } from "@/config/sectors";
-import { returnPeriods, summarizeSectors, type ReturnPeriod } from "@/lib/market/sector-returns";
+import { returnPeriods, summarizeSectors, type ReturnPeriod, type SectorWeight } from "@/lib/market/sector-returns";
 import type { SectorBoard } from "@/lib/sources/sector-returns-daily";
 import { nextSectorRefreshAt } from "@/lib/market/sector-refresh";
 
@@ -21,6 +21,7 @@ export function SectorReturnsBoard() {
   const [error, setError] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
   const [period, setPeriod] = useState<ReturnPeriod>("1d");
+  const [weight, setWeight] = useState<SectorWeight>("marketCap");
   const [selected, setSelected] = useState<Sector | null>(null);
   const [query, setQuery] = useState("");
   const [descending, setDescending] = useState(true);
@@ -72,7 +73,7 @@ export function SectorReturnsBoard() {
   const board = boards[boardKey];
   const snapshot = board?.snapshot?.priceBasis === "KRX_REGULAR_CLOSE" ? board.snapshot : undefined;
   const rows = useMemo(() => snapshot?.rows ?? [], [snapshot]);
-  const summaries = useMemo(() => summarizeSectors(rows), [rows]);
+  const summaries = useMemo(() => summarizeSectors(rows, weight, board?.marketCaps), [rows, weight, board?.marketCaps]);
   const ranked = [...summaries].sort((a, b) => compare(a.returns[period], b.returns[period], true));
   const visible = rows.filter(r => (!selected || r.sector === selected) && `${r.name} ${r.code}`.toLowerCase().includes(query.trim().toLowerCase()))
     .sort((a, b) => compare(a.returns[period], b.returns[period], descending) || a.name.localeCompare(b.name, "ko"));
@@ -118,9 +119,10 @@ export function SectorReturnsBoard() {
       <Metric label={`${periodLabel} 평균 등락률`} value={percent(average)} tone={color(average)} note={`동일가중 · ${values.length}/${rows.length}종목 산정`} />
       <Metric label={`${minerviniUniverses[universe].name} 지수 · 일간`} value={percent(snapshot ? board?.indexDaily?.change ?? null : null)} tone={color(snapshot ? board?.indexDaily?.change ?? null : null)} note={board?.indexDaily ? `KRX 지수 · ${board.indexDaily.previousDate} 대비` : "KRX 지수 자료 없음"} />
       <Metric label="상승 / 하락" value={values.length ? `${values.filter(v => v > 0).length} / ${values.filter(v => v < 0).length}` : "—"} note={`보합 ${values.filter(v => v === 0).length} · 미산정 ${rows.length - values.length}`} />
-      <Metric label={`${periodLabel} 선도 섹터`} value={leader?.sector ?? "—"} tone={color(leader?.returns[period] ?? null)} note={leader ? percent(leader.returns[period]) : "데이터 대기"} />
+      <Metric label={`${periodLabel} 선도 섹터`} value={leader?.sector ?? "—"} tone={color(leader?.returns[period] ?? null)} note={leader ? `${percent(leader.returns[period])} · ${weight === "marketCap" ? "시총가중" : "동일가중"}` : "데이터 대기"} />
     </div>
-    <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">섹터별 흐름 <span className="ml-2 text-xs font-normal text-zinc-500">{periodLabel} · 단순평균</span></h2><button type="button" aria-pressed={selected === null} onClick={() => setSelected(null)} className={`rounded-md px-3 py-1.5 text-xs ${selected === null ? "bg-white/10 text-zinc-100" : "text-zinc-400 hover:bg-white/5"}`}>전체 종목</button></div>
+    <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><h2 className="text-sm font-semibold">섹터별 흐름 <span className="ml-2 text-xs font-normal text-zinc-500">{periodLabel} · {weight === "marketCap" ? "시총가중" : "동일가중"}</span></h2><div className="flex items-center gap-2"><div className="flex rounded-lg border border-white/10 p-1" aria-label="섹터 가중 방식">{([ ["marketCap", "시총가중"], ["equal", "동일가중"] ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={weight === id} onClick={() => setWeight(id)} className={`rounded-md px-3 py-1.5 text-xs ${weight === id ? "bg-white/10 text-zinc-100" : "text-zinc-400 hover:bg-white/5"}`}>{label}</button>)}</div><button type="button" aria-pressed={selected === null} onClick={() => setSelected(null)} className={`rounded-md px-3 py-1.5 text-xs ${selected === null ? "bg-white/10 text-zinc-100" : "text-zinc-400 hover:bg-white/5"}`}>전체 종목</button></div></div>
+    {weight === "marketCap" && snapshot && !Object.keys(board?.marketCaps ?? {}).length && <p role="status" className="mb-3 text-xs text-amber-200">이 기준일의 KRX 시가총액이 없어 시총가중 등락률을 표시할 수 없습니다.</p>}
     <div className="mb-7 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
       {ranked.map(s => <button key={s.sector} type="button" aria-pressed={selected === s.sector} onClick={() => setSelected(selected === s.sector ? null : s.sector)} style={heat(s.returns[period])} className={`rounded-lg border p-3 text-left transition-colors ${selected === s.sector ? "border-zinc-200 ring-1 ring-zinc-200/20" : "border-white/10 hover:border-white/30"}`}>
         <p className="text-xs font-medium text-zinc-200">{s.sector}</p><p className={`mt-3 text-xl font-semibold tabular-nums ${color(s.returns[period])}`}>{percent(s.returns[period])}</p><p className="mt-1 text-[11px] text-zinc-500">{s.count}종목 · 산정 {s.coverage[period]}/{s.count}</p>
@@ -144,7 +146,7 @@ export function SectorReturnsBoard() {
     </div>
     <details className="mt-4 rounded-lg border border-white/10 p-4 text-xs text-zinc-500"><summary className="cursor-pointer text-zinc-400">산정 기준과 섹터 분류 안내</summary><div className="mt-3 space-y-2 leading-relaxed">
       <p>표시 가격과 모든 기간의 비교 가격은 KRX 정규장 15:30 종가입니다. NXT 저녁 20:00 종가는 포함하지 않습니다. 일간 / 1W / 1M / 3M / 6M / 1Y는 각각 1 / 5 / 21 / 63 / 126 / 252거래일 전 KRX 종가 대비입니다. 배당은 포함하지 않습니다. 일봉 이력이 부족한 기간은 —로 표시하고 해당 기간 평균에서 제외합니다.</p>
-      <p>섹터 등락률은 현재 지수 구성종목 중 해당 섹터의 유효 수익률 단순평균입니다. 공식 섹터 지수 수익률과는 다릅니다. 상승은 빨강, 하락은 파랑으로 표시합니다.</p>
+      <p>섹터 등락률은 현재 지수 구성종목 중 유효 수익률의 동일가중 평균 또는 선택 기준일 KRX 종가 기준 시가총액 가중평균입니다. 시총가중은 종가가 일치하는 시총과 수익률이 모두 있는 종목만 산정합니다. 구성종목 평균 카드는 항상 동일가중입니다. 공식 섹터 지수 수익률과는 다릅니다. 상승은 빨강, 하락은 파랑으로 표시합니다.</p>
       <p>네이버 업종을 리서치용 섹터로 묶고, 반도체장비·미용기기·일부 2차전지·원전 종목은 종목코드별 분류를 우선합니다. 한 종목은 한 섹터에만 포함하며 분류가 없는 종목은 기타/미분류에 표시합니다. 상세 업종명은 표의 섹터명에 마우스를 올려 확인할 수 있습니다.</p>
       <p>장중에는 직전 완료 거래일 결과를 표시합니다. 일부 종목의 수집이 실패하면 해당 지수의 마지막 정상 결과와 기준일을 유지합니다. 현재 구성 기준 비교이며 과거 편입·편출을 재현하지 않습니다. 시세·업종 출처: <a href="https://m.stock.naver.com" target="_blank" rel="noreferrer" className="underline">네이버 증권</a>.</p>
     </div></details>
