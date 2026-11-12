@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from scripts.short_selling.collect import collect, publish, read_previous, sample, validate
-from scripts.short_selling.model import FIELDS, PRICE, aggregate, derive, normalize, ratio, strict_mean
+from scripts.short_selling.model import FIELDS, PRICE, aggregate, build, derive, normalize, ratio, strict_mean
 from scripts.short_selling.sources import KST, ROOT, Source, KrxPriceNotPublished, KrxPriceSchemaMismatch, completed_day, known_calendar, number
 
 
@@ -33,6 +33,26 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(ratio(None, 100))
         self.assertIsNone(ratio(0, 0))
         self.assertIsNone(strict_mean([{'v': 0}, {'v': None}], 'v', 2))
+
+    def test_lending_change_uses_same_day_listed_shares_and_latest_observation(self):
+        days = ['2026-11-02', '2026-11-03', '2026-11-04']
+        snapshots = {}
+        for day, quantity, shares in zip(days, [100, 120, None], [1000, 2000, 5000]):
+            row = dict.fromkeys(FIELDS)
+            row.update(date=day, name='Test', session_status='trading', close=100, listed_shares=shares,
+                       lending_quantity=quantity, balance_status='not_disclosed', lending_status='reported' if quantity is not None else 'unavailable', lending_published_at=None)
+            snapshots[day] = {'members': ['005930'], 'normalized': {'005930': row}}
+        files = build(snapshots, dict.fromkeys(days, 300), days[0], days[-1], self.config, '2026-11-05T09:00:00+09:00')
+        loan = files['stocks.json']['stocks'][0]['latest_lending']
+        self.assertEqual(loan['as_of'], days[1])
+        self.assertEqual(loan['change_shares_pct'], 1.0)
+        self.assertEqual(loan['quantity_shares_pct'], 6.0)
+        self.assertEqual(files['summary.json']['rankings']['lending_increase'][0]['as_of'], days[1])
+        snapshots[days[1]]['normalized']['005930']['listed_shares'] = 0
+        files = build(snapshots, dict.fromkeys(days, 300), days[0], days[-1], self.config, '2026-11-05T09:00:00+09:00')
+        self.assertIsNone(files['stocks.json']['stocks'][0]['latest_lending']['change_shares_pct'])
+        self.assertIsNone(files['stocks.json']['stocks'][0]['latest_lending']['quantity_shares_pct'])
+        self.assertEqual(files['summary.json']['rankings']['lending_increase'], [])
 
     def test_web_prices_validate_market_and_crosscheck_regular_close(self):
         import pandas as pd

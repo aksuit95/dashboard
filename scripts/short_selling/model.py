@@ -140,7 +140,7 @@ def build(snapshots, index, start, end, config, collected_at, sample=False):
         day += timedelta(days=1)
     market_by_day = {r["date"]: r for r in market}
     market_rows = [market_by_day.get(d, {"date": d, "session_status": "no_observation", "index_close": None, "short_value": None, "trading_value": None, "short_volume": None, "volume": None, "short_value_ratio_pct": None, "short_volume_ratio_pct": None, "expected_count": None, "observed_count": None, "coverage": "unavailable"}) for d in days]
-    fingerprint = hashlib.sha256(json.dumps([snapshots, index, config, sample], sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:20]
+    fingerprint = hashlib.sha256(json.dumps([snapshots, index, config, sample, "lending-listed-shares-v2"], sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:20]
     meta = {"schema_version": VERSION, "dataset_id": fingerprint, "as_of": end, "collected_at": collected_at,
             "price_basis": PRICE, "is_sample": sample, "period_start": start,
             "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
@@ -156,6 +156,7 @@ def build(snapshots, index, start, end, config, collected_at, sample=False):
             if found:
                 row["return_pct"] = change(ratio(row["close"], previous["close"] if previous else None), 100)
                 row["lending_change"] = change(row["lending_quantity"], previous["lending_quantity"] if previous else None)
+                row["lending_change_shares_pct"] = ratio(row["lending_change"], row.get("listed_shares"))
             # Missing trading session or absence from index must break comparisons.
             if d in snapshots:
                 previous = row
@@ -170,13 +171,14 @@ def build(snapshots, index, start, end, config, collected_at, sample=False):
         disclosed = [r for r in sessions if r["balance_ratio_pct"] is not None]
         current["latest_disclosed_balance"] = ({"as_of": disclosed[-1]["date"], **{k: disclosed[-1][k] for k in ("balance_quantity", "balance_value", "balance_ratio_pct")}} if disclosed else None)
         loans = [r for r in sessions if r.get("lending_quantity") is not None]
-        current["latest_lending"] = ({"as_of": loans[-1]["date"], "quantity": loans[-1]["lending_quantity"], "change": loans[-1]["lending_change"], "source": loans[-1].get("lending_source"), "updated_at": loans[-1].get("lending_updated_at"), "collected_at": loans[-1].get("lending_collected_at")} if loans else None)
+        current["latest_lending"] = ({"as_of": loans[-1]["date"], "quantity": loans[-1]["lending_quantity"], "quantity_shares_pct": ratio(loans[-1]["lending_quantity"], loans[-1].get("listed_shares")), "change": loans[-1]["lending_change"], "change_shares_pct": loans[-1].get("lending_change_shares_pct"), "source": loans[-1].get("lending_source"), "updated_at": loans[-1].get("lending_updated_at"), "collected_at": loans[-1].get("lending_collected_at")} if loans else None)
         stocks.append(current)
     def rank(field, positive=False):
         return [{"code": s["code"], "name": s.get("name"), "value": s[field], "as_of": end} for s in sorted((s for s in stocks if s.get(field) is not None and (not positive or s[field] > 0)), key=lambda s: s[field], reverse=True)[:10]]
     balances = [{"code": s["code"], "name": s.get("name"), "value": s["latest_disclosed_balance"]["balance_ratio_pct"], "as_of": s["latest_disclosed_balance"]["as_of"]} for s in stocks if s.get("latest_disclosed_balance")]
+    lending_ranks = [{"code": s["code"], "name": s.get("name"), "value": s["latest_lending"]["change_shares_pct"], "as_of": s["latest_lending"]["as_of"]} for s in stocks if s.get("latest_lending") and s["latest_lending"].get("change_shares_pct") is not None and s["latest_lending"]["change_shares_pct"] > 0]
     rankings = {"short_ratio": rank("short_value_ratio_pct"), "surge": rank("short_value_ratio_pct_vs_mean_20_pct", positive=True),
-                "balance_ratio": sorted(balances, key=lambda r: r["value"], reverse=True)[:10], "lending_increase": rank("lending_change", positive=True)}
+                "balance_ratio": sorted(balances, key=lambda r: r["value"], reverse=True)[:10], "lending_increase": sorted(lending_ranks, key=lambda r: r["value"], reverse=True)[:10]}
     latest = market[-1]
     trading_rows = [r for r in market_rows if r["session_status"] == "trading"]
     mean20 = strict_mean(trading_rows[:-1], "short_value", 20)

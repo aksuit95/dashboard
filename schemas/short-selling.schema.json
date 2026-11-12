@@ -42,7 +42,7 @@
         "short_volume_ratio_pct": {"$ref": "#/$defs/percentage"}, "short_value_ratio_pct": {"$ref": "#/$defs/percentage"},
         "balance_quantity": {"$ref": "#/$defs/nonnegative"}, "balance_value": {"$ref": "#/$defs/nonnegative"}, "balance_ratio_pct": {"$ref": "#/$defs/percentage"},
         "balance_status": {"enum": ["reported", "not_disclosed", "publication_pending", "unavailable"]},
-        "lending_quantity": {"$ref": "#/$defs/nonnegative"}, "lending_change": {"$ref": "#/$defs/nullableNumber"},
+        "lending_quantity": {"$ref": "#/$defs/nonnegative"}, "lending_change": {"$ref": "#/$defs/nullableNumber"}, "lending_change_shares_pct": {"$ref": "#/$defs/nullableNumber"},
         "lending_status": {"enum": ["reported", "unavailable"]}, "lending_published_at": {"type": ["string", "null"], "format": "date-time"},
         "return_pct": {"$ref": "#/$defs/nullableNumber"}
       }

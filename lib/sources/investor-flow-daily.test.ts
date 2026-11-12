@@ -17,7 +17,7 @@ beforeEach(() => {
   }));
   vi.mocked(collectInvestorToss).mockImplementation(async (_db, _universe, _view, board) => ({
     market: "KOSPI", asOf: board.asOf, collectedAt: board.fetchedAt, latestUpdatedAt: null,
-    points: [{ date: board.asOf, individual: 1, foreign: -1, institution: 0 }], prices: [], priceError: null,
+    points: [{ date: board.asOf, individual: 1, foreign: -1, institution: 0 }], prices: [], priceError: null, turnover: [], turnoverError: null, turnoverCollectedAt: null,
   }));
 });
 afterEach(() => { db.close(); vi.unstubAllEnvs(); });

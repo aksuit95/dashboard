@@ -1,6 +1,7 @@
 import { isMinerviniUniverse } from "@/config/minervini";
 import { resolveSectorDate, sectorDateRange } from "@/lib/market/sector-date";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
+import { readIndexPublication } from "@/lib/sources/sector-index";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -18,5 +19,7 @@ export async function GET(request: Request) {
   catch (error) { return Response.json({ error: (error as Error).message }, { status: 400 }); }
   const snapshot = publication.snapshots[universe][session];
   if (!snapshot) return Response.json({ error: "선택한 거래일의 배포 데이터가 없습니다." }, { status: 404 });
-  return Response.json({ snapshot, stale: false, expectedDate: session, error: null, ...range, requestedDate: date ?? range.latestDate, publishedAt: publication.publishedAt }, { headers: { "Cache-Control": "no-store" } });
+  const indices = await readIndexPublication().catch(() => null);
+  const indexDaily = indices?.series[universe]?.[session] ?? null;
+  return Response.json({ snapshot, indexDaily, stale: false, expectedDate: session, error: null, ...range, requestedDate: date ?? range.latestDate, publishedAt: publication.publishedAt }, { headers: { "Cache-Control": "no-store" } });
 }

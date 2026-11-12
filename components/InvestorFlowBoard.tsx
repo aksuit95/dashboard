@@ -7,6 +7,7 @@ import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
 import { alignFlows, buyingStreak, cumulativeFlows, investorColors, investorNames, investors, rollingFlows, windowSum, type FlowPeriod, type Investor, type InvestorPoint } from "@/lib/market/investor-flow";
 import type { InvestorBoard } from "@/lib/sources/investor-flow";
 import { PageHeader } from "./PageHeader";
+import { MarketTurnoverChart } from "./MarketTurnoverChart";
 
 const periods: FlowPeriod[] = [1, 5, 20, 60];
 const box = "rounded-xl border border-white/10 bg-[#151a22] p-4 md:p-5";
@@ -84,7 +85,7 @@ function DailyTable({ points, divisor = 1e8, unit }: { points: InvestorPoint[]; 
   return <details className="mt-4 border-t border-white/10 pt-4"><summary className="cursor-pointer text-sm text-zinc-400">일별 순매수 원자료 ({points.length}거래일)</summary><div className="mt-3 max-h-72 overflow-auto"><table className="w-full text-right text-xs"><thead className="sticky top-0 bg-[#151a22] text-zinc-500"><tr><th className="p-2 text-left">거래일</th>{investors.map(k => <th key={k} className="p-2">{investorNames[k]} ({unit ?? (divisor === 1 ? "계약" : "억 원")})</th>)}</tr></thead><tbody>{[...points].reverse().map(p => <tr key={p.date} className="border-t border-white/5"><td className="p-2 text-left text-zinc-400">{p.date}</td>{investors.map(k => <td key={k} className={`p-2 font-mono ${tone(p[k])}`}>{number(p[k] == null ? null : p[k]! / divisor, divisor === 1 ? 0 : 1)}</td>)}</tr>)}</tbody></table></div></details>;
 }
 function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: MinerviniUniverse }) {
-  const [data, setData] = useState<{ market: "KOSPI" | "KOSDAQ"; points: InvestorPoint[]; prices: { date: string; value: number }[]; priceError: string | null; latestUpdatedAt: string | null; collectedAt: string } | null>(null);
+  const [data, setData] = useState<{ market: "KOSPI" | "KOSDAQ"; points: InvestorPoint[]; prices: { date: string; value: number }[]; priceError: string | null; turnover?: { date: string; value: number }[]; turnoverError?: string | null; turnoverCollectedAt?: string | null; latestUpdatedAt: string | null; collectedAt: string } | null>(null);
   const [failure, setFailure] = useState<string | null>(null), [period, setPeriod] = useState<FlowPeriod>(1);
   const [months, setMonths] = useState<3 | 6 | 12>(12);
   const [cumulative, setCumulative] = useState(true);
@@ -105,7 +106,7 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
   const from = useMemo(() => { const date = new Date(`${board.asOf}T00:00:00Z`); date.setUTCMonth(date.getUTCMonth() - months); return date.toISOString().slice(0, 10); }, [board.asOf, months]);
   const chartPrices = useMemo(() => (data?.prices ?? []).filter(point => point.date >= from), [data, from]);
   const latest = data?.points.at(-1)?.date;
-  return <section className={`${box} space-y-4`}><h2 className="font-semibold">{universe === "kospi200" ? "코스피" : "코스닥"} 시장 전체 · 투자자별 순매수 대금</h2>
+  return <><section className={`${box} space-y-4`}><h2 className="font-semibold">{universe === "kospi200" ? "코스피" : "코스닥"} 시장 전체 · 투자자별 순매수 대금</h2>
     <p className="text-xs leading-relaxed text-zinc-400">토스증권 KRX 시장 전체 · 매수대금 − 매도대금 · 억 원 · 외국인에는 등록·미등록 외국인이 포함됩니다. 비교 차트는 {universe === "kospi200" ? "코스피" : "코스닥"} KRX 15:30 종가입니다.</p>
     {failure && <Notice>{failure}</Notice>}
     {!failure && !data && <p className="text-sm text-zinc-400">저장된 시장 수급을 불러오고 있습니다…</p>}
@@ -117,7 +118,7 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
       {cumulative && <p className="text-xs text-zinc-500">선택한 차트 구간의 첫 거래일부터 순매수 대금을 누적합니다. 거래일 자료가 빠지면 그 이후 누적은 결측으로 표시합니다.</p>}
       <FlowChart points={points} prices={chartPrices} period={period} overlay from={from} cumulative={cumulative} /><DailyTable points={points} />
     </>}
-  </section>;
+  </section>{data && <MarketTurnoverChart market={universe === "kospi200" ? "코스피" : "코스닥"} points={data.turnover} error={data.turnoverError} asOf={board.asOf} collectedAt={data.turnoverCollectedAt} />}</>;
 }
 function TossFlow({ board, universe, view }: { board: InvestorBoard; universe: MinerviniUniverse; view: "index" | "stocks" }) {
   const [data, setData] = useState<{ rows: { code: string; name: string; points: InvestorPoint[]; error: string | null }[] } | null>(null);

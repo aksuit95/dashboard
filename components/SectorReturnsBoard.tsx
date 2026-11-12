@@ -113,9 +113,10 @@ export function SectorReturnsBoard() {
       {returnPeriods.map(p => <button key={p.id} type="button" aria-pressed={period === p.id} onClick={() => { setPeriod(p.id); setDescending(true); }} className={`min-w-14 rounded-md px-3 py-2 text-xs ${period === p.id ? "bg-zinc-100 font-semibold text-zinc-950" : "bg-white/5 text-zinc-400 hover:bg-white/10"}`}>{p.label}</button>)}
       <span className="ml-2 text-xs text-zinc-500">섹터·종목 모두 선택 기간으로 정렬</span>
     </div>
-    <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-5">
       <Metric label="구성종목" value={snapshot ? `${rows.length}종목` : "—"} note={minerviniUniverses[universe].label} />
       <Metric label={`${periodLabel} 평균 등락률`} value={percent(average)} tone={color(average)} note={`동일가중 · ${values.length}/${rows.length}종목 산정`} />
+      <Metric label={`${minerviniUniverses[universe].name} 지수 · 일간`} value={percent(snapshot ? board?.indexDaily?.change ?? null : null)} tone={color(snapshot ? board?.indexDaily?.change ?? null : null)} note={board?.indexDaily ? `KRX 지수 · ${board.indexDaily.previousDate} 대비` : "KRX 지수 자료 없음"} />
       <Metric label="상승 / 하락" value={values.length ? `${values.filter(v => v > 0).length} / ${values.filter(v => v < 0).length}` : "—"} note={`보합 ${values.filter(v => v === 0).length} · 미산정 ${rows.length - values.length}`} />
       <Metric label={`${periodLabel} 선도 섹터`} value={leader?.sector ?? "—"} tone={color(leader?.returns[period] ?? null)} note={leader ? percent(leader.returns[period]) : "데이터 대기"} />
     </div>

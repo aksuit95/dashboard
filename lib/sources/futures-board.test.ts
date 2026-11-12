@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { asiaMarketSession, clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession } from "@/lib/sources/futures-board";
+import { asiaMarketSession, clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession, vendorCashSession } from "@/lib/sources/futures-board";
 
 describe("선물·매크로 시세", () => {
-  it("13개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
+  it("26개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
     const requested: string[] = [];
     const fetchImpl: typeof fetch = async (input) => {
       const url = String(input);
@@ -23,11 +23,14 @@ describe("선물·매크로 시세", () => {
     const board = await loadMarketBoard(fetchImpl, new Date("2026-11-02T01:00:00Z"));
     expect(board.futures.map((card) => card.id)).toEqual(["K200-NIGHT", "FUT", "NQ=F", "ES=F"]);
     expect(board.futures[0]).toMatchObject({ price: null, session: "missing" });
-    expect(board.asia.map((card) => card.id)).toEqual(["^N225", "^TWII", "000688.SS"]);
+    expect(board.asia.map((card) => card.id)).toEqual(["^N225", "^TWII", "000688.SS", "^HSI", "HSTECH.HK", "000001.SS", "399106.SZ", "399006.SZ", "^NSEI"]);
+    expect(board.usIndices.map((card) => card.id)).toEqual(["^IXIC", "^GSPC", "^DJI", "^RUT"]);
+    expect(board.europe.map((card) => card.id)).toEqual(["^FTSE", "^GDAXI", "^FCHI"]);
     expect(board.usIndicators.map((card) => card.id)).toEqual(["^SOX", "^VIX"]);
     expect(board.currencies.map((card) => card.id)).toEqual(["KRW=X", "DX-Y.NYB"]);
     expect(board.macro.map((card) => card.id)).toEqual(["^TNX", "CL=F"]);
-    expect(requested).toHaveLength(11);
+    expect(requested).toHaveLength(24);
+    expect(new Set(requested).size).toBe(24);
     expect(board.asia[2]).toMatchObject({ price: null, session: "missing" });
     expect(board.asia[0].price).toBe(100);
     expect(board.usIndicators[1]).toMatchObject({ price: 100, unit: "points" });
@@ -120,5 +123,30 @@ describe("선물·매크로 시세", () => {
     expect(usCashSession(new Date("2026-10-30T14:00:00Z"))).toBe("live");
     expect(usCashSession(new Date("2026-10-30T21:00:00Z"))).toBe("closed");
     expect(usCashSession(new Date("2026-10-31T15:00:00Z"))).toBe("closed");
+  });
+
+  it("홍콩은 12~13시 점심휴장·16시 마감이고 인도는 점심휴장이 없다", () => {
+    const hongKong = { startMs: Date.parse("2026-11-12T09:30:00+08:00"), endMs: Date.parse("2026-11-12T16:00:00+08:00") };
+    for (const symbol of ["^HSI", "HSTECH.HK"]) {
+      expect(asiaMarketSession(symbol, hongKong, new Date("2026-11-12T11:45:00+08:00"))).toBe("open");
+      expect(asiaMarketSession(symbol, hongKong, new Date("2026-11-12T12:00:00+08:00"))).toBe("break");
+      expect(asiaMarketSession(symbol, hongKong, new Date("2026-11-12T13:00:00+08:00"))).toBe("open");
+      expect(asiaMarketSession(symbol, hongKong, new Date("2026-11-12T16:00:00+08:00"))).toBe("closed");
+    }
+    const india = { startMs: Date.parse("2026-11-12T09:15:00+05:30"), endMs: Date.parse("2026-11-12T15:30:00+05:30") };
+    expect(asiaMarketSession("^NSEI", india, new Date("2026-11-12T09:14:00+05:30"))).toBe("pre");
+    expect(asiaMarketSession("^NSEI", india, new Date("2026-11-12T12:00:00+05:30"))).toBe("open");
+    expect(asiaMarketSession("^NSEI", india, new Date("2026-11-12T15:30:00+05:30"))).toBe("closed");
+  });
+
+  it("미국·유럽 세션은 제공처의 당일 거래 구간을 사용하고 오래된 구간은 확정하지 않는다", () => {
+    const period = { startMs: Date.parse("2026-11-12T08:00:00Z"), endMs: Date.parse("2026-11-12T16:30:00Z") };
+    expect(vendorCashSession(period, new Date("2026-11-12T07:59:00Z"), "Europe/London")).toBe("pre");
+    expect(vendorCashSession(period, new Date("2026-11-12T08:00:00Z"), "Europe/London")).toBe("open");
+    expect(vendorCashSession(period, new Date("2026-11-12T16:30:00Z"), "Europe/London")).toBe("closed");
+    expect(vendorCashSession(period, new Date("2026-11-13T10:00:00Z"), "Europe/London")).toBe("unknown");
+    expect(vendorCashSession(null, new Date("2026-11-14T10:00:00Z"), "Europe/London")).toBe("closed");
+    const us = { startMs: Date.parse("2026-11-12T14:30:00Z"), endMs: Date.parse("2026-11-12T21:00:00Z") };
+    expect(vendorCashSession(us, new Date("2026-11-13T01:00:00+09:00"), "America/New_York")).toBe("open");
   });
 });

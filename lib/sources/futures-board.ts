@@ -27,6 +27,8 @@ export type MarketBoard = {
   asOf: string;
   futures: MarketCard[];
   asia: MarketCard[];
+  usIndices: MarketCard[];
+  europe: MarketCard[];
   usIndicators: MarketCard[];
   currencies: MarketCard[];
   macro: MarketCard[];
@@ -112,8 +114,10 @@ export function clockSession(tradedAtMs: number | null, nowMs: number): "live" |
 export function asiaMarketSession(symbol: string, period: YahooChartQuote["regularSession"], now: Date): MarketCard["session"] {
   const japan = symbol === "^N225";
   const taiwan = symbol === "^TWII";
+  const hongKong = symbol === "^HSI" || symbol === "HSTECH.HK";
+  const india = symbol === "^NSEI";
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: japan ? "Asia/Tokyo" : taiwan ? "Asia/Taipei" : "Asia/Shanghai",
+    timeZone: japan ? "Asia/Tokyo" : taiwan ? "Asia/Taipei" : india ? "Asia/Kolkata" : hongKong ? "Asia/Hong_Kong" : "Asia/Shanghai",
     weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
   }).formatToParts(now);
   const read = (key: string) => parts.find((part) => part.type === key)?.value;
@@ -122,15 +126,26 @@ export function asiaMarketSession(symbol: string, period: YahooChartQuote["regul
   // https://www.twse.com.tw/en/about/company/service.html
   // https://english.sse.com.cn/start/trading/schedule/
   // https://www.jpx.co.jp/english/equities/trading/domestic/01.html
-  const start = taiwan || japan ? 540 : 570;
-  const end = japan ? 930 : taiwan ? 810 : 900;
+  const start = taiwan || japan ? 540 : india ? 555 : 570;
+  const end = japan || india ? 930 : taiwan ? 810 : hongKong ? 960 : 900;
   if (minute >= end) return "closed";
   // A missing or stale period cannot establish whether today is a trading day.
   if (!period || period.endMs <= now.getTime() || period.startMs - now.getTime() > 24 * 60 * 60 * 1000) return "unknown";
   if (minute < start) return "pre";
   if (now.getTime() < period.startMs) return "unknown";
-  if (!taiwan && minute >= 690 && minute < (japan ? 750 : 780)) return "break";
+  if (hongKong && minute >= 720 && minute < 780) return "break";
+  if (!taiwan && !india && !hongKong && minute >= 690 && minute < (japan ? 750 : 780)) return "break";
   return "open";
+}
+
+/** Vendor periods include local DST and trading-day adjustments; missing periods stay unknown. */
+export function vendorCashSession(period: YahooChartQuote["regularSession"], now: Date, timeZone: string): MarketCard["session"] {
+  const weekday = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }).format(now);
+  if (weekday === "Sat" || weekday === "Sun") return "closed";
+  const date = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" });
+  if (!period || date.format(new Date(period.startMs)) !== date.format(now)) return "unknown";
+  if (now.getTime() < period.startMs) return "pre";
+  return now.getTime() < period.endMs ? "open" : "closed";
 }
 
 type FetchLike = typeof fetch;
@@ -154,7 +169,26 @@ const asiaSpec = [
   { id: "^N225", name: "닛케이225", symbol: "N225", venue: "일본 · 현물 지수", unit: "points" as const, session: "clock" as const },
   { id: "^TWII", name: "대만 가권", symbol: "TWII", venue: "대만 · 현물 지수", unit: "points" as const, session: "clock" as const },
   { id: "000688.SS", name: "중국 과창판50", symbol: "000688", venue: "상하이 · STAR 50 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "^HSI", name: "홍콩 항셍", symbol: "HSI", venue: "홍콩 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "HSTECH.HK", name: "홍콩 항셍테크", symbol: "HSTECH", venue: "홍콩 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "000001.SS", name: "중국 상하이종합", symbol: "000001", venue: "상하이 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "399106.SZ", name: "중국 심천종합", symbol: "399106", venue: "선전 · 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "399006.SZ", name: "중국 차이넥스트", symbol: "399006", venue: "선전 · ChiNext 현물 지수", unit: "points" as const, session: "clock" as const },
+  { id: "^NSEI", name: "인도 NIFTY 50", symbol: "NIFTY50", venue: "인도 NSE · 현물 지수", unit: "points" as const, session: "clock" as const },
 ];
+
+const usIndicesSpec = [
+  { id: "^IXIC", name: "나스닥 종합", symbol: "IXIC", venue: "미국 · 현물 지수" },
+  { id: "^GSPC", name: "S&P 500", symbol: "SPX", venue: "미국 · 현물 지수" },
+  { id: "^DJI", name: "다우존스 산업평균", symbol: "DJI", venue: "미국 · 현물 지수" },
+  { id: "^RUT", name: "러셀2000", symbol: "RUT", venue: "미국 · 현물 지수" },
+].map((spec) => ({ ...spec, unit: "points" as const, session: "cash" as const, timeZone: "America/New_York" }));
+
+const europeSpec = [
+  { id: "^FTSE", name: "영국 FTSE 100", symbol: "FTSE", venue: "영국 · 현물 지수", timeZone: "Europe/London" },
+  { id: "^GDAXI", name: "독일 DAX", symbol: "DAX", venue: "독일 · 현물 지수", timeZone: "Europe/Berlin" },
+  { id: "^FCHI", name: "프랑스 CAC 40", symbol: "CAC40", venue: "프랑스 · 현물 지수", timeZone: "Europe/Paris" },
+].map((spec) => ({ ...spec, unit: "points" as const, session: "cash" as const }));
 
 const usIndicatorsSpec = [
   { id: "^SOX", name: "필라델피아 반도체 SOX", symbol: "SOX", venue: "미국 · 현물 지수", unit: "points" as const, session: "clock" as const },
@@ -173,7 +207,7 @@ const macroSpec = [
 
 async function yahooCard(
   fetchImpl: FetchLike,
-  spec: (typeof futuresSpec)[number] | (typeof macroSpec)[number] | (typeof asiaSpec)[number] | (typeof usIndicatorsSpec)[number] | (typeof currenciesSpec)[number],
+  spec: (typeof futuresSpec)[number] | (typeof macroSpec)[number] | (typeof asiaSpec)[number] | (typeof usIndicesSpec)[number] | (typeof europeSpec)[number] | (typeof usIndicatorsSpec)[number] | (typeof currenciesSpec)[number],
   now: Date,
 ): Promise<MarketCard> {
   try {
@@ -182,11 +216,12 @@ async function yahooCard(
     if (!quote) return blank(spec, "응답에 시세가 없습니다.");
     const isAsia = asiaSpec.some((item) => item.id === spec.id);
     const session = isAsia ? asiaMarketSession(spec.id, quote.regularSession, now)
+      : spec.session === "cash" ? vendorCashSession(quote.regularSession, now, spec.timeZone)
       : spec.session === "us-cash" ? usCashSession(now) : clockSession(quote.tradedAtMs, now.getTime());
     return {
       ...spec, price: quote.price, change: quote.change, changePct: quote.changePct, session,
       ...(quote.tradedAtMs == null ? {} : { tradedAt: new Date(quote.tradedAtMs).toISOString() }),
-      delayed: isAsia && session === "open" && quote.tradedAtMs != null && now.getTime() - quote.tradedAtMs > FRESH_MS,
+      delayed: session === "open" && (quote.tradedAtMs == null || now.getTime() - quote.tradedAtMs > FRESH_MS),
     };
   } catch {
     return blank(spec, "조회에 실패했습니다.");
@@ -198,11 +233,13 @@ function blank(spec: { id: string; name: string; symbol: string; venue: string; 
 }
 
 export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Date()): Promise<MarketBoard> {
-  const [night, kospi, futures, asia, usIndicators, currencies, macro] = await Promise.all([
+  const [night, kospi, futures, asia, usIndices, europe, usIndicators, currencies, macro] = await Promise.all([
     loadNightFutures(fetchImpl, now),
     loadKospiFutures(fetchImpl),
     Promise.all(futuresSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
     Promise.all(asiaSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(usIndicesSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
+    Promise.all(europeSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
     Promise.all(usIndicatorsSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
     Promise.all(currenciesSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
     Promise.all(macroSpec.map((spec) => yahooCard(fetchImpl, spec, now))),
@@ -211,6 +248,8 @@ export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Da
     asOf: now.toISOString(),
     futures: [night, kospi, ...futures],
     asia,
+    usIndices,
+    europe,
     usIndicators,
     currencies,
     macro,

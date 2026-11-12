@@ -88,13 +88,16 @@ describe("미너비니 공통 일별 캐시와 예약 수집", () => {
     expect((await next.loadDailyMinervini("kospi200")).stale).toBe(false);
   });
   it("화면 API는 시장 인자를 검증하고 해당 시장의 결과만 요청한다", async () => {
+    const readPublished = vi.fn().mockResolvedValue(success);
+    vi.doMock("@/lib/sources/minervini-publication", () => ({ readPublishedMinervini: readPublished }));
     const { GET } = await import("@/app/api/minervini/route");
     expect((await GET(new Request("http://localhost/api/minervini?universe=invalid"))).status).toBe(400);
-    expect(state.load).not.toHaveBeenCalled();
+    expect(readPublished).not.toHaveBeenCalled();
     expect((await GET(new Request("http://localhost/api/minervini?universe=kosdaq150"))).status).toBe(200);
-    expect(state.load.mock.calls[0][3]).toBe("kosdaq150");
+    expect(readPublished).toHaveBeenNthCalledWith(1, "kosdaq150");
     expect((await GET(new Request("http://localhost/api/minervini"))).status).toBe(200);
-    expect(state.load.mock.calls[1][3]).toBe("kospi200");
+    expect(readPublished).toHaveBeenNthCalledWith(2, "kospi200");
+    vi.doUnmock("@/lib/sources/minervini-publication");
   });
   it("예약 경로는 한 시장 실패 시에도 다른 시장을 갱신하고 각각의 결과를 반환한다", async () => {
     vi.stubEnv("CRON_SECRET", "test-only");

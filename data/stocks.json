@@ -1,6 +1,6 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "2ca7ac4411ad4734361a",
+  "dataset_id": "1dada7b252a2668011f9",
   "as_of": "2026-11-11",
   "collected_at": "2026-11-12T07:49:02.628829+09:00",
   "price_basis": {
@@ -84,6 +84,7 @@
       "lending_status": "unavailable",
       "name": "하이트진로",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.922213973141545,
       "short_value_ratio_pct_vs_mean_5_pct": 95.37206589591881,
       "short_value_ratio_pct_mean_20": 15.825772345147362,
@@ -116,7 +117,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2992625,
+        "quantity_shares_pct": 4.267033961790446,
         "change": 9410,
+        "change_shares_pct": 0.013417247259662703,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -144,6 +147,7 @@
       "lending_status": "unavailable",
       "name": "유한양행",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.073106152088053,
       "short_value_ratio_pct_vs_mean_5_pct": -61.10187213223854,
       "short_value_ratio_pct_mean_20": 12.265554584899279,
@@ -176,7 +180,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 11460795,
+        "quantity_shares_pct": 15.568394227862637,
         "change": 191500,
+        "change_shares_pct": 0.2601344404673232,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -204,6 +210,7 @@
       "lending_status": "unavailable",
       "name": "CJ대한통운",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.738009130744853,
       "short_value_ratio_pct_vs_mean_5_pct": -3.766776257433051,
       "short_value_ratio_pct_mean_20": 9.507329853395891,
@@ -236,7 +243,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 515580,
+        "quantity_shares_pct": 2.2600921676439736,
         "change": 46259,
+        "change_shares_pct": 0.20278056476791687,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -264,6 +273,7 @@
       "lending_status": "unavailable",
       "name": "두산",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.472813493213525,
       "short_value_ratio_pct_vs_mean_5_pct": -3.2447093852746747,
       "short_value_ratio_pct_mean_20": 5.5750078476000615,
@@ -296,7 +306,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 496858,
+        "quantity_shares_pct": 3.489805836187492,
         "change": 4569,
+        "change_shares_pct": 0.032091508772205846,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -324,6 +336,7 @@
       "lending_status": "unavailable",
       "name": "DL",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.08329693899754,
       "short_value_ratio_pct_vs_mean_5_pct": -2.3270315187870523,
       "short_value_ratio_pct_mean_20": 6.298053820111459,
@@ -356,7 +369,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 627589,
+        "quantity_shares_pct": 2.994810431285075,
         "change": 739,
+        "change_shares_pct": 0.0035264558631838195,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -384,6 +399,7 @@
       "lending_status": "unavailable",
       "name": "한국앤컴퍼니",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 24.512223649607808,
       "short_value_ratio_pct_vs_mean_5_pct": -19.693798938394778,
       "short_value_ratio_pct_mean_20": 26.639846140651382,
@@ -416,7 +432,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2952605,
+        "quantity_shares_pct": 3.1101253865266467,
         "change": 136933,
+        "change_shares_pct": 0.14423832498869757,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -444,6 +462,7 @@
       "lending_status": "unavailable",
       "name": "기아",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.580078469035696,
       "short_value_ratio_pct_vs_mean_5_pct": 12.075273413818238,
       "short_value_ratio_pct_mean_20": 5.935672628580989,
@@ -476,7 +495,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6336610,
+        "quantity_shares_pct": 1.6230530316513694,
         "change": 27751,
+        "change_shares_pct": 0.007108113751888967,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -504,6 +525,7 @@
       "lending_status": "unavailable",
       "name": "SK하이닉스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 1.7857005679322024,
       "short_value_ratio_pct_vs_mean_5_pct": 78.45753296898269,
       "short_value_ratio_pct_mean_20": 2.2801273050783406,
@@ -536,7 +558,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 13030039,
+        "quantity_shares_pct": 1.7837337697567859,
         "change": 198168,
+        "change_shares_pct": 0.027128004274213052,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -564,6 +588,7 @@
       "lending_status": "unavailable",
       "name": "영풍",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.304100275919186,
       "short_value_ratio_pct_vs_mean_5_pct": 33.895961275416624,
       "short_value_ratio_pct_mean_20": 14.572916715824523,
@@ -596,7 +621,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 647948,
+        "quantity_shares_pct": 3.51941315811043,
         "change": -1116,
+        "change_shares_pct": -0.006061697982633235,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -624,6 +651,7 @@
       "lending_status": "unavailable",
       "name": "현대건설",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.334540727132293,
       "short_value_ratio_pct_vs_mean_5_pct": 17.2171842501391,
       "short_value_ratio_pct_mean_20": 12.150068438005565,
@@ -656,7 +684,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 7015415,
+        "quantity_shares_pct": 6.300001620930897,
         "change": -24265,
+        "change_shares_pct": -0.021790519781351242,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -684,6 +714,7 @@
       "lending_status": "unavailable",
       "name": "삼성화재",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.262279850706665,
       "short_value_ratio_pct_vs_mean_5_pct": -62.4425273755906,
       "short_value_ratio_pct_mean_20": 9.154714507064545,
@@ -716,7 +747,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 931000,
+        "quantity_shares_pct": 2.085224397806344,
         "change": -3592,
+        "change_shares_pct": -0.008045248159957451,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -744,6 +777,7 @@
       "lending_status": "unavailable",
       "name": "한화",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 15.274949324694223,
       "short_value_ratio_pct_vs_mean_5_pct": 64.4696346069843,
       "short_value_ratio_pct_mean_20": 11.08642060968478,
@@ -776,7 +810,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1268422,
+        "quantity_shares_pct": 2.378489095696091,
         "change": -11514,
+        "change_shares_pct": -0.021590545928598524,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -804,6 +840,7 @@
       "lending_status": "unavailable",
       "name": "DB하이텍",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.7807271639522,
       "short_value_ratio_pct_vs_mean_5_pct": -0.6776549769302562,
       "short_value_ratio_pct_mean_20": 9.57962458266574,
@@ -836,7 +873,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5166247,
+        "quantity_shares_pct": 11.87517739508302,
         "change": 236838,
+        "change_shares_pct": 0.5443977540943498,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -864,6 +903,7 @@
       "lending_status": "unavailable",
       "name": "CJ",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.337788830370584,
       "short_value_ratio_pct_vs_mean_5_pct": -60.42326953138261,
       "short_value_ratio_pct_mean_20": 12.43970745106529,
@@ -896,7 +936,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2282405,
+        "quantity_shares_pct": 7.8226176661492035,
         "change": 429,
+        "change_shares_pct": 0.0014703363245252305,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -924,6 +966,7 @@
       "lending_status": "unavailable",
       "name": "세아베스틸지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.408435767326063,
       "short_value_ratio_pct_vs_mean_5_pct": 51.31630017686027,
       "short_value_ratio_pct_mean_20": 13.96278104556674,
@@ -956,7 +999,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1492411,
+        "quantity_shares_pct": 4.16152486694944,
         "change": 42301,
+        "change_shares_pct": 0.11795454696918496,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -984,6 +1029,7 @@
       "lending_status": "unavailable",
       "name": "대한전선",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.018827572160795,
       "short_value_ratio_pct_vs_mean_5_pct": 37.86241678795449,
       "short_value_ratio_pct_mean_20": 10.466860837733645,
@@ -1016,7 +1062,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 10638117,
+        "quantity_shares_pct": 5.42781575279507,
         "change": 257159,
+        "change_shares_pct": 0.13120852789765589,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1044,6 +1092,7 @@
       "lending_status": "unavailable",
       "name": "현대해상",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.395078687053202,
       "short_value_ratio_pct_vs_mean_5_pct": -6.976052850795966,
       "short_value_ratio_pct_mean_20": 9.034301227593522,
@@ -1076,7 +1125,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2888510,
+        "quantity_shares_pct": 3.388351080520714,
         "change": -125909,
+        "change_shares_pct": -0.14769687354285865,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1104,6 +1155,7 @@
       "lending_status": "unavailable",
       "name": "대상",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 14.068314970449151,
       "short_value_ratio_pct_vs_mean_5_pct": 75.0909729159525,
       "short_value_ratio_pct_mean_20": 13.412888940493309,
@@ -1136,7 +1188,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1261532,
+        "quantity_shares_pct": 3.6409925241049095,
         "change": -19351,
+        "change_shares_pct": -0.05585022522928796,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1164,6 +1218,7 @@
       "lending_status": "unavailable",
       "name": "오리온홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.948546832478426,
       "short_value_ratio_pct_vs_mean_5_pct": 12.053723706480085,
       "short_value_ratio_pct_mean_20": 14.3965324855243,
@@ -1196,7 +1251,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1610570,
+        "quantity_shares_pct": 2.677293277558066,
         "change": 2044,
+        "change_shares_pct": 0.003397795475718961,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1224,6 +1281,7 @@
       "lending_status": "unavailable",
       "name": "아세아",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.106933951468555,
       "short_value_ratio_pct_vs_mean_5_pct": 77.67957780865186,
       "short_value_ratio_pct_mean_20": 10.380173688659351,
@@ -1256,7 +1314,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 34032,
+        "quantity_shares_pct": 1.6529599990674413,
         "change": -804,
+        "change_shares_pct": -0.03905088855342686,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1284,6 +1344,7 @@
       "lending_status": "unavailable",
       "name": "KCC",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.749905017999936,
       "short_value_ratio_pct_vs_mean_5_pct": 32.73084675646345,
       "short_value_ratio_pct_mean_20": 15.34810227474595,
@@ -1316,7 +1377,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 123551,
+        "quantity_shares_pct": 1.437827247065483,
         "change": 1611,
+        "change_shares_pct": 0.01874804489662158,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1344,6 +1407,7 @@
       "lending_status": "unavailable",
       "name": "아모레퍼시픽홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.487476441968859,
       "short_value_ratio_pct_vs_mean_5_pct": 30.97295212517301,
       "short_value_ratio_pct_mean_20": 8.43436914504976,
@@ -1376,7 +1440,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1401397,
+        "quantity_shares_pct": 1.8328934850397955,
         "change": -31208,
+        "change_shares_pct": -0.04081708458140123,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1404,6 +1470,7 @@
       "lending_status": "unavailable",
       "name": "미원상사",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.019720590983338,
       "short_value_ratio_pct_vs_mean_5_pct": 450.6314322149675,
       "short_value_ratio_pct_mean_20": 8.31857587751021,
@@ -1436,7 +1503,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 34250,
+        "quantity_shares_pct": 0.7611111111111111,
         "change": 1491,
+        "change_shares_pct": 0.033133333333333334,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1464,6 +1533,7 @@
       "lending_status": "unavailable",
       "name": "세아제강지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.381666615620967,
       "short_value_ratio_pct_vs_mean_5_pct": 28.346878433973757,
       "short_value_ratio_pct_mean_20": 8.465572429237673,
@@ -1496,7 +1566,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 109822,
+        "quantity_shares_pct": 2.651644015909574,
         "change": -1319,
+        "change_shares_pct": -0.03184715682636201,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1524,6 +1596,7 @@
       "lending_status": "unavailable",
       "name": "대웅",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.137082052984589,
       "short_value_ratio_pct_vs_mean_5_pct": -6.6062808011886744,
       "short_value_ratio_pct_mean_20": 16.16861240312317,
@@ -1556,7 +1629,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1632095,
+        "quantity_shares_pct": 2.8070853452187214,
         "change": -23862,
+        "change_shares_pct": -0.04104091398332152,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1584,6 +1659,7 @@
       "lending_status": "unavailable",
       "name": "삼양식품",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.412340146914962,
       "short_value_ratio_pct_vs_mean_5_pct": -31.20865879784212,
       "short_value_ratio_pct_mean_20": 13.765954491137213,
@@ -1616,7 +1692,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 595701,
+        "quantity_shares_pct": 7.9078695582047835,
         "change": 23991,
+        "change_shares_pct": 0.31847805958172126,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1644,6 +1722,7 @@
       "lending_status": "unavailable",
       "name": "태광산업",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.09445377599379,
       "short_value_ratio_pct_vs_mean_5_pct": -28.53470358256756,
       "short_value_ratio_pct_mean_20": 8.332701276346075,
@@ -1676,7 +1755,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 17610,
+        "quantity_shares_pct": 1.5816418178552183,
         "change": 0,
+        "change_shares_pct": 0.0,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1704,6 +1785,7 @@
       "lending_status": "unavailable",
       "name": "대한항공",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 1.0001270149407933,
       "short_value_ratio_pct_vs_mean_5_pct": 10.792379342832547,
       "short_value_ratio_pct_mean_20": 1.2623253214551604,
@@ -1736,7 +1818,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6590579,
+        "quantity_shares_pct": 1.7898452283533102,
         "change": -66780,
+        "change_shares_pct": -0.018135867023130147,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1764,6 +1848,7 @@
       "lending_status": "unavailable",
       "name": "LG",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.164354721462502,
       "short_value_ratio_pct_vs_mean_5_pct": 103.13612325369525,
       "short_value_ratio_pct_mean_20": 8.8841896785171,
@@ -1796,7 +1881,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3534361,
+        "quantity_shares_pct": 2.3376639679966145,
         "change": -40166,
+        "change_shares_pct": -0.026566219732096417,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1824,6 +1911,7 @@
       "lending_status": "unavailable",
       "name": "포스코퓨처엠",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.764643161334368,
       "short_value_ratio_pct_vs_mean_5_pct": -8.938742422575686,
       "short_value_ratio_pct_mean_20": 19.328994464149492,
@@ -1856,7 +1944,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 9193452,
+        "quantity_shares_pct": 10.335967059645705,
         "change": 60967,
+        "change_shares_pct": 0.06854366604899005,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1884,6 +1974,7 @@
       "lending_status": "unavailable",
       "name": "롯데정밀화학",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.0437882244551,
       "short_value_ratio_pct_vs_mean_5_pct": -14.48411468081423,
       "short_value_ratio_pct_mean_20": 8.612602283463888,
@@ -1916,7 +2007,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 575744,
+        "quantity_shares_pct": 2.231565891472868,
         "change": 127,
+        "change_shares_pct": 0.0004922480620155039,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -1944,6 +2037,7 @@
       "lending_status": "unavailable",
       "name": "현대제철",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.390234331751083,
       "short_value_ratio_pct_vs_mean_5_pct": 35.994015786600045,
       "short_value_ratio_pct_mean_20": 13.266037303781236,
@@ -1976,7 +2070,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3549986,
+        "quantity_shares_pct": 2.660245881876299,
         "change": 13968,
+        "change_shares_pct": 0.010467172117875435,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2004,6 +2100,7 @@
       "lending_status": "unavailable",
       "name": "신세계",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.009075206778647,
       "short_value_ratio_pct_vs_mean_5_pct": -36.87208211210271,
       "short_value_ratio_pct_mean_20": 9.926425233793932,
@@ -2036,7 +2133,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 533303,
+        "quantity_shares_pct": 5.646297302296271,
         "change": -1218,
+        "change_shares_pct": -0.012895464893684937,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2064,6 +2163,7 @@
       "lending_status": "unavailable",
       "name": "농심",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.039706555466275,
       "short_value_ratio_pct_vs_mean_5_pct": -18.391310798694363,
       "short_value_ratio_pct_mean_20": 16.12745958688759,
@@ -2096,7 +2196,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 233101,
+        "quantity_shares_pct": 3.8322327699049197,
         "change": -20,
+        "change_shares_pct": -0.0003288044898910704,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2124,6 +2226,7 @@
       "lending_status": "unavailable",
       "name": "롯데지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.008505031125363,
       "short_value_ratio_pct_vs_mean_5_pct": 52.943034239678155,
       "short_value_ratio_pct_mean_20": 8.408631933670213,
@@ -2156,7 +2259,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1439627,
+        "quantity_shares_pct": 1.4444837008784415,
         "change": -637,
+        "change_shares_pct": -0.0006391489722404256,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2184,6 +2289,7 @@
       "lending_status": "unavailable",
       "name": "롯데칠성",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.45809595603719,
       "short_value_ratio_pct_vs_mean_5_pct": 21.686401001908948,
       "short_value_ratio_pct_mean_20": 16.36909510599416,
@@ -2216,7 +2322,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 247325,
+        "quantity_shares_pct": 2.665460630825862,
         "change": 5655,
+        "change_shares_pct": 0.06094482914109067,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2244,6 +2352,7 @@
       "lending_status": "unavailable",
       "name": "현대차",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.833685025032201,
       "short_value_ratio_pct_vs_mean_5_pct": 21.00927500391711,
       "short_value_ratio_pct_mean_20": 10.345741851079023,
@@ -2276,7 +2385,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 8103197,
+        "quantity_shares_pct": 3.9825707517481552,
         "change": 7637,
+        "change_shares_pct": 0.0037534435891291625,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2304,6 +2415,7 @@
       "lending_status": "unavailable",
       "name": "코스모화학",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.47318579094597,
       "short_value_ratio_pct_vs_mean_5_pct": 50.30109568366177,
       "short_value_ratio_pct_mean_20": 19.189237264441502,
@@ -2336,7 +2448,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2609510,
+        "quantity_shares_pct": 6.794143171614166,
         "change": 101512,
+        "change_shares_pct": 0.2642975354135057,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2364,6 +2478,7 @@
       "lending_status": "unavailable",
       "name": "POSCO홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.942140839110463,
       "short_value_ratio_pct_vs_mean_5_pct": 69.75782149761773,
       "short_value_ratio_pct_mean_20": 7.362398396340744,
@@ -2396,7 +2511,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2375739,
+        "quantity_shares_pct": 2.9980984591576587,
         "change": 1475,
+        "change_shares_pct": 0.001861397749187746,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2424,6 +2541,7 @@
       "lending_status": "unavailable",
       "name": "DB손해보험",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.636670553184382,
       "short_value_ratio_pct_vs_mean_5_pct": 7.768839832348931,
       "short_value_ratio_pct_mean_20": 13.182539080584949,
@@ -2456,7 +2574,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1450399,
+        "quantity_shares_pct": 2.2143378197878,
         "change": 21303,
+        "change_shares_pct": 0.0325234908290336,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2484,6 +2604,7 @@
       "lending_status": "unavailable",
       "name": "에스엘",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 15.94246645232215,
       "short_value_ratio_pct_vs_mean_5_pct": 12.841245628170299,
       "short_value_ratio_pct_mean_20": 20.442563400961635,
@@ -2516,7 +2637,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1285881,
+        "quantity_shares_pct": 2.7684003709913685,
         "change": 14949,
+        "change_shares_pct": 0.03218401791919312,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2544,6 +2667,7 @@
       "lending_status": "unavailable",
       "name": "삼성전자",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 1.909862063143639,
       "short_value_ratio_pct_vs_mean_5_pct": 21.218514657183277,
       "short_value_ratio_pct_mean_20": 1.5055092131297745,
@@ -2576,7 +2700,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 81353825,
+        "quantity_shares_pct": 1.3915488887012002,
         "change": 657578,
+        "change_shares_pct": 0.01124780469921799,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2604,6 +2730,7 @@
       "lending_status": "unavailable",
       "name": "NH투자증권",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.717654490219223,
       "short_value_ratio_pct_vs_mean_5_pct": 30.60085906728139,
       "short_value_ratio_pct_mean_20": 17.321816027599926,
@@ -2636,7 +2763,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 7141898,
+        "quantity_shares_pct": 1.9343932571212494,
         "change": 42305,
+        "change_shares_pct": 0.011458369573818397,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2664,6 +2793,7 @@
       "lending_status": "unavailable",
       "name": "동원산업",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.688203888867832,
       "short_value_ratio_pct_vs_mean_5_pct": 37.47022034566848,
       "short_value_ratio_pct_mean_20": 14.52419362921882,
@@ -2696,7 +2826,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 897384,
+        "quantity_shares_pct": 2.0330026046866054,
         "change": 45008,
+        "change_shares_pct": 0.10196457840983876,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2724,6 +2856,7 @@
       "lending_status": "unavailable",
       "name": "LS",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.547122418514386,
       "short_value_ratio_pct_vs_mean_5_pct": 153.4725201691673,
       "short_value_ratio_pct_mean_20": 5.804061146965351,
@@ -2756,7 +2889,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 944872,
+        "quantity_shares_pct": 3.028435897435897,
         "change": -3288,
+        "change_shares_pct": -0.010538461538461538,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2784,6 +2919,7 @@
       "lending_status": "unavailable",
       "name": "녹십자",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.99599780282903,
       "short_value_ratio_pct_vs_mean_5_pct": -37.702559647736855,
       "short_value_ratio_pct_mean_20": 15.675262291782673,
@@ -2816,7 +2952,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 426303,
+        "quantity_shares_pct": 3.6478125515015654,
         "change": 3228,
+        "change_shares_pct": 0.027621524869041625,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2844,6 +2982,7 @@
       "lending_status": "unavailable",
       "name": "삼성SDI",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.064886116232811,
       "short_value_ratio_pct_vs_mean_5_pct": 3.7198075802565,
       "short_value_ratio_pct_mean_20": 7.586304468173674,
@@ -2876,7 +3015,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4401617,
+        "quantity_shares_pct": 5.462043868173356,
         "change": 98941,
+        "change_shares_pct": 0.12277762521385664,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2904,6 +3045,7 @@
       "lending_status": "unavailable",
       "name": "대한유화",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 14.370740047808246,
       "short_value_ratio_pct_vs_mean_5_pct": 52.580556867548154,
       "short_value_ratio_pct_mean_20": 12.595794203908003,
@@ -2936,7 +3078,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 303858,
+        "quantity_shares_pct": 4.674738461538461,
         "change": 1643,
+        "change_shares_pct": 0.02527692307692308,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -2964,6 +3108,7 @@
       "lending_status": "unavailable",
       "name": "미래에셋증권",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.091510070692415,
       "short_value_ratio_pct_vs_mean_5_pct": 179.8235173693496,
       "short_value_ratio_pct_mean_20": 7.535755893506685,
@@ -2996,7 +3141,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 20623188,
+        "quantity_shares_pct": 3.7978616044481854,
         "change": 42139,
+        "change_shares_pct": 0.007760104313156729,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3024,6 +3171,7 @@
       "lending_status": "unavailable",
       "name": "GS리테일",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.22570767321561,
       "short_value_ratio_pct_vs_mean_5_pct": -7.643888678429917,
       "short_value_ratio_pct_mean_20": 18.671861904031626,
@@ -3056,7 +3204,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2129281,
+        "quantity_shares_pct": 2.546760954156997,
         "change": 8443,
+        "change_shares_pct": 0.010098386608412663,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3084,6 +3234,7 @@
       "lending_status": "unavailable",
       "name": "오뚜기",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.499748657105346,
       "short_value_ratio_pct_vs_mean_5_pct": 10.727186728428691,
       "short_value_ratio_pct_mean_20": 14.045658455482226,
@@ -3116,7 +3267,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 151984,
+        "quantity_shares_pct": 3.792176813886817,
         "change": 3889,
+        "change_shares_pct": 0.09703505388202593,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3144,6 +3297,7 @@
       "lending_status": "unavailable",
       "name": "DN오토모티브",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.930351373306953,
       "short_value_ratio_pct_vs_mean_5_pct": 50.18463530545668,
       "short_value_ratio_pct_mean_20": 21.740126831727196,
@@ -3176,7 +3330,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2053472,
+        "quantity_shares_pct": 3.509556729335654,
         "change": 138598,
+        "change_shares_pct": 0.23687566403265445,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3204,6 +3360,7 @@
       "lending_status": "unavailable",
       "name": "이수페타시스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.836368628805255,
       "short_value_ratio_pct_vs_mean_5_pct": -10.47348209201023,
       "short_value_ratio_pct_mean_20": 7.414156981344585,
@@ -3236,7 +3393,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5205656,
+        "quantity_shares_pct": 7.091283725549512,
         "change": 80945,
+        "change_shares_pct": 0.1102654422736741,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3264,6 +3423,7 @@
       "lending_status": "unavailable",
       "name": "율촌화학",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.299496981057754,
       "short_value_ratio_pct_vs_mean_5_pct": 76.75551416246566,
       "short_value_ratio_pct_mean_20": 11.22006755724753,
@@ -3296,7 +3456,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 603687,
+        "quantity_shares_pct": 2.4342217741935483,
         "change": -13992,
+        "change_shares_pct": -0.056419354838709676,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3324,6 +3486,7 @@
       "lending_status": "unavailable",
       "name": "호텔신라",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 14.131244691319257,
       "short_value_ratio_pct_vs_mean_5_pct": -17.424661672050163,
       "short_value_ratio_pct_mean_20": 12.366768197919887,
@@ -3358,7 +3521,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2799223,
+        "quantity_shares_pct": 7.132119777148057,
         "change": 49236,
+        "change_shares_pct": 0.12544804374201762,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3386,6 +3551,7 @@
       "lending_status": "unavailable",
       "name": "한미사이언스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.760609238580313,
       "short_value_ratio_pct_vs_mean_5_pct": -21.745399947645268,
       "short_value_ratio_pct_mean_20": 7.338727888529024,
@@ -3418,7 +3584,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2599299,
+        "quantity_shares_pct": 3.8006142571706594,
         "change": 17357,
+        "change_shares_pct": 0.025378866248827524,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3446,6 +3614,7 @@
       "lending_status": "unavailable",
       "name": "삼성전기",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.413422083858029,
       "short_value_ratio_pct_vs_mean_5_pct": -48.388617311687696,
       "short_value_ratio_pct_mean_20": 3.1413051914658565,
@@ -3478,7 +3647,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2873153,
+        "quantity_shares_pct": 3.8465803057864485,
         "change": 5400,
+        "change_shares_pct": 0.007229525768814546,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3506,6 +3677,7 @@
       "lending_status": "unavailable",
       "name": "한샘",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 22.040254936645113,
       "short_value_ratio_pct_vs_mean_5_pct": 53.991509505602465,
       "short_value_ratio_pct_mean_20": 27.465309770360886,
@@ -3538,7 +3710,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 673652,
+        "quantity_shares_pct": 2.862471577205471,
         "change": 2783,
+        "change_shares_pct": 0.011825480217327086,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3566,6 +3740,7 @@
       "lending_status": "unavailable",
       "name": "한올바이오파마",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.362663921747994,
       "short_value_ratio_pct_vs_mean_5_pct": 81.11734426796764,
       "short_value_ratio_pct_mean_20": 6.668702032584372,
@@ -3598,7 +3773,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3260255,
+        "quantity_shares_pct": 6.240840703362007,
         "change": -15604,
+        "change_shares_pct": -0.029869466754981058,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3626,6 +3803,7 @@
       "lending_status": "unavailable",
       "name": "HD한국조선해양",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.199858333480455,
       "short_value_ratio_pct_vs_mean_5_pct": 27.005935294611348,
       "short_value_ratio_pct_mean_20": 6.815372795833545,
@@ -3658,7 +3836,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1507471,
+        "quantity_shares_pct": 2.1300051279358674,
         "change": 1834,
+        "change_shares_pct": 0.0025913794723974003,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3686,6 +3866,7 @@
       "lending_status": "unavailable",
       "name": "한화솔루션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.466844406672585,
       "short_value_ratio_pct_vs_mean_5_pct": 31.00804301812269,
       "short_value_ratio_pct_mean_20": 8.988489531241644,
@@ -3718,7 +3899,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 17975942,
+        "quantity_shares_pct": 7.993125214257889,
         "change": 779483,
+        "change_shares_pct": 0.346602432372411,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3746,6 +3929,7 @@
       "lending_status": "unavailable",
       "name": "영원무역홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 24.09414190376141,
       "short_value_ratio_pct_vs_mean_5_pct": -2.5606178544590676,
       "short_value_ratio_pct_mean_20": 22.619229159063593,
@@ -3778,7 +3962,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 311440,
+        "quantity_shares_pct": 2.5441623833044,
         "change": -926,
+        "change_shares_pct": -0.007564520828859088,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3806,6 +3992,7 @@
       "lending_status": "unavailable",
       "name": "OCI홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.118376198739146,
       "short_value_ratio_pct_vs_mean_5_pct": -24.812264589644016,
       "short_value_ratio_pct_mean_20": 9.265596575504631,
@@ -3838,7 +4025,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1849620,
+        "quantity_shares_pct": 9.906786375230903,
         "change": 67841,
+        "change_shares_pct": 0.3633645259469727,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3866,6 +4055,7 @@
       "lending_status": "unavailable",
       "name": "LS ELECTRIC",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.208883275482698,
       "short_value_ratio_pct_vs_mean_5_pct": -2.461630823932367,
       "short_value_ratio_pct_mean_20": 12.052806493631723,
@@ -3898,7 +4088,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5957331,
+        "quantity_shares_pct": 3.9715540000000003,
         "change": 72933,
+        "change_shares_pct": 0.048622,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3926,6 +4118,7 @@
       "lending_status": "unavailable",
       "name": "고려아연",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 15.851245661200313,
       "short_value_ratio_pct_vs_mean_5_pct": -66.94231376082611,
       "short_value_ratio_pct_mean_20": 12.614838074416948,
@@ -3958,7 +4151,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 393817,
+        "quantity_shares_pct": 1.886732069596807,
         "change": 2768,
+        "change_shares_pct": 0.013261170464058083,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -3986,6 +4181,7 @@
       "lending_status": "unavailable",
       "name": "삼성중공업",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.501979323883115,
       "short_value_ratio_pct_vs_mean_5_pct": -19.16808130442314,
       "short_value_ratio_pct_mean_20": 6.037648754091554,
@@ -4018,7 +4214,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 40493189,
+        "quantity_shares_pct": 4.60149875,
         "change": 1662423,
+        "change_shares_pct": 0.18891170454545456,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4046,6 +4244,7 @@
       "lending_status": "unavailable",
       "name": "S-Oil",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.448252845439022,
       "short_value_ratio_pct_vs_mean_5_pct": 623.1064291333402,
       "short_value_ratio_pct_mean_20": 7.181269560415406,
@@ -4078,7 +4277,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1961340,
+        "quantity_shares_pct": 1.7421312486192382,
         "change": -55036,
+        "change_shares_pct": -0.048884913069130495,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4106,6 +4307,7 @@
       "lending_status": "unavailable",
       "name": "LG이노텍",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.770390120548289,
       "short_value_ratio_pct_vs_mean_5_pct": 50.43196295298077,
       "short_value_ratio_pct_mean_20": 8.0416626757539,
@@ -4138,7 +4340,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1373139,
+        "quantity_shares_pct": 5.801887826847616,
         "change": -15664,
+        "change_shares_pct": -0.06618468408496231,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4166,6 +4370,7 @@
       "lending_status": "unavailable",
       "name": "롯데케미칼",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.316912153714377,
       "short_value_ratio_pct_vs_mean_5_pct": 72.54643100319106,
       "short_value_ratio_pct_mean_20": 10.62858033447462,
@@ -4198,7 +4403,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1482638,
+        "quantity_shares_pct": 3.466098134538437,
         "change": -33408,
+        "change_shares_pct": -0.07810092988218303,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4226,6 +4433,7 @@
       "lending_status": "unavailable",
       "name": "HMM",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.7775682754068844,
       "short_value_ratio_pct_vs_mean_5_pct": 111.9116661115878,
       "short_value_ratio_pct_mean_20": 4.572764152758034,
@@ -4258,7 +4466,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 19028958,
+        "quantity_shares_pct": 2.017407971818607,
         "change": 2723711,
+        "change_shares_pct": 0.2887618063127802,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4286,6 +4496,7 @@
       "lending_status": "unavailable",
       "name": "현대위아",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.8342260874376564,
       "short_value_ratio_pct_vs_mean_5_pct": 0.5937354947690636,
       "short_value_ratio_pct_mean_20": 5.4590253021191835,
@@ -4318,7 +4529,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2571703,
+        "quantity_shares_pct": 9.45649991213485,
         "change": -3941,
+        "change_shares_pct": -0.014491590262842734,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4346,6 +4559,7 @@
       "lending_status": "unavailable",
       "name": "금호석유화학",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.61437621881579,
       "short_value_ratio_pct_vs_mean_5_pct": 0.0510664134372405,
       "short_value_ratio_pct_mean_20": 12.701660729113208,
@@ -4378,7 +4592,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 736487,
+        "quantity_shares_pct": 2.955441231889778,
         "change": -2188,
+        "change_shares_pct": -0.008780203065871949,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4406,6 +4622,7 @@
       "lending_status": "unavailable",
       "name": "SKC",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.998483735044257,
       "short_value_ratio_pct_vs_mean_5_pct": -6.109890660997749,
       "short_value_ratio_pct_mean_20": 10.715881950784011,
@@ -4438,7 +4655,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4290503,
+        "quantity_shares_pct": 8.650504499166484,
         "change": -33436,
+        "change_shares_pct": -0.06741360358776828,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4466,6 +4685,7 @@
       "lending_status": "unavailable",
       "name": "현대모비스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.549419992295551,
       "short_value_ratio_pct_vs_mean_5_pct": 102.84161294876344,
       "short_value_ratio_pct_mean_20": 3.859391456539787,
@@ -4498,7 +4718,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1588980,
+        "quantity_shares_pct": 1.7690599543523347,
         "change": -2928,
+        "change_shares_pct": -0.0032598318080426666,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4526,6 +4748,7 @@
       "lending_status": "unavailable",
       "name": "한화에어로스페이스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.448311839739459,
       "short_value_ratio_pct_vs_mean_5_pct": -40.791590300605776,
       "short_value_ratio_pct_mean_20": 9.844159570686811,
@@ -4558,7 +4781,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1206807,
+        "quantity_shares_pct": 2.3404332852288,
         "change": -1023,
+        "change_shares_pct": -0.0019839653323100235,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4586,6 +4811,7 @@
       "lending_status": "unavailable",
       "name": "삼성에피스홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.738192600148816,
       "short_value_ratio_pct_vs_mean_5_pct": -22.975518602023868,
       "short_value_ratio_pct_mean_20": 8.210703604846278,
@@ -4618,7 +4844,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 469641,
+        "quantity_shares_pct": 1.8873933013594917,
         "change": 12968,
+        "change_shares_pct": 0.05211579979607805,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4646,6 +4874,7 @@
       "lending_status": "unavailable",
       "name": "에스원",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.6684549692164956,
       "short_value_ratio_pct_vs_mean_5_pct": -3.239351702897423,
       "short_value_ratio_pct_mean_20": 5.130750711113034,
@@ -4678,7 +4907,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1935455,
+        "quantity_shares_pct": 5.093412810140261,
         "change": -311296,
+        "change_shares_pct": -0.8192177209728063,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4706,6 +4937,7 @@
       "lending_status": "unavailable",
       "name": "한솔케미칼",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.537588106549798,
       "short_value_ratio_pct_vs_mean_5_pct": -12.48312016549346,
       "short_value_ratio_pct_mean_20": 16.089831160609428,
@@ -4738,7 +4970,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 655985,
+        "quantity_shares_pct": 6.077291200436982,
         "change": -1068,
+        "change_shares_pct": -0.00989435277036319,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4766,6 +5000,7 @@
       "lending_status": "unavailable",
       "name": "동원시스템즈",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 23.20107777247002,
       "short_value_ratio_pct_vs_mean_5_pct": -5.637730544871104,
       "short_value_ratio_pct_mean_20": 18.604246865141047,
@@ -4798,7 +5033,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 352138,
+        "quantity_shares_pct": 1.2146341096609663,
         "change": 215,
+        "change_shares_pct": 0.0007416022513250707,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4826,6 +5063,7 @@
       "lending_status": "unavailable",
       "name": "한국전력",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 0.8517468150049117,
       "short_value_ratio_pct_vs_mean_5_pct": 82.85025809954419,
       "short_value_ratio_pct_mean_20": 1.3232591395240179,
@@ -4858,7 +5096,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5063466,
+        "quantity_shares_pct": 0.78874600330635,
         "change": 2832,
+        "change_shares_pct": 0.00044114617958599577,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4886,6 +5126,7 @@
       "lending_status": "unavailable",
       "name": "삼성증권",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.81167097182952,
       "short_value_ratio_pct_vs_mean_5_pct": 116.6966359951179,
       "short_value_ratio_pct_mean_20": 4.247885235898914,
@@ -4918,7 +5159,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1933619,
+        "quantity_shares_pct": 2.165306830907055,
         "change": 28048,
+        "change_shares_pct": 0.03140873460246361,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -4946,6 +5189,7 @@
       "lending_status": "unavailable",
       "name": "SK텔레콤",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.969682028873644,
       "short_value_ratio_pct_vs_mean_5_pct": -64.7652617740784,
       "short_value_ratio_pct_mean_20": 3.5382323704087426,
@@ -4980,7 +5224,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3126646,
+        "quantity_shares_pct": 1.4556754171479254,
         "change": 236742,
+        "change_shares_pct": 0.11022018789668998,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5008,6 +5254,7 @@
       "lending_status": "unavailable",
       "name": "현대엘리베이터",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.090065635719391,
       "short_value_ratio_pct_vs_mean_5_pct": 81.73745481013654,
       "short_value_ratio_pct_mean_20": 8.538101175776605,
@@ -5040,7 +5287,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1278580,
+        "quantity_shares_pct": 3.2706625599845087,
         "change": -76946,
+        "change_shares_pct": -0.19683117313000986,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5068,6 +5317,7 @@
       "lending_status": "unavailable",
       "name": "한국카본",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.229142550628053,
       "short_value_ratio_pct_vs_mean_5_pct": 43.38028450847037,
       "short_value_ratio_pct_mean_20": 5.72360636738402,
@@ -5100,7 +5350,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2359364,
+        "quantity_shares_pct": 4.565643259876455,
         "change": 3304,
+        "change_shares_pct": 0.006393623591201615,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5128,6 +5380,7 @@
       "lending_status": "unavailable",
       "name": "삼성에스디에스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.646237891848669,
       "short_value_ratio_pct_vs_mean_5_pct": -33.62514290479953,
       "short_value_ratio_pct_mean_20": 9.32799920386428,
@@ -5160,7 +5413,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2259968,
+        "quantity_shares_pct": 2.9206930153093005,
         "change": 56427,
+        "change_shares_pct": 0.07292401696610656,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5188,6 +5443,7 @@
       "lending_status": "unavailable",
       "name": "한온시스템",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.849867983204529,
       "short_value_ratio_pct_vs_mean_5_pct": 19.803760679964057,
       "short_value_ratio_pct_mean_20": 14.282391172220944,
@@ -5220,7 +5476,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 28644596,
+        "quantity_shares_pct": 2.791187190476775,
         "change": 545435,
+        "change_shares_pct": 0.05314828616321556,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5248,6 +5506,7 @@
       "lending_status": "unavailable",
       "name": "코웨이",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.171538620889786,
       "short_value_ratio_pct_vs_mean_5_pct": 46.7265311571783,
       "short_value_ratio_pct_mean_20": 10.529642944642578,
@@ -5280,7 +5539,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1275053,
+        "quantity_shares_pct": 1.8017512746613111,
         "change": 7112,
+        "change_shares_pct": 0.01004982150968724,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5308,6 +5569,7 @@
       "lending_status": "unavailable",
       "name": "한화머시너리앤서비스홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.1747286109058512,
       "short_value_ratio_pct_vs_mean_5_pct": -87.56143282920077,
       "short_value_ratio_pct_mean_20": 2.301234502071684,
@@ -5340,7 +5602,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2979113,
+        "quantity_shares_pct": 3.5249294700672484,
         "change": 42463,
+        "change_shares_pct": 0.050242834054117974,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5368,6 +5632,7 @@
       "lending_status": "unavailable",
       "name": "포스코DX",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.056044911559701,
       "short_value_ratio_pct_vs_mean_5_pct": 21.6332064468928,
       "short_value_ratio_pct_mean_20": 11.172080932270921,
@@ -5400,7 +5665,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6643178,
+        "quantity_shares_pct": 4.369513494512165,
         "change": -109036,
+        "change_shares_pct": -0.07171782441891944,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5428,6 +5695,7 @@
       "lending_status": "unavailable",
       "name": "롯데쇼핑",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.465455257260714,
       "short_value_ratio_pct_vs_mean_5_pct": -36.4943972564625,
       "short_value_ratio_pct_mean_20": 10.05414001547279,
@@ -5460,7 +5728,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 854509,
+        "quantity_shares_pct": 3.0206666924719734,
         "change": -8637,
+        "change_shares_pct": -0.030531566341466778,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5488,6 +5758,7 @@
       "lending_status": "unavailable",
       "name": "기업은행",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.377373004461191,
       "short_value_ratio_pct_vs_mean_5_pct": 61.38496050857472,
       "short_value_ratio_pct_mean_20": 15.709341684649598,
@@ -5520,7 +5791,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 15464429,
+        "quantity_shares_pct": 1.9392936197809754,
         "change": 446734,
+        "change_shares_pct": 0.05602200999074937,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5548,6 +5821,7 @@
       "lending_status": "unavailable",
       "name": "동서",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.012838075770961,
       "short_value_ratio_pct_vs_mean_5_pct": -11.480876847214077,
       "short_value_ratio_pct_mean_20": 14.605100907521315,
@@ -5580,7 +5854,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2726944,
+        "quantity_shares_pct": 2.735149448345035,
         "change": -712,
+        "change_shares_pct": -0.0007141424272818456,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5608,6 +5884,7 @@
       "lending_status": "unavailable",
       "name": "삼성E&A",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.769422290213408,
       "short_value_ratio_pct_vs_mean_5_pct": -57.506177474482605,
       "short_value_ratio_pct_mean_20": 4.818475811536646,
@@ -5640,7 +5917,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6810794,
+        "quantity_shares_pct": 3.474894897959184,
         "change": 80766,
+        "change_shares_pct": 0.04120714285714286,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5668,6 +5947,7 @@
       "lending_status": "unavailable",
       "name": "삼성물산",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.8456318678603916,
       "short_value_ratio_pct_vs_mean_5_pct": -13.092344911919056,
       "short_value_ratio_pct_mean_20": 5.577357451709187,
@@ -5700,7 +5980,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2294516,
+        "quantity_shares_pct": 1.4149042526570093,
         "change": 102644,
+        "change_shares_pct": 0.0632950182564541,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5728,6 +6010,7 @@
       "lending_status": "unavailable",
       "name": "팬오션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.907543144746267,
       "short_value_ratio_pct_vs_mean_5_pct": 47.309138955545535,
       "short_value_ratio_pct_mean_20": 7.848218051919003,
@@ -5760,7 +6043,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 18745404,
+        "quantity_shares_pct": 3.5066354476272488,
         "change": 101799,
+        "change_shares_pct": 0.01904317356579812,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5788,6 +6073,7 @@
       "lending_status": "unavailable",
       "name": "삼성카드",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.241415215390504,
       "short_value_ratio_pct_vs_mean_5_pct": 120.83250320270031,
       "short_value_ratio_pct_mean_20": 13.258953331692666,
@@ -5820,7 +6106,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1799817,
+        "quantity_shares_pct": 1.5534560916865674,
         "change": 25727,
+        "change_shares_pct": 0.022205460261137833,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5848,6 +6136,7 @@
       "lending_status": "unavailable",
       "name": "제일기획",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.5049512521951085,
       "short_value_ratio_pct_vs_mean_5_pct": 73.8100900805882,
       "short_value_ratio_pct_mean_20": 8.302351326384173,
@@ -5882,7 +6171,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5619206,
+        "quantity_shares_pct": 5.548259024785314,
         "change": 75843,
+        "change_shares_pct": 0.07488542139526343,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5910,6 +6201,7 @@
       "lending_status": "unavailable",
       "name": "KT",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.18401364051979,
       "short_value_ratio_pct_vs_mean_5_pct": 83.17769708033777,
       "short_value_ratio_pct_mean_20": 9.461499776352785,
@@ -5944,7 +6236,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6851267,
+        "quantity_shares_pct": 2.7185228128285868,
         "change": 132220,
+        "change_shares_pct": 0.05246373938020452,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -5972,6 +6266,7 @@
       "lending_status": "unavailable",
       "name": "LG유플러스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 0.6919062947923512,
       "short_value_ratio_pct_vs_mean_5_pct": 7.058585360734227,
       "short_value_ratio_pct_mean_20": 2.366882139960918,
@@ -6006,7 +6301,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 8003037,
+        "quantity_shares_pct": 1.885606522996947,
         "change": -31651,
+        "change_shares_pct": -0.007457335516426622,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6034,6 +6331,7 @@
       "lending_status": "unavailable",
       "name": "삼성생명",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.445280431179565,
       "short_value_ratio_pct_vs_mean_5_pct": -8.887959481021895,
       "short_value_ratio_pct_mean_20": 4.897737286723916,
@@ -6066,7 +6364,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2147684,
+        "quantity_shares_pct": 1.073842,
         "change": 2649,
+        "change_shares_pct": 0.0013245,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6094,6 +6394,7 @@
       "lending_status": "unavailable",
       "name": "KT&G",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.091258966035294,
       "short_value_ratio_pct_vs_mean_5_pct": 14.86949201496499,
       "short_value_ratio_pct_mean_20": 8.618402190414614,
@@ -6126,7 +6427,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1622592,
+        "quantity_shares_pct": 1.5630333036972692,
         "change": 49287,
+        "change_shares_pct": 0.047477876409674956,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6154,6 +6457,7 @@
       "lending_status": "unavailable",
       "name": "두산에너빌리티",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.606914058952691,
       "short_value_ratio_pct_vs_mean_5_pct": 39.50355618638301,
       "short_value_ratio_pct_mean_20": 10.951480937002513,
@@ -6186,7 +6490,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 32150314,
+        "quantity_shares_pct": 5.019085875058678,
         "change": 850897,
+        "change_shares_pct": 0.13283618672681716,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6214,6 +6520,7 @@
       "lending_status": "unavailable",
       "name": "LG디스플레이",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.278320931702833,
       "short_value_ratio_pct_vs_mean_5_pct": 34.55837052827383,
       "short_value_ratio_pct_mean_20": 13.914339555289539,
@@ -6246,7 +6553,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 27215592,
+        "quantity_shares_pct": 5.4431184,
         "change": 1449292,
+        "change_shares_pct": 0.2898584,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6274,6 +6583,7 @@
       "lending_status": "unavailable",
       "name": "파라다이스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.010681796525402,
       "short_value_ratio_pct_vs_mean_5_pct": -70.81651189095584,
       "short_value_ratio_pct_mean_20": 13.738407295650006,
@@ -6306,7 +6616,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5533589,
+        "quantity_shares_pct": 5.973902535590705,
         "change": -16328,
+        "change_shares_pct": -0.017627236247781508,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6334,6 +6646,7 @@
       "lending_status": "unavailable",
       "name": "SK",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.61122081152318,
       "short_value_ratio_pct_vs_mean_5_pct": 58.57356905528701,
       "short_value_ratio_pct_mean_20": 6.057584374578468,
@@ -6366,7 +6679,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 774467,
+        "quantity_shares_pct": 1.068190519738278,
         "change": -20759,
+        "change_shares_pct": -0.028632035966990085,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6394,6 +6709,7 @@
       "lending_status": "unavailable",
       "name": "강원랜드",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.011852312450603,
       "short_value_ratio_pct_vs_mean_5_pct": -3.7717182590210285,
       "short_value_ratio_pct_mean_20": 13.35724071610997,
@@ -6428,7 +6744,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 7042725,
+        "quantity_shares_pct": 3.2919082642136486,
         "change": -51436,
+        "change_shares_pct": -0.024042198648689703,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6456,6 +6774,7 @@
       "lending_status": "unavailable",
       "name": "NAVER",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.675995322727198,
       "short_value_ratio_pct_vs_mean_5_pct": 90.73158419367442,
       "short_value_ratio_pct_mean_20": 6.795109250845921,
@@ -6490,7 +6809,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6114551,
+        "quantity_shares_pct": 4.019851120866754,
         "change": -35116,
+        "change_shares_pct": -0.023086092823554324,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6518,6 +6839,7 @@
       "lending_status": "unavailable",
       "name": "카카오",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.957461860970094,
       "short_value_ratio_pct_vs_mean_5_pct": 102.23022980160502,
       "short_value_ratio_pct_mean_20": 6.227904257315327,
@@ -6552,7 +6874,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 10051910,
+        "quantity_shares_pct": 2.2690515638458293,
         "change": -183626,
+        "change_shares_pct": -0.041450516614529406,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6580,6 +6904,7 @@
       "lending_status": "unavailable",
       "name": "한국가스공사",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 0.915901549721631,
       "short_value_ratio_pct_vs_mean_5_pct": -18.81504324254024,
       "short_value_ratio_pct_mean_20": 0.9181113388806373,
@@ -6612,7 +6937,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 937410,
+        "quantity_shares_pct": 1.0154691105261449,
         "change": 1863,
+        "change_shares_pct": 0.0020181339572974554,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6640,6 +6967,7 @@
       "lending_status": "unavailable",
       "name": "NC",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.0112294699579,
       "short_value_ratio_pct_vs_mean_5_pct": 121.82452568897006,
       "short_value_ratio_pct_mean_20": 12.26339747767205,
@@ -6674,7 +7002,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 569336,
+        "quantity_shares_pct": 2.642663472957835,
         "change": 15895,
+        "change_shares_pct": 0.07377916713972907,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6702,6 +7032,7 @@
       "lending_status": "unavailable",
       "name": "키움증권",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.294922621030802,
       "short_value_ratio_pct_vs_mean_5_pct": 85.93133731941992,
       "short_value_ratio_pct_mean_20": 11.522665732454794,
@@ -6734,7 +7065,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 657405,
+        "quantity_shares_pct": 2.5064704878498487,
         "change": -1377,
+        "change_shares_pct": -0.005250051127948893,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6762,6 +7095,7 @@
       "lending_status": "unavailable",
       "name": "한화오션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.255312602914705,
       "short_value_ratio_pct_vs_mean_5_pct": 7.249208784710049,
       "short_value_ratio_pct_mean_20": 10.0087810290475,
@@ -6794,7 +7128,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 11412063,
+        "quantity_shares_pct": 3.724400833470093,
         "change": 117881,
+        "change_shares_pct": 0.038471229492011046,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6822,6 +7158,7 @@
       "lending_status": "unavailable",
       "name": "한미반도체",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 20.286515757737444,
       "short_value_ratio_pct_vs_mean_5_pct": 46.55139850675869,
       "short_value_ratio_pct_mean_20": 21.710917508333477,
@@ -6854,7 +7191,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 21906112,
+        "quantity_shares_pct": 22.98353411210737,
         "change": -93684,
+        "change_shares_pct": -0.09829171921328014,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6882,6 +7221,7 @@
       "lending_status": "unavailable",
       "name": "대우건설",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.805214807058262,
       "short_value_ratio_pct_vs_mean_5_pct": 91.27187471098725,
       "short_value_ratio_pct_mean_20": 9.444044350584159,
@@ -6914,7 +7254,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 36765636,
+        "quantity_shares_pct": 8.947898213644418,
         "change": -938819,
+        "change_shares_pct": -0.22848664587321266,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -6942,6 +7284,7 @@
       "lending_status": "unavailable",
       "name": "포스코인터내셔널",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.773496645246427,
       "short_value_ratio_pct_vs_mean_5_pct": 155.7138945083881,
       "short_value_ratio_pct_mean_20": 5.738351393386484,
@@ -6974,7 +7317,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2799470,
+        "quantity_shares_pct": 1.591306067750586,
         "change": -7873,
+        "change_shares_pct": -0.004475258770910338,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7002,6 +7347,7 @@
       "lending_status": "unavailable",
       "name": "한국항공우주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 18.062177752648182,
       "short_value_ratio_pct_vs_mean_5_pct": -6.417635138131246,
       "short_value_ratio_pct_mean_20": 17.056675255757025,
@@ -7034,7 +7380,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 10182634,
+        "quantity_shares_pct": 10.446394277874454,
         "change": -1649,
+        "change_shares_pct": -0.0016917139675466065,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7062,6 +7410,7 @@
       "lending_status": "unavailable",
       "name": "한전KPS",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 14.857108339275072,
       "short_value_ratio_pct_vs_mean_5_pct": 22.171451440596286,
       "short_value_ratio_pct_mean_20": 20.42573137645083,
@@ -7094,7 +7443,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2963315,
+        "quantity_shares_pct": 6.5851444444444445,
         "change": 30179,
+        "change_shares_pct": 0.06706444444444444,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7122,6 +7473,7 @@
       "lending_status": "unavailable",
       "name": "LG생활건강",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 17.698815215553484,
       "short_value_ratio_pct_vs_mean_5_pct": -14.809523576997051,
       "short_value_ratio_pct_mean_20": 16.721356332242046,
@@ -7154,7 +7506,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 900377,
+        "quantity_shares_pct": 6.012324244034749,
         "change": 3837,
+        "change_shares_pct": 0.025621809669017902,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7182,6 +7536,7 @@
       "lending_status": "unavailable",
       "name": "LG화학",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.612704217964352,
       "short_value_ratio_pct_vs_mean_5_pct": 0.28943626901509845,
       "short_value_ratio_pct_mean_20": 8.86006842532516,
@@ -7214,7 +7569,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2216486,
+        "quantity_shares_pct": 3.1398392072023795,
         "change": -75136,
+        "change_shares_pct": -0.1064364758777443,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7242,6 +7599,7 @@
       "lending_status": "unavailable",
       "name": "한전기술",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.936509492839141,
       "short_value_ratio_pct_vs_mean_5_pct": 64.97780005632899,
       "short_value_ratio_pct_mean_20": 9.953421308483126,
@@ -7274,7 +7632,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3415451,
+        "quantity_shares_pct": 8.936292517006802,
         "change": -52684,
+        "change_shares_pct": -0.13784406070120356,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7302,6 +7662,7 @@
       "lending_status": "unavailable",
       "name": "신한지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.313912917373736,
       "short_value_ratio_pct_vs_mean_5_pct": -47.42751768710056,
       "short_value_ratio_pct_mean_20": 11.420575825501489,
@@ -7334,7 +7695,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 9038081,
+        "quantity_shares_pct": 1.9252479281408992,
         "change": 36654,
+        "change_shares_pct": 0.007807856286979119,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7362,6 +7725,7 @@
       "lending_status": "unavailable",
       "name": "산일전기",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.250610598848336,
       "short_value_ratio_pct_vs_mean_5_pct": 2.0996916228717737,
       "short_value_ratio_pct_mean_20": 8.052980903936971,
@@ -7394,7 +7758,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2266230,
+        "quantity_shares_pct": 7.39562410154408,
         "change": -33264,
+        "change_shares_pct": -0.1085538714577789,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7422,6 +7788,7 @@
       "lending_status": "unavailable",
       "name": "현대로템",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.907887254436432,
       "short_value_ratio_pct_vs_mean_5_pct": 25.109424706909934,
       "short_value_ratio_pct_mean_20": 8.429678860265058,
@@ -7454,7 +7821,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3243144,
+        "quantity_shares_pct": 2.9714823748480343,
         "change": 5218,
+        "change_shares_pct": 0.004780914764178539,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7482,6 +7851,7 @@
       "lending_status": "unavailable",
       "name": "LG씨엔에스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.366188602659474,
       "short_value_ratio_pct_vs_mean_5_pct": 44.07974012832568,
       "short_value_ratio_pct_mean_20": 7.778848469203308,
@@ -7514,7 +7884,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4055517,
+        "quantity_shares_pct": 4.185867077442438,
         "change": 361840,
+        "change_shares_pct": 0.37347005161161245,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7542,6 +7914,7 @@
       "lending_status": "unavailable",
       "name": "LG전자",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.472354408110988,
       "short_value_ratio_pct_vs_mean_5_pct": -34.469334865206264,
       "short_value_ratio_pct_mean_20": 6.602834546140791,
@@ -7574,7 +7947,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4413656,
+        "quantity_shares_pct": 2.709682173956761,
         "change": 99622,
+        "change_shares_pct": 0.061161077694754734,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7602,6 +7977,7 @@
       "lending_status": "unavailable",
       "name": "엘앤에프",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.385715891818972,
       "short_value_ratio_pct_vs_mean_5_pct": 101.90573417252025,
       "short_value_ratio_pct_mean_20": 11.665605579226103,
@@ -7634,7 +8010,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5933538,
+        "quantity_shares_pct": 14.583249001231415,
         "change": -36057,
+        "change_shares_pct": -0.0886196750130194,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7662,6 +8040,7 @@
       "lending_status": "unavailable",
       "name": "셀트리온",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.0353211141022065,
       "short_value_ratio_pct_vs_mean_5_pct": -52.497472979044915,
       "short_value_ratio_pct_mean_20": 4.7387292952008995,
@@ -7694,7 +8073,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 7622526,
+        "quantity_shares_pct": 3.2845397956608258,
         "change": 210525,
+        "change_shares_pct": 0.09071503862125171,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7722,6 +8103,7 @@
       "lending_status": "unavailable",
       "name": "TKG휴켐스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 23.379622684559365,
       "short_value_ratio_pct_vs_mean_5_pct": 68.13098047927056,
       "short_value_ratio_pct_mean_20": 17.137356639112358,
@@ -7754,7 +8136,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1113905,
+        "quantity_shares_pct": 2.7249106549374944,
         "change": -12955,
+        "change_shares_pct": -0.03169140773649031,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7782,6 +8166,7 @@
       "lending_status": "unavailable",
       "name": "대웅제약",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.361797797497804,
       "short_value_ratio_pct_vs_mean_5_pct": 18.02827264494408,
       "short_value_ratio_pct_mean_20": 15.538392540264681,
@@ -7814,7 +8199,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 366741,
+        "quantity_shares_pct": 3.165223545353135,
         "change": 230,
+        "change_shares_pct": 0.0019850559807363262,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7842,6 +8229,7 @@
       "lending_status": "unavailable",
       "name": "현대백화점",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.15551601636378,
       "short_value_ratio_pct_vs_mean_5_pct": -40.92112306174701,
       "short_value_ratio_pct_mean_20": 11.539997137133309,
@@ -7874,7 +8262,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 646161,
+        "quantity_shares_pct": 2.9963535209417964,
         "change": 601,
+        "change_shares_pct": 0.002786934627880698,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7902,6 +8292,7 @@
       "lending_status": "unavailable",
       "name": "한국금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.781168129498152,
       "short_value_ratio_pct_vs_mean_5_pct": 90.17712029535656,
       "short_value_ratio_pct_mean_20": 7.618804969926049,
@@ -7934,7 +8325,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1426168,
+        "quantity_shares_pct": 2.559250986505543,
         "change": -6787,
+        "change_shares_pct": -0.012179235858197015,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -7962,6 +8355,7 @@
       "lending_status": "unavailable",
       "name": "지역난방공사",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.821639524181842,
       "short_value_ratio_pct_vs_mean_5_pct": 104.70643150412556,
       "short_value_ratio_pct_mean_20": 6.151079032059587,
@@ -7994,7 +8388,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 183683,
+        "quantity_shares_pct": 1.5863810444379807,
         "change": 8292,
+        "change_shares_pct": 0.07161398507471967,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8022,6 +8418,7 @@
       "lending_status": "unavailable",
       "name": "HD현대마린엔진",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.923398130788605,
       "short_value_ratio_pct_vs_mean_5_pct": 44.89236436072463,
       "short_value_ratio_pct_mean_20": 5.881475269054572,
@@ -8054,7 +8451,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1469336,
+        "quantity_shares_pct": 4.331577956690883,
         "change": -15651,
+        "change_shares_pct": -0.04613888627255373,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8082,6 +8481,7 @@
       "lending_status": "unavailable",
       "name": "금호타이어",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.052873949366735,
       "short_value_ratio_pct_vs_mean_5_pct": -18.01212035535484,
       "short_value_ratio_pct_mean_20": 12.822382435025435,
@@ -8114,7 +8514,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 13972639,
+        "quantity_shares_pct": 4.864103961575447,
         "change": -246308,
+        "change_shares_pct": -0.08574383969754928,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8142,6 +8544,7 @@
       "lending_status": "unavailable",
       "name": "GS",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.650761822594369,
       "short_value_ratio_pct_vs_mean_5_pct": 65.31701883528171,
       "short_value_ratio_pct_mean_20": 7.601217293794849,
@@ -8174,7 +8577,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1574743,
+        "quantity_shares_pct": 1.6951769297316301,
         "change": 7252,
+        "change_shares_pct": 0.007806621838873888,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8202,6 +8607,7 @@
       "lending_status": "unavailable",
       "name": "LIG디펜스앤에어로스페이스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.080899063228072,
       "short_value_ratio_pct_vs_mean_5_pct": 19.029110572160832,
       "short_value_ratio_pct_mean_20": 5.63419216669597,
@@ -8234,7 +8640,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 726247,
+        "quantity_shares_pct": 3.3011227272727277,
         "change": -3699,
+        "change_shares_pct": -0.016813636363636364,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8262,6 +8670,7 @@
       "lending_status": "unavailable",
       "name": "미스토홀딩스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.2591665471767115,
       "short_value_ratio_pct_vs_mean_5_pct": 58.55311599777494,
       "short_value_ratio_pct_mean_20": 8.63859488836524,
@@ -8294,7 +8703,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2141389,
+        "quantity_shares_pct": 4.033367462871884,
         "change": -1063,
+        "change_shares_pct": -0.0020021909204879697,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8322,6 +8733,7 @@
       "lending_status": "unavailable",
       "name": "한화엔진",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.74552133580821,
       "short_value_ratio_pct_vs_mean_5_pct": 14.670865236085845,
       "short_value_ratio_pct_mean_20": 4.006270041722734,
@@ -8354,7 +8766,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2864253,
+        "quantity_shares_pct": 3.4324159358267776,
         "change": -62685,
+        "change_shares_pct": -0.07511940912248379,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8382,6 +8796,7 @@
       "lending_status": "unavailable",
       "name": "현대글로비스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.066376574418012,
       "short_value_ratio_pct_vs_mean_5_pct": -39.42693723870844,
       "short_value_ratio_pct_mean_20": 12.811364527420611,
@@ -8414,7 +8829,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1425809,
+        "quantity_shares_pct": 1.9010786666666668,
         "change": -21674,
+        "change_shares_pct": -0.028898666666666666,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8442,6 +8859,7 @@
       "lending_status": "unavailable",
       "name": "하나금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.939393798263513,
       "short_value_ratio_pct_vs_mean_5_pct": 56.359441800959445,
       "short_value_ratio_pct_mean_20": 10.224825435974674,
@@ -8474,7 +8892,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5752523,
+        "quantity_shares_pct": 2.1229379306359144,
         "change": 21253,
+        "change_shares_pct": 0.007843306291831444,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8502,6 +8922,7 @@
       "lending_status": "unavailable",
       "name": "한화생명",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.7035362038049255,
       "short_value_ratio_pct_vs_mean_5_pct": 7.370464411133852,
       "short_value_ratio_pct_mean_20": 9.00761128577389,
@@ -8534,7 +8955,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 15643410,
+        "quantity_shares_pct": 1.801136402887638,
         "change": 2250889,
+        "change_shares_pct": 0.2591607658917942,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8562,6 +8985,7 @@
       "lending_status": "unavailable",
       "name": "아모레퍼시픽",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.174736823202409,
       "short_value_ratio_pct_vs_mean_5_pct": -0.20219847322893258,
       "short_value_ratio_pct_mean_20": 11.634095406227882,
@@ -8594,7 +9018,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2916791,
+        "quantity_shares_pct": 4.986584749746545,
         "change": -7171,
+        "change_shares_pct": -0.012259637128759817,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8622,6 +9048,7 @@
       "lending_status": "unavailable",
       "name": "후성",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.20299829090734,
       "short_value_ratio_pct_vs_mean_5_pct": -72.95919453103728,
       "short_value_ratio_pct_mean_20": 8.041802228278586,
@@ -8654,7 +9081,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 11102217,
+        "quantity_shares_pct": 10.351203059092727,
         "change": 22621,
+        "change_shares_pct": 0.021090793343323824,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8682,6 +9111,7 @@
       "lending_status": "unavailable",
       "name": "SK이노베이션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.721849555126039,
       "short_value_ratio_pct_vs_mean_5_pct": 63.7774766071376,
       "short_value_ratio_pct_mean_20": 6.9952070644218125,
@@ -8714,7 +9144,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3810753,
+        "quantity_shares_pct": 2.254179327702067,
         "change": 2495,
+        "change_shares_pct": 0.0014758703654150916,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8742,6 +9174,7 @@
       "lending_status": "unavailable",
       "name": "CJ제일제당",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.370662473216274,
       "short_value_ratio_pct_vs_mean_5_pct": 145.5520105323898,
       "short_value_ratio_pct_mean_20": 12.670694692895541,
@@ -8774,7 +9207,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 620069,
+        "quantity_shares_pct": 4.118914167793595,
         "change": -5622,
+        "change_shares_pct": -0.03734509458033799,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8802,6 +9237,7 @@
       "lending_status": "unavailable",
       "name": "풍산",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.788369373246031,
       "short_value_ratio_pct_vs_mean_5_pct": 19.018793676101197,
       "short_value_ratio_pct_mean_20": 8.542343459083854,
@@ -8834,7 +9270,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1435193,
+        "quantity_shares_pct": 5.1212487972036245,
         "change": 5985,
+        "change_shares_pct": 0.02135648240429245,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8862,6 +9300,7 @@
       "lending_status": "unavailable",
       "name": "KB금융",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.096897920727404,
       "short_value_ratio_pct_vs_mean_5_pct": 36.43156120737598,
       "short_value_ratio_pct_mean_20": 5.3862559093393445,
@@ -8894,7 +9333,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4881727,
+        "quantity_shares_pct": 1.3763450303020628,
         "change": 55114,
+        "change_shares_pct": 0.015538738647218062,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8922,6 +9363,7 @@
       "lending_status": "unavailable",
       "name": "영원무역",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.7063212584235306,
       "short_value_ratio_pct_vs_mean_5_pct": 33.46077718084854,
       "short_value_ratio_pct_mean_20": 7.522015505997459,
@@ -8954,7 +9396,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 687205,
+        "quantity_shares_pct": 1.550851350715801,
         "change": 3612,
+        "change_shares_pct": 0.008151388710480096,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -8982,6 +9426,7 @@
       "lending_status": "unavailable",
       "name": "씨에스윈드",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.175354860861088,
       "short_value_ratio_pct_vs_mean_5_pct": -45.65041162933407,
       "short_value_ratio_pct_mean_20": 10.814113639481317,
@@ -9014,7 +9459,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4184935,
+        "quantity_shares_pct": 9.923632372392259,
         "change": 88641,
+        "change_shares_pct": 0.21019220062467447,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9042,6 +9489,7 @@
       "lending_status": "unavailable",
       "name": "코오롱인더",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.955575751237883,
       "short_value_ratio_pct_vs_mean_5_pct": 143.03440931114918,
       "short_value_ratio_pct_mean_20": 4.673691286317822,
@@ -9074,7 +9522,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1132065,
+        "quantity_shares_pct": 3.7803505987036945,
         "change": -9168,
+        "change_shares_pct": -0.03061507447798092,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9102,6 +9552,7 @@
       "lending_status": "unavailable",
       "name": "한미약품",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.970706509870293,
       "short_value_ratio_pct_vs_mean_5_pct": -45.93672480775077,
       "short_value_ratio_pct_mean_20": 9.434308935438427,
@@ -9134,7 +9585,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 786511,
+        "quantity_shares_pct": 6.139345504184649,
         "change": 57136,
+        "change_shares_pct": 0.44599203917948266,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9162,6 +9615,7 @@
       "lending_status": "unavailable",
       "name": "에스디바이오센서",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.68523041999586,
       "short_value_ratio_pct_vs_mean_5_pct": -25.084581670869383,
       "short_value_ratio_pct_mean_20": 9.379547152518025,
@@ -9194,7 +9648,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2844208,
+        "quantity_shares_pct": 2.3554692771131336,
         "change": -9723,
+        "change_shares_pct": -0.00805223379632256,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9222,6 +9678,7 @@
       "lending_status": "unavailable",
       "name": "메리츠금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.4529880447439,
       "short_value_ratio_pct_vs_mean_5_pct": 12.486863566484942,
       "short_value_ratio_pct_mean_20": 18.688529489008168,
@@ -9254,7 +9711,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4822472,
+        "quantity_shares_pct": 2.881715317822956,
         "change": -43460,
+        "change_shares_pct": -0.02596994813294627,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9282,6 +9741,7 @@
       "lending_status": "unavailable",
       "name": "BNK금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.9654147404320734,
       "short_value_ratio_pct_vs_mean_5_pct": 64.88271801936719,
       "short_value_ratio_pct_mean_20": 6.367595897172039,
@@ -9314,7 +9774,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 8573119,
+        "quantity_shares_pct": 2.794005330815172,
         "change": -168377,
+        "change_shares_pct": -0.05487457197160872,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9342,6 +9804,7 @@
       "lending_status": "unavailable",
       "name": "iM금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.186426091321408,
       "short_value_ratio_pct_vs_mean_5_pct": 114.6278426611857,
       "short_value_ratio_pct_mean_20": 7.526419103694664,
@@ -9374,7 +9837,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 8799508,
+        "quantity_shares_pct": 5.55652856371972,
         "change": -1701,
+        "change_shares_pct": -0.0010741117670314345,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9402,6 +9867,7 @@
       "lending_status": "unavailable",
       "name": "이마트",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 4.694228842120264,
       "short_value_ratio_pct_vs_mean_5_pct": 37.239131489125896,
       "short_value_ratio_pct_mean_20": 8.352071406177112,
@@ -9434,7 +9900,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 654276,
+        "quantity_shares_pct": 2.4215671056292782,
         "change": -794,
+        "change_shares_pct": -0.002938705197607198,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9462,6 +9930,7 @@
       "lending_status": "unavailable",
       "name": "한국타이어앤테크놀로지",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 25.521060995054235,
       "short_value_ratio_pct_vs_mean_5_pct": -38.09264006280695,
       "short_value_ratio_pct_mean_20": 22.67526032068616,
@@ -9494,7 +9963,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4365237,
+        "quantity_shares_pct": 3.523902779824082,
         "change": 1010,
+        "change_shares_pct": 0.0008153375882277007,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9522,6 +9993,7 @@
       "lending_status": "unavailable",
       "name": "한국콜마",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.433822759444519,
       "short_value_ratio_pct_vs_mean_5_pct": 37.046566631226284,
       "short_value_ratio_pct_mean_20": 10.039971333097121,
@@ -9554,7 +10026,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1916516,
+        "quantity_shares_pct": 8.119083873354873,
         "change": -4409,
+        "change_shares_pct": -0.018678185205665714,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9582,6 +10056,7 @@
       "lending_status": "unavailable",
       "name": "JB금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.104888910379582,
       "short_value_ratio_pct_vs_mean_5_pct": 49.748704585374895,
       "short_value_ratio_pct_mean_20": 12.838153300793213,
@@ -9614,7 +10089,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 6249456,
+        "quantity_shares_pct": 3.35052267127733,
         "change": 143732,
+        "change_shares_pct": 0.07705907915633509,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9642,6 +10119,7 @@
       "lending_status": "unavailable",
       "name": "한진칼",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.111828965581591,
       "short_value_ratio_pct_vs_mean_5_pct": -35.59199613868597,
       "short_value_ratio_pct_mean_20": 9.642728159729934,
@@ -9674,7 +10152,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3002789,
+        "quantity_shares_pct": 4.497733188391199,
         "change": -107893,
+        "change_shares_pct": -0.1616077343080355,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9702,6 +10182,7 @@
       "lending_status": "unavailable",
       "name": "종근당",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.53663167974676,
       "short_value_ratio_pct_vs_mean_5_pct": 15.448807156336144,
       "short_value_ratio_pct_mean_20": 13.532974517251514,
@@ -9734,7 +10215,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 609831,
+        "quantity_shares_pct": 4.41817517920303,
         "change": -5097,
+        "change_shares_pct": -0.03692734362208193,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9762,6 +10245,7 @@
       "lending_status": "unavailable",
       "name": "더블유게임즈",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.44882930763133,
       "short_value_ratio_pct_vs_mean_5_pct": 8.350927388151263,
       "short_value_ratio_pct_mean_20": 15.318837373613363,
@@ -9794,7 +10278,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 570162,
+        "quantity_shares_pct": 2.6928134776976544,
         "change": 531,
+        "change_shares_pct": 0.002507855586057041,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9822,6 +10308,7 @@
       "lending_status": "unavailable",
       "name": "코스맥스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.414641775917964,
       "short_value_ratio_pct_vs_mean_5_pct": 46.35295335054121,
       "short_value_ratio_pct_mean_20": 5.3568776901817,
@@ -9854,7 +10341,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 700101,
+        "quantity_shares_pct": 6.1685576001569755,
         "change": 3041,
+        "change_shares_pct": 0.026794110652716346,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9882,6 +10371,7 @@
       "lending_status": "unavailable",
       "name": "HL만도",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.557916982840115,
       "short_value_ratio_pct_vs_mean_5_pct": 4.566365470809728,
       "short_value_ratio_pct_mean_20": 10.318197717391708,
@@ -9914,7 +10404,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2921694,
+        "quantity_shares_pct": 6.222046837625476,
         "change": 30869,
+        "change_shares_pct": 0.06573869947731037,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -9942,6 +10434,7 @@
       "lending_status": "unavailable",
       "name": "삼성바이오로직스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 18.71866513939504,
       "short_value_ratio_pct_vs_mean_5_pct": 19.065665199763828,
       "short_value_ratio_pct_mean_20": 15.216287395477849,
@@ -9974,7 +10467,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 890338,
+        "quantity_shares_pct": 1.923352147161548,
         "change": 35268,
+        "change_shares_pct": 0.07618767650722924,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10002,6 +10497,7 @@
       "lending_status": "unavailable",
       "name": "두산밥캣",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.419353458139054,
       "short_value_ratio_pct_vs_mean_5_pct": -0.9473618799717798,
       "short_value_ratio_pct_mean_20": 11.666282840667725,
@@ -10034,7 +10530,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2638228,
+        "quantity_shares_pct": 2.752280724229604,
         "change": 583507,
+        "change_shares_pct": 0.6087324782213832,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10062,6 +10560,7 @@
       "lending_status": "unavailable",
       "name": "넷마블",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 15.802057479274136,
       "short_value_ratio_pct_vs_mean_5_pct": 54.828256850051275,
       "short_value_ratio_pct_mean_20": 13.78803929950486,
@@ -10096,7 +10595,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2245985,
+        "quantity_shares_pct": 2.7008508157772346,
         "change": 29237,
+        "change_shares_pct": 0.035158193532405166,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10124,6 +10625,7 @@
       "lending_status": "unavailable",
       "name": "크래프톤",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.976168932458708,
       "short_value_ratio_pct_vs_mean_5_pct": 60.14572652045149,
       "short_value_ratio_pct_mean_20": 12.180649208830564,
@@ -10158,7 +10660,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1212188,
+        "quantity_shares_pct": 2.6651660210174675,
         "change": -10181,
+        "change_shares_pct": -0.022384362211124706,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10186,6 +10690,7 @@
       "lending_status": "unavailable",
       "name": "HD현대",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.715781310271852,
       "short_value_ratio_pct_vs_mean_5_pct": 60.38270642001342,
       "short_value_ratio_pct_mean_20": 5.367323894247305,
@@ -10218,7 +10723,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 892630,
+        "quantity_shares_pct": 1.1300103040664888,
         "change": 8850,
+        "change_shares_pct": 0.01120351230743805,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10246,6 +10753,7 @@
       "lending_status": "unavailable",
       "name": "HD현대일렉트릭",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.538035701501553,
       "short_value_ratio_pct_vs_mean_5_pct": 3.8677674739018073,
       "short_value_ratio_pct_mean_20": 7.551592179228086,
@@ -10278,7 +10786,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 871754,
+        "quantity_shares_pct": 2.4183725003387924,
         "change": 67060,
+        "change_shares_pct": 0.18603420216336194,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10306,6 +10816,7 @@
       "lending_status": "unavailable",
       "name": "HD건설기계",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.802380701478663,
       "short_value_ratio_pct_vs_mean_5_pct": 39.74845721589725,
       "short_value_ratio_pct_mean_20": 5.641471811659832,
@@ -10338,7 +10849,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1636900,
+        "quantity_shares_pct": 3.4462949182087623,
         "change": 7995,
+        "change_shares_pct": 0.016832505266710887,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10366,6 +10879,7 @@
       "lending_status": "unavailable",
       "name": "미원에스씨",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.604798527360964,
       "short_value_ratio_pct_vs_mean_5_pct": 113.52964359367209,
       "short_value_ratio_pct_mean_20": 6.6099620941177095,
@@ -10398,7 +10912,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 30853,
+        "quantity_shares_pct": 0.61706,
         "change": 30,
+        "change_shares_pct": 0.0006000000000000001,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10426,6 +10942,7 @@
       "lending_status": "unavailable",
       "name": "오리온",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.035038171936348,
       "short_value_ratio_pct_vs_mean_5_pct": 15.534194496635905,
       "short_value_ratio_pct_mean_20": 10.666033721075824,
@@ -10458,7 +10975,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1339357,
+        "quantity_shares_pct": 3.3883077821662533,
         "change": 8026,
+        "change_shares_pct": 0.020304189442894124,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10486,6 +11005,7 @@
       "lending_status": "unavailable",
       "name": "한화시스템",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.959394822237364,
       "short_value_ratio_pct_vs_mean_5_pct": 52.638963037518295,
       "short_value_ratio_pct_mean_20": 17.23564713836986,
@@ -10518,7 +11038,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 12681548,
+        "quantity_shares_pct": 6.712676802061857,
         "change": 51384,
+        "change_shares_pct": 0.027198902278897378,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10546,6 +11068,7 @@
       "lending_status": "unavailable",
       "name": "에이피알",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 3.472135052359215,
       "short_value_ratio_pct_vs_mean_5_pct": -15.607057766828248,
       "short_value_ratio_pct_mean_20": 7.3361782285500565,
@@ -10578,7 +11101,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4050505,
+        "quantity_shares_pct": 10.819189674277485,
         "change": 185293,
+        "change_shares_pct": 0.49493090671802603,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10606,6 +11131,7 @@
       "lending_status": "unavailable",
       "name": "롯데웰푸드",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 11.584581861050612,
       "short_value_ratio_pct_vs_mean_5_pct": 2.0928179549970736,
       "short_value_ratio_pct_mean_20": 12.874461303872716,
@@ -10638,7 +11164,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 223426,
+        "quantity_shares_pct": 2.427336669790476,
         "change": -2205,
+        "change_shares_pct": -0.023955481263988967,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10666,6 +11194,7 @@
       "lending_status": "unavailable",
       "name": "BGF리테일",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 21.02258687169826,
       "short_value_ratio_pct_vs_mean_5_pct": -3.2853899863071945,
       "short_value_ratio_pct_mean_20": 20.626249500461057,
@@ -10698,7 +11227,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 810805,
+        "quantity_shares_pct": 4.691098181163448,
         "change": -573,
+        "change_shares_pct": -0.003315222843725255,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10726,6 +11257,7 @@
       "lending_status": "unavailable",
       "name": "SK케미칼",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.08630182100607,
       "short_value_ratio_pct_vs_mean_5_pct": -62.05679522277726,
       "short_value_ratio_pct_mean_20": 7.917285834358711,
@@ -10758,7 +11290,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 602818,
+        "quantity_shares_pct": 3.484745674922708,
         "change": -9479,
+        "change_shares_pct": -0.05479581607150476,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10786,6 +11320,7 @@
       "lending_status": "unavailable",
       "name": "효성티앤씨",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.710342727935597,
       "short_value_ratio_pct_vs_mean_5_pct": 28.448329216713176,
       "short_value_ratio_pct_mean_20": 15.722859186044044,
@@ -10818,7 +11353,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 209831,
+        "quantity_shares_pct": 4.848577136675015,
         "change": 1012,
+        "change_shares_pct": 0.023384342934624124,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10846,6 +11383,7 @@
       "lending_status": "unavailable",
       "name": "효성중공업",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.554546779687122,
       "short_value_ratio_pct_vs_mean_5_pct": 35.24013961586755,
       "short_value_ratio_pct_mean_20": 8.301467388537672,
@@ -10878,7 +11416,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 217551,
+        "quantity_shares_pct": 2.3330996848319083,
         "change": 4253,
+        "change_shares_pct": 0.045610789927833496,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10906,6 +11446,7 @@
       "lending_status": "unavailable",
       "name": "HS효성첨단소재",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.649290898079958,
       "short_value_ratio_pct_vs_mean_5_pct": -22.198238384220133,
       "short_value_ratio_pct_mean_20": 8.788831895826828,
@@ -10938,7 +11479,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 223815,
+        "quantity_shares_pct": 4.9959285241703695,
         "change": 77,
+        "change_shares_pct": 0.0017187699500083484,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -10966,6 +11509,7 @@
       "lending_status": "unavailable",
       "name": "한일시멘트",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 14.059638039049531,
       "short_value_ratio_pct_vs_mean_5_pct": -39.56602005112104,
       "short_value_ratio_pct_mean_20": 15.340067160569086,
@@ -10998,7 +11542,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2172581,
+        "quantity_shares_pct": 2.9540754993299427,
         "change": -55204,
+        "change_shares_pct": -0.07506131364722887,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11026,6 +11572,7 @@
       "lending_status": "unavailable",
       "name": "SK바이오사이언스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 6.4825590612033555,
       "short_value_ratio_pct_vs_mean_5_pct": 34.66806380271103,
       "short_value_ratio_pct_mean_20": 11.584435628405675,
@@ -11058,7 +11605,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2887915,
+        "quantity_shares_pct": 3.6809098661267976,
         "change": -18655,
+        "change_shares_pct": -0.023777491218611144,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11086,6 +11635,7 @@
       "lending_status": "unavailable",
       "name": "현대오토에버",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.179382418804839,
       "short_value_ratio_pct_vs_mean_5_pct": 134.03579057962793,
       "short_value_ratio_pct_mean_20": 12.180388435136255,
@@ -11118,7 +11668,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1047869,
+        "quantity_shares_pct": 3.820995069206215,
         "change": -9634,
+        "change_shares_pct": -0.03512983636001511,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11146,6 +11698,7 @@
       "lending_status": "unavailable",
       "name": "우리금융지주",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.924845212232811,
       "short_value_ratio_pct_vs_mean_5_pct": 11.977028869420494,
       "short_value_ratio_pct_mean_20": 4.797116206552166,
@@ -11178,7 +11731,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 15496309,
+        "quantity_shares_pct": 2.1032290631220083,
         "change": -161676,
+        "change_shares_pct": -0.021943397102452834,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11206,6 +11761,7 @@
       "lending_status": "unavailable",
       "name": "카카오뱅크",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 12.732893876472819,
       "short_value_ratio_pct_vs_mean_5_pct": 15.99886282308907,
       "short_value_ratio_pct_mean_20": 16.953244506480754,
@@ -11238,7 +11794,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 18860842,
+        "quantity_shares_pct": 3.953056825356655,
         "change": 165787,
+        "change_shares_pct": 0.034747411165705316,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11266,6 +11824,7 @@
       "lending_status": "unavailable",
       "name": "SK바이오팜",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 2.8683403784403207,
       "short_value_ratio_pct_vs_mean_5_pct": 51.98265925406659,
       "short_value_ratio_pct_mean_20": 7.167180633012746,
@@ -11298,7 +11857,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2225464,
+        "quantity_shares_pct": 2.8417464477594785,
         "change": 201702,
+        "change_shares_pct": 0.2575579483676134,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11326,6 +11887,7 @@
       "lending_status": "unavailable",
       "name": "HD현대중공업",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.494671889155402,
       "short_value_ratio_pct_vs_mean_5_pct": 8.472871145196706,
       "short_value_ratio_pct_mean_20": 6.322690171214124,
@@ -11358,7 +11920,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 5053820,
+        "quantity_shares_pct": 4.81493999331658,
         "change": -56311,
+        "change_shares_pct": -0.05364933574279454,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11386,6 +11950,7 @@
       "lending_status": "unavailable",
       "name": "하이브",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.421309154511304,
       "short_value_ratio_pct_vs_mean_5_pct": 34.284015028725236,
       "short_value_ratio_pct_mean_20": 11.305230287510177,
@@ -11420,7 +11985,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2981582,
+        "quantity_shares_pct": 6.916726618488074,
         "change": 18672,
+        "change_shares_pct": 0.04331563559895697,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11448,6 +12015,7 @@
       "lending_status": "unavailable",
       "name": "SK아이이테크놀로지",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.808969351248205,
       "short_value_ratio_pct_vs_mean_5_pct": 8.56238413154287,
       "short_value_ratio_pct_mean_20": 9.811687960147493,
@@ -11480,7 +12048,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3125718,
+        "quantity_shares_pct": 3.8217738494212417,
         "change": 7084,
+        "change_shares_pct": 0.008661512634633089,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11508,6 +12078,7 @@
       "lending_status": "unavailable",
       "name": "LG에너지솔루션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 25.06505718667008,
       "short_value_ratio_pct_vs_mean_5_pct": 32.51187433094455,
       "short_value_ratio_pct_mean_20": 23.60467462844579,
@@ -11540,7 +12111,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 10807495,
+        "quantity_shares_pct": 4.618587606837607,
         "change": 11929,
+        "change_shares_pct": 0.005097863247863248,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11568,6 +12141,7 @@
       "lending_status": "unavailable",
       "name": "DL이앤씨",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 8.602203513465653,
       "short_value_ratio_pct_vs_mean_5_pct": -13.373908152624892,
       "short_value_ratio_pct_mean_20": 9.23098161172136,
@@ -11600,7 +12174,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2717238,
+        "quantity_shares_pct": 7.022443982565292,
         "change": 59420,
+        "change_shares_pct": 0.15356535623454026,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11628,6 +12204,7 @@
       "lending_status": "unavailable",
       "name": "카카오페이",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.446431467627766,
       "short_value_ratio_pct_vs_mean_5_pct": 27.24724383597696,
       "short_value_ratio_pct_mean_20": 9.837543852512223,
@@ -11660,7 +12237,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3357740,
+        "quantity_shares_pct": 2.4815621104383014,
         "change": 90773,
+        "change_shares_pct": 0.06708644429015229,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:31+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11688,6 +12267,7 @@
       "lending_status": "unavailable",
       "name": "F&F",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.850680920796762,
       "short_value_ratio_pct_vs_mean_5_pct": 22.93548844353876,
       "short_value_ratio_pct_mean_20": 13.702540537919086,
@@ -11720,7 +12300,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 846338,
+        "quantity_shares_pct": 2.2093516667612967,
         "change": 721,
+        "change_shares_pct": 0.0018821588440255488,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:32+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11748,6 +12330,7 @@
       "lending_status": "unavailable",
       "name": "SK스퀘어",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 5.1370039010589945,
       "short_value_ratio_pct_vs_mean_5_pct": 15.179517019963498,
       "short_value_ratio_pct_mean_20": 6.06108828181001,
@@ -11780,7 +12363,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 2852814,
+        "quantity_shares_pct": 2.162467817265514,
         "change": 32201,
+        "change_shares_pct": 0.024408750862750534,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11808,6 +12393,7 @@
       "lending_status": "unavailable",
       "name": "HD현대마린솔루션",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.09647889371053,
       "short_value_ratio_pct_vs_mean_5_pct": -42.7672758987659,
       "short_value_ratio_pct_mean_20": 11.0220010942631,
@@ -11840,7 +12426,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1783455,
+        "quantity_shares_pct": 3.9779553039181006,
         "change": 24240,
+        "change_shares_pct": 0.05406676174446495,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11868,6 +12456,7 @@
       "lending_status": "unavailable",
       "name": "에코프로머티",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 13.52235707607717,
       "short_value_ratio_pct_vs_mean_5_pct": -26.629180164835304,
       "short_value_ratio_pct_mean_20": 14.208335669006505,
@@ -11900,7 +12489,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4537727,
+        "quantity_shares_pct": 6.407963581145896,
         "change": 30355,
+        "change_shares_pct": 0.04286589618672161,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11928,6 +12519,7 @@
       "lending_status": "unavailable",
       "name": "두산로보틱스",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 16.93175890334211,
       "short_value_ratio_pct_vs_mean_5_pct": -11.302939225151846,
       "short_value_ratio_pct_mean_20": 17.224127504789237,
@@ -11960,7 +12552,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 4937722,
+        "quantity_shares_pct": 7.6175926003062635,
         "change": 91124,
+        "change_shares_pct": 0.14058011125581957,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -11988,6 +12582,7 @@
       "lending_status": "unavailable",
       "name": "OCI",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 10.84663810384275,
       "short_value_ratio_pct_vs_mean_5_pct": 57.80551689965688,
       "short_value_ratio_pct_mean_20": 10.107334481910613,
@@ -12020,7 +12615,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 625423,
+        "quantity_shares_pct": 6.986018981300744,
         "change": -6774,
+        "change_shares_pct": -0.07566605733932273,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -12048,6 +12645,7 @@
       "lending_status": "unavailable",
       "name": "이수스페셜티케미컬",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 7.464875017480014,
       "short_value_ratio_pct_vs_mean_5_pct": -15.89629067855914,
       "short_value_ratio_pct_mean_20": 7.43179259415975,
@@ -12080,7 +12678,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 3641517,
+        "quantity_shares_pct": 12.050472962723427,
         "change": 61292,
+        "change_shares_pct": 0.20282689572264645,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:38+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"
@@ -12108,6 +12708,7 @@
       "lending_status": "unavailable",
       "name": "달바글로벌",
       "lending_published_at": null,
+      "lending_change_shares_pct": null,
       "short_value_ratio_pct_mean_5": 9.171226155836482,
       "short_value_ratio_pct_vs_mean_5_pct": 15.301621568229791,
       "short_value_ratio_pct_mean_20": 7.967217200414294,
@@ -12140,7 +12741,9 @@
       "latest_lending": {
         "as_of": "2026-11-10",
         "quantity": 1538407,
+        "quantity_shares_pct": 12.270405518147898,
         "change": 8716,
+        "change_shares_pct": 0.06951921987885981,
         "source": "토스증권",
         "updated_at": "2026-11-10T19:00:28+09:00",
         "collected_at": "2026-11-11T23:33:03.619998+09:00"

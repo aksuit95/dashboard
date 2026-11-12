@@ -9,7 +9,7 @@ const REFRESH_MS = 60_000;
 function isBoard(value: unknown): value is MarketBoard {
   if (!value || typeof value !== "object") return false;
   const board = value as MarketBoard;
-  return [board.futures, board.asia, board.usIndicators, board.currencies, board.macro].every(Array.isArray);
+  return [board.futures, board.asia, board.usIndices, board.europe, board.usIndicators, board.currencies, board.macro].every(Array.isArray);
 }
 
 function tone(value: number | null): string {
@@ -67,7 +67,9 @@ export function FuturesBoard() {
     <div className="space-y-8">
       {problem ? <p className="text-xs text-amber-300">{problem}</p> : null}
       <Section title="지수 선물" description="코스피200 야간·주간선물과 미국 주요 지수 선물. 야간 등락은 야간 시가 대비입니다." cards={board?.futures} />
-      <Section title="아시아 증시" description="일본·대만·중국 기술주의 현물 지수." cards={board?.asia} />
+      <Section title="미국 증시" description="나스닥 종합·S&P 500·다우·러셀2000 현물 지수." cards={board?.usIndices} />
+      <Section title="아시아 증시" description="일본·대만·홍콩·중국·인도의 주요 현물 지수." cards={board?.asia} />
+      <Section title="유럽 증시" description="영국 FTSE 100·독일 DAX·프랑스 CAC 40 현물 지수." cards={board?.europe} />
       <Section title="미국 시장 지표" description="반도체 업종 흐름과 옵션에 반영된 예상 변동성." cards={board?.usIndicators} />
       <Section title="환율·달러" description="원화 환율과 주요 통화 대비 달러 강도." cards={board?.currencies} />
       <Section title="금리·원자재" description="미국 장기 국채 금리와 국제 유가." cards={board?.macro} />

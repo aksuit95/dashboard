@@ -4,6 +4,7 @@ import type { InvestorBoard } from "./investor-flow";
 import { indexParams, krxDate } from "./investor-flow";
 import { loadTossInvestorFlows, loadTossMarketFlow, type TossMarketFlow } from "./toss-investor-flow";
 import { createInvestorKrxWebQuery } from "./investor-flow-krx-web";
+import { parseMarketTurnover } from "@/lib/market/market-turnover";
 
 /** Called only by the scheduled daily collector. */
 export async function collectInvestorToss(db: AppDatabase, universe: MinerviniUniverse, view: InvestorBoard["view"], board: InvestorBoard) {
@@ -22,9 +23,16 @@ export async function collectInvestorToss(db: AppDatabase, universe: MinerviniUn
     const data = await loadTossMarketFlow(universe, board.asOf, fetch, previous);
     const spec = indexParams[universe], dates = data.points.map(point => point.date.replaceAll("-", ""));
     let prices: { date: string; value: number }[] = [], priceError: string | null = null;
+    let turnover: { date: string; value: number }[] = [], turnoverError: string | null = null, turnoverCollectedAt: string | null = null;
     try {
       const query = createInvestorKrxWebQuery();
       const result = await query("MDCSTAT00301", { indIdx: spec.indIdx, indIdx2: spec.indIdx2, marketIndex: data.market, strtDd: dates[0], endDd: board.asOf.replaceAll("-", ""), sessionDates: JSON.stringify(dates) });
+      try {
+        turnover = parseMarketTurnover(result, board.asOf);
+        const found = new Set(turnover.map(point => point.date));
+        if (data.points.some(point => !found.has(point.date))) throw new Error("수급 거래일의 KRX 거래대금 누락");
+        turnoverCollectedAt = new Date().toISOString();
+      } catch (error) { turnover = []; turnoverError = error instanceof Error ? error.message : "거래대금 조회 실패"; }
       if (!Array.isArray(result.output)) throw new Error("KRX 지수 이력 없음");
       prices = result.output.map((row: { TRD_DD: string; CLSPRC_IDX: string }) => {
         const value = Number(String(row.CLSPRC_IDX).replaceAll(",", ""));
@@ -36,8 +44,8 @@ export async function collectInvestorToss(db: AppDatabase, universe: MinerviniUn
       const found = new Set(prices.map(point => point.date));
       if (prices.length !== found.size || [...wanted].some(day => !found.has(day))) throw new Error("수급 거래일의 KRX 지수 종가 누락");
       prices = prices.filter(point => wanted.has(point.date));
-    } catch (error) { prices = []; priceError = error instanceof Error ? error.message : "KRX 지수 이력 조회 실패"; }
-    return { ...data, prices, priceError };
+    } catch (error) { prices = []; priceError = error instanceof Error ? error.message : "KRX 지수 이력 조회 실패"; if (!turnover.length) turnoverError = priceError; }
+    return { ...data, prices, priceError, turnover, turnoverError, turnoverCollectedAt };
   }
   const data = await loadTossInvestorFlows(universe, view, board.asOf, board.equity?.stocks ?? []);
   return data;
