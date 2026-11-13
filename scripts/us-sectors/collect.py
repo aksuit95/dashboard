@@ -1,4 +1,5 @@
-import csv, io, json, os, tempfile, time, urllib.request
+import csv, io, json, os, re, tempfile, time, urllib.request
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone, timedelta
 
@@ -14,7 +15,7 @@ def eastern(now):
 SP = 'https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv'
 NASDAQ = 'https://raw.githubusercontent.com/Gary-Strauss/NASDAQ100_Constituents/master/data/nasdaq100_constituents.csv'
 OUT = 'data/us-sectors/board.json'
-HEADERS = {'User-Agent': 'Mozilla/5.0 dashboard research contact'}
+HEADERS = {'User-Agent': 'Mozilla/5.0 dashboard research contact', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
 
 def get(url):
     for attempt in range(3):
@@ -61,7 +62,7 @@ def universe():
     return list(rows.values())
 
 def chart(symbol):
-    url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + symbol.replace('.', '-') + '?interval=1d&range=2y&includePrePost=false'
+    url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + symbol.replace('.', '-') + '?interval=1d&range=2y&includePrePost=false&_=' + str(time.time_ns())
     result = json.loads(get(url))['chart']['result'][0]
     closes = result['indicators']['quote'][0]['close']
     return {eastern(datetime.fromtimestamp(t, timezone.utc)).date().isoformat(): c for t,c in zip(result['timestamp'], closes) if c is not None and c > 0}
@@ -69,12 +70,33 @@ def chart(symbol):
 def is_completed_session(day, now_et):
     return day < now_et.date().isoformat() or (day == now_et.date().isoformat() and (now_et.hour, now_et.minute) >= (16, 0))
 
+def expected_session(now_et, calendar_text):
+    year = re.search(r'export const CALENDAR_YEAR = (\d{4})', calendar_text)
+    if not year or int(year.group(1)) != now_et.year:
+        raise ValueError('미국 거래일 캘린더 갱신 필요')
+    section = calendar_text.split('export const US_HOLIDAYS:', 1)[1].split('};', 1)[0]
+    holidays = set(re.findall(r'"(\d{4}-\d{2}-\d{2})"', section))
+    day = now_et.date()
+    if (now_et.hour, now_et.minute) < (16, 0): day -= timedelta(days=1)
+    while day.weekday() >= 5 or day.isoformat() in holidays:
+        day -= timedelta(days=1)
+    # The explicit calendar covers one year only. Do not guess across its boundary.
+    if day.year != int(year.group(1)): raise ValueError('이전 연도 미국 거래일 캘린더 확인 필요')
+    return day.isoformat()
+
 def main():
     now = datetime.now(timezone.utc)
     et = eastern(now)
+    expected = expected_session(et, Path('config/market-calendar.ts').read_text(encoding='utf-8'))
     benchmark = chart('SPY')
     dates = sorted(d for d in benchmark if is_completed_session(d, et))
     if len(dates) < 280: raise ValueError('미국 정규장 기준 이력 부족')
+    if dates[-1] != expected: raise ValueError(f'미국 최신 거래일 미반영: 기대 {expected}, SPY {dates[-1]}')
+    if os.environ.get('SKIP_IF_CURRENT') == 'true' and os.path.exists(OUT):
+        with open(OUT, encoding='utf-8') as f: previous = json.load(f)
+        if previous.get('priceBasis') == 'US_REGULAR_CLOSE' and previous.get('latestDate') == expected:
+            print(f'Already published {expected}')
+            return
     members = universe()
     def collect(row):
         try: return chart(row['code'])

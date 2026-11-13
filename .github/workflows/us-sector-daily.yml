@@ -2,6 +2,7 @@ name: Collect US sector returns
 on:
   schedule:
     - cron: '10 21 * * 1-5' # 06:10 KST, Tuesday–Saturday
+    - cron: '40 21 * * 1-5' # 06:40 KST backup if the first run is missed or fails
   workflow_dispatch:
 permissions:
   contents: write
@@ -11,13 +12,21 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python scripts/us-sectors/collect.py
+      - name: Collect latest completed US session
+        env:
+          SKIP_IF_CURRENT: ${{ github.event_name == 'schedule' && 'true' || 'false' }}
+        run: |
+          for attempt in 1 2 3; do
+            python scripts/us-sectors/collect.py && break
+            if [ "$attempt" = 3 ]; then exit 1; fi
+            sleep 120
+          done
       - name: Publish US sector data
         env:
           BRANCH: ${{ github.event.repository.default_branch }}

@@ -19,6 +19,13 @@ class CollectorTest(unittest.TestCase):
         self.assertFalse(collector.is_completed_session('2026-11-10', before))
         self.assertTrue(collector.is_completed_session('2026-11-10', after))
         self.assertTrue(collector.is_completed_session('2026-11-09', before))
+    def test_expected_session_uses_us_holidays_and_close(self):
+        calendar = 'export const CALENDAR_YEAR = 2026; export const US_HOLIDAYS: Record<string, string> = { "2026-11-26": "Thanksgiving" };'
+        self.assertEqual(collector.expected_session(collector.eastern(datetime(2026,11,12,21,10,tzinfo=timezone.utc)), calendar), '2026-11-12')
+        self.assertEqual(collector.expected_session(collector.eastern(datetime(2026,11,12,20,59,tzinfo=timezone.utc)), calendar), '2026-11-11')
+        self.assertEqual(collector.expected_session(collector.eastern(datetime(2026,11,26,21,10,tzinfo=timezone.utc)), calendar), '2026-11-25')
+        self.assertEqual(collector.expected_session(collector.eastern(datetime(2026,11,29,21,10,tzinfo=timezone.utc)), calendar), '2026-11-27')
+        with self.assertRaises(ValueError): collector.expected_session(collector.eastern(datetime(2027,1,4,22,tzinfo=timezone.utc)), calendar)
     def test_us_daylight_transition(self):
         self.assertEqual(collector.eastern(datetime(2026,3,8,6,59,tzinfo=timezone.utc)).utcoffset().total_seconds(), -18000)
         self.assertEqual(collector.eastern(datetime(2026,3,8,7,0,tzinfo=timezone.utc)).utcoffset().total_seconds(), -14400)
