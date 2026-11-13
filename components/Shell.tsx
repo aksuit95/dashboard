@@ -79,7 +79,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen md:grid md:grid-cols-[250px_minmax(0,1fr)]">
       <aside className="border-b border-white/[0.08] bg-[#10151c] md:sticky md:top-0 md:h-screen md:overflow-y-auto md:border-b-0 md:border-r">
-        <div className="flex items-center gap-3 px-4 py-4 md:px-5 md:pb-5 md:pt-6">
+        <div className="flex items-center gap-3 px-4 py-4 md:px-5 md:py-3">
           <Link href="/" onClick={() => setMenuOpen(false)} className="flex min-w-0 flex-1 items-center gap-3" aria-label={lang === "ko" ? "mk리서치 홈" : "MK Research home"}>
             <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-400 text-[11px] font-extrabold tracking-[-0.06em] text-[#092019]">mk</span>
             <span className="min-w-0"><span className="block text-[15px] font-bold tracking-tight text-zinc-100">{lang === "ko" ? "mk리서치" : "MK Research"}</span><span className="mt-0.5 block text-[10px] tracking-wide text-zinc-500">MARKET RESEARCH</span></span>
@@ -90,20 +90,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </button>
         </div>
         <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-2.5 text-xs text-zinc-500 md:hidden"><span>{lang === "ko" ? "현재 화면" : "Current page"}</span><span className="font-medium text-zinc-300">{current?.[lang] ?? (pathname === "/health" ? (lang === "ko" ? "수집 상태" : "Data status") : "mk리서치")}</span></div>
-        <nav id="main-navigation" aria-label={lang === "ko" ? "주요 메뉴" : "Main navigation"} className={`${menuOpen ? "block" : "hidden"} border-t border-white/[0.06] px-3 pb-5 pt-2 md:block md:border-t-0 md:px-3 md:pt-0`}>
-          <Link href="/guide" onClick={() => setMenuOpen(false)} aria-current={pathname === "/guide" ? "page" : undefined} className={`mb-3 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition focus-visible:outline-2 focus-visible:outline-emerald-400 ${pathname === "/guide" ? "bg-emerald-400/10 text-emerald-300" : "text-zinc-300 hover:bg-white/[0.05] hover:text-white"}`}><span aria-hidden="true" className="text-emerald-400">◈</span>{lang === "ko" ? "리서치보드 사용법" : "Research board guide"}</Link>
+        <nav id="main-navigation" aria-label={lang === "ko" ? "주요 메뉴" : "Main navigation"} className={`${menuOpen ? "block" : "hidden"} border-t border-white/[0.06] px-3 pb-5 pt-2 md:block md:border-t-0 md:px-3 md:pb-2 md:pt-0`}>
+          <Link href="/guide" onClick={() => setMenuOpen(false)} aria-current={pathname === "/guide" ? "page" : undefined} className={`mb-3 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition focus-visible:outline-2 focus-visible:outline-emerald-400 md:mb-1 md:py-1.5 ${pathname === "/guide" ? "bg-emerald-400/10 text-emerald-300" : "text-zinc-300 hover:bg-white/[0.05] hover:text-white"}`}><span aria-hidden="true" className="text-emerald-400">◈</span>{lang === "ko" ? "리서치보드 사용법" : "Research board guide"}</Link>
           {groups.map((group) => (
-            <section key={group.icon} className="mb-4">
-              <h2 className="flex items-center gap-2 px-2.5 pb-1.5 pt-2 text-[11px] font-semibold tracking-wide text-zinc-500"><span className="text-emerald-400/70"><SectionIcon name={group.icon} /></span>{group.title[lang]}</h2>
-              <ul className="space-y-0.5">
+            <section key={group.icon} className="mb-4 md:mb-1">
+              <h2 className="flex items-center gap-2 px-2.5 pb-1.5 pt-2 text-[11px] font-semibold tracking-wide text-zinc-400 md:pb-0 md:pt-1"><span className="text-emerald-400/80"><SectionIcon name={group.icon} /></span>{group.title[lang]}</h2>
+              <ul className="space-y-0.5 md:space-y-0">
                 {group.items.map((item) => {
                   const active = isActive(pathname, item.href);
-                  return <li key={item.href}><Link href={item.href} onClick={() => setMenuOpen(false)} aria-current={active ? "page" : undefined} className={`relative block rounded-lg px-3 py-2 text-[13px] leading-5 transition focus-visible:outline-2 focus-visible:outline-emerald-400 ${active ? "bg-emerald-400/10 font-semibold text-emerald-300 before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-emerald-400" : "text-zinc-400 hover:bg-white/[0.05] hover:text-zinc-100"}`}>{item[lang]}</Link></li>;
+                  return <li key={item.href}><Link href={item.href} onClick={() => setMenuOpen(false)} aria-current={active ? "page" : undefined} className={`relative block rounded-lg px-3 py-2 text-[13px] leading-5 transition focus-visible:outline-2 focus-visible:outline-emerald-400 md:py-1 ${active ? "bg-emerald-400/10 font-semibold text-emerald-300 before:absolute before:bottom-1 before:left-0 before:top-1 before:w-0.5 before:rounded-full before:bg-emerald-400" : "text-zinc-300 hover:bg-white/[0.05] hover:text-zinc-100"}`}>{item[lang]}</Link></li>;
                 })}
               </ul>
             </section>
           ))}
-          <div className="mt-5 border-t border-white/[0.07] pt-3"><Link href="/health" onClick={() => setMenuOpen(false)} aria-current={pathname === "/health" ? "page" : undefined} className={`block rounded-lg px-3 py-2 text-xs transition ${pathname === "/health" ? "bg-emerald-400/10 font-semibold text-emerald-300" : "text-zinc-500 hover:bg-white/5 hover:text-zinc-200"}`}>{lang === "ko" ? "데이터 수집 상태" : "Data status"} <span aria-hidden="true" className="float-right">↗</span></Link></div>
+          <div className="mt-5 border-t border-white/[0.07] pt-3 md:mt-1 md:pt-1"><Link href="/health" onClick={() => setMenuOpen(false)} aria-current={pathname === "/health" ? "page" : undefined} className={`block rounded-lg px-3 py-2 text-xs transition md:py-1.5 ${pathname === "/health" ? "bg-emerald-400/10 font-semibold text-emerald-300" : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"}`}>{lang === "ko" ? "데이터 수집 상태" : "Data status"} <span aria-hidden="true" className="float-right">↗</span></Link></div>
         </nav>
       </aside>
       <div className="min-w-0">
