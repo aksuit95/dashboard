@@ -11,6 +11,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
     items: [
       { href: "/events", ko: "매크로 · 실적 캘린더", en: "Macro & earnings" },
       { href: "/valuation/sectors", ko: "섹터/종목 등락률", en: "Sector & stock performance" },
+      { href: "/rising", ko: "연속 상승 섹터/종목", en: "Rising sectors & stocks" },
       { href: "/adr", ko: "코스피 · 코스닥 ADR", en: "KOSPI · KOSDAQ ADR" },
       { href: "/risk", ko: "공포 · 탐욕 지수", en: "Fear & greed" },
     ],
