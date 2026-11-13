@@ -1,51 +1,9 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-13T10:16:34.537Z",
+      "updatedAt": "2026-11-13T15:10:23.299Z",
       "error": null,
       "events": [
-        {
-          "id": "smt-usd-nonfarm-payrolls.20261106T1330",
-          "date": "2026-11-06",
-          "time": "22:30",
-          "country": "US",
-          "category": "매크로",
-          "title": "Nonfarm Payrolls",
-          "detail": "대상 기간 2026-10",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "forecast": "65K",
-          "previous": "29K"
-        },
-        {
-          "id": "smt-usd-average-hourly-earnings-mom.20261106T1330",
-          "date": "2026-11-06",
-          "time": "22:30",
-          "country": "US",
-          "category": "매크로",
-          "title": "Average Hourly Earnings MoM",
-          "detail": "대상 기간 2026-10",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "forecast": "0.3%",
-          "previous": "0.1%"
-        },
-        {
-          "id": "smt-usd-unemployment-rate.20261106T1330",
-          "date": "2026-11-06",
-          "time": "22:30",
-          "country": "US",
-          "category": "매크로",
-          "title": "Unemployment Rate",
-          "detail": "대상 기간 2026-10",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "forecast": "4.2%",
-          "previous": "4.2%"
-        },
         {
           "id": "smt-usd-michigan-consumer-sentiment-index.20261106T1500",
           "date": "2026-11-07",
@@ -129,6 +87,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "0.4%",
+          "actual": "0.3%",
           "previous": "1.3%"
         },
         {
@@ -143,7 +102,20 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "0.3%",
+          "actual": "0.3%",
           "previous": "0.7%"
+        },
+        {
+          "id": "smt-usd-fed-s-chair-warsh-speech.20261116T1700",
+          "date": "2026-11-17",
+          "time": "02:00",
+          "country": "US",
+          "category": "매크로",
+          "title": "Fed's Chair Warsh speech",
+          "detail": "시장 영향도 높음",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
         },
         {
           "id": "smt-usd-retail-sales-control-group.20261117T1330",
@@ -660,10 +632,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-13T10:15:56Z"
+      "generatedAt": "2026-11-13T15:10:01Z"
     },
     "ism": {
-      "updatedAt": "2026-11-13T10:16:34.537Z",
+      "updatedAt": "2026-11-13T15:10:23.299Z",
       "error": null,
       "events": [
         {
@@ -693,11 +665,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-13T10:15:56Z"
+      "generatedAt": "2026-11-13T15:10:01Z"
     },
     "dart": {
       "updatedAt": "2026-11-12T18:38:48.935Z",
-      "error": null,
+      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
       "capAsOf": "2026-11-12",
       "companies": [
         {
