@@ -1,24 +1,9 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-14T13:59:02.145Z",
+      "updatedAt": "2026-11-14T16:47:30.349Z",
       "error": null,
       "events": [
-        {
-          "id": "smt-usd-michigan-consumer-sentiment-index.20261106T1500",
-          "date": "2026-11-07",
-          "time": "00:00",
-          "country": "US",
-          "category": "매크로",
-          "title": "Michigan Consumer Sentiment Index",
-          "detail": "대상 기간 2026-11",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "forecast": "48",
-          "actual": "51",
-          "previous": "48"
-        },
         {
           "id": "smt-usd-cpi-yoy.20261110T1330",
           "date": "2026-11-10",
@@ -632,10 +617,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-14T13:56:36Z"
+      "generatedAt": "2026-11-14T16:46:24Z"
     },
     "ism": {
-      "updatedAt": "2026-11-14T13:59:02.145Z",
+      "updatedAt": "2026-11-14T16:47:30.349Z",
       "error": null,
       "events": [
         {
@@ -665,7 +650,7 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-14T13:56:36Z"
+      "generatedAt": "2026-11-14T16:46:24Z"
     },
     "dart": {
       "updatedAt": "2026-11-14T13:59:02.145Z",
