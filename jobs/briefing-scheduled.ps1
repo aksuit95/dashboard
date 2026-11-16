@@ -13,8 +13,14 @@ try {
   Push-Location -LiteralPath $projectRoot
   try {
     "[$(Get-Date -Format o)] Checking briefing data" | Out-File -LiteralPath $logPath -Append -Encoding utf8
-    & $node --import tsx jobs/briefing-auto.ts 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
-    if ($LASTEXITCODE -ne 0) { throw "Briefing generation failed with exit code $LASTEXITCODE" }
+    $ErrorActionPreference = 'Continue'
+    try {
+      & $node --import tsx jobs/briefing-auto.ts 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
+      $generationExit = $LASTEXITCODE
+      & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $projectRoot 'jobs\briefing-publish.ps1') 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
+      $publicationExit = $LASTEXITCODE
+    } finally { $ErrorActionPreference = 'Stop' }
+    if ($generationExit -ne 0 -or $publicationExit -ne 0) { throw "Briefing generation exit $generationExit; publication exit $publicationExit" }
   } finally { Pop-Location }
 } catch {
   "[$(Get-Date -Format o)] $($_.Exception.Message)" | Out-File -LiteralPath $logPath -Append -Encoding utf8
