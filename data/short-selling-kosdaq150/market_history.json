@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "743d31b7fe0c2ac97490",
-  "as_of": "2026-11-13",
-  "collected_at": "2026-11-14T03:29:19.637320+09:00",
+  "dataset_id": "322693bc3cc873c77448",
+  "as_of": "2026-11-16",
+  "collected_at": "2026-11-17T05:53:29.094754+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -11,7 +11,7 @@
     "adjusted": false
   },
   "is_sample": false,
-  "period_start": "2025-11-13",
+  "period_start": "2025-11-16",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
   "universe": "kosdaq150",
   "membership_basis": "point_in_time",
@@ -21,48 +21,6 @@
     "ratio": "percent_0_100"
   },
   "rows": [
-    {
-      "date": "2025-11-13",
-      "session_status": "trading",
-      "index_close": 1611.94,
-      "short_value": 160579544225,
-      "trading_value": 5869627697896,
-      "short_volume": 3533785,
-      "volume": 97019821,
-      "short_value_ratio_pct": 2.735770520548699,
-      "short_volume_ratio_pct": 3.642333044502319,
-      "expected_count": 150,
-      "observed_count": 150,
-      "coverage": "complete"
-    },
-    {
-      "date": "2025-11-14",
-      "session_status": "trading",
-      "index_close": 1578.79,
-      "short_value": 192468096579,
-      "trading_value": 6379889581775,
-      "short_volume": 3673682,
-      "volume": 95700861,
-      "short_value_ratio_pct": 3.0167935371297117,
-      "short_volume_ratio_pct": 3.8387136349797313,
-      "expected_count": 150,
-      "observed_count": 150,
-      "coverage": "complete"
-    },
-    {
-      "date": "2025-11-15",
-      "session_status": "no_observation",
-      "index_close": null,
-      "short_value": null,
-      "trading_value": null,
-      "short_volume": null,
-      "volume": null,
-      "short_value_ratio_pct": null,
-      "short_volume_ratio_pct": null,
-      "expected_count": null,
-      "observed_count": null,
-      "coverage": "unavailable"
-    },
     {
       "date": "2025-11-16",
       "session_status": "no_observation",
@@ -5141,6 +5099,48 @@
       "volume": 99679306,
       "short_value_ratio_pct": 6.752336827954873,
       "short_volume_ratio_pct": 6.126408022945103,
+      "expected_count": 150,
+      "observed_count": 150,
+      "coverage": "complete"
+    },
+    {
+      "date": "2026-11-14",
+      "session_status": "no_observation",
+      "index_close": null,
+      "short_value": null,
+      "trading_value": null,
+      "short_volume": null,
+      "volume": null,
+      "short_value_ratio_pct": null,
+      "short_volume_ratio_pct": null,
+      "expected_count": null,
+      "observed_count": null,
+      "coverage": "unavailable"
+    },
+    {
+      "date": "2026-11-15",
+      "session_status": "no_observation",
+      "index_close": null,
+      "short_value": null,
+      "trading_value": null,
+      "short_volume": null,
+      "volume": null,
+      "short_value_ratio_pct": null,
+      "short_volume_ratio_pct": null,
+      "expected_count": null,
+      "observed_count": null,
+      "coverage": "unavailable"
+    },
+    {
+      "date": "2026-11-16",
+      "session_status": "trading",
+      "index_close": 1088.51,
+      "short_value": 270907191304,
+      "trading_value": 2864918673348,
+      "short_volume": 6238284,
+      "volume": 75237381,
+      "short_value_ratio_pct": 9.456016808582303,
+      "short_volume_ratio_pct": 8.291468837810822,
       "expected_count": 150,
       "observed_count": 150,
       "coverage": "complete"
