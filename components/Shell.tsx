@@ -9,6 +9,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
   {
     icon: "market", title: { ko: "시장 한눈에", en: "Market overview" },
     items: [
+      { href: "/briefing", ko: "장 마감 브리핑", en: "Market briefing" },
       { href: "/events", ko: "매크로 · 실적 캘린더", en: "Macro & earnings" },
       { href: "/valuation/sectors", ko: "섹터/종목 등락률", en: "Sector & stock performance" },
       { href: "/rising", ko: "연속 상승 섹터/종목", en: "Rising sectors & stocks" },

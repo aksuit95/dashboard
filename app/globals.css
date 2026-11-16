@@ -15,3 +15,32 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.briefing-value-up { color: #fb7185; }
+.briefing-value-down { color: #60a5fa; }
+.briefing-value-neutral { color: #a1a1aa; }
+.briefing-section-title { display: flex; align-items: center; gap: 0.55rem; letter-spacing: -0.02em; }
+.briefing-section-title::before { content: ""; width: 3px; height: 1em; border-radius: 999px; background: #34d399; flex: none; }
+.briefing-flow-table th { padding: 0.3rem 0; color: #a1a1aa; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.briefing-flow-table td { padding: 0.3rem 0; font-variant-numeric: tabular-nums; }
+
+@media print {
+  @page { size: A4; margin: 14mm; }
+  :root { color-scheme: light; }
+  body { background: white; color: #111; }
+  body > div { display: block !important; }
+  aside, footer, .briefing-controls { display: none !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  .briefing-report { margin: 0 !important; padding: 0 !important; border: 0 !important; background: white !important; color: #111 !important; }
+  .briefing-report * { color: #111 !important; }
+  .briefing-report .briefing-value-up { color: #b91c1c !important; }
+  .briefing-report .briefing-value-down { color: #1d4ed8 !important; }
+  .briefing-report .briefing-value-neutral { color: #52525b !important; }
+  .briefing-flow-table th { border-bottom-color: #d4d4d8; }
+  .briefing-header { background: #f5faf8 !important; border-color: #dbe9e3 !important; }
+  .briefing-card { border-color: #ddd !important; break-inside: avoid; }
+  .briefing-report section { break-inside: auto; }
+  .briefing-report h3 { break-after: avoid; }
+  .briefing-report tr { break-inside: avoid; }
+  .briefing-report thead { display: table-header-group; }
+}
