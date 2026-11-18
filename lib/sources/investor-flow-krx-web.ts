@@ -17,6 +17,7 @@ export function createInvestorKrxWebQuery(
   options: { allowInvalidRows?: boolean } = {},
 ): Query {
   return async (bld, params) => {
+    if (bld === "MDCSTAT00601") return query(bld, params);
     if (bld !== "MDCSTAT01501" && bld !== "MDCSTAT00301") throw new Error("수급분석 KRX 웹 미지원 조회");
     if (bld === "MDCSTAT00301") {
       const { marketIndex, sessionDates: _ignored, ...rest } = params;

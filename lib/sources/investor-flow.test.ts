@@ -22,14 +22,20 @@ describe("KRX investor source", () => {
     expect(() => parsePrices({ output: [{ TRD_DD: "2026/11/02", closingPrice: 500 }] }, "2026-11-02")).toThrow();
     expect(() => parsePrices({ output: [{ TRD_DD: "2026/10/30", CLSPRC_IDX: 500 }] }, "2026-11-02")).toThrow();
   });
-  it("selects the reference-date market's largest ten, with won market caps", async () => {
-    const query = vi.fn(async (bld: string) => provider(bld));
-    const result = await fetchEquityFlow("kospi200", "stocks", "2026-11-02", query);
-    expect(result.stocks).toHaveLength(10);
-    expect(result.stocks[0].code).toBe("000199");
-    expect(result.stocks[0].marketCap).toBe(2e12);
-    expect(result.stocks[0].price).toBe(1000);
-    expect(query.mock.calls.filter(([bld]) => bld === "MDCSTAT02303")).toHaveLength(10);
+  it.each([["kospi200", "1", "028", 200], ["kosdaq150", "2", "203", 150]] as const)("selects every %s constituent from the reference date", async (universe, indIdx, indIdx2, count) => {
+    const marketCaps = [...caps, { ...caps[0], ISU_SRT_CD: "ABC123", MKTCAP: "10000000000000" }];
+    const query = vi.fn(async (bld: string) => {
+      if (bld === "MDCSTAT01501") return { OutBlock_1: marketCaps };
+      if (bld === "MDCSTAT00601") return { output: caps.slice(0, count) };
+      return provider(bld);
+    });
+    const result = await fetchEquityFlow(universe, "stocks", "2026-11-02", query, true);
+    expect(result.memberCount).toBe(count);
+    expect(result.stocks).toHaveLength(count);
+    expect(result.stocks[0]).toMatchObject({ code: caps[count - 1].ISU_SRT_CD, marketCap: count * 1e10, price: 1000 });
+    expect(result.stocks.at(-1)?.code).toBe(caps[0].ISU_SRT_CD);
+    expect(query).toHaveBeenCalledWith("MDCSTAT00601", { indIdx, indIdx2, trdDd: "20261102" });
+    expect(query.mock.calls.map(([bld]) => bld)).not.toContain("MDCSTAT02303");
   });
   it("index view collects the full membership instead of the ten-stock sample", async () => {
     const result = await fetchEquityFlow("kospi200", "index", "2026-11-02", async bld => provider(bld));
@@ -41,9 +47,13 @@ describe("KRX investor source", () => {
       if (params.isuCd2 === "000199") throw new Error("failed member");
       return provider(bld);
     });
-    expect(result.collectedCount).toBe(9);
+    expect(result.collectedCount).toBe(199);
     expect(result.points[0].foreign).toBeNull();
     expect(result.stocks[0].error).toBe("failed member");
+  });
+  it("rejects an incomplete constituent response instead of using a market-cap sample", async () => {
+    const query = async (bld: string) => bld === "MDCSTAT00601" ? { output: caps.slice(0, 10) } : provider(bld);
+    await expect(fetchEquityFlow("kospi200", "stocks", "2026-11-02", query, true)).rejects.toThrow("전체 구성종목 확인 실패");
   });
   it("chooses nearest listed contract and keeps product totals separate", async () => {
     const contracts = { output: [ { ISU_SRT_CD: "empty", ISU_NM: "코스피200 F 202706", TDD_CLSPRC: "" }, { ISU_SRT_CD: "far", ISU_NM: "코스피200 F 202703", TDD_CLSPRC: "510.1" }, { ISU_SRT_CD: "near", ISU_NM: "코스피200 F 202612", TDD_CLSPRC: "500.1" } ] };

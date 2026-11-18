@@ -2,7 +2,7 @@ import type { MinerviniUniverse } from "@/config/minervini";
 import type { AppDatabase } from "@/lib/db/client";
 import type { InvestorBoard } from "./investor-flow";
 import { indexParams, krxDate } from "./investor-flow";
-import { loadTossInvestorFlows, loadTossMarketFlow, type TossMarketFlow } from "./toss-investor-flow";
+import { loadTossInvestorFlows, loadTossMarketFlow, type TossMarketFlow, type TossStockFlow } from "./toss-investor-flow";
 import { createInvestorKrxWebQuery } from "./investor-flow-krx-web";
 import { parseMarketTurnover } from "@/lib/market/market-turnover";
 
@@ -47,6 +47,9 @@ export async function collectInvestorToss(db: AppDatabase, universe: MinerviniUn
     } catch (error) { prices = []; priceError = error instanceof Error ? error.message : "KRX 지수 이력 조회 실패"; if (!turnover.length) turnoverError = priceError; }
     return { ...data, prices, priceError, turnover, turnoverError, turnoverCollectedAt };
   }
-  const data = await loadTossInvestorFlows(universe, view, board.asOf, board.equity?.stocks ?? []);
-  return data;
+  if (!board.equity) throw new Error(board.equityError ?? "기준일 KRX 구성종목 조회 실패");
+  const saved = db.prepare(`SELECT toss FROM investor_flow_daily_snapshots
+    WHERE as_of = ? AND universe = ? AND view = 'stocks'`).get(board.asOf, universe) as { toss: string | null } | undefined;
+  const previous = saved?.toss ? JSON.parse(saved.toss) as TossStockFlow : undefined;
+  return loadTossInvestorFlows(universe, view, board.asOf, board.equity.stocks, fetch, previous);
 }

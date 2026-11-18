@@ -6,6 +6,7 @@ import { ColorType, createChart } from "lightweight-charts";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
 import { alignFlows, buyingStreak, cumulativeFlows, investorColors, investorNames, investors, rollingFlows, windowSum, type FlowPeriod, type Investor, type InvestorPoint } from "@/lib/market/investor-flow";
 import type { InvestorBoard } from "@/lib/sources/investor-flow";
+import type { TossFlowStock } from "@/lib/sources/toss-investor-flow";
 import { PageHeader } from "./PageHeader";
 import { MarketTurnoverChart } from "./MarketTurnoverChart";
 
@@ -120,27 +121,140 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
     </>}
   </section>{data && <MarketTurnoverChart market={universe === "kospi200" ? "코스피" : "코스닥"} points={data.turnover} error={data.turnoverError} asOf={board.asOf} collectedAt={data.turnoverCollectedAt} />}</>;
 }
-function TossFlow({ board, universe, view }: { board: InvestorBoard; universe: MinerviniUniverse; view: "index" | "stocks" }) {
-  const [data, setData] = useState<{ rows: { code: string; name: string; points: InvestorPoint[]; error: string | null }[] } | null>(null);
+const stockWindows = [5, 20, 60] as const;
+const wonPerEok = 100_000_000;
+const capFormat = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 });
+const stockSortDefault = { key: "marketCap", ascending: false } as const;
+type StockSortKey = "name" | "marketCap" | "amount" | typeof stockWindows[number] | "streakDays";
+const stockColumns: [StockSortKey, string][] = [
+  ["name", "종목"], ["marketCap", "시가총액 (억 원)"], ["amount", "선택 기간 (주)"],
+  ...stockWindows.map<[StockSortKey, string]>(days => [days, `${days}일 (주)`]), ["streakDays", "연속 순매수"],
+];
+const flowDirections = { all: "전체", buy: "순매수", sell: "순매도", flat: "보합 (0주)", missing: "결측" } as const;
+type FlowDirection = keyof typeof flowDirections;
+const stockFilterField = "mt-1 block w-full rounded-md border border-white/10 bg-[#10141b] px-3 py-2 text-sm text-zinc-100";
+
+function TossFlow({ board, universe }: { board: InvestorBoard; universe: MinerviniUniverse }) {
+  const [data, setData] = useState<{ rows: TossFlowStock[] } | null>(null);
   const [failure, setFailure] = useState<string | null>(null), [period, setPeriod] = useState<FlowPeriod>(1), [investor, setInvestor] = useState<Investor>("foreign");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<{ key: StockSortKey; ascending: boolean }>(stockSortDefault);
+  const [direction, setDirection] = useState<FlowDirection>("all");
+  const [minCap, setMinCap] = useState("");
+  const [maxCap, setMaxCap] = useState("");
+  const [minStreak, setMinStreak] = useState("");
   useEffect(() => {
     const controller = new AbortController();
     setData(null); setFailure(null);
-    fetch(`/api/investor-flow/toss?universe=${universe}&view=${view}&asOf=${board.asOf}`, { signal: controller.signal, cache: "no-store" }).then(async r => { const body = await r.json(); if (!r.ok) throw new Error(body.error); setData(body); }).catch(e => { if (!controller.signal.aborted) setFailure(e.message); });
+    fetch(`/api/investor-flow/toss?universe=${universe}&view=stocks&asOf=${board.asOf}`, { signal: controller.signal, cache: "no-store" }).then(async response => {
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error ?? "종목 수급 조회 실패");
+      if (!controller.signal.aborted) setData(body);
+    }).catch(error => { if (!controller.signal.aborted) setFailure(error.message); });
     return () => controller.abort();
-  }, [universe, view, board.asOf]);
-  const sessions = board.equity?.sessions ?? [];
-  const rows = (data?.rows ?? []).map(row => ({ ...row, points: alignFlows(row.points, sessions) }));
-  return <section className={`${box} space-y-4`}><h2 className="font-semibold">토스증권 투자자별 순매수</h2>
-    <p className="text-xs leading-relaxed text-zinc-400">KRX·NXT 합산 · 단위: 주 · 외국인은 등록외국인 기준. 거래대금은 제공되지 않습니다. {view === "index" && "현재 구성종목을 고정해 과거를 합산하며 편입·편출을 소급하지 않습니다."}</p>
+  }, [universe, board.asOf]);
+
+  const full = board.stockScope === "INDEX_CONSTITUENTS_AS_OF";
+  const rows = useMemo(() => {
+    const stocks = board.equity?.stocks ?? [];
+    const marketCaps = new Map(stocks.map(stock => [stock.code, stock.marketCap]));
+    const flows = data?.rows ?? [];
+    const byCode = new Map(flows.map(row => [row.code, row]));
+    const members = full ? stocks.map(({ code, name }) => byCode.get(code) ?? {
+      code, name, points: [], error: failure ?? "저장된 수급 자료 없음",
+    }) : flows;
+    return members.map(row => {
+      const cap = marketCaps.get(row.code);
+      return { ...row, marketCap: board.priceBasis === "KRX_REGULAR_CLOSE" && cap != null && Number.isFinite(cap) && cap > 0 ? cap : null,
+        points: alignFlows(row.points, board.equity?.sessions ?? []) };
+    });
+  }, [full, board.equity, board.priceBasis, data, failure]);
+  const metrics = useMemo(() => rows.map(({ points, ...row }) => {
+    const streak = buyingStreak(points, investor);
+    const totals = { 5: windowSum(points, investor, 5), 20: windowSum(points, investor, 20), 60: windowSum(points, investor, 60) };
+    return { ...row, ...totals, amount: period === 1 ? windowSum(points, investor, 1) : totals[period],
+      streakDays: streak?.days ?? null, streakAtLeast: streak?.atLeast ?? false };
+  }), [rows, investor, period]);
+  const filtered = useMemo(() => {
+    const search = query.trim().toLowerCase();
+    const minimum = minCap ? Number(minCap) * wonPerEok : 0;
+    const maximum = maxCap ? Number(maxCap) * wonPerEok : Infinity;
+    const days = Number(minStreak);
+    return metrics.filter(row => {
+      if (search && !row.name.toLowerCase().includes(search) && !row.code.toLowerCase().includes(search)) return false;
+      if ((minCap || maxCap) && (row.marketCap == null || row.marketCap < minimum || row.marketCap > maximum)) return false;
+      if (days > 0 && (row.streakDays == null || row.streakDays < days)) return false;
+      if (direction === "all") return true;
+      if (direction === "missing") return row.amount == null;
+      if (row.amount == null) return false;
+      return direction === "buy" ? row.amount > 0 : direction === "sell" ? row.amount < 0 : row.amount === 0;
+    }).sort((a, b) => {
+      const { key, ascending } = sort;
+      if (key === "name") return (ascending ? a.name.localeCompare(b.name, "ko") : b.name.localeCompare(a.name, "ko")) || a.code.localeCompare(b.code);
+      const x = a[key], y = b[key];
+      const compare = x == null || y == null ? Number(x == null) - Number(y == null) : ascending ? x - y : y - x;
+      return compare || (b.marketCap ?? 0) - (a.marketCap ?? 0) || a.code.localeCompare(b.code);
+    });
+  }, [metrics, query, minCap, maxCap, minStreak, direction, sort]);
+
+  function resetFilters() {
+    setQuery(""); setDirection("all"); setMinCap(""); setMaxCap(""); setMinStreak("");
+    setInvestor("foreign"); setPeriod(1); setSort(stockSortDefault);
+  }
+  return <section className={`${box} space-y-4`}>
+    <h2 className="font-semibold">{minerviniUniverses[universe].name} 투자자별 순매수</h2>
+    <p className="text-xs leading-relaxed text-zinc-400">토스증권 · KRX·NXT 합산 · 단위 주 · 외국인은 등록외국인 기준입니다.</p>
     {failure && <Notice>{failure}</Notice>}
     {!failure && !data && <p className="text-sm text-zinc-400">저장된 토스 수급을 불러오고 있습니다…</p>}
-    {data && <><p className="text-xs text-zinc-500">{board.asOf} 기준 · {data.rows.filter(r => !r.error).length}/{data.rows.length}개 수신 · 누락된 날의 합산은 결측입니다.</p>
-      <Buttons period={period} setPeriod={setPeriod} />
-      <>
-        <div className="flex gap-2">{investors.map(k => <button key={k} type="button" onClick={() => setInvestor(k)} aria-pressed={investor === k} className={`rounded px-3 py-2 text-xs ${investor === k ? "bg-white/15" : "text-zinc-500"}`}>{investorNames[k]}</button>)}</div>
-        <div className="overflow-x-auto"><table className="w-full whitespace-nowrap text-right text-sm"><thead className="text-xs text-zinc-500"><tr><th className="p-2 text-left">종목</th><th>선택 기간 (주)</th><th>5일 (주)</th><th>20일 (주)</th><th>60일 (주)</th><th>연속 순매수</th></tr></thead><tbody>{rows.map(r => ({ ...r, amount: windowSum(r.points, investor, period), streak: buyingStreak(r.points, investor) })).sort((a, b) => (b.amount ?? -Infinity) - (a.amount ?? -Infinity)).map(r => <tr key={r.code} className="border-t border-white/5"><td className="p-2 text-left">{r.name} <span className="text-xs text-zinc-500">{r.code}</span>{r.error && <span className="ml-2 text-amber-300 text-xs" title={r.error}>결측</span>}</td><td className={tone(r.amount)}>{number(r.amount, 0)}</td>{([5, 20, 60] as const).map(n => <td key={n} className={tone(windowSum(r.points, investor, n))}>{number(windowSum(r.points, investor, n), 0)}</td>)}<td>{r.streak ? `${r.streak.days}일${r.streak.atLeast ? "+" : ""}` : "—"}</td></tr>)}</tbody></table></div>
-      </></>}
+    {(data || failure) && rows.length > 0 && <>
+      <p className="text-xs text-zinc-500">{board.asOf} 기준 · {full ? `지수 구성종목 ${rows.length}개` : `이전 수집 범위 · 시장 시가총액 상위 ${rows.length}개`} · 수급 {rows.filter(row => !row.error).length}개 수신</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex gap-2" role="group" aria-label="투자자 유형">{investors.map(key => <button key={key} type="button" onClick={() => setInvestor(key)} aria-pressed={investor === key} className={`rounded px-3 py-2 text-xs ${investor === key ? "bg-white/15 text-white" : "text-zinc-500"}`}>{investorNames[key]}</button>)}</div>
+        <Buttons period={period} setPeriod={setPeriod} />
+      </div>
+      <div className="flex flex-wrap items-end gap-3">
+        <label className="w-44 text-xs text-zinc-400">종목 검색
+          <input type="search" placeholder="종목명 또는 종목코드" value={query} onChange={event => setQuery(event.target.value)} className={stockFilterField} />
+        </label>
+        <label className="w-32 text-xs text-zinc-400">선택 기간 수급
+          <select value={direction} onChange={event => setDirection(event.target.value as FlowDirection)} className={stockFilterField}>
+            {Object.entries(flowDirections).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+          </select>
+        </label>
+        <label className="w-32 text-xs text-zinc-400">시총 최소 (억 원)
+          <input type="number" min="0" step="1" placeholder="제한 없음" value={minCap} onChange={event => setMinCap(event.target.value)} className={stockFilterField} />
+        </label>
+        <label className="w-32 text-xs text-zinc-400">시총 최대 (억 원)
+          <input type="number" min="0" step="1" placeholder="제한 없음" value={maxCap} onChange={event => setMaxCap(event.target.value)} className={stockFilterField} />
+        </label>
+        <label className="w-32 text-xs text-zinc-400">연속 순매수 (일 이상)
+          <input type="number" min="0" step="1" placeholder="제한 없음" value={minStreak} onChange={event => setMinStreak(event.target.value)} className={stockFilterField} />
+        </label>
+        <button type="button" onClick={resetFilters} className="rounded-md border border-white/10 px-3 py-2 text-sm text-zinc-300 hover:bg-white/10">필터 초기화</button>
+      </div>
+      <div className="flex flex-wrap justify-between gap-2 text-xs text-zinc-400">
+        <span role="status">{filtered.length} / {rows.length}종목 표시</span>
+        <span>시가총액 {board.asOf} KRX 15:30 기준 · 열 제목을 눌러 정렬</span>
+      </div>
+      {filtered.length ? <div className="max-h-[70vh] overflow-auto" tabIndex={0} role="region" aria-label="구성종목 수급 표">
+        <table className="w-full whitespace-nowrap text-right text-sm tabular-nums">
+          <thead className="sticky top-0 bg-[#151a22] text-xs text-zinc-400"><tr>{stockColumns.map(([key, label]) => {
+            const active = sort.key === key;
+            return <th key={key} scope="col" aria-sort={active ? (sort.ascending ? "ascending" : "descending") : undefined} className={key === "name" ? "text-left" : undefined}>
+              <button type="button" onClick={() => setSort(current => ({ key, ascending: current.key === key ? !current.ascending : key === "name" }))}
+                className={`rounded px-2 py-2 hover:text-white ${active ? "text-zinc-100" : ""}`}>{label} <span aria-hidden="true">{active ? (sort.ascending ? "↑" : "↓") : "↕"}</span></button>
+            </th>;
+          })}</tr></thead>
+          <tbody>{filtered.map(row => <tr key={row.code} className="border-t border-white/5">
+            <td className="p-2 text-left">{row.name} <span className="text-xs text-zinc-500">{row.code}</span>{row.error && <span className="ml-2 text-xs text-amber-300" title={row.error}>결측</span>}</td>
+            <td className="px-2 text-zinc-200">{row.marketCap == null ? "—" : capFormat.format(row.marketCap / wonPerEok)}</td>
+            <td className={`px-2 ${tone(row.amount)}`}>{number(row.amount, 0)}</td>
+            {stockWindows.map(days => <td key={days} className={`px-2 ${tone(row[days])}`}>{number(row[days], 0)}</td>)}
+            <td className="px-2">{row.streakDays == null ? "—" : `${row.streakDays}일${row.streakAtLeast ? "+" : ""}`}</td>
+          </tr>)}</tbody>
+        </table>
+      </div> : <p className="text-sm text-zinc-400" role="status">{minCap && maxCap && Number(minCap) > Number(maxCap) ? "시총 최대값을 최소값 이상으로 입력해 주세요." : "조건에 맞는 종목이 없습니다."}</p>}
+    </>}
   </section>;
 }
 export function InvestorFlowBoard({ universe, view }: { universe: MinerviniUniverse; view: "index" | "stocks" }) {
@@ -158,18 +272,18 @@ export function InvestorFlowBoard({ universe, view }: { universe: MinerviniUnive
     return () => controller.abort();
   }, [universe, view, refresh]);
   return <div className="space-y-5">
-    <PageHeader title={view === "index" ? `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 수급` : `${spec.name} 종목 수급`} description={view === "index" ? `시장 전체의 투자자별 순매수 대금과 ${spec.market === "KOSPI" ? "코스피" : "코스닥"} 지수를 비교합니다.` : `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 시가총액 상위 10개 종목으로 먼저 테스트합니다.`} />
+    <PageHeader title={view === "index" ? `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 수급` : `${spec.name} 종목 수급`} description={view === "index" ? `시장 전체의 투자자별 순매수 대금과 ${spec.market === "KOSPI" ? "코스피" : "코스닥"} 지수를 비교합니다.` : `${spec.name} 구성종목 전체의 투자자별 순매수 수량을 확인합니다.`} />
     <div className="flex flex-wrap gap-2">{(["kospi200", "kosdaq150"] as const).flatMap(u => (["index", "stocks"] as const).map(v => <Link key={`${u}-${v}`} href={`/investor-flow/${u}${v === "stocks" ? "/stocks" : ""}`} aria-current={u === universe && v === view ? "page" : undefined} className={`rounded-lg border px-3 py-2 text-xs ${u === universe && v === view ? "border-rose-500/40 bg-rose-950 text-rose-100" : "border-white/10 text-zinc-400 hover:bg-white/5"}`}>{v === "index" ? `${u === "kospi200" ? "코스피" : "코스닥"} 시장` : `${minerviniUniverses[u].name} 종목`}</Link>))}<Link href="/investor-flow/pension" className="rounded-lg border border-white/10 px-3 py-2 text-xs text-zinc-400 hover:bg-white/5">국민연금 공시</Link></div>
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 px-4 py-3 text-xs text-zinc-400">
       <div className="space-y-1"><p>현물 기준 {board?.asOf ?? "확인 중"} · KRX 정규장 15:30 KST</p><p>시세 출처 {board?.quoteSource === "KRX_WEB" ? "KRX 정보데이터시스템 · 네이버 종가 대조" : board?.quoteSource === "KRX_OPEN_API" ? "KRX Open API" : "확인 중"} · 거래일 16:00 KST 수집 · 최근 수집 {board ? kst(board.fetchedAt) : "—"} KST</p></div>
       <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)} className="rounded-md bg-white/10 px-3 py-2 text-zinc-200 disabled:opacity-40">{loading ? "조회 중…" : "저장 자료 새로고침"}</button>
     </div>
-    {loading && <div className={`${box} animate-pulse text-sm text-zinc-400`} role="status">{view === "index" ? "기준일 지수 종가를 불러오고 있습니다." : "시총 상위 10개 종목의 자료를 불러오고 있습니다."}</div>}
+    {loading && <div className={`${box} animate-pulse text-sm text-zinc-400`} role="status">{view === "index" ? "기준일 지수 종가를 불러오고 있습니다." : "저장된 구성종목 목록을 불러오고 있습니다."}</div>}
     {error && <Notice>{error}</Notice>}
     {board?.stale && <Notice>새 기준일 자료가 없어 마지막 저장 결과를 표시합니다. 기준일을 확인해 주세요.</Notice>}
     {board?.collectionError && <Notice>예약 수집 안내: {board.collectionError} · 다음 거래일 16:00에 다시 수집합니다.</Notice>}
     {board?.equityError && <Notice>현물 데이터 수신 불가: {board.equityError}</Notice>}
-    {board && (view === "index" ? <TossMarketFlow key={refresh} board={board} universe={universe} /> : <TossFlow key={refresh} board={board} universe={universe} view={view} />)}
+    {board && (view === "index" ? <TossMarketFlow key={refresh} board={board} universe={universe} /> : <TossFlow key={refresh} board={board} universe={universe} />)}
     <p className="text-xs leading-relaxed text-zinc-500">5·20·60일은 거래일 기준입니다. 결측값은 —로 표시합니다. 수급 출처: 토스증권 · 종가·시총 출처: <a href="https://data.krx.co.kr/contents/MDC/MAIN/main/index.cmd" target="_blank" rel="noreferrer" className="underline">KRX 정보데이터시스템</a>.</p>
   </div>;
 }

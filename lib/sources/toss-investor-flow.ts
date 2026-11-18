@@ -1,4 +1,4 @@
-import type { MinerviniUniverse } from "@/config/minervini";
+import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
 import { investors, type InvestorPoint } from "@/lib/market/investor-flow";
 import type { FlowStock } from "@/lib/sources/investor-flow";
@@ -127,14 +127,23 @@ export async function loadTossMarketFlow(universe: MinerviniUniverse, asOf: stri
   return result;
 }
 export type TossFlowStock = { code: string; name: string; points: InvestorPoint[]; error: string | null };
-export async function loadTossInvestorFlows(universe: MinerviniUniverse, view: "index" | "stocks", asOf: string, stocks: FlowStock[], fetcher: typeof fetch = fetch) {
+export type TossStockFlow = { universe: MinerviniUniverse; view: "index" | "stocks"; asOf: string; collectedAt: string; membershipBasis: "CURRENT" | "INDEX_CONSTITUENTS_AS_OF"; rows: TossFlowStock[] };
+export async function loadTossInvestorFlows(universe: MinerviniUniverse, view: "index" | "stocks", asOf: string, stocks: FlowStock[], fetcher: typeof fetch = fetch, previous?: TossStockFlow): Promise<TossStockFlow> {
   const selected = view === "index" ? await fetchIndexMembers(universe, fetcher) : stocks;
-  if (view === "stocks" && selected.length !== 10) throw new Error("시총 상위 10개 종목 확인 실패");
+  const spec = minerviniUniverses[universe];
+  if (view === "stocks" && (selected.length < spec.minSize || selected.length > spec.maxSize || new Set(selected.map(stock => stock.code)).size !== selected.length)) {
+    throw new Error(`${spec.name} 전체 구성종목 확인 실패 (${selected.length}개)`);
+  }
+  const savedRows = previous?.membershipBasis === "INDEX_CONSTITUENTS_AS_OF" && previous.asOf === asOf && previous.universe === universe && previous.view === view
+    ? previous.rows.filter(row => !row.error) : [];
+  const saved = new Map(savedRows.map(row => [row.code, row.points]));
   const bearer = await accessToken(fetcher);
   const rows: TossFlowStock[] = [];
   for (let i = 0; i < selected.length; i += 4) {
     rows.push(...await Promise.all(selected.slice(i, i + 4).map(async stock => {
       try {
+        const previousPoints = saved.get(stock.code);
+        if (previousPoints) return { code: stock.code, name: stock.name, points: previousPoints, error: null };
         const cacheKey = `${stock.code}:${asOf}`;
         const cached = flowCache.get(cacheKey);
         if (cached && cached.until > Date.now()) return { code: stock.code, name: stock.name, points: cached.points, error: null };
@@ -155,5 +164,5 @@ export async function loadTossInvestorFlows(universe: MinerviniUniverse, view: "
       } catch (error) { return { code: stock.code, name: stock.name, points: [], error: error instanceof Error ? error.message : "토스 수급 조회 실패" }; }
     })));
   }
-  return { universe, view, asOf, collectedAt: new Date().toISOString(), membershipBasis: view === "index" ? "CURRENT" : "MARKET_CAP_AS_OF", rows };
+  return { universe, view, asOf, collectedAt: new Date().toISOString(), membershipBasis: view === "index" ? "CURRENT" : "INDEX_CONSTITUENTS_AS_OF", rows };
 }

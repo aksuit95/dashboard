@@ -10,7 +10,7 @@ type Query = (bld: string, params: Record<string, string>) => Promise<Row>;
 export type FlowStock = { code: string; name: string; marketCap: number; price?: number; points: InvestorPoint[]; error: string | null };
 export type EquityFlow = { sessions: string[]; prices: { date: string; value: number }[]; points: InvestorPoint[]; stocks: FlowStock[]; memberCount: number; collectedCount: number; error: string | null };
 export type FuturesFlow = { asOf: string; flowDate: string | null; contract: { code: string; name: string; close: number } | null; points: InvestorPoint[]; error: string | null; scope: "ALL_CONTRACTS"; session: "KRX_DAY" };
-export type InvestorBoard = { version: 1; universe: MinerviniUniverse; view: "index" | "stocks"; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; collectionError?: string | null; stale?: boolean; quoteSource?: "KRX_OPEN_API" | "KRX_WEB"; equity: EquityFlow | null; equityError: string | null };
+export type InvestorBoard = { version: 1; universe: MinerviniUniverse; view: "index" | "stocks"; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; stockScope?: "INDEX_CONSTITUENTS_AS_OF"; collectionError?: string | null; stale?: boolean; quoteSource?: "KRX_OPEN_API" | "KRX_WEB"; equity: EquityFlow | null; equityError: string | null };
 export const indexParams = { kospi200: { indIdx: "1", indIdx2: "028", product: "KR___FUK2I", market: "STK" }, kosdaq150: { indIdx: "2", indIdx2: "203", product: "KR___FUKQI", market: "KSQ" } };
 export function krxNumber(raw: unknown): number {
   if (typeof raw !== "string" && typeof raw !== "number") throw new Error("KRX 숫자 결측");
@@ -74,28 +74,37 @@ export function parseNearContract(data: Row, asOf: string): FuturesFlow["contrac
 }
 function since(asOf: string) { const d = new Date(asOf); d.setUTCDate(d.getUTCDate() - 240); return d.toISOString().slice(0, 10).replaceAll("-", ""); }
 const message = (e: unknown) => e instanceof Error ? e.message : "수급 수집 실패";
+function parseMemberCodes(data: Row, universe: MinerviniUniverse) {
+  const members = rows(data);
+  const codes = new Set(members.map(row => String(row.ISU_SRT_CD)));
+  const spec = minerviniUniverses[universe];
+  if (codes.size < spec.minSize || codes.size > spec.maxSize || codes.size !== members.length || [...codes].some(code => !/^[0-9A-Z]{6}$/.test(code))) {
+    throw new Error(`${spec.name} 전체 구성종목 확인 실패 (${codes.size}개)`);
+  }
+  return codes;
+}
 export async function fetchEquityFlow(universe: MinerviniUniverse, view: InvestorBoard["view"], asOf: string, query: Query, quoteOnly = false): Promise<EquityFlow> {
   const spec = indexParams[universe], endDd = asOf.replaceAll("-", "");
   // Fail authentication before launching hundreds of member requests.
   const caps = parseCapitalizations(await query("MDCSTAT01501", { trdDd: endDd, mktId: spec.market }));
   const prices = parsePrices(await query("MDCSTAT00301", { indIdx: spec.indIdx, indIdx2: spec.indIdx2, strtDd: since(asOf), endDd }), asOf);
   const sessions = prices.map(p => p.date);
-  let selected = caps.slice(0, 10);
+  if (quoteOnly && view === "index") {
+    return { sessions, prices, points: [], stocks: [], memberCount: 0, collectedCount: 0, error: null };
+  }
+  let membership: Row;
+  try { membership = await query("MDCSTAT00601", { indIdx: spec.indIdx, indIdx2: spec.indIdx2, trdDd: endDd }); }
+  catch (e) {
+    if (view === "stocks") throw e;
+    return { sessions, prices, points: alignFlows([], sessions), stocks: [], memberCount: 0, collectedCount: 0, error: `지수 시세 수신 · 구성종목·수급은 별도 인증 필요: ${message(e)}` };
+  }
+  const codes = parseMemberCodes(membership, universe);
+  const selected = caps.filter(stock => codes.has(stock.code));
+  if (selected.length !== codes.size) throw new Error("구성종목 시총 누락");
   if (quoteOnly) {
-    const stocks = view === "stocks" ? selected.map(stock => ({ ...stock, points: alignFlows([], sessions), error: null })) : [];
+    const stocks = selected.map(stock => ({ ...stock, points: [], error: null }));
     return { sessions, prices, points: [], stocks, memberCount: stocks.length, collectedCount: 0, error: null };
   }
-  if (view === "index") {
-    let members: Row[];
-    try { members = rows(await query("MDCSTAT00601", { indIdx: spec.indIdx, indIdx2: spec.indIdx2, trdDd: endDd })); }
-    catch (e) { return { sessions, prices, points: alignFlows([], sessions), stocks: [], memberCount: 0, collectedCount: 0, error: `지수 시세 수신 · 구성종목·수급은 별도 인증 필요: ${message(e)}` }; }
-    const codes = new Set(members.map(r => String(r.ISU_SRT_CD)));
-    const bounds = minerviniUniverses[universe];
-    if (codes.size < bounds.minSize || codes.size > bounds.maxSize || codes.size !== members.length) throw new Error("지수 전체 구성 확인 실패");
-    selected = caps.filter(s => codes.has(s.code));
-    if (selected.length !== codes.size) throw new Error("구성종목 시총 누락");
-  }
-  if (selected.length < 10) throw new Error("시총 상위 10개 확인 실패");
   let symbols: Row[] = [], symbolsError: string | null = null;
   try { symbols = rows(await query("dbms/comm/finder/finder_stkisu", { mktsel: spec.market, searchText: "", typeNo: "0" }), "block1"); }
   catch (e) { symbolsError = message(e); }
@@ -149,6 +158,7 @@ export async function loadInvestorBoard(db: AppDatabase, universe: MinerviniUniv
     let cacheable = true;
     if (bld === "MDCSTAT01501") parseCapitalizations(result);
     if (bld === "MDCSTAT00301") parsePrices(result, asOf);
+    if (bld === "MDCSTAT00601") parseMemberCodes(result, universe);
     if (bld === "MDCSTAT02303") cacheable = parseStockFlows(result, asOf).at(-1)?.date === asOf;
     if (bld === "MDCSTAT13102") cacheable = parseFuturesFlows(result, asOf).at(-1)?.date === asOf;
     if (bld === "MDCSTAT12501") parseNearContract(result, asOf);
@@ -163,6 +173,7 @@ export async function loadInvestorBoard(db: AppDatabase, universe: MinerviniUniv
   const work = (async () => {
     const [equity] = await Promise.allSettled([fetchEquityFlow(universe, view, asOf, query, true)]);
     const board: InvestorBoard = { version: 1, universe, view, asOf, fetchedAt: new Date().toISOString(), priceBasis: "KRX_REGULAR_CLOSE",
+      ...(view === "stocks" && equity.status === "fulfilled" ? { stockScope: "INDEX_CONSTITUENTS_AS_OF" as const } : {}),
       quoteSource: "KRX_WEB", equity: equity.status === "fulfilled" ? equity.value : null, equityError: equity.status === "rejected" ? message(equity.reason) : null };
     if (board.equityError || board.equity?.error) failed.set(key, { until: Date.now() + 60_000, board });
     return board;

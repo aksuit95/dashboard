@@ -31,7 +31,12 @@ export async function collectInvestorDaily(db: AppDatabase, now = new Date(), re
   const asOf = minerviniSession(now);
   const today = new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
   if (asOf !== today && !recoverPreviousSession) return { ok: true, skipped: true, asOf };
-  if (retryFailed) db.prepare("DELETE FROM investor_flow_daily_runs WHERE as_of = ? AND finished_at IS NOT NULL AND error IS NOT NULL").run(asOf);
+  // A completed top-ten run needs one more claim for the new stock scope on the same date.
+  db.prepare(`DELETE FROM investor_flow_daily_runs
+    WHERE as_of = ? AND finished_at IS NOT NULL AND ((? AND error IS NOT NULL) OR EXISTS (
+      SELECT 1 FROM investor_flow_daily_snapshots WHERE as_of = ? AND view = 'stocks'
+        AND json_extract(toss, '$.membershipBasis') = 'MARKET_CAP_AS_OF'
+    ))`).run(asOf, Number(retryFailed), asOf);
   const claim = db.prepare("INSERT OR IGNORE INTO investor_flow_daily_runs(as_of, started_at) VALUES (?, ?)").run(asOf, now.toISOString());
   if (!claim.changes) {
     const run = db.prepare("SELECT error FROM investor_flow_daily_runs WHERE as_of = ?").get(asOf) as { error: string | null };
@@ -42,15 +47,18 @@ export async function collectInvestorDaily(db: AppDatabase, now = new Date(), re
     for (const universe of minerviniUniverseIds) {
       for (const view of ["index", "stocks"] as const) {
         try {
-          const saved = db.prepare("SELECT error, toss FROM investor_flow_daily_snapshots WHERE as_of = ? AND universe = ? AND view = ?").get(asOf, universe, view) as { error: string | null; toss: string | null } | undefined;
-          if (retryFailed && saved && !saved.error && saved.toss) continue;
+          const saved = db.prepare(`SELECT error, toss IS NOT NULL AS has_toss, json_extract(toss, '$.membershipBasis') AS membership_basis
+            FROM investor_flow_daily_snapshots WHERE as_of = ? AND universe = ? AND view = ?`)
+            .get(asOf, universe, view) as { error: string | null; has_toss: number; membership_basis: string | null } | undefined;
+          if (saved?.has_toss && !saved.error && saved.membership_basis !== "MARKET_CAP_AS_OF") continue;
           const board = await loadInvestorBoard(db, universe, view, now);
           let toss: Awaited<ReturnType<typeof collectInvestorToss>> | null = null;
           let error: string | null = null;
           try { toss = await collectInvestorToss(db, universe, view, board); }
           catch (e) { error = e instanceof Error ? e.message : "수급 수집 실패"; }
+          const missing = toss && "rows" in toss ? toss.rows.filter(row => row.error).length : 0;
           const problems = [board.equityError, error, toss && "priceError" in toss ? toss.priceError : null,
-            toss && "rows" in toss ? toss.rows.find(row => row.error)?.error : null];
+            toss && "rows" in toss && missing ? `구성종목 수급 ${missing}/${toss.rows.length}개 결측` : null];
           if (toss && "points" in toss && toss.points.at(-1)?.date !== asOf) problems.push(`${asOf} 시장 수급 미발표`);
           error = problems.filter(Boolean).join(" · ") || null;
           db.prepare("INSERT OR REPLACE INTO investor_flow_daily_snapshots(as_of, universe, view, board, toss, error) VALUES (?, ?, ?, ?, ?, ?)")

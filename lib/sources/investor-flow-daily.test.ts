@@ -72,6 +72,14 @@ describe("scheduled investor flow snapshots", () => {
     expect((await collectInvestorDaily(db, at("18:00"), true)).skipped).toBe(true);
     expect(collectInvestorToss).toHaveBeenCalledTimes(5);
   });
+  it("recollects a same-day legacy stock snapshot without recollecting the market tabs", async () => {
+    await collectInvestorDaily(db, at("16:00"));
+    db.prepare(`UPDATE investor_flow_daily_snapshots SET toss = json_set(toss, '$.membershipBasis', 'MARKET_CAP_AS_OF') WHERE view = 'stocks'`).run();
+    vi.mocked(loadInvestorBoard).mockClear();
+    await Promise.all([collectInvestorDaily(db, at("17:00")), collectInvestorDaily(db, at("17:00"))]);
+    expect(vi.mocked(loadInvestorBoard).mock.calls.map(([, universe, view]) => [universe, view])).toEqual([["kospi200", "stocks"], ["kosdaq150", "stocks"]]);
+    expect((await collectInvestorDaily(db, at("18:00"))).skipped).toBe(true);
+  });
   it("rejects unauthenticated scheduled calls", async () => {
     const { GET } = await import("@/app/api/cron/investor-flow/route");
     vi.stubEnv("CRON_SECRET", "test-only");
