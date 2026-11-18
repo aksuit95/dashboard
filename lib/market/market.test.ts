@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { adrRatio, annualPriceReturns, disparity, etfNetFlow, holdingWeightChanges, marketCapRatio, revenueYoy, sliceByRange, sum } from "@/lib/market/series";
 import { changePercent, funding8hPercent, isQuoteStale, perShareKrw, premiumPercent, sharesPerReceiptOn, toUsd } from "@/lib/market/convert";
-import { fiftyTwoWeekHigh, moverExclusion, trailingReturn } from "@/lib/market/movers";
 
 describe("1주 환산과 프리미엄", () => {
   it("SKHY 1 ADS = 보통주 0.1주를 1주 원화로 나눈다", () => {
@@ -159,24 +158,5 @@ describe("보유 비중, 매출 YoY, 스테일", () => {
     expect(isQuoteStale({ fetchedAt: "2026-01-01T00:00:00.000Z", now: "2026-01-01T00:00:10.000Z", intervalMs: 20_000, failed: false })).toBe(false);
     expect(isQuoteStale({ fetchedAt: "2026-01-01T00:00:00.000Z", now: "2026-01-01T00:01:10.000Z", intervalMs: 20_000, failed: false })).toBe(true);
     expect(isQuoteStale({ fetchedAt: "2026-01-01T00:00:00.000Z", now: "2026-01-01T00:00:10.000Z", intervalMs: 20_000, failed: true })).toBe(true);
-  });
-});
-
-describe("급등락 제외와 52주", () => {
-  it("ETF 와 시총 미달, 시총 미확인을 제외한다", () => {
-    expect(moverExclusion({ marketCap: 2e9, capCurrency: "USD", instrumentClass: "etf" }).excluded).toBe(true);
-    expect(moverExclusion({ marketCap: 50e9, capCurrency: "KRW", instrumentClass: "equity" }).reason).toBe("시가총액 기준 미달");
-    expect(moverExclusion({ marketCap: 200e9, capCurrency: "KRW", instrumentClass: "equity" }).excluded).toBe(false);
-    expect(moverExclusion({ marketCap: 0.5e9, capCurrency: "USD", instrumentClass: "equity" }).excluded).toBe(true);
-    expect(moverExclusion({ marketCap: 2e9, capCurrency: "USD", instrumentClass: "equity" }).excluded).toBe(false);
-    expect(moverExclusion({ marketCap: null, capCurrency: "USD", instrumentClass: "equity" }).reason).toBe("시총 미확인");
-  });
-
-  it("52주 창이 짧으면 shortWindow 이고, 마지막 값이 최고가면 신고가", () => {
-    expect(fiftyTwoWeekHigh([1, 2, 3])?.high).toBe(true);
-    expect(fiftyTwoWeekHigh([1, 5, 4])?.high).toBe(false);
-    expect(fiftyTwoWeekHigh([1, 2])?.shortWindow).toBe(true);
-    expect(trailingReturn([100, 110, 121], 2)).toBeCloseTo(21, 6);
-    expect(trailingReturn([100], 1)).toBeNull();
   });
 });

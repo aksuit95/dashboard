@@ -4,7 +4,11 @@ import { loadDisparityIndicators } from "@/lib/sources/disparity-indicators";
 import { FearGreedBoard } from "@/components/FearGreedBoard";
 import { loadRiskCharts } from "@/lib/sources/risk-charts";
 import { RangeChart } from "@/components/RangeChart";
-import { formatPlain } from "@/lib/view/read";
+import { formatNumber } from "@/lib/format";
+
+function formatPlain(value: number | null) {
+  return value == null ? "—" : formatNumber(value);
+}
 
 export default async function RiskPage() {
   const [charts, disparity] = await Promise.all([loadRiskCharts(), loadDisparityIndicators()]);

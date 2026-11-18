@@ -130,6 +130,13 @@ export function reportRequests(now: Date) {
   }
   return list;
 }
+type ReportPeriod = { year: number; quarter: 1 | 2 | 3 | 4 };
+/** New or previously empty companies need their history even during an incremental update. */
+export function reportRequestsForCompany(now: Date, period: ReportPeriod | undefined, hasReports: boolean) {
+  const all = reportRequests(now);
+  if (period && !all.some(p => p.year === period.year && p.quarter === period.quarter)) throw new Error("요청한 재무기간은 수집 대상 기간이 아닙니다.");
+  return period && hasReports ? [period] : all;
+}
 async function collectReport(corpCode: string, year: number, quarter: 1 | 2 | 3 | 4, now: Date, refresh: boolean) {
   const reportCode = { 1: "11013", 2: "11012", 3: "11014", 4: "11011" }[quarter];
   return cached(`report-${corpCode}-${year}-${reportCode}`, year < now.getUTCFullYear() - 1 ? 30 : 1, refresh, async () => {
@@ -158,8 +165,9 @@ export function financialSummary(publication: FinancialPublication): FinancialPu
     return { ...rest, evidence: _evidence.bonds ? { bonds: _evidence.bonds } : {} };
   }) })) };
 }
-export async function collectFinancials(options: { refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; onProgress?: (text: string) => void } = {}) {
+export async function collectFinancials(options: { refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; period?: ReportPeriod; onProgress?: (text: string) => void } = {}) {
   const now = new Date(), refresh = options.refresh ?? false;
+  reportRequestsForCompany(now, options.period, true); // Validate before any network request or checkpoint.
   const previous = await readFinancialPublication();
   const [members, codes] = await Promise.all([fetchIndexMembers("kospi200"), corpCodes(refresh)]);
   if (options.codes?.some(code => !members.some(m => m.code === code))) throw new Error("선택 종목이 현재 코스피200 구성에 없습니다.");
@@ -181,6 +189,10 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
       const old = oldByCode.get(member.code);
       const sameCorp = old?.corpCode === codes[member.code];
       const company: FinancialCompany = { code: member.code, name: member.name, corpCode: codes[member.code] ?? null, industry: sectors[member.code] ?? old?.industry ?? "미확인", financial: sameCorp ? old?.financial ?? null : null, fiscalMonth: sameCorp ? old?.fiscalMonth ?? null : null, reports: sameCorp ? old?.reports ?? [] : [], errors: [], attemptedAt: now.toISOString(), referenceFcf: null, market: null };
+      if (options.period && sameCorp && old?.reports.length) {
+        // Keep errors for historical periods not rechecked by this incremental run.
+        company.errors.push(...old.errors.filter(e => /^\d{4} Q[1-4]:/.test(e) && !e.startsWith(`${options.period!.year} Q${options.period!.quarter}:`)));
+      }
       const ref = references.data?.stocks.find(s => s.code === member.code);
       if (ref && references.data) company.referenceFcf = { value: ref.values.fcf == null ? null : ref.values.fcf * 1e8, source: "QuantiWise E124260.M", compositionDate: references.data.compositionDate, sourceUpdatedAt: references.data.sourceUpdatedAt, definition: "기존 12개월 선행 조회표의 공급자 FCF. 상세 산식·예상기간 미검증. 공시 FCF와 혼합하지 않음" };
       const close = caps?.closes[member.code], marketCap = caps?.values[member.code];
@@ -197,9 +209,10 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
         company.financial = classifyFinancial(industry, company.industry);
         if (!company.fiscalMonth || Number(company.fiscalMonth) !== 12) { company.errors.push("12월 결산 외 기업: 기간 매핑 검증 전 수집 보류"); return company; }
         const reports = new Map(company.reports.map(r => [`${r.year}-${r.quarter}`, r]));
-        for (const period of reportRequests(now)) {
+        for (const period of reportRequestsForCompany(now, options.period, company.reports.length > 0)) {
           try {
-            const report = await collectReport(company.corpCode, period.year, period.quarter, now, refresh);
+            const refreshPeriod = refresh || (!!options.period && options.period.year === period.year && options.period.quarter === period.quarter);
+            const report = await collectReport(company.corpCode, period.year, period.quarter, now, refreshPeriod);
             if (report) {
               const key = `${report.year}-${report.quarter}`, existing = reports.get(key);
               // Old parsed caches predate raw-account collection. Do not discard a richer copy

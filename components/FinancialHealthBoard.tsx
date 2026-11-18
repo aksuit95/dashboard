@@ -14,6 +14,10 @@ const panel = "rounded-xl border border-white/10 bg-[#121720] p-4 sm:p-5";
 const inputClass = "rounded-md border border-white/15 bg-[#0c1018] px-3 py-2 text-sm text-zinc-200";
 const buttonClass = "rounded-md border border-white/15 px-3 py-2 text-xs text-zinc-300 hover:bg-white/5 disabled:opacity-40";
 type SortKey = "cash" | "fcf" | "average" | "yield" | "debt";
+const selectedReports = (company: FinancialCompany, period: string) => period === "latest" ? company : {
+  ...company,
+  reports: company.reports.some(r => r.periodEnd === period) ? company.reports.filter(r => r.periodEnd <= period) : [],
+};
 
 /** Native disclosure works with mouse, touch and keyboard; Escape closes the popup. */
 function CardHelp({ label, content, alignRight = false }: { label: string; content: string[]; alignRight?: boolean }) {
@@ -39,6 +43,7 @@ export function FinancialHealthBoard() {
   const [reload, setReload] = useState(0), [query, setQuery] = useState(""), [industry, setIndustry] = useState("");
   const [kind, setKind] = useState("nonfinancial"), [filter, setFilter] = useState("all"), [sort, setSort] = useState<SortKey>("cash"), [desc, setDesc] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
+  const [period, setPeriod] = useState("latest");
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("code");
     if (code && /^[0-9A-Z]{6}$/.test(code)) { setKind("all"); setQuery(code); setSelected(code); }
@@ -52,7 +57,7 @@ export function FinancialHealthBoard() {
     return () => controller.abort();
   }, [reload]);
   const companies = board?.publication?.companies;
-  const analyzed = useMemo(() => (companies ?? []).map(company => ({ company, analysis: analyzeCompany(company) })), [companies]);
+  const analyzed = useMemo(() => (companies ?? []).map(c => { const company = selectedReports(c, period); return { company, analysis: analyzeCompany(company) }; }), [companies, period]);
   const industries = [...new Set(analyzed.map(r => r.company.industry))].sort((a, b) => a.localeCompare(b, "ko"));
   const nonfinancial = analyzed.filter(r => r.company.financial === false);
   const covered = analyzed.filter(r => r.analysis.latest?.values.cash != null).length;
@@ -77,7 +82,7 @@ export function FinancialHealthBoard() {
   const priceDates = [...new Set(analyzed.flatMap(r => r.company.market ? [r.company.market.date] : []))].sort();
   return <section aria-label="현금·재무건전성 분석" className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
-      <span>공시 실적 · 단위 억원 · 연결 우선 / 별도 구분</span>
+      <div className="flex flex-wrap items-center gap-3"><span>공시 실적 · 단위 억원 · 연결 우선 / 별도 구분</span><label className="flex items-center gap-2">재무 기준 <select aria-label="재무 기준 분기" className={inputClass} value={period} onChange={e => setPeriod(e.target.value)}><option value="latest">최신 공시</option><option value="2026-06-30">2026년 2분기</option></select></label></div>
       <button type="button" disabled={busy} className={buttonClass} onClick={() => setReload(v => v + 1)}>{busy ? "불러오는 중…" : "저장 자료 새로고침"}</button>
     </div>
     {error && <div role="status" className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-4 text-sm text-amber-200">{error}</div>}
@@ -89,6 +94,7 @@ export function FinancialHealthBoard() {
       <div className="text-xs leading-6 text-zinc-400">
         구성 확인 {kst(publication.membershipAt)} KST · 저장 {kst(publication.publishedAt)} KST<br />
         가격: {priceDates.length ? priceDates.join(", ") : "확보 실패"} · KRX 정규장 15:30 KST. 기업 상세에 가격 수집 시각 별도 표시.<br />
+        {period !== "latest" && <>2분기 보고서가 없는 기업은 결측으로 표시합니다. 시가총액과 FCF 수익률은 위 가격 기준일을 사용하며 2분기 당시 수치가 아닙니다.<br /></>}
         {publication.membershipSource}. 금융업은 일반기업 FCF 평가에서 제외합니다.
       </div>
       <div className="flex flex-wrap gap-2">
@@ -115,13 +121,13 @@ export function FinancialHealthBoard() {
       </div>
       <CardHelp label="기업 비교표" content={cardHelp["기업 비교표"]} />
       <p className="text-xs leading-5 text-zinc-500">¹ 표기 차입금은 재무상태표에서 식별한 단기차입금·유동성장기부채·장기차입금과 비유동으로 확인된 사채의 부분 합계입니다. 만기 구분이 불명확한 사채와 주석 내 차입·리스·기타 금융부채는 빠질 수 있어 총차입금·순현금으로 확정하지 않습니다. 가용 유동성과 순차입금/EBITDA는 사용제한·주석·감가상각 데이터 검증 전까지 결측입니다. 금융자회사 포함 여부·기업 인수에 따라 연결 FCF와 부채의 업종 간 비교가 제한될 수 있습니다.</p>
-      {active && <CompanyDetail key={active.code} company={active} />}
+      {active && <CompanyDetail key={`${active.code}-${period}`} company={active} period={period} />}
     </>}
     {!publication && !busy && <div className={panel}><p className="text-sm text-zinc-400">공식 재무제표가 저장되면 기업 비교와 상세 분석이 표시됩니다.</p></div>}
   </section>;
 }
 
-function CompanyDetail({ company }: { company: FinancialCompany }) {
+function CompanyDetail({ company, period }: { company: FinancialCompany; period: string }) {
   const [detail, setDetail] = useState<FinancialCompany | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
   useEffect(() => {
@@ -133,7 +139,7 @@ function CompanyDetail({ company }: { company: FinancialCompany }) {
     }).catch(error => { if (!controller.signal.aborted) setDetailError(error instanceof Error ? error.message : "공시 계정 조회 실패"); });
     return () => controller.abort();
   }, [company]);
-  const detailed = detail ? { ...detail, market: company.market } : company;
+  const detailed = detail ? selectedReports({ ...detail, market: company.market }, period) : company;
   return <>{detailError && <p role="alert" className="text-xs text-amber-300">공시 계정 상세: {detailError}</p>}<CompanyDetailContent company={detailed} loading={!detail && !detailError} /></>;
 }
 
@@ -142,7 +148,7 @@ function CompanyDetailContent({ company, loading }: { company: FinancialCompany;
   const [tab, setTab] = useState("history");
   const annual = [...a.annual].reverse();
   return <section className="space-y-4" aria-label={`${company.name} 상세 분석`}>
-    <div className="flex flex-wrap items-end justify-between gap-3 border-t border-white/10 pt-6"><div><p className="mb-1 text-xs tracking-wider text-cyan-400">COMPANY CASH REVIEW</p><h2 className="text-xl font-semibold">{company.name} <span className="text-sm font-normal text-zinc-500">{company.code}</span></h2><p className="mt-2 text-xs text-zinc-400">{company.industry} · {a.latest?.periodEnd ?? "재무기간 미확보"} · {a.latest ? a.latest.scope === "CFS" ? "연결재무제표" : "별도재무제표" : ""}</p></div>{a.latest && <a className={buttonClass} href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${a.latest.receipt}`} target="_blank" rel="noreferrer">최신 공시 원문 ↗</a>}</div>
+    <div className="flex flex-wrap items-end justify-between gap-3 border-t border-white/10 pt-6"><div><p className="mb-1 text-xs tracking-wider text-cyan-400">COMPANY CASH REVIEW</p><h2 className="text-xl font-semibold">{company.name} <span className="text-sm font-normal text-zinc-500">{company.code}</span></h2><p className="mt-2 text-xs text-zinc-400">{company.industry} · {a.latest?.periodEnd ?? "재무기간 미확보"} · {a.latest ? a.latest.scope === "CFS" ? "연결재무제표" : "별도재무제표" : ""}</p></div>{a.latest && <a className={buttonClass} href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${a.latest.receipt}`} target="_blank" rel="noreferrer">선택 보고서 원문 ↗</a>}</div>
     <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">{[["현금및현금성자산", money(v?.cash), "억원 · 사용제한 여부 미검증"], ["단기금융상품", money(v?.shortInvestments), "억원 · 가용 현금에 자동 합산 안 함"], ["TTM FCF", money(a.ttm?.fcf), a.ttm?.label ?? "산출 불가 / 금융업 제외"], ["유동비율 / 당좌비율", `${pct(a.currentRatio)} / ${pct(a.quickRatio)}`, "비금융기업 · 분모 양수일 때만 계산"]].map(([label, value, hint], index) => <div key={label} className={panel}><p className="text-xs text-zinc-400">{label}</p><p className="my-2 text-lg font-semibold tabular-nums">{value}</p><p className="text-[11px] text-zinc-500">{hint}</p><CardHelp label={label} content={cardHelp[label]} alignRight={index % 2 === 1} /></div>)}</div>
     <div className={panel}><h3 className="mb-3 text-sm font-medium">공시된 현금흐름과 부채 계정</h3><p className="mb-4 text-xs text-zinc-500">재무상태표는 결산일 잔액, 현금흐름표는 해당 사업연도 시작부터 결산일까지의 누적 금액입니다. 확인된 계정만 표시합니다.</p><dl className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-2 lg:grid-cols-4">{(["endingCash", "ocf", "icf", "financing", "ppe", "intangible", "dividends", "buybacks", "shortDebt", "currentLongDebt", "longDebt", "bonds", "currentBonds", "currentLeases", "longLeases", "assetSales", "acquisitions"] as Metric[]).map((key, index) => <div key={key}><dt className="mb-1 text-zinc-500">{key === "endingCash" ? "현금흐름표 기말 현금" : metricLabels[key]}</dt><dd className="tabular-nums">{money(v?.[key])} 억원<CardHelp label={key === "endingCash" ? "현금흐름표 기말 현금" : metricLabels[key]} content={accountHelp[key]!} alignRight={index % 2 === 1} /></dd></div>)}</dl></div>
     <div className="flex flex-wrap gap-2" role="tablist" aria-label="상세 항목">{[["history", "현금·FCF 이력"], ["accounts", "공시 계정"], ["evidence", "출처·계산 근거"]].map(([id, label]) => <button type="button" role="tab" aria-selected={tab === id} key={id} onClick={() => setTab(id)} className={`${buttonClass} ${tab === id ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-200" : ""}`}>{label}</button>)}</div>
@@ -163,9 +169,9 @@ function CompanyDetailContent({ company, loading }: { company: FinancialCompany;
     {tab === "evidence" && <div className={`${panel} space-y-4 text-xs leading-6 text-zinc-400`}>
       <p>공시일 {a.latest?.filedAt ?? "—"} (접수번호 기준, 시각 미제공) · 재무 수집 {kst(a.latest?.fetchedAt)} KST<br />가격 기준 {company.market?.date ?? "미확보"} · KRX 15:30 KST · 가격 수집 {kst(company.market?.fetchedAt)} KST<br />DART 업종코드 {company.industryCode ?? "미확인"} · {company.financialBasis ?? "업종 미확인"}</p>
       <p>FCF = 영업현금흐름 − 유형자산 취득 − 무형자산 취득. 기업 인수대금은 별도입니다. TTM = 직전 연간 + 당기 누적 − 전년 동기 누적. 손익계산서 분·반기는 누적 필드를 사용합니다. 연결과 별도는 혼합하지 않습니다.</p>
-      <p>가용 유동성·총차입금·순현금·리스 포함 여부·순차입금/EBITDA·정확한 만기 구조는 주석 확인 전까지 확정하지 않습니다. 점수나 순현금 기업 수를 임의로 산출하지 않습니다. 정정공시는 재수집 시 접수번호를 갱신합니다. 이 페이지는 현재 구성기업의 최신 확보 공시를 보여주며 과거 시점 백테스트를 지원하지 않습니다.</p>
+      <p>가용 유동성·총차입금·순현금·리스 포함 여부·순차입금/EBITDA·정확한 만기 구조는 주석 확인 전까지 확정하지 않습니다. 점수나 순현금 기업 수를 임의로 산출하지 않습니다. 정정공시는 재수집 시 접수번호를 갱신합니다. 구성종목과 가격은 현재 저장 자료 기준이며 과거 시점 백테스트가 아닙니다.</p>
       {company.referenceFcf && <p className="rounded-lg bg-violet-400/5 p-3 text-violet-200">기존 보유 자료 참고: {company.referenceFcf.source} FCF {money(company.referenceFcf.value)}억원 · 구성일 {company.referenceFcf.compositionDate} · 원본 갱신 {company.referenceFcf.sourceUpdatedAt ?? "미제공"}<br />{company.referenceFcf.definition}</p>}
-      <details><summary className="cursor-pointer text-zinc-200">최신 보고서 계정 매핑과 원문 금액</summary><div className="mt-3 overflow-x-auto"><table className="w-full text-left"><thead><tr>{["지표", "금액 (억원)", "원문 계정 / ID", "사용 필드 / 원문 금액"].map(s => <th key={s} className="p-2">{s}</th>)}</tr></thead><tbody>{(Object.keys(metricLabels) as Metric[]).map(key => <tr key={key} className="border-t border-white/5"><td className="p-2 whitespace-nowrap">{metricLabels[key]}</td><td className="p-2">{money(v?.[key])}</td><td className="p-2">{a.latest?.evidence[key]?.map((e, i) => <div key={i}>{e.statement} · {e.name}<span className="block text-[10px] text-zinc-600">{e.id}</span></div>)}</td><td className="p-2">{a.latest?.evidence[key]?.map((e, i) => <div key={i}>{e.field}<br />{e.raw || "결측"}</div>)}</td></tr>)}</tbody></table></div></details>
+      <details><summary className="cursor-pointer text-zinc-200">선택 보고서 계정 매핑과 원문 금액</summary><div className="mt-3 overflow-x-auto"><table className="w-full text-left"><thead><tr>{["지표", "금액 (억원)", "원문 계정 / ID", "사용 필드 / 원문 금액"].map(s => <th key={s} className="p-2">{s}</th>)}</tr></thead><tbody>{(Object.keys(metricLabels) as Metric[]).map(key => <tr key={key} className="border-t border-white/5"><td className="p-2 whitespace-nowrap">{metricLabels[key]}</td><td className="p-2">{money(v?.[key])}</td><td className="p-2">{a.latest?.evidence[key]?.map((e, i) => <div key={i}>{e.statement} · {e.name}<span className="block text-[10px] text-zinc-600">{e.id}</span></div>)}</td><td className="p-2">{a.latest?.evidence[key]?.map((e, i) => <div key={i}>{e.field}<br />{e.raw || "결측"}</div>)}</td></tr>)}</tbody></table></div></details>
       <details><summary className="cursor-pointer text-zinc-200">확보한 전체 보고서와 공시 원문</summary><ul className="mt-2 grid gap-2 sm:grid-cols-2">{[...company.reports].reverse().map(r => <li key={r.periodEnd}><a className="text-cyan-300 underline" target="_blank" rel="noreferrer" href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${r.receipt}`}>{r.periodEnd} · {r.scope} · 공시 {r.filedAt} ↗</a> · {r.warnings.length}개 검증 참고</li>)}</ul></details>
       <p>공식 출처: <a className="text-cyan-300 underline" href="https://opendart.fss.or.kr/guide/detail.do?apiGrpCd=DS003&apiId=2019020" target="_blank" rel="noreferrer">OpenDART 전체 재무제표</a> · <a className="text-cyan-300 underline" href="https://openapi.krx.co.kr/" target="_blank" rel="noreferrer">KRX Open API</a>. 단기금융상품의 환금성·사용제한과 주석만 제공되는 사항은 추가 확인이 필요합니다.</p>
     </div>}
@@ -176,7 +182,7 @@ function DisclosedAccounts({ report }: { report: FinancialCompany["reports"][num
   const [query, setQuery] = useState("");
   const [statement, setStatement] = useState("relevant");
   const rows = (report?.accounts ?? []).filter(a => (statement === "all" || (statement === "relevant" ? /현금|차입|사채|금융|예치|리스|배당|자기주식|매출채권|재고|자산|부채/.test(a.name) : a.statement === statement)) && `${a.name} ${a.id}`.toLowerCase().includes(query.toLowerCase()));
-  return <details open className="border-t border-white/10 pt-4"><summary className="cursor-pointer text-sm font-medium text-zinc-200">최신 재무제표 공시 계정 전체 보기</summary>{!report?.accounts?.length ? <p className="mt-3">공시 계정 상세가 아직 수집되지 않았습니다.</p> : <><p className="my-3">{report.periodEnd} · {report.scope === "CFS" ? "연결" : "별도"} · 재무상태표는 기말 잔액, 현금흐름표와 손익계산서는 누적액입니다. 원문 행을 그대로 표시하므로 합계와 하위 항목을 중복 합산하지 마세요.</p><div className="flex flex-wrap gap-2"><input className={inputClass} aria-label="공시 계정 검색" placeholder="계정명 또는 ID 검색" value={query} onChange={e => setQuery(e.target.value)} /><select className={inputClass} aria-label="공시 계정 구분" value={statement} onChange={e => setStatement(e.target.value)}><option value="relevant">현금·자산·부채 관련</option><option value="all">전체 계정</option><option value="BS">재무상태표</option><option value="CF">현금흐름표</option><option value="IS">손익계산서</option><option value="CIS">포괄손익계산서</option></select></div><div className="mt-3 max-h-96 overflow-auto"><table className="w-full text-left text-xs"><caption className="py-2 text-left text-zinc-500">{rows.length}개 공시 계정 · 공시 원본 단위</caption><thead className="sticky top-0 bg-[#1c222b]"><tr><th className="p-2">구분</th><th className="p-2">계정명 / ID</th><th className="p-2 text-right">원문 금액</th><th className="p-2">통화</th></tr></thead><tbody>{rows.map((a, i) => <tr key={i} className="border-t border-white/5"><td className="p-2">{a.statement}</td><td className="p-2">{a.name}<span className="block text-[10px] text-zinc-600">{a.id}</span></td><td className="p-2 text-right tabular-nums">{a.amount || "—"}</td><td className="p-2">{a.currency || "미확인"}</td></tr>)}</tbody></table></div></>}</details>;
+  return <details open className="border-t border-white/10 pt-4"><summary className="cursor-pointer text-sm font-medium text-zinc-200">선택 재무제표 공시 계정 전체 보기</summary>{!report?.accounts?.length ? <p className="mt-3">공시 계정 상세가 아직 수집되지 않았습니다.</p> : <><p className="my-3">{report.periodEnd} · {report.scope === "CFS" ? "연결" : "별도"} · 재무상태표는 기말 잔액, 현금흐름표와 손익계산서는 누적액입니다. 원문 행을 그대로 표시하므로 합계와 하위 항목을 중복 합산하지 마세요.</p><div className="flex flex-wrap gap-2"><input className={inputClass} aria-label="공시 계정 검색" placeholder="계정명 또는 ID 검색" value={query} onChange={e => setQuery(e.target.value)} /><select className={inputClass} aria-label="공시 계정 구분" value={statement} onChange={e => setStatement(e.target.value)}><option value="relevant">현금·자산·부채 관련</option><option value="all">전체 계정</option><option value="BS">재무상태표</option><option value="CF">현금흐름표</option><option value="IS">손익계산서</option><option value="CIS">포괄손익계산서</option></select></div><div className="mt-3 max-h-96 overflow-auto"><table className="w-full text-left text-xs"><caption className="py-2 text-left text-zinc-500">{rows.length}개 공시 계정 · 공시 원본 단위</caption><thead className="sticky top-0 bg-[#1c222b]"><tr><th className="p-2">구분</th><th className="p-2">계정명 / ID</th><th className="p-2 text-right">원문 금액</th><th className="p-2">통화</th></tr></thead><tbody>{rows.map((a, i) => <tr key={i} className="border-t border-white/5"><td className="p-2">{a.statement}</td><td className="p-2">{a.name}<span className="block text-[10px] text-zinc-600">{a.id}</span></td><td className="p-2 text-right tabular-nums">{a.amount || "—"}</td><td className="p-2">{a.currency || "미확인"}</td></tr>)}</tbody></table></div></>}</details>;
 }
 
 function Trend({ title, labels, series }: { title: string; labels: string[]; series: { name: string; color: string; values: (number | null)[] }[] }) {

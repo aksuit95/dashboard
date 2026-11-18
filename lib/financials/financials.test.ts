@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { analyzeCompany, discreteQuarters, flowSummary, ratio } from "./analyze";
 import { classifyFinancial, parseAmount, parseFinancialReport, type DartAccount } from "./parse";
-import { applyFinancialMarketCaps, atomicJson, dartRequest, financialSummary, readFinancialPublication } from "./source";
+import { applyFinancialMarketCaps, atomicJson, dartRequest, financialSummary, readFinancialPublication, reportRequests, reportRequestsForCompany } from "./source";
 import { metricLabels, type FinancialCompany, type FinancialReport, type Metric } from "./types";
 
 const now = new Date("2026-11-04T12:00:00+09:00");
@@ -18,6 +18,13 @@ function report(year: number, quarter: 1 | 2 | 3 | 4, partial: Partial<Record<Me
 function company(reports: FinancialReport[], financial: boolean | null = false): FinancialCompany {
   return { code: "005930", name: "테스트", corpCode: "00126380", industry: "제조업", financial, fiscalMonth: "12", reports, errors: [], attemptedAt: now.toISOString(), referenceFcf: null, market: null };
 }
+it("기간 선택 시 기존 기업은 해당 분기만, 신규 기업은 전체 이력을 조회한다", () => {
+  const selected = { year: 2026, quarter: 3 as const };
+  expect(reportRequestsForCompany(now, selected, true)).toEqual([selected]);
+  expect(reportRequestsForCompany(now, selected, false)).toEqual(reportRequests(now));
+  expect(reportRequestsForCompany(now, undefined, true)).toEqual(reportRequests(now));
+  expect(() => reportRequestsForCompany(now, { year: 2027, quarter: 3 }, true)).toThrow("수집 대상 기간");
+});
 it("공통 KRX 시총을 재무 자료에 적용하고 자료가 없으면 이전 가격을 사용하지 않는다", () => {
   const publication = { schemaVersion: 1 as const, publishedAt: now.toISOString(), membershipAt: now.toISOString(), membershipSource: "test", companies: [{ ...company([]), market: { date: "2026-11-02", exchange: "KRX" as const, priceTime: "15:30" as const, close: 80, marketCap: 800, fetchedAt: now.toISOString() } }] };
   const caps = { version: 1 as const, source: "KRX_WEB_VERIFIED" as const, asOf: "2026-11-03", fetchedAt: now.toISOString(), exchange: "KRX" as const, priceTime: "15:30 KST" as const, priceBasis: "KRX_REGULAR_CLOSE" as const, values: { "005930": 1000 }, closes: { "005930": 100 } };

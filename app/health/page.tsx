@@ -1,11 +1,11 @@
 import { PageHeader } from "@/components/PageHeader";
 import { getDb } from "@/lib/db/client";
-import { loadHealth } from "@/lib/view/read";
+import { listIngestRuns } from "@/lib/db/quotes";
 import { revalidatePath } from "next/cache";
 import { ingestQuotes } from "@/lib/ingest/run";
 
 export default function HealthPage() {
-  const runs = loadHealth(getDb());
+  const runs = listIngestRuns(getDb(), 40);
   return (
     <div>
       <PageHeader

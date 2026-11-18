@@ -6,7 +6,11 @@ const codes = codesArg?.slice(8).split(",");
 const limitArg = process.argv.find(a => a.startsWith("--limit="));
 const limit = limitArg ? Number(limitArg.slice(8)) : undefined;
 if (limit != null && (!Number.isInteger(limit) || limit < 1 || limit > 210)) throw new Error("--limit는 1~210 정수여야 합니다.");
-const work = process.argv.includes("--enrich") ? enrichFinancialAccounts().then(r => { if (r.failed) process.exitCode = 1; return r.publication; }) : process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, onProgress: console.log });
+const periodArg = process.argv.find(a => a.startsWith("--period="));
+const periodMatch = periodArg?.match(/^--period=(\d{4})Q([1-4])$/);
+if (periodArg && !periodMatch) throw new Error("--period는 2026Q3 형식이어야 합니다.");
+const period = periodMatch ? { year: Number(periodMatch[1]), quarter: Number(periodMatch[2]) as 1 | 2 | 3 | 4 } : undefined;
+const work = process.argv.includes("--enrich") ? enrichFinancialAccounts().then(r => { if (r.failed) process.exitCode = 1; return r.publication; }) : process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, period, onProgress: console.log });
 work.then(p => {
   console.log(`재무 데이터 저장 완료: ${p.companies.filter(c => c.reports.length).length}/${p.companies.length}개 기업 · data/financials/board.json`);
   const errors = p.companies.filter(c => c.errors.length);

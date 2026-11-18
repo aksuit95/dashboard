@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     "/api/briefing": ["./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json", "./data/sectors/board.json", "./data/investor-flow/board.json"],
     "/api/briefing/automatic": ["./public/data/briefing-archive/*.json"],
     "/api/briefing/automatic/pdf": ["./public/data/briefing-archive/*.json"],
+    "/api/market-live": ["./data/sectors/board.json", "./data/market-live-publication/*.json", "./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json"],
+    "/api/market-live/archive": ["./data/market-live-publication/*.json"],
     "/api/rising": ["./data/sectors/board.json", "./data/sectors/market-caps.json"],
     "/api/valuation/sectors": ["./data/sectors/board.json", "./data/sectors/index-daily.json", "./data/sectors/market-caps.json"],
     "/api/investor-flow": ["./data/investor-flow/board.json"],
@@ -22,5 +24,9 @@ export default function config(phase: string): NextConfig {
     ...nextConfig,
     // Keep development servers from overwriting production build assets.
     distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
+    ...(phase === PHASE_DEVELOPMENT_SERVER && {
+      // Keep recently visited dashboard chunks available to open tabs.
+      onDemandEntries: { maxInactiveAge: 60 * 60 * 1000, pagesBufferLength: 12 },
+    }),
   };
 }
