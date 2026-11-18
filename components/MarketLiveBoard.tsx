@@ -2,7 +2,6 @@
 
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
-import { MarketLiveReplay } from "@/components/MarketLiveReplay";
 import { MarketLiveRotation } from "@/components/MarketLiveRotation";
 import { MarketLiveSectorReplay } from "@/components/MarketLiveSectorReplay";
 import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
@@ -149,7 +148,6 @@ export function MarketLiveBoard() {
         ))}
       </section>
 
-      <MarketLiveReplay indexes={board?.indexes ?? []} />
       <BreadthPanel breadth={board?.breadth} />
       <MarketLiveRotation radar={board?.radar ?? null} active={!failed && (board?.state === "open" || board?.state === "auction")} />
       <MarketLiveSectorReplay live={board?.state === "open" || board?.state === "auction"} />
