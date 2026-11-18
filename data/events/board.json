@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-18T03:56:25.475Z",
+      "updatedAt": "2026-11-18T16:15:51.127Z",
       "error": null,
       "events": [
         {
@@ -124,6 +124,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "3.4%",
           "previous": "3.4%"
         },
         {
@@ -589,12 +590,36 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "previous": "0.3%"
+        },
+        {
+          "id": "smt-usd-services-pmi.20261218T1445",
+          "date": "2026-12-18",
+          "time": "23:45",
+          "country": "US",
+          "category": "매크로",
+          "title": "S&P Global Services PMI",
+          "detail": "대상 기간 2026-12",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-manufacturing-pmi.20261218T1445",
+          "date": "2026-12-18",
+          "time": "23:45",
+          "country": "US",
+          "category": "매크로",
+          "title": "S&P Global Manufacturing PMI",
+          "detail": "대상 기간 2026-12",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
         }
       ],
-      "generatedAt": "2026-11-18T03:55:04Z"
+      "generatedAt": "2026-11-18T16:15:14Z"
     },
     "ism": {
-      "updatedAt": "2026-11-18T03:56:25.475Z",
+      "updatedAt": "2026-11-18T16:15:51.127Z",
       "error": null,
       "events": [
         {
@@ -624,10 +649,10 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-18T03:55:04Z"
+      "generatedAt": "2026-11-18T16:15:14Z"
     },
     "dart": {
-      "updatedAt": "2026-11-18T07:10:09.661Z",
+      "updatedAt": "2026-11-18T16:15:51.127Z",
       "error": null,
       "capAsOf": "2026-11-18",
       "companies": [
@@ -716,7 +741,7 @@
           "corpCode": "00382199",
           "name": "신한지주",
           "marketCap": 40273319901000,
-          "status": "예정"
+          "status": "발표완료"
         },
         {
           "code": "000270",
@@ -795,7 +820,7 @@
           "corpCode": "01350869",
           "name": "우리금융지주",
           "marketCap": 23687687807550,
-          "status": "예정"
+          "status": "발표완료"
         },
         {
           "code": "066570",
@@ -850,17 +875,6 @@
       ],
       "events": [
         {
-          "id": "dart-055550-ir",
-          "date": "2026-11-18",
-          "time": null,
-          "country": "KR",
-          "category": "실적",
-          "title": "신한지주 실적 설명회",
-          "detail": "실적 공시 시각과 다를 수 있음",
-          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261111800522",
-          "sourceName": "DART"
-        },
-        {
           "id": "dart-086790-ir",
           "date": "2026-11-24",
           "time": null,
@@ -880,17 +894,6 @@
           "title": "현대모비스 실적 설명회",
           "detail": "실적 공시 시각과 다를 수 있음",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261118800300",
-          "sourceName": "DART"
-        },
-        {
-          "id": "dart-316140-ir",
-          "date": "2026-11-18",
-          "time": null,
-          "country": "KR",
-          "category": "실적",
-          "title": "우리금융지주 실적 설명회",
-          "detail": "실적 공시 시각과 다를 수 있음",
-          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261113801383",
           "sourceName": "DART"
         }
       ]
