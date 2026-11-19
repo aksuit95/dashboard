@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { readFinancialPublication } from "@/lib/financials/source";
+import { financialPath, readFinancialPublication } from "@/lib/financials/source";
+import { financialMarkets, type FinancialMarket } from "@/lib/financials/types";
 import { minerviniSession } from "@/lib/market/minervini-session";
 import { readRiskPrices } from "@/lib/investment-risk/history";
 import { capitalScenario, dangerRules, priceThreshold, warningRules } from "@/lib/investment-risk/scenarios";
-import type { RiskOutlook } from "@/lib/investment-risk/types";
+import type { MarketFinancialOutlook, RiskOutlook } from "@/lib/investment-risk/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,25 +38,29 @@ async function priceOutlook(): Promise<RiskOutlook["price"]> {
   return { asOf: latest.date, expectedAsOf, fetchedAt: history.fetchedAt, covered, total: Object.keys(history.latestMarket).length, rows };
 }
 
-async function financialOutlook(): Promise<RiskOutlook["financial"]> {
-  const publication = await readFinancialPublication();
+async function financialOutlook(market: FinancialMarket): Promise<MarketFinancialOutlook | null> {
+  const publication = await readFinancialPublication(financialPath(financialMarkets[market].universe));
   if (!publication) return null;
   let covered = 0;
   const rows = publication.companies.flatMap(company => {
-    const scenario = capitalScenario(company);
+    const scenario = capitalScenario(company, market);
     if (!scenario) return [];
     covered++;
-    if (scenario.repeatLoss == null && scenario.impairmentPct < 25) return [];
-    return [{ code: company.code, name: company.name, ...scenario }];
+    const capitalWatch = scenario.impairmentPct != null && scenario.impairmentPct >= 25;
+    if (scenario.repeatLoss == null && !capitalWatch && !scenario.equityFloor?.currentBelow) return [];
+    return [{ code: company.code, name: company.name, market, ...scenario }];
   });
   return { covered, total: publication.companies.length, rows };
 }
 
 export async function GET() {
-  const [price, financial] = await Promise.allSettled([priceOutlook(), financialOutlook()]);
+  const [price, kospi, kosdaq] = await Promise.allSettled([priceOutlook(), financialOutlook("KOSPI"), financialOutlook("KOSDAQ")]);
   const result: RiskOutlook = {
     price: price.status === "fulfilled" ? price.value : null,
-    financial: financial.status === "fulfilled" ? financial.value : null,
+    financial: {
+      KOSPI: kospi.status === "fulfilled" ? kospi.value : null,
+      KOSDAQ: kosdaq.status === "fulfilled" ? kosdaq.value : null,
+    },
   };
   return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
 }

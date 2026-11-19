@@ -1,4 +1,4 @@
-import type { FinancialCompany, FinancialReport } from "@/lib/financials/types";
+import type { FinancialCompany, FinancialMarket, FinancialReport } from "@/lib/financials/types";
 import { parseAmount } from "@/lib/financials/parse";
 
 export type PriceRule = { days: 3 | 5 | 15; rise: number; indexMultiple: number };
@@ -30,23 +30,34 @@ function account(report: FinancialReport, id: string, name?: string) {
   return values.length === 1 ? values[0] : null;
 }
 
-export function capitalScenario(company: FinancialCompany) {
+const kosdaqEquityFloor = 1_000_000_000;
+
+export function capitalScenario(company: FinancialCompany, market: FinancialMarket = "KOSPI") {
   const latest = [...company.reports].sort((a, b) => b.periodEnd.localeCompare(a.periodEnd))[0];
   if (!latest) return null;
-  const capital = account(latest, "IssuedCapital", "자본금");
+  const statedCapital = account(latest, "IssuedCapital", "자본금");
+  const capital = statedCapital != null && statedCapital > 0 ? statedCapital : null;
   const equity = latest.scope === "CFS" ? account(latest, "EquityAttributableToOwnersOfParent") : latest.values.equity;
-  if (capital == null || capital <= 0 || equity == null) return null;
+  if (equity == null || (capital == null && market === "KOSPI")) return null;
   const previous = company.reports.find(r => r.year === latest.year && r.quarter === latest.quarter - 1 && r.scope === latest.scope);
   // Use parent-attributable profit, never consolidated profit including minority interests.
   const profit = (r: FinancialReport) => r.scope === "OFS" ? r.values.profit : parentProfit(r);
   const ytd = profit(latest), prior = previous ? profit(previous) : null;
   const quarterProfit = ytd == null ? null : latest.quarter === 1 ? ytd : prior == null ? null : ytd - prior;
   const repeatLoss = quarterProfit != null && quarterProfit < 0 ? -quarterProfit : null;
-  const room = equity - capital / 2;
+  const projectedEquity = repeatLoss == null ? null : equity - repeatLoss;
+  const room = capital == null ? null : equity - capital / 2;
+  const equityFloor = market === "KOSDAQ" ? {
+    minimum: kosdaqEquityFloor,
+    room: equity - kosdaqEquityFloor,
+    currentBelow: equity < kosdaqEquityFloor,
+    projectedBelow: projectedEquity == null ? null : projectedEquity < kosdaqEquityFloor,
+  } : null;
   return {
     periodEnd: latest.periodEnd, filedAt: latest.filedAt, receipt: latest.receipt, scope: latest.scope,
-    capital, equity, room, impairmentPct: (1 - equity / capital) * 100, repeatLoss,
-    projectedPct: repeatLoss == null ? null : (1 - (equity - repeatLoss) / capital) * 100,
+    capital, equity, room, impairmentPct: capital == null ? null : (1 - equity / capital) * 100, repeatLoss,
+    projectedEquity, equityFloor,
+    projectedPct: projectedEquity == null || capital == null ? null : (1 - projectedEquity / capital) * 100,
   };
 }
 

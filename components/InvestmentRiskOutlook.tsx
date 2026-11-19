@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { financialMarkets, type FinancialMarket } from "@/lib/financials/types";
 import { useEffect, useState } from "react";
 import type { FinancialCandidate, PriceCandidate, RiskOutlook } from "@/lib/investment-risk/types";
 
 const warningGuide = "https://kind.krx.co.kr/external/2026/06/04/000788/20260604002076/70805.htm";
 const dangerGuide = "https://kind.krx.co.kr/external/2026/05/29/002183/20260529003475/68811.htm";
-const capitalGuide = "https://www.krx.co.kr/contents/LST/04/04010500/LST04010500.jsp";
+const capitalGuide = {
+  KOSPI: "https://www.krx.co.kr/contents/LST/04/04010500/LST04010500.jsp",
+  KOSDAQ: "https://kind.krx.co.kr/external/notice/dst/20260202/kosdaq_2.pdf",
+};
 const format = (n: number, digits = 0) => n.toLocaleString("ko-KR", { maximumFractionDigits: digits });
 const won = (n: number) => `${format(n)}원`;
 const eok = (n: number) => `${format(n / 1e8, 2)}억원`;
@@ -14,6 +18,9 @@ const cell = "p-3";
 const link = "text-cyan-300 underline underline-offset-2";
 const button = "rounded-md border border-white/15 px-3 py-2 text-xs";
 const marketName = { KOSPI: "코스피", KOSDAQ: "코스닥" };
+const markets: FinancialMarket[] = ["KOSPI", "KOSDAQ"];
+const nearEquityFloor = (row: FinancialCandidate) => row.equityFloor?.currentBelow || row.equityFloor?.projectedBelow;
+const impairmentText = (pct: number | null) => pct == null ? "잠식률 미확인" : pct > 0 ? `자본잠식 ${format(pct, 2)}%` : "자본잠식 없음";
 
 function RiskPriceTable({ rows, stage, limit }: { rows: PriceCandidate[]; stage: "warning" | "danger"; limit: number }) {
   const candidates = rows.flatMap(row => {
@@ -52,26 +59,37 @@ function RiskPriceTable({ rows, stage, limit }: { rows: PriceCandidate[]; stage:
 function RiskFinancialTable({ rows }: { rows: FinancialCandidate[] }) {
   if (!rows.length) return <p className="py-8 text-center text-sm text-zinc-400">조건에 맞는 재무 후보가 없습니다.</p>;
   return <div className="overflow-x-auto">
-    <p className="mb-2 text-xs text-zinc-400">{rows.length}개 후보 · 다음 분기 시나리오에서 잠식률이 높은 순</p>
+    <p className="mb-2 text-xs text-zinc-400">{rows.length}개 후보 · {rows.some(row => nearEquityFloor(row)) ? "자기자본 10억원 미달 먼저 · " : ""}예상 잠식률이 높은 순</p>
     <table className="w-full min-w-[850px] text-left text-sm">
       <thead className="border-b border-white/10 text-xs text-zinc-400"><tr>
         <th className={cell}>종목</th><th className={cell}>재무 기준일</th><th className={cell}>현재 상태</th>
         <th className={cell}>다음 공시에서 볼 조건</th><th className={cell}>같은 분기 순손실 반복 시</th>
       </tr></thead>
       <tbody>{rows.map(row => <tr key={row.code} className="border-b border-white/5 align-top">
-        <td className={cell}><Link className={link} href={`/financials?code=${row.code}`}>{row.name}</Link><p className="text-xs text-zinc-500">{row.code} · 코스피</p></td>
+        <td className={cell}><Link className={link} href={`/financials?universe=${financialMarkets[row.market].universe}&code=${row.code}`}>{row.name}</Link><p className="text-xs text-zinc-500">{row.code} · {financialMarkets[row.market].label}</p></td>
         <td className={cell}>{row.periodEnd} · {row.scope === "CFS" ? "연결" : "별도"}
           <p><a className={`${link} text-xs`} href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${row.receipt}`} target="_blank" rel="noreferrer">DART {row.filedAt}</a></p>
         </td>
-        <td className={cell}>{row.impairmentPct > 0 ? `자본잠식 ${format(row.impairmentPct, 2)}%` : "자본잠식 없음"}
+        <td className={cell}>{impairmentText(row.impairmentPct)}
+          {row.equityFloor && <p className={row.equityFloor.currentBelow ? "font-medium text-amber-200" : "text-xs text-zinc-400"}>
+            자기자본 {eok(row.equity)}{row.equityFloor.currentBelow && " · 10억원 미만"}
+          </p>}
           {row.repeatLoss != null && <p className="text-xs text-zinc-400">최근 분기 순손실 {eok(row.repeatLoss)}</p>}
         </td>
-        <td className={cell}>{row.room <= 0 ? "최근 공시 수치가 50% 이상" : `자기자본 ${eok(row.room)} 감소 시 50%`}
+        <td className={cell}>{row.room == null ? "자본금 자료 미확보" : row.room <= 0 ? "최근 공시 잠식률이 50% 이상" : `자기자본 ${eok(row.room)} 감소 시 잠식률 50%`}
+          {row.equityFloor && <p className="mt-1 text-xs text-zinc-400">
+            {row.equityFloor.currentBelow ? "최근 공시 자기자본이 10억원 미만"
+              : row.equityFloor.room === 0 ? "자기자본이 더 감소하면 10억원 미만"
+                : `자기자본이 ${eok(row.equityFloor.room)}보다 더 감소하면 10억원 미만`}
+          </p>}
           <p className="mt-1 text-xs text-zinc-400">사업연도 말 감사보고서 확인</p>
         </td>
-        <td className={cell}>{row.projectedPct == null ? "—" : <>
-          <span className={row.projectedPct >= 50 ? "font-medium text-amber-200" : ""}>{row.projectedPct > 0 ? `자본잠식 ${format(row.projectedPct, 2)}%` : "자본잠식 없음"}</span>
-          {row.projectedPct >= 100 && <p className="text-xs text-amber-200">전액잠식 수준 · 상장 조치 확인</p>}
+        <td className={cell}>{row.projectedEquity == null ? "—" : <>
+          <span className={(row.projectedPct ?? 0) >= 50 ? "font-medium text-amber-200" : ""}>{impairmentText(row.projectedPct)}</span>
+          {(row.projectedPct ?? 0) >= 100 && <p className="text-xs text-amber-200">전액잠식 수준 · 상장 조치 확인</p>}
+          {row.equityFloor && <p className={row.equityFloor.projectedBelow ? "font-medium text-amber-200" : "text-xs text-zinc-400"}>
+            예상 자기자본 {eok(row.projectedEquity)}{row.equityFloor.projectedBelow && " · 10억원 미만"}
+          </p>}
         </>}</td>
       </tr>)}</tbody>
     </table>
@@ -99,15 +117,18 @@ export function InvestmentRiskOutlook({ market, query, alerts, observedAt, alert
   const matches = (code: string, name: string, listing: string) =>
     (market === "전체" || market === listing) && `${name} ${code}`.toLowerCase().includes(query.trim().toLowerCase());
   const price = outlook?.price;
-  const finance = outlook?.financial;
+  const selectedMarkets = markets.filter(listing => market === "전체" || market === listing);
+  const financialResults = selectedMarkets.map(listing => ({ listing, data: outlook?.financial?.[listing] }));
   const priceRows = (price?.rows ?? []).filter(row => {
     const labels = alerts?.[row.code] ?? [];
     const unavailable = labels.includes("투자위험") || labels.includes("거래정지");
     const warned = labels.includes("투자경고");
     return !unavailable && matches(row.code, row.name, row.market) && (mode === "danger" ? warned : !warned);
   });
-  const financialRows = (finance?.rows ?? []).filter(row => matches(row.code, row.name, "KOSPI"))
-    .sort((a, b) => (b.projectedPct ?? b.impairmentPct) - (a.projectedPct ?? a.impairmentPct));
+  const financialRows = financialResults.flatMap(result => result.data?.rows ?? []).filter(row => matches(row.code, row.name, row.market))
+    .sort((a, b) => Number(Boolean(nearEquityFloor(b))) - Number(Boolean(nearEquityFloor(a)))
+      || (b.projectedPct ?? b.impairmentPct ?? -Infinity) - (a.projectedPct ?? a.impairmentPct ?? -Infinity)
+      || a.name.localeCompare(b.name, "ko"));
   const alertStale = price && observedAt && Date.parse(observedAt) < Date.parse(`${price.asOf}T15:30:00+09:00`);
   return <div className="mt-5 space-y-4" aria-label="다음 위험 조건">
     <div className="flex flex-wrap items-center gap-2">
@@ -122,11 +143,14 @@ export function InvestmentRiskOutlook({ market, query, alerts, observedAt, alert
     </div>
     {loading ? <p role="status" className="py-8 text-sm text-zinc-400">위험 후보를 불러오는 중입니다.</p> : mode === "financial" ? <>
       <div className="space-y-1 text-xs leading-5 text-zinc-400">
-        <p>코스피200 공시에서 최근 분기 순손실이 있거나 자본잠식률이 25% 이상인 종목을 봅니다. 최근 분기 순손실만큼 자기자본이 다시 감소하고 자본금이 유지된다고 가정합니다.</p>
-        <p>코스피의 관리종목 자본잠식 판단은 사업연도 말 50% 이상이 기준입니다. 전액잠식, 반복 잠식, 감사의견 등에 따른 거래정지와 심사 여부는 거래소 공시에서 확인하세요. <a className={link} href={capitalGuide} target="_blank" rel="noreferrer">KRX 상장관리 기준</a></p>
-        {finance && <p>자본금·자기자본 확인 {finance.covered}/{finance.total}개 · 반복 손실 계산은 같은 범위의 분기 계정이 확보된 경우 표시</p>}
+        <p>현금·재무건전성 공시에서 최근 분기 순손실, 자본잠식률 25% 이상 또는 코스닥 자기자본 10억원 미만을 점검합니다. 손실 반복 시나리오는 같은 금액이 자기자본에서 다시 줄고 자본금은 유지된다고 가정합니다.</p>
+        {selectedMarkets.includes("KOSPI") && <p>코스피는 사업연도 말 자본잠식률 50% 이상을 확인합니다. <a className={link} href={capitalGuide.KOSPI} target="_blank" rel="noreferrer">KRX 코스피 상장관리 기준</a></p>}
+        {selectedMarkets.includes("KOSDAQ") && <p>코스닥은 사업연도 말 자본잠식률 50% 이상과 자기자본 10억원 미만을 확인합니다. 감사보고서, 거래소 공시 및 적용 예외를 함께 확인하세요. <a className={link} href={capitalGuide.KOSDAQ} target="_blank" rel="noreferrer">KRX 코스닥 정기결산 안내</a></p>}
+        {financialResults.map(({ listing, data }) => <p key={listing} className={data ? "" : "text-amber-200"}>
+          {financialMarkets[listing].label} · {data ? `재무 점검 가능 ${data.covered}/${data.total}개` : "저장 공시 자료 조회 불가"}
+        </p>)}
       </div>
-      {finance ? <RiskFinancialTable rows={financialRows} /> : <p role="status" className="py-6 text-sm text-amber-200">재무 공시 자료를 확인할 수 없습니다.</p>}
+      {financialResults.some(({ data }) => data) && <RiskFinancialTable rows={financialRows} />}
     </> : <>
       <div className="space-y-1 text-xs leading-5 text-zinc-400">
         <p>{price ? `${price.asOf} KRX 정규장 15:30 종가 · 수집 ${new Date(price.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST · 15거래일 비교 가능 ${price.covered}/${price.total}개` : "KRX 종가 이력을 확인할 수 없습니다."}</p>

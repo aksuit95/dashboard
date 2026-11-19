@@ -35,9 +35,9 @@ function report(quarter: 2 | 3, profit: string) {
     year: 2026, quarter, periodEnd: quarter === 2 ? "2026-06-30" : "2026-09-30", scope: "CFS",
     values: { equity: 99999, profit: 99999 },
     accounts: [
-      { statement: "BS", currency: "KRW", id: "ifrs-full_IssuedCapital", amount: "1000" },
-      { statement: "BS", currency: "KRW", id: "ifrs-full_EquityAttributableToOwnersOfParent", amount: "600" },
-      { statement: "IS", currency: "KRW", id: "ifrs-full_ProfitLossAttributableToOwnersOfParent", amount: profit },
+      { statement: "BS", currency: "KRW", id: "ifrs-full_IssuedCapital", name: "자본금", amount: "1000" },
+      { statement: "BS", currency: "KRW", id: "ifrs-full_EquityAttributableToOwnersOfParent", name: "지배기업 소유주지분", amount: "600" },
+      { statement: "IS", currency: "KRW", id: "ifrs-full_ProfitLossAttributableToOwnersOfParent", name: "지배기업 소유주 귀속 순이익", amount: profit },
     ],
   } as FinancialReport;
 }
@@ -50,5 +50,33 @@ describe("같은 분기 손실 반복", () => {
   it("직전 누적 공시가 빠지면 반복 손실 시나리오를 비운다", () => {
     const company = { reports: [report(3, "-420")] } as FinancialCompany;
     expect(capitalScenario(company)).toMatchObject({ room: 100, repeatLoss: null, projectedPct: null });
+  });
+});
+
+describe("코스닥 자기자본 기준", () => {
+  const companyWithEquity = (equity: string, quarterLoss: string, includeCapital = true) => {
+    const latest = report(3, quarterLoss);
+    latest.accounts = latest.accounts?.flatMap(row => {
+      if (row.id.endsWith("IssuedCapital")) return includeCapital ? [{ ...row, amount: "2000000000" }] : [];
+      return [{ ...row, amount: row.id.endsWith("EquityAttributableToOwnersOfParent") ? equity : row.amount }];
+    });
+    return { reports: [report(2, "0"), latest] } as FinancialCompany;
+  };
+
+  it("코스닥만 10억원 자기자본 기준을 적용하고 같은 손실 반복 시 미달을 표시한다", () => {
+    const company = companyWithEquity("1200000000", "-300000000");
+    expect(capitalScenario(company, "KOSDAQ")).toMatchObject({
+      equity: 1_200_000_000,
+      projectedEquity: 900_000_000,
+      equityFloor: { room: 200_000_000, currentBelow: false, projectedBelow: true },
+    });
+    expect(capitalScenario(company, "KOSPI")?.equityFloor).toBeNull();
+  });
+
+  it("자본금이 없어도 코스닥 자기자본을 확인하며 10억원과 같은 값은 미달로 보지 않는다", () => {
+    expect(capitalScenario(companyWithEquity("1000000000", "0", false), "KOSDAQ")).toMatchObject({
+      impairmentPct: null, room: null, equityFloor: { room: 0, currentBelow: false, projectedBelow: null },
+    });
+    expect(capitalScenario(companyWithEquity("999999999", "0", false), "KOSDAQ")?.equityFloor?.currentBelow).toBe(true);
   });
 });
