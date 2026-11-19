@@ -67,4 +67,34 @@ describe("기초 종목 KRX 종가", () => {
     ]), new Date("2026-11-05T15:30:00+09:00"));
     expect(board.names[0]).toMatchObject({ priceAsOf: "2026-11-05", price: null, changePct: null });
   });
+  it("수능일 10:00~16:30에는 전일 KRX 종가와 정규장 실시간 가격을 사용한다", async () => {
+    const request = vi.fn<typeof fetch>().mockImplementation(async url => {
+      const path = String(url);
+      if (path.includes("daily-prices")) return Response.json({ hasNext: false, items: [{tradingDateKst:"2026-11-18", regularMarketClosingPrice:"100"}] });
+      if (path.includes("codeType=KRX")) return Response.json({itemcode:path.includes("005930") ? "005930" : "000660",tradeTime:"20261119160000",nowPrice:"110",marketStatus:"OPEN",tradingSessionType:"REGULAR_MARKET"});
+      return Response.json({closePrice:"100",iNav:"100"});
+    });
+    const board = await loadSingleStockBoard(request,new Date("2026-11-19T16:00:01+09:00"));
+    expect(board.names[0]).toMatchObject({price:110,priceAsOf:"2026-11-19",priceBasis:"KRX_REGULAR_LIVE"});
+    expect(board.names[0].changePct).toBeCloseTo(10);
+    expect(board.names[0].products[0].price).toBe(100);
+  });
+  it("특별 거래일 마감 후에는 16:30 종가를 15:30 종가로 표시하지 않고 ETF를 계속 표시한다", async () => {
+    const board=await loadSingleStockBoard(fetcher([]),new Date("2026-11-19T16:30:00+09:00"));
+    expect(board.names[0]).toMatchObject({price:null,priceAsOf:"2026-11-19",priceBasis:"KRX_REGULAR_CLOSE",priceNotice:expect.any(String)});
+    expect(board.names[0].products[0].price).toBe(100);
+  });
+  it("거래일 확인이 불가능해도 ETF 시세는 표시한다", async () => {
+    const board=await loadSingleStockBoard(fetcher([]),new Date("2026-11-20T10:00:00+09:00"));
+    expect(board.names[0]).toMatchObject({price:null,priceNotice:expect.any(String)});
+    expect(board.names[0].products[0].price).toBe(100);
+  });
+  it("직전 특별 거래일의 기준 종가가 없어도 KRX 장중 가격은 표시하되 등락률은 비운다", async () => {
+    const request=vi.fn<typeof fetch>().mockImplementation(async url => String(url).includes("codeType=KRX")
+      ? Response.json({itemcode:String(url).includes("005930") ? "005930" : "000660",tradeTime:"20261120100000",nowPrice:"110",marketStatus:"OPEN",tradingSessionType:"REGULAR_MARKET"})
+      : Response.json({closePrice:"100",iNav:"100"}));
+    const board=await loadSingleStockBoard(request,new Date("2026-11-20T10:00:01+09:00"));
+    expect(board.names[0]).toMatchObject({price:110,changePct:null,priceBasis:"KRX_REGULAR_LIVE",priceNotice:expect.any(String)});
+    expect(request.mock.calls.some(([url])=>String(url).includes("daily-prices"))).toBe(false);
+  });
 });

@@ -75,9 +75,12 @@ export function SingleStockBoard() {
 }
 
 function SessionStrip({ now }: { now: Date | null }) {
-  const session = now ? seoulSession(now) : null;
+  const special = now ? new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Seoul", year:"numeric", month:"2-digit", day:"2-digit"}).format(now) === "2026-11-19" : false;
+  const minute = now ? seoulMinutes(now) : 0;
+  const session = special && minute >= 600 && minute < 990 ? {kind:"kr" as const,label:"KR 정규"} : special && ((minute >= 480 && minute < 600) || (minute >= 990 && minute < 1020)) ? {kind:"closed" as const,label:"KR 거래 대기"} : now ? seoulSession(now) : null;
   const us = now ? usCashSpan(now) : { start: 23 * 60 + 30, end: 6 * 60 };
-  const spans = now ? sessionSpans(now) : sessionSpans(new Date("2026-01-15T12:00:00Z"));
+  const regularSpans = now ? sessionSpans(now) : sessionSpans(new Date("2026-01-15T12:00:00Z"));
+  const spans = special ? regularSpans.filter(span=>span.kind!=="nxt").map(span=>span.kind==="kr" ? {...span,start:600,end:990} : span.kind==="after" ? {...span,start:1020} : span) : regularSpans;
   const marker = now ? (seoulMinutes(now) / DAY) * 100 : null;
   return (
     <section className="rounded-xl border border-white/10 bg-[#151a22] px-4 py-4">
@@ -104,9 +107,9 @@ function SessionStrip({ now }: { now: Date | null }) {
         <span>24</span>
       </div>
       <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-[11px] text-zinc-400">
-        <Legend kind="kr" text="KR 정규 09:00–15:30" />
-        <Legend kind="after" text="애프터 16:00–20:00" />
-        <Legend kind="nxt" text="NXT 08:00–09:00 · 15:30–20:00" />
+        <Legend kind="kr" text={special ? "KR 정규 10:00–16:30 (수능일)" : "KR 정규 09:00–15:30"} />
+        <Legend kind="after" text={special ? "애프터 17:00–20:00" : "애프터 16:00–20:00"} />
+        {!special ? <Legend kind="nxt" text="NXT 08:00–09:00 · 15:30–20:00" /> : null}
         <Legend kind="us" text={`US 정규 ${formatHm(us.start)}–${formatHm(us.end)}`} />
         <span className="inline-flex items-center gap-1">
           <span className="inline-block h-2 w-3 rounded-sm bg-white/10" />
@@ -136,6 +139,7 @@ function NameColumn({ group }: { group: SingleStockGroup }) {
             {group.price == null ? "—" : `₩${formatNumber(group.price, 0)}`} · {group.changePct == null ? "—" : `${formatSigned(group.changePct)}%`}
           </p>
           <p className="mt-1 text-[11px] text-zinc-500">{group.priceAsOf} · {group.priceBasis === "KRX_REGULAR_LIVE" ? `KRX 정규장 현재가${group.priceTime ? ` (${group.priceTime.slice(11, 19)} KST)` : " · 확인 중"}` : "KRX 15:30 종가"} · 전일 대비</p>
+          {group.priceNotice ? <p className="mt-1 text-[11px] text-amber-300">{group.priceNotice}</p> : null}
         </div>
       </div>
       <div className="space-y-3">
