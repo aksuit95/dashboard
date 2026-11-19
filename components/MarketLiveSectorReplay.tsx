@@ -5,8 +5,8 @@ import { MarketLiveRotation } from "@/components/MarketLiveRotation";
 import { sectorNames } from "@/config/sectors";
 import { formatSigned } from "@/lib/format";
 import {
-  MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveFrameTime,
-  type MarketLiveArchiveResponse, type MarketLiveSectorResponse,
+  MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveFrameTime, summarizeMarketLiveHourlyLeaders,
+  type MarketLiveArchiveResponse, type MarketLiveHourlyLeader, type MarketLiveSectorResponse,
 } from "@/lib/market/market-live-archive";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 
@@ -126,7 +126,12 @@ function buildTimeline(day: ArchiveDay | null) {
     if (last?.name === leader.name && last.end + minute === slot.time) last.end = slot.time;
     else leads.push({ name: leader.name, start: slot.time, end: slot.time });
   }
-  return { slots, byMinute, leads, start, end, latest };
+  const hourlyCloseAt = schedule?.closeAt ?? latest + minute;
+  const hourlyLeaders = summarizeMarketLiveHourlyLeaders(
+    slots.map(({ time, ranks }) => ({ time, name: ranks[0]?.name })),
+    schedule?.openAt ?? first, hourlyCloseAt,
+  );
+  return { slots, byMinute, leads, hourlyLeaders, hourlyCloseAt, start, end, latest };
 }
 
 export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
@@ -219,7 +224,7 @@ export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
           <TimelineTrack timeline={timeline} selected={selected} seek={seek} />
           <div className="mt-4 grid items-start gap-3 lg:grid-cols-2">
             <SectorRanks slot={slot ?? null} />
-            <LeadHistory leads={timeline.leads} selected={selected} seek={seek} />
+            <LeadHistory hours={timeline.hourlyLeaders} selected={selected} closeAt={timeline.hourlyCloseAt} seek={seek} />
           </div>
         </>
       )}
@@ -302,25 +307,38 @@ function SectorRanks({ slot }: { slot: Slot | null }) {
   );
 }
 
-function LeadHistory({ leads, selected, seek }: { leads: Lead[]; selected: number; seek: (time: number) => void }) {
+function LeadHistory({ hours, selected, closeAt, seek }: {
+  hours: MarketLiveHourlyLeader[]; selected: number; closeAt: number; seek: (time: number) => void;
+}) {
   return (
     <div className="min-w-0 rounded-lg border border-white/[0.07] bg-black/15">
-      <h3 className="px-3 py-2.5 text-sm font-semibold">시간대별 1위 섹터</h3>
-      {leads.length ? (
+      <div className="px-3 py-2.5">
+        <h3 className="text-sm font-semibold">시간대별 1위 섹터</h3>
+        <p className="mt-0.5 text-[11px] text-zinc-400">구간 내 누적 1위 시간 기준 · 동률이면 가장 최근 1위</p>
+      </div>
+      {hours.length ? (
         <ol className="max-h-64 overflow-auto border-t border-white/[0.06] px-1.5">
-          {leads.map(lead => {
-            const current = selected >= lead.start && selected <= lead.end;
+          {hours.map(({ start, end, observed, lead }) => {
+            const current = selected >= start && (selected < end || (selected === end && end === closeAt));
+            const interval = `${minuteClock.format(start)}–${minuteClock.format(end)}`;
             return (
-              <li key={lead.start} className="border-b border-white/[0.06] last:border-b-0">
-                <button
-                  type="button"
-                  className={`flex w-full items-center justify-between gap-2 rounded px-2 py-2 text-left text-xs hover:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-emerald-400 ${current ? "bg-white/[0.07]" : ""}`}
-                  onClick={() => seek(lead.start)}
-                  aria-current={current ? "time" : undefined}
-                >
-                  <span className="min-w-0 break-words text-zinc-200"><span className="mr-1.5 inline-block h-2 w-2 rounded-full" style={{ backgroundColor: sectorColor(lead.name) }} aria-hidden="true" />{lead.name}</span>
-                  <span className="shrink-0 tabular-nums text-zinc-400">{minuteClock.format(lead.start)}{lead.start !== lead.end ? `–${minuteClock.format(lead.end)}` : ""}</span>
-                </button>
+              <li key={start} className="border-b border-white/[0.06] last:border-b-0">
+                {lead ? (
+                  <button
+                    type="button"
+                    className={`flex w-full flex-wrap items-center gap-x-3 gap-y-1 rounded px-2 py-2 text-left text-xs hover:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-emerald-400 ${current ? "bg-white/[0.07]" : ""}`}
+                    onClick={() => seek(lead.firstAt)}
+                    aria-current={current ? "time" : undefined}
+                  >
+                    <span className="shrink-0 tabular-nums text-zinc-400">{interval}</span>
+                    <span className="min-w-0 break-words text-zinc-200"><span className="mr-1.5 inline-block h-2 w-2 rounded-full" style={{ backgroundColor: sectorColor(lead.name) }} aria-hidden="true" />{lead.name}</span>
+                    <span className="ml-auto shrink-0 tabular-nums text-zinc-400">1위 {lead.minutes}/{observed}분</span>
+                  </button>
+                ) : (
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 px-2 py-2 text-xs text-zinc-400">
+                    <span className="tabular-nums">{interval}</span><span>기록 없음</span>
+                  </div>
+                )}
               </li>
             );
           })}

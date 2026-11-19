@@ -13,6 +13,34 @@ export function marketLiveFrameTime(frame: Pick<MarketLiveArchiveFrame, "collect
   return frame.minuteAt ?? frame.collectedAt;
 }
 
+type MinuteLeader = { time: number; name: string | undefined };
+type HourlyLead = { name: string; minutes: number; firstAt: number; lastAt: number };
+export type MarketLiveHourlyLeader = { start: number; end: number; observed: number; lead: HourlyLead | null };
+
+export function summarizeMarketLiveHourlyLeaders(minutes: readonly MinuteLeader[], openAt: number, closeAt: number): MarketLiveHourlyLeader[] {
+  const hour = 60 * 60_000;
+  const latest = minutes.at(-1)?.time ?? openAt - 1;
+  const lastMinute = Math.min(closeAt - 1, latest);
+  const count = lastMinute < openAt ? 0 : Math.floor((lastMinute - openAt) / hour) + 1;
+  const hours = Array.from({ length: count }, (_, index) => {
+    const start = openAt + index * hour;
+    return { start, end: Math.min(start + hour, closeAt), observed: 0, leaders: new Map<string, HourlyLead>() };
+  });
+  for (const { time, name } of minutes) {
+    // The closing snapshot remains in the replay, but adds no minute to the session.
+    if (!name || time < openAt || time >= closeAt) continue;
+    const period = hours[Math.floor((time - openAt) / hour)];
+    const lead = period.leaders.get(name) ?? { name, minutes: 0, firstAt: time, lastAt: time };
+    lead.minutes++;
+    lead.lastAt = time;
+    period.leaders.set(name, lead);
+    period.observed++;
+  }
+  return hours.map(({ leaders, ...period }) => ({
+    ...period, lead: [...leaders.values()].sort((a, b) => b.minutes - a.minutes || b.lastAt - a.lastAt)[0] ?? null,
+  }));
+}
+
 export function summarizeMarketLiveArchiveSectors(
   totals: ReadonlyMap<string, number>,
   stocks: MarketLiveRotationStock[],
