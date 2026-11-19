@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 64067450,
       "short_volume_ratio_pct": 5.121540670330214,
       "short_value_ratio_pct": 5.109058294259085,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 103226,
+      "balance_value": 1047743900,
+      "balance_ratio_pct": 0.21,
       "lending_quantity": 1878722,
       "lending_change": 4327,
       "return_pct": -2.7777777777777857,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "인카금융서비스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "인카금융서비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.3677315307712539,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.3677315307712539
     },
     {
       "close": 10950,
       "market_cap": 539437044150,
       "listed_shares": 49263657,
-      "volume": 97473,
-      "trading_value": 1050687100,
+      "volume": 102700,
+      "trading_value": 1107596240,
       "short_volume": 4482,
       "short_value": 48191305,
-      "short_volume_ratio_pct": 4.598196423625004,
-      "short_value_ratio_pct": 4.586646681014738,
+      "short_volume_ratio_pct": 4.364167478091529,
+      "short_value_ratio_pct": 4.3509812745482055,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "인카금융서비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0025942044862808295,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.0025942044862808295
     }
   ]
 }

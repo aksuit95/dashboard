@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1118034850,
       "short_volume_ratio_pct": 5.451699359996303,
       "short_value_ratio_pct": 5.550502326026101,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 308973,
+      "balance_value": 6982789800,
+      "balance_ratio_pct": 0.45,
       "lending_quantity": 4253419,
       "lending_change": -87126,
       "return_pct": -4.033970276008489,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "고영",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "고영",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.23036993330602615,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.23036993330602615
     },
     {
       "close": 23800,
       "market_cap": 1623260269400,
       "listed_shares": 68204213,
-      "volume": 745735,
-      "trading_value": 17213900800,
+      "volume": 828451,
+      "trading_value": 19203195200,
       "short_volume": 24179,
       "short_value": 551232150,
-      "short_volume_ratio_pct": 3.2423045719994366,
-      "short_value_ratio_pct": 3.2022500675732952,
+      "short_volume_ratio_pct": 2.9185793728295337,
+      "short_value_ratio_pct": 2.8705230783677083,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "고영",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.04707773697205479,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.04707773697205479
     }
   ]
 }

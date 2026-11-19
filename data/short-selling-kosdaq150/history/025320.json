@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 298273495,
       "short_volume_ratio_pct": 25.139440698549816,
       "short_value_ratio_pct": 25.205099158196987,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 3558987,
+      "balance_value": 11335373595,
+      "balance_ratio_pct": 3.86,
       "lending_quantity": 11772866,
       "lending_change": 485858,
       "return_pct": -2.748091603053439,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "시노펙스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "시노펙스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.0843736333404261,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.0843736333404261
     },
     {
       "close": 3285,
       "market_cap": 302945173605,
       "listed_shares": 92220753,
-      "volume": 550850,
-      "trading_value": 1779817630,
+      "volume": 586765,
+      "trading_value": 1898216430,
       "short_volume": 202503,
       "short_value": 652027145,
-      "short_volume_ratio_pct": 36.76191340655351,
-      "short_value_ratio_pct": 36.634491872068935,
+      "short_volume_ratio_pct": 34.51177217455029,
+      "short_value_ratio_pct": 34.349462721698174,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "시노펙스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.1225277351617374,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.1225277351617374
     }
   ]
 }

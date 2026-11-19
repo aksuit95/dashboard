@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 420783755,
       "short_volume_ratio_pct": 8.394728809502373,
       "short_value_ratio_pct": 8.472059306438915,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1333353,
+      "balance_value": 14226876510,
+      "balance_ratio_pct": 1.19,
       "lending_quantity": 9032301,
       "lending_change": 60819,
       "return_pct": -2.6459854014598534,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "하림지주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "하림지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.025379976242442332,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.025379976242442332
     },
     {
       "close": 10700,
       "market_cap": 1198460144700,
       "listed_shares": 112005621,
-      "volume": 328946,
-      "trading_value": 3461731800,
-      "short_volume": 58741,
-      "short_value": 617321665,
-      "short_volume_ratio_pct": 17.857338286527273,
-      "short_value_ratio_pct": 17.832740970863195,
+      "volume": 342528,
+      "trading_value": 3608143040,
+      "short_volume": 58763,
+      "short_value": 617571145,
+      "short_volume_ratio_pct": 17.15567778400598,
+      "short_value_ratio_pct": 17.116038309833748,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "하림지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.027018286876870225,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.027018286876870225
     }
   ]
 }

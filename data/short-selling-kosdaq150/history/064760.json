@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2214445900,
       "short_volume_ratio_pct": 15.570548618268102,
       "short_value_ratio_pct": 15.586720890213057,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 96601,
+      "balance_value": 16171007400,
+      "balance_ratio_pct": 0.86,
       "lending_quantity": 783640,
       "lending_change": 11095,
       "return_pct": -2.843876958792805,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "티씨케이",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "티씨케이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.058240967148910104,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.058240967148910104
     },
     {
       "close": 183000,
       "market_cap": 2045833128000,
       "listed_shares": 11179416,
-      "volume": 65151,
-      "trading_value": 11327043300,
-      "short_volume": 17629,
-      "short_value": 3112232350,
-      "short_volume_ratio_pct": 27.058679068625192,
-      "short_value_ratio_pct": 27.476123005550797,
+      "volume": 69225,
+      "trading_value": 12068677300,
+      "short_volume": 17744,
+      "short_value": 3133208750,
+      "short_volume_ratio_pct": 25.632358252076564,
+      "short_value_ratio_pct": 25.961492482693195,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "티씨케이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.10530961545755163,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.10530961545755163
     }
   ]
 }

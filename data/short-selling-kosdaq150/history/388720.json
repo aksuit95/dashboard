@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 201012300,
       "short_volume_ratio_pct": 16.038522471441674,
       "short_value_ratio_pct": 16.047792030786884,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 201112,
+      "balance_value": 10317045600,
+      "balance_ratio_pct": 1.71,
       "lending_quantity": 689204,
       "lending_change": -11406,
       "return_pct": -3.932584269662925,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "유일로보틱스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "유일로보틱스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.3350975631390134,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.3350975631390134
     },
     {
       "close": 57000,
       "market_cap": 671536665000,
       "listed_shares": 11781345,
-      "volume": 26311,
-      "trading_value": 1452718550,
+      "volume": 29177,
+      "trading_value": 1615001050,
       "short_volume": 2609,
       "short_value": 143861700,
-      "short_volume_ratio_pct": 9.91600471285774,
-      "short_value_ratio_pct": 9.902929924037936,
+      "short_volume_ratio_pct": 8.941974843198409,
+      "short_value_ratio_pct": 8.907839409763852,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "유일로보틱스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.35634301516507666,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.35634301516507666
     }
   ]
 }

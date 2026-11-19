@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 192347150,
       "short_volume_ratio_pct": 10.630976803760026,
       "short_value_ratio_pct": 10.630099077721757,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 108619,
+      "balance_value": 2110467170,
+      "balance_ratio_pct": 0.41,
       "lending_quantity": 1755562,
       "lending_change": -6264,
       "return_pct": -2.606516290726816,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "성광벤드",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "성광벤드",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.021056306642481537,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.021056306642481537
     },
     {
       "close": 19150,
       "market_cap": 508573520600,
       "listed_shares": 26557364,
-      "volume": 168865,
-      "trading_value": 3184729105,
+      "volume": 179606,
+      "trading_value": 3390253955,
       "short_volume": 10453,
       "short_value": 196774900,
-      "short_volume_ratio_pct": 6.190151896485358,
-      "short_value_ratio_pct": 6.178701343579425,
+      "short_volume_ratio_pct": 5.819961471220338,
+      "short_value_ratio_pct": 5.804134516524736,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "성광벤드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.002214075161977672,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.002214075161977672
     }
   ]
 }

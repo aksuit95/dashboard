@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 45425675,
       "short_volume_ratio_pct": 9.673926122006979,
       "short_value_ratio_pct": 9.696514182165988,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 921826,
+      "balance_value": 3014371020,
+      "balance_ratio_pct": 1.1,
       "lending_quantity": 3061140,
       "lending_change": 4995,
       "return_pct": -2.388059701492537,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "위메이드맥스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "위메이드맥스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.028569285457374548,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.028569285457374548
     },
     {
       "close": 4235,
       "market_cap": 354906916210,
       "listed_shares": 83803286,
-      "volume": 2921844,
-      "trading_value": 11908508949,
+      "volume": 2931573,
+      "trading_value": 11949711264,
       "short_volume": 45183,
       "short_value": 176718620,
-      "short_volume_ratio_pct": 1.5463864600574158,
-      "short_value_ratio_pct": 1.4839693261081162,
+      "short_volume_ratio_pct": 1.5412544732810678,
+      "short_value_ratio_pct": 1.4788526358154523,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "위메이드맥스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.013742897862024168,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.013742897862024168
     }
   ]
 }

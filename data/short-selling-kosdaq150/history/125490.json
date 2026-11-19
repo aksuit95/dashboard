@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 131383330,
       "short_volume_ratio_pct": 4.429175992857055,
       "short_value_ratio_pct": 4.430917676265168,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 756200,
+      "balance_value": 6767990000,
+      "balance_ratio_pct": 2.07,
       "lending_quantity": 3094068,
       "lending_change": -13713,
       "return_pct": -4.380341880341874,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한라캐스트",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한라캐스트",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.03193218891757989,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.03193218891757989
     },
     {
       "close": 10180,
       "market_cap": 371593943360,
       "listed_shares": 36502352,
-      "volume": 721739,
-      "trading_value": 7183591490,
+      "volume": 772340,
+      "trading_value": 7697218790,
       "short_volume": 50139,
       "short_value": 498667760,
-      "short_volume_ratio_pct": 6.946971134994784,
-      "short_value_ratio_pct": 6.9417611050708565,
+      "short_volume_ratio_pct": 6.491830023046845,
+      "short_value_ratio_pct": 6.478544700429387,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한라캐스트",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.03594288937874469,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.03594288937874469
     }
   ]
 }

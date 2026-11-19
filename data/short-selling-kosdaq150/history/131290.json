@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2997390650,
       "short_volume_ratio_pct": 4.17567267898698,
       "short_value_ratio_pct": 4.151668229580348,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 244095,
+      "balance_value": 45426079500,
+      "balance_ratio_pct": 2.21,
       "lending_quantity": 919777,
       "lending_change": 10832,
       "return_pct": -17.472283813747225,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "티에스이",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "티에스이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0932248446380662,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.0932248446380662
     },
     {
       "close": 197900,
       "market_cap": 2189056799100,
       "listed_shares": 11061429,
-      "volume": 248466,
-      "trading_value": 45056127100,
+      "volume": 262924,
+      "trading_value": 47895277400,
       "short_volume": 11714,
       "short_value": 2081389850,
-      "short_volume_ratio_pct": 4.71452834593063,
-      "short_value_ratio_pct": 4.619548958081664,
+      "short_volume_ratio_pct": 4.455279852733109,
+      "short_value_ratio_pct": 4.34570998016602,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "티에스이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.37544877791106374,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.37544877791106374
     }
   ]
 }

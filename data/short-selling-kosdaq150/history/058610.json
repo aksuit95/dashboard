@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1432492100,
       "short_volume_ratio_pct": 10.465534106561796,
       "short_value_ratio_pct": 10.471022178087178,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1239790,
+      "balance_value": 84057762000,
+      "balance_ratio_pct": 5.59,
       "lending_quantity": 3375412,
       "lending_change": -567,
       "return_pct": -3.142857142857153,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "에스피지",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "에스피지",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06980993229130969,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.06980993229130969
     },
     {
       "close": 78400,
       "market_cap": 1738705024000,
       "listed_shares": 22177360,
-      "volume": 471394,
-      "trading_value": 35987325900,
+      "volume": 506309,
+      "trading_value": 38721121900,
       "short_volume": 69164,
       "short_value": 5276429750,
-      "short_volume_ratio_pct": 14.672227478499938,
-      "short_value_ratio_pct": 14.661911153559759,
+      "short_volume_ratio_pct": 13.660432660687446,
+      "short_value_ratio_pct": 13.626748118576595,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "에스피지",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.1888773055043522,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.1888773055043522
     }
   ]
 }

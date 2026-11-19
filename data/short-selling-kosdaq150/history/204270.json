@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 447876225,
       "short_volume_ratio_pct": 4.971294239273585,
       "short_value_ratio_pct": 4.9833445314884415,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1193113,
+      "balance_value": 19817606930,
+      "balance_ratio_pct": 2.06,
       "lending_quantity": 3029773,
       "lending_change": 1932,
       "return_pct": -8.936403508771932,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "제이앤티씨",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "제이앤티씨",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0021660038487450986,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.0021660038487450986
     },
     {
       "close": 17520,
       "market_cap": 1013505124320,
       "listed_shares": 57848466,
-      "volume": 325241,
-      "trading_value": 5357907185,
+      "volume": 356507,
+      "trading_value": 5905859735,
       "short_volume": 21032,
       "short_value": 340329160,
-      "short_volume_ratio_pct": 6.466589390636482,
-      "short_value_ratio_pct": 6.351904731623305,
+      "short_volume_ratio_pct": 5.899463404645631,
+      "short_value_ratio_pct": 5.762567606932845,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "제이앤티씨",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.021763757745970308,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.021763757745970308
     }
   ]
 }

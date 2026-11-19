@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 773315600,
       "short_volume_ratio_pct": 9.410920345844593,
       "short_value_ratio_pct": 9.474569541010993,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 399212,
+      "balance_value": 17824815800,
+      "balance_ratio_pct": 2.32,
       "lending_quantity": 2349595,
       "lending_change": 2683,
       "return_pct": -7.172557172557177,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "큐리옥스바이오시스템즈",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "큐리옥스바이오시스템즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.4119839771946087,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.4119839771946087
     },
     {
       "close": 44400,
       "market_cap": 764776635600,
       "listed_shares": 17224699,
-      "volume": 323579,
-      "trading_value": 13626416725,
+      "volume": 340525,
+      "trading_value": 14372257725,
       "short_volume": 25161,
       "short_value": 1062860250,
-      "short_volume_ratio_pct": 7.775844538737063,
-      "short_value_ratio_pct": 7.799998131937361,
+      "short_volume_ratio_pct": 7.388884810219514,
+      "short_value_ratio_pct": 7.395221198623475,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "큐리옥스바이오시스템즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.022607071392074834,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.022607071392074834
     }
   ]
 }

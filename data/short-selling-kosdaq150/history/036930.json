@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 23830814800,
       "short_volume_ratio_pct": 11.687753306065634,
       "short_value_ratio_pct": 11.690981236113094,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 3003606,
+      "balance_value": 443632606200,
+      "balance_ratio_pct": 6.46,
       "lending_quantity": 10360633,
       "lending_change": 493021,
       "return_pct": -2.828947368421055,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "주성엔지니어링",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "주성엔지니어링",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.6732690461574711,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.6732690461574711
     },
     {
       "close": 160000,
       "market_cap": 7436979360000,
       "listed_shares": 46481121,
-      "volume": 1035795,
-      "trading_value": 156394964950,
+      "volume": 1177216,
+      "trading_value": 178829520650,
       "short_volume": 102056,
       "short_value": 15332110600,
-      "short_volume_ratio_pct": 9.852914910769023,
-      "short_value_ratio_pct": 9.803455376521699,
+      "short_volume_ratio_pct": 8.669267152332283,
+      "short_value_ratio_pct": 8.573590391715898,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "주성엔지니어링",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.24497042573478378,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.24497042573478378
     }
   ]
 }

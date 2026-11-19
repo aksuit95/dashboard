@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 549709250,
       "short_volume_ratio_pct": 6.33420424855163,
       "short_value_ratio_pct": 6.322659325803534,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 11191,
+      "balance_value": 1101194400,
+      "balance_ratio_pct": 0.1,
       "lending_quantity": 922175,
       "lending_change": -616,
       "return_pct": 2.9288702928870265,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "코스메카코리아",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "코스메카코리아",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.10837078651685395,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.10837078651685395
     },
     {
       "close": 108700,
       "market_cap": 1160916000000,
       "listed_shares": 10680000,
-      "volume": 117238,
-      "trading_value": 12492528250,
-      "short_volume": 4203,
-      "short_value": 450238300,
-      "short_volume_ratio_pct": 3.585015097493987,
-      "short_value_ratio_pct": 3.60406069123758,
+      "volume": 120231,
+      "trading_value": 12816367350,
+      "short_volume": 4212,
+      "short_value": 451215300,
+      "short_volume_ratio_pct": 3.5032562317538734,
+      "short_value_ratio_pct": 3.520617720121763,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "코스메카코리아",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.03852059925093633,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.03852059925093633
     }
   ]
 }

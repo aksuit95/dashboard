@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2133423220,
       "short_volume_ratio_pct": 24.63195955137307,
       "short_value_ratio_pct": 24.64900221361205,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 10318649,
+      "balance_value": 82446005510,
+      "balance_ratio_pct": 5.97,
       "lending_quantity": 45015321,
       "lending_change": -144596,
       "return_pct": -1.842751842751838,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "우리기술",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "우리기술",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.1590656695747883,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.1590656695747883
     },
     {
       "close": 8660,
       "market_cap": 1496314739920,
       "listed_shares": 172784612,
-      "volume": 1105851,
-      "trading_value": 9290953345,
+      "volume": 1204679,
+      "trading_value": 10143766595,
       "short_volume": 247412,
       "short_value": 2073830980,
-      "short_volume_ratio_pct": 22.37299600036533,
-      "short_value_ratio_pct": 22.320970765783134,
+      "short_volume_ratio_pct": 20.53758719127668,
+      "short_value_ratio_pct": 20.444387797943016,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "우리기술",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.596407277286938,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.596407277286938
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1842383175,
       "short_volume_ratio_pct": 21.33631507819036,
       "short_value_ratio_pct": 21.26974114073611,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 814407,
+      "balance_value": 22396192500,
+      "balance_ratio_pct": 1.3,
       "lending_quantity": 5087779,
       "lending_change": 463682,
       "return_pct": -0.36231884057971797,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "펄어비스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "펄어비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.33018792115258266,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.33018792115258266
     },
     {
       "close": 29350,
       "market_cap": 1844468758500,
       "listed_shares": 62843910,
-      "volume": 525648,
-      "trading_value": 15234144425,
+      "volume": 550146,
+      "trading_value": 15950479475,
       "short_volume": 59763,
       "short_value": 1733327225,
-      "short_volume_ratio_pct": 11.369395488996439,
-      "short_value_ratio_pct": 11.377909888759637,
+      "short_volume_ratio_pct": 10.863116336390704,
+      "short_value_ratio_pct": 10.866928657014556,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "펄어비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.05095004432410395,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.05095004432410395
     }
   ]
 }

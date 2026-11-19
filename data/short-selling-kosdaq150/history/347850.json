@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 978604300,
       "short_volume_ratio_pct": 6.548889504651924,
       "short_value_ratio_pct": 6.563177913534601,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1174428,
+      "balance_value": 42866622000,
+      "balance_ratio_pct": 2.55,
       "lending_quantity": 5377427,
       "lending_change": 11434,
       "return_pct": -3.94736842105263,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "디앤디파마텍",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "디앤디파마텍",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06935357187961812,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.06935357187961812
     },
     {
       "close": 37400,
       "market_cap": 1720257468600,
       "listed_shares": 45996189,
-      "volume": 397429,
-      "trading_value": 14225420425,
-      "short_volume": 24509,
-      "short_value": 874448800,
-      "short_volume_ratio_pct": 6.1668876705021525,
-      "short_value_ratio_pct": 6.147085807483261,
+      "volume": 424835,
+      "trading_value": 15252617225,
+      "short_volume": 24512,
+      "short_value": 874561000,
+      "short_volume_ratio_pct": 5.769769439900196,
+      "short_value_ratio_pct": 5.733842179993473,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "디앤디파마텍",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06460970059932575,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.06460970059932575
     }
   ]
 }

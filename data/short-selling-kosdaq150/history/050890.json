@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 676389135,
       "short_volume_ratio_pct": 13.937840896738262,
       "short_value_ratio_pct": 13.808313078927137,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 628644,
+      "balance_value": 4752548640,
+      "balance_ratio_pct": 1.03,
       "lending_quantity": 6098694,
       "lending_change": 156620,
       "return_pct": -2.9525032092426216,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "쏠리드",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "쏠리드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.243193596264066,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.243193596264066
     },
     {
       "close": 8100,
       "market_cap": 492127925400,
       "listed_shares": 60756534,
-      "volume": 430833,
-      "trading_value": 3411178290,
-      "short_volume": 16293,
-      "short_value": 129190870,
-      "short_volume_ratio_pct": 3.781743738293028,
-      "short_value_ratio_pct": 3.7872799079053707,
+      "volume": 467765,
+      "trading_value": 3710891230,
+      "short_volume": 16348,
+      "short_value": 129637920,
+      "short_volume_ratio_pct": 3.494917319594241,
+      "short_value_ratio_pct": 3.4934443497553014,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "쏠리드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.10563472893302309,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.10563472893302309
     }
   ]
 }

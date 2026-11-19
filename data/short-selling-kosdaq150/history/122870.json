@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1615923125,
       "short_volume_ratio_pct": 19.937331845921648,
       "short_value_ratio_pct": 19.834141497979687,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 12570,
+      "balance_value": 561879000,
+      "balance_ratio_pct": 0.07,
       "lending_quantity": 1836147,
       "lending_change": 2540,
       "return_pct": 2.7586206896551744,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "와이지엔터테인먼트",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "와이지엔터테인먼트",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.27974887872799437,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.27974887872799437
     },
     {
       "close": 47300,
       "market_cap": 884086617700,
       "listed_shares": 18691049,
-      "volume": 858927,
-      "trading_value": 40374110625,
-      "short_volume": 103320,
-      "short_value": 4862122625,
-      "short_volume_ratio_pct": 12.028961716187755,
-      "short_value_ratio_pct": 12.042674252716123,
+      "volume": 893647,
+      "trading_value": 41999113875,
+      "short_volume": 103328,
+      "short_value": 4862500325,
+      "short_volume_ratio_pct": 11.562507343503643,
+      "short_value_ratio_pct": 11.577625993424604,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "와이지엔터테인먼트",
       "lending_published_at": null,
-      "lending_change_shares_pct": 1.0618451644955829,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 1.0618451644955829
     }
   ]
 }

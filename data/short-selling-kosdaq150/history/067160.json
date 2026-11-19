@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 208588000,
       "short_volume_ratio_pct": 17.108270549394735,
       "short_value_ratio_pct": 17.086452573632176,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 93166,
+      "balance_value": 3130377600,
+      "balance_ratio_pct": 0.83,
       "lending_quantity": 878176,
       "lending_change": 1527,
       "return_pct": -4.815864022662879,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "SOOP",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "SOOP",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.07477392640515276,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.07477392640515276
     },
     {
       "close": 35750,
       "market_cap": 399985014000,
       "listed_shares": 11188392,
-      "volume": 25495,
-      "trading_value": 906872125,
+      "volume": 27444,
+      "trading_value": 976674925,
       "short_volume": 4004,
       "short_value": 141755150,
-      "short_volume_ratio_pct": 15.705040203961563,
-      "short_value_ratio_pct": 15.631217025222824,
+      "short_volume_ratio_pct": 14.589709954817081,
+      "short_value_ratio_pct": 14.514056455375876,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "SOOP",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.002448966750539309,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.002448966750539309
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 651849075,
       "short_volume_ratio_pct": 30.362703021122613,
       "short_value_ratio_pct": 30.374151269359178,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1173315,
+      "balance_value": 41770014000,
+      "balance_ratio_pct": 7.3,
       "lending_quantity": 3061715,
       "lending_change": 101156,
       "return_pct": -2.864938608458388,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "제룡전기",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "제룡전기",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.3108251072426309,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.3108251072426309
     },
     {
       "close": 38500,
       "market_cap": 618402746500,
       "listed_shares": 16062409,
-      "volume": 60901,
-      "trading_value": 2282749600,
+      "volume": 72386,
+      "trading_value": 2723396350,
       "short_volume": 10005,
       "short_value": 374787850,
-      "short_volume_ratio_pct": 16.428301669923318,
-      "short_value_ratio_pct": 16.418263746492386,
+      "short_volume_ratio_pct": 13.821733484375432,
+      "short_value_ratio_pct": 13.761781313983182,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "제룡전기",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0020233577665716273,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.0020233577665716273
     }
   ]
 }

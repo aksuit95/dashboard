@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 418648750,
       "short_volume_ratio_pct": 8.114725820882546,
       "short_value_ratio_pct": 8.087617762762456,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1882250,
+      "balance_value": 26615015000,
+      "balance_ratio_pct": 8.59,
       "lending_quantity": 5176269,
       "lending_change": 18195,
       "return_pct": -10.336081166772345,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "엔켐",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "엔켐",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.00962074107637472,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.00962074107637472
     },
     {
       "close": 11750,
       "market_cap": 257454179500,
       "listed_shares": 21910994,
-      "volume": 832872,
-      "trading_value": 9673174545,
+      "volume": 902437,
+      "trading_value": 10496019805,
       "short_volume": 142385,
       "short_value": 1640054510,
-      "short_volume_ratio_pct": 17.095664159678797,
-      "short_value_ratio_pct": 16.954666768085286,
+      "short_volume_ratio_pct": 15.777832690813872,
+      "short_value_ratio_pct": 15.625489856819112,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "엔켐",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.23699518150568613,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.23699518150568613
     }
   ]
 }

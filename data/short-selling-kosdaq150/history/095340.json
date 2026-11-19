@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2440720000,
       "short_volume_ratio_pct": 11.441714727985419,
       "short_value_ratio_pct": 11.429979550586832,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 49041,
+      "balance_value": 6507740700,
+      "balance_ratio_pct": 0.23,
       "lending_quantity": 2387713,
       "lending_change": 14946,
       "return_pct": -3.9797395079594793,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "ISC",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "ISC",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.3007445655901871,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.3007445655901871
     },
     {
       "close": 146900,
       "market_cap": 3113847820200,
       "listed_shares": 21197058,
-      "volume": 139895,
-      "trading_value": 19360129250,
-      "short_volume": 11934,
-      "short_value": 1658934900,
-      "short_volume_ratio_pct": 8.530683727081025,
-      "short_value_ratio_pct": 8.568821409082277,
+      "volume": 150881,
+      "trading_value": 20956084550,
+      "short_volume": 11935,
+      "short_value": 1659080000,
+      "short_volume_ratio_pct": 7.910207381976525,
+      "short_value_ratio_pct": 7.916936945169942,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "ISC",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.13218815554498176,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.13218815554498176
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1515630000,
       "short_volume_ratio_pct": 7.059674502712478,
       "short_value_ratio_pct": 7.08573996410075,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 34580,
+      "balance_value": 8593130000,
+      "balance_ratio_pct": 0.44,
       "lending_quantity": 657118,
       "lending_change": 7361,
       "return_pct": -12.190812720848058,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "솔브레인",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "솔브레인",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.006685036804984364,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.006685036804984364
     },
     {
       "close": 262000,
       "market_cap": 2037984292000,
       "listed_shares": 7778566,
-      "volume": 37420,
-      "trading_value": 9497664750,
-      "short_volume": 4567,
-      "short_value": 1159512500,
-      "short_volume_ratio_pct": 12.204703367183324,
-      "short_value_ratio_pct": 12.208395753282405,
+      "volume": 39869,
+      "trading_value": 10142173250,
+      "short_volume": 4568,
+      "short_value": 1159774500,
+      "short_volume_ratio_pct": 11.4575233890993,
+      "short_value_ratio_pct": 11.43516750712181,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "솔브레인",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.04631959155453589,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.04631959155453589
     }
   ]
 }

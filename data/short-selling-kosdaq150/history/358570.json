@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 576650880,
       "short_volume_ratio_pct": 21.271879898362656,
       "short_value_ratio_pct": 21.240690622661766,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 800323,
+      "balance_value": 5602261000,
+      "balance_ratio_pct": 1.24,
       "lending_quantity": 5717900,
       "lending_change": -32309,
       "return_pct": 2.040816326530617,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "지아이이노베이션",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "지아이이노베이션",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06975013301350366,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.06975013301350366
     },
     {
       "close": 7120,
       "market_cap": 459353962720,
       "listed_shares": 64516006,
-      "volume": 514532,
-      "trading_value": 3557541655,
-      "short_volume": 246211,
-      "short_value": 1700147780,
-      "short_volume_ratio_pct": 47.851445585502944,
-      "short_value_ratio_pct": 47.78996129561834,
+      "volume": 536407,
+      "trading_value": 3712331595,
+      "short_volume": 246212,
+      "short_value": 1700154900,
+      "short_volume_ratio_pct": 45.900221287194235,
+      "short_value_ratio_pct": 45.79749563023612,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "지아이이노베이션",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.06770257910881836,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.06770257910881836
     }
   ]
 }

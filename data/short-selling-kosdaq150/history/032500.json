@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1142604735,
       "short_volume_ratio_pct": 8.805816777729339,
       "short_value_ratio_pct": 8.818343465123057,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1325235,
+      "balance_value": 25974606000,
+      "balance_ratio_pct": 3.14,
       "lending_quantity": 4990201,
       "lending_change": 155796,
       "return_pct": 0.667693888032872,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "케이엠더블유",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "케이엠더블유",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.4194687481312972,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.4194687481312972
     },
     {
       "close": 20300,
       "market_cap": 856491530300,
       "listed_shares": 42191701,
-      "volume": 291307,
-      "trading_value": 5810272525,
+      "volume": 314650,
+      "trading_value": 6281930675,
       "short_volume": 24055,
       "short_value": 478534910,
-      "short_volume_ratio_pct": 8.257611385926188,
-      "short_value_ratio_pct": 8.236014884689078,
+      "short_volume_ratio_pct": 7.6450023836008265,
+      "short_value_ratio_pct": 7.617640734311351,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "케이엠더블유",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0028441612249764476,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.0028441612249764476
     }
   ]
 }

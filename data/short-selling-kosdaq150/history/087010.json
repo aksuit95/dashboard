@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3266822800,
       "short_volume_ratio_pct": 24.150375939849624,
       "short_value_ratio_pct": 24.14009581854531,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1139442,
+      "balance_value": 101638226400,
+      "balance_ratio_pct": 4.89,
       "lending_quantity": 3251450,
       "lending_change": 50675,
       "return_pct": 0.7909604519773978,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "펩트론",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "펩트론",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.24621580068060908,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.24621580068060908
     },
     {
       "close": 88500,
       "market_cap": 2063585475000,
       "listed_shares": 23317350,
-      "volume": 174131,
-      "trading_value": 14976611700,
+      "volume": 187670,
+      "trading_value": 16163533800,
       "short_volume": 21105,
       "short_value": 1804408450,
-      "short_volume_ratio_pct": 12.120185377675428,
-      "short_value_ratio_pct": 12.048175422749326,
+      "short_volume_ratio_pct": 11.245803804550542,
+      "short_value_ratio_pct": 11.163452697454069,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "펩트론",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.05650727891462795,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.05650727891462795
     }
   ]
 }

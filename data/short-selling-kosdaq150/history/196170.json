@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2836132650,
       "short_volume_ratio_pct": 4.386891467305269,
       "short_value_ratio_pct": 4.379955426293165,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 791925,
+      "balance_value": 137003025000,
+      "balance_ratio_pct": 1.14,
       "lending_quantity": 3787069,
       "lending_change": -48609,
       "return_pct": 0.7571345369831164,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "알테오젠",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "알테오젠",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.012211591068241878,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.012211591068241878
     },
     {
       "close": 172700,
       "market_cap": 12029441469100,
       "listed_shares": 69655133,
-      "volume": 441921,
-      "trading_value": 74927699650,
-      "short_volume": 29511,
-      "short_value": 4982158300,
-      "short_volume_ratio_pct": 6.677890392174167,
-      "short_value_ratio_pct": 6.64928767768463,
+      "volume": 481061,
+      "trading_value": 81690309450,
+      "short_volume": 29681,
+      "short_value": 5011498900,
+      "short_volume_ratio_pct": 6.169903608897832,
+      "short_value_ratio_pct": 6.134753232961343,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "알테오젠",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.06193944098850547,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": -0.06193944098850547
     }
   ]
 }

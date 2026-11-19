@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "a4f960b7e86821309e63",
+  "dataset_id": "3822b4af77209dc265d3",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:54:15.369170+09:00",
+  "collected_at": "2026-11-20T04:24:53.964546+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 548381455,
       "short_volume_ratio_pct": 9.817811441074104,
       "short_value_ratio_pct": 9.792583058912687,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 917154,
+      "balance_value": 8263557540,
+      "balance_ratio_pct": 1.36,
       "lending_quantity": 5670961,
       "lending_change": -103173,
       "return_pct": -4.6560846560846585,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "LS머트리얼즈",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "LS머트리얼즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.010945615603963179,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.010945615603963179
     },
     {
       "close": 9390,
       "market_cap": 635258468010,
       "listed_shares": 67652659,
-      "volume": 432830,
-      "trading_value": 3898811885,
+      "volume": 462906,
+      "trading_value": 4181888765,
       "short_volume": 41428,
       "short_value": 371708260,
-      "short_volume_ratio_pct": 9.571425270891574,
-      "short_value_ratio_pct": 9.533885474959252,
+      "short_volume_ratio_pct": 8.949549152527728,
+      "short_value_ratio_pct": 8.888525756853793,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "LS머트리얼즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.028142278930972986,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00"
+      "lending_collected_at": "2026-11-19T23:36:03.466329+09:00",
+      "lending_change_shares_pct": 0.028142278930972986
     }
   ]
 }
