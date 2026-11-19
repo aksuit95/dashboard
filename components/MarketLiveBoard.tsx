@@ -2,8 +2,7 @@
 
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
-import { MarketLiveRotation } from "@/components/MarketLiveRotation";
-import { MarketLiveSectorReplay } from "@/components/MarketLiveSectorReplay";
+import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
 import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
 import {
   MARKET_LIVE_POLL_MS,
@@ -149,8 +148,7 @@ export function MarketLiveBoard() {
       </section>
 
       <BreadthPanel breadth={board?.breadth} />
-      <MarketLiveRotation radar={board?.radar ?? null} active={!failed && (board?.state === "open" || board?.state === "auction")} />
-      <MarketLiveSectorReplay live={board?.state === "open" || board?.state === "auction"} />
+      <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <SectorPanel sectors={board?.sectors ?? []} />

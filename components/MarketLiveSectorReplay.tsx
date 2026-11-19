@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MarketLiveRotation } from "@/components/MarketLiveRotation";
 import { sectorNames } from "@/config/sectors";
 import { formatSigned } from "@/lib/format";
-import type { MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
+import {
+  MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveFrameTime,
+  type MarketLiveArchiveResponse, type MarketLiveSectorResponse,
+} from "@/lib/market/market-live-archive";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 
 type ArchiveDay = NonNullable<MarketLiveArchiveResponse["day"]>;
@@ -28,11 +32,13 @@ function snapshotTime(value: string | null) {
   return Number.isFinite(time) ? secondClock.format(time) : "—";
 }
 
-function useArchive(date: string, refresh: number, live: boolean) {
-  const [archive, setArchive] = useState<MarketLiveArchiveResponse | null>(null);
+function useArchive(date: string | null, refresh: number, live: boolean) {
+  const [archive, setArchive] = useState<MarketLiveSectorResponse | null>(null);
   const [busy, setBusy] = useState(true);
   const [failed, setFailed] = useState(false);
+  const reload = useRef<() => void>(() => undefined);
   useEffect(() => {
+    if (date === null) return;
     let mounted = true;
     let pending: AbortController | null = null;
     const url = date ? `/api/market-live/archive?date=${encodeURIComponent(date)}` : "/api/market-live/archive";
@@ -42,12 +48,13 @@ function useArchive(date: string, refresh: number, live: boolean) {
       pending = controller;
       setBusy(true);
       try {
-        const response = await fetch(url, { cache: "no-store", signal: controller.signal });
+        const response = await fetch(url, { signal: controller.signal });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const value: MarketLiveArchiveResponse = await response.json();
+        const value: MarketLiveSectorResponse = await response.json();
         if (!Array.isArray(value?.dates) || (value.day !== null && !Array.isArray(value.day?.frames))) throw new Error("기록 형식 오류");
         if (mounted) {
-          setArchive(value);
+          setArchive(previous => !date && value.warning && previous?.day &&
+            previous.day.date > (value.day?.date ?? "") ? { ...previous, warning: value.warning } : value);
           setFailed(false);
         }
       } catch {
@@ -57,30 +64,47 @@ function useArchive(date: string, refresh: number, live: boolean) {
         if (mounted) setBusy(false);
       }
     }
-    const loadVisible = () => {
+    reload.current = () => {
       if (!document.hidden) void load();
     };
-    void load();
-    const timer = live && !date ? window.setInterval(loadVisible, minute) : undefined;
-    if (timer !== undefined) document.addEventListener("visibilitychange", loadVisible);
+    if (!document.hidden) void load();
     return () => {
       mounted = false;
       pending?.abort();
+      reload.current = () => undefined;
+    };
+  }, [date, refresh]);
+  useEffect(() => {
+    if (date === null) return;
+    const loadVisible = () => reload.current();
+    const timer = live ? window.setInterval(loadVisible, minute) : undefined;
+    document.addEventListener("visibilitychange", loadVisible);
+    return () => {
       window.clearInterval(timer);
       document.removeEventListener("visibilitychange", loadVisible);
     };
-  }, [date, refresh, live]);
+  }, [date, live]);
+  const previousLive = useRef(live);
+  useEffect(() => {
+    const changed = previousLive.current !== live;
+    previousLive.current = live;
+    if (!changed) return;
+    reload.current();
+    if (live) return;
+    const afterClose = window.setTimeout(() => reload.current(), MARKET_LIVE_SECTOR_REFRESH_SECONDS * 1000);
+    return () => window.clearTimeout(afterClose);
+  }, [live]);
   return { archive, busy, failed };
 }
 
 function buildTimeline(day: ArchiveDay | null) {
   const byMinute = new Map<number, Slot>();
   for (const frame of day?.frames ?? []) {
-    const collectedAt = Date.parse(frame.collectedAt);
-    if (!Number.isFinite(collectedAt)) continue;
-    const time = Math.floor(collectedAt / minute) * minute;
+    const at = Date.parse(marketLiveFrameTime(frame));
+    if (!Number.isFinite(at)) continue;
+    const time = Math.floor(at / minute) * minute;
     const saved = byMinute.get(time);
-    if (saved && Date.parse(saved.frame.collectedAt) >= collectedAt) continue;
+    if (saved && Date.parse(saved.frame.collectedAt) >= Date.parse(frame.collectedAt)) continue;
     const ranks = frame.sectors
       .filter((row): row is SectorRank => row.changePct != null && Number.isFinite(row.changePct) && row.compared > 0)
       .sort((a, b) => b.changePct - a.changePct || a.name.localeCompare(b.name, "ko-KR"));
@@ -105,12 +129,15 @@ function buildTimeline(day: ArchiveDay | null) {
   return { slots, byMinute, leads, start, end, latest };
 }
 
-export function MarketLiveSectorReplay({ live = false }: { live?: boolean }) {
+export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
   const [date, setDate] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [cursor, setCursor] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
-  const { archive, busy, failed } = useArchive(date, refresh, live);
+  const latest = useArchive("", refresh, live);
+  const useLatest = !date || date === latest.archive?.day?.date;
+  const history = useArchive(useLatest ? null : date, refresh, false);
+  const { archive, busy, failed } = useLatest ? latest : history;
   const day = archive?.day && (!date || archive.day.date === date) ? archive.day : null;
   const timeline = useMemo(() => buildTimeline(day), [day]);
   const selected = timeline && cursor != null && cursor >= timeline.start && cursor <= timeline.end ? cursor : timeline?.latest;
@@ -138,7 +165,11 @@ export function MarketLiveSectorReplay({ live = false }: { live?: boolean }) {
   }
 
   const slot = selected == null ? null : timeline?.byMinute.get(selected);
+  const warning = latest.failed ? "섹터 데이터를 갱신하지 못했습니다." : latest.archive?.warning;
   return (
+    <>
+    {warning && <p className="text-xs text-amber-200" role="status">{warning}</p>}
+    <MarketLiveRotation radar={latest.archive?.radar ?? null} active={live && !latest.failed} />
     <section aria-labelledby="market-live-sector-replay" className="min-w-0 rounded-xl border border-white/10 bg-[#151a22] px-4 py-4 sm:px-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -157,15 +188,15 @@ export function MarketLiveSectorReplay({ live = false }: { live?: boolean }) {
             }}
           >
             <option value="">최신 기록</option>
-            {archive?.dates.map(day => <option value={day} key={day}>{day}</option>)}
+            {latest.archive?.dates.map(day => <option value={day} key={day}>{day}</option>)}
           </select>
           <button type="button" disabled={busy} onClick={() => setRefresh(value => value + 1)} className={control}>기록 새로고침</button>
         </div>
       </div>
-      {failed && <p className="mt-3 text-xs text-amber-200" role="status">저장된 섹터 기록을 갱신하지 못했습니다.</p>}
+      {!useLatest && failed && <p className="mt-3 text-xs text-amber-200" role="status">저장된 섹터 기록을 갱신하지 못했습니다.</p>}
       {!day || !timeline || selected == null ? (
         <p className="mt-3 rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-xs text-zinc-400">
-          {busy ? "저장된 섹터 흐름을 불러오는 중입니다." : "이 거래일의 저장된 섹터 기록이 없습니다."}
+          {busy ? "섹터 흐름을 불러오는 중입니다." : "이 거래일의 섹터 기록이 없습니다."}
         </p>
       ) : (
         <>
@@ -192,6 +223,7 @@ export function MarketLiveSectorReplay({ live = false }: { live?: boolean }) {
         </>
       )}
     </section>
+    </>
   );
 }
 

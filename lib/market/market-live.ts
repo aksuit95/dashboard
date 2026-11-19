@@ -55,7 +55,7 @@ export type MarketLiveBoardData = {
   breadth: { up: number; flat: number; down: number; compared: number; total: number };
   warnings: string[];
 };
-export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks"> & { radar: MarketLiveRadar | null };
+export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks">;
 
 export function marketLiveChange(price: number | null, close: number | undefined): number | null {
   return price != null && close != null && close > 0 ? (price / close - 1) * 100 : null;

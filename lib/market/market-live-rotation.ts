@@ -1,5 +1,5 @@
-import type { MarketLiveArchiveFrame } from "./market-live-archive";
-import type { MarketLiveRotationData, MarketLiveRotationWindow } from "./market-live";
+import { marketLiveFrameTime, type MarketLiveArchiveFrame } from "./market-live-archive";
+import { marketLiveRotationWindows, type MarketLiveRadar, type MarketLiveRotationData, type MarketLiveRotationWindow } from "./market-live";
 
 const maximumDelayMs = 90_000;
 
@@ -13,8 +13,8 @@ export function compareMarketLiveRotation(
   current: MarketLiveArchiveFrame,
   minutes: MarketLiveRotationWindow,
 ): MarketLiveRotationData | null {
-  const { from, through } = marketLiveRotationBounds(Date.parse(current.collectedAt), minutes);
-  const earlierAt = Date.parse(base.collectedAt);
+  const { from, through } = marketLiveRotationBounds(Date.parse(marketLiveFrameTime(current)), minutes);
+  const earlierAt = Date.parse(marketLiveFrameTime(base));
   if (!(earlierAt >= from && earlierAt <= through)) return null;
 
   const earlier = new Map(base.stocks.map(stock => [`${stock.market}:${stock.code}`, stock]));
@@ -36,5 +36,23 @@ export function compareMarketLiveRotation(
       name, total, compared: sector.count, nowPct: sector.nowPct / sector.count, changePp: sector.changePp / sector.count,
     }] : [];
   });
-  return rows.length ? { minutes, from: base.collectedAt, to: current.collectedAt, rows } : null;
+  return rows.length ? { minutes, from: marketLiveFrameTime(base), to: marketLiveFrameTime(current), rows } : null;
+}
+
+export function calculateMarketLiveRadar(
+  date: string,
+  baselineDate: string,
+  current: MarketLiveArchiveFrame,
+  live: boolean,
+  readEarlier: (from: number, through: number) => MarketLiveArchiveFrame | null,
+): MarketLiveRadar {
+  const windows: MarketLiveRadar["windows"] = {};
+  const time = Date.parse(marketLiveFrameTime(current));
+  for (const minutes of marketLiveRotationWindows) {
+    const { from, through } = marketLiveRotationBounds(time, minutes);
+    const earlier = readEarlier(from, through);
+    const comparison = earlier && compareMarketLiveRotation(earlier, current, minutes);
+    if (comparison) windows[minutes] = comparison;
+  }
+  return { date, baselineDate, live, windows };
 }

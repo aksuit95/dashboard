@@ -89,7 +89,7 @@ function loadCloses(symbol: MarketLiveSymbol, date: string | null) {
   return entry.result;
 }
 
-function loadMembers(date: string, publication: Promise<SectorPublication | null>) {
+export function loadMarketLiveMembers(date: string, publication: Promise<SectorPublication | null>) {
   if (memberCache?.key === date && memberCache.until > Date.now()) return memberCache.result;
   const entry: NonNullable<typeof memberCache> = {
     key: date, until: Infinity,
@@ -135,7 +135,7 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   const finalCloses = state === "closed"
     ? Promise.all(marketLiveSymbols.map(symbol => loadCloses(symbol, standardClose ? date : null)))
     : Promise.resolve([]);
-  const membership = loadMembers(date, publication);
+  const membership = loadMarketLiveMembers(date, publication);
   const stockFeed = state === "closed"
     ? Promise.resolve({ quotes: [] as MarketLiveQuote[], failedBatches: 0 })
     : membership.then(({ members }) => fetchNaverLiveStocks(members.map(member => member.code), date, openAt, closeAt, Date.now()));

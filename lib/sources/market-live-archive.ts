@@ -3,8 +3,8 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { localDate } from "@/lib/market/market-hours";
-import { MARKET_LIVE_STALE_MS, marketLiveChange, type MarketLiveBoardData, type MarketLiveSector } from "@/lib/market/market-live";
-import type { MarketLiveArchiveFrame, MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
+import { MARKET_LIVE_STALE_MS, type MarketLiveBoardData, type MarketLiveSector } from "@/lib/market/market-live";
+import { summarizeMarketLiveArchiveSectors, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { loadMarketLiveBoard, resolveMarketLiveSession } from "@/lib/sources/market-live";
 
 export const marketLiveArchivePath = path.join(process.cwd(), "data", "market-live-archive.sqlite");
@@ -77,7 +77,6 @@ export function readMarketLiveRotationFrame(date: string, baselineDate: string, 
 
 function archiveFrame(board: MarketLiveBoardData, time: number, earliest: number): MarketLiveArchiveFrame | null {
   const totals = new Map(board.sectors.map(sector => [sector.name, sector.total]));
-  const groups = new Map<string, { count: number; up: number; change: number; oldest: number }>();
   const seen = new Set<string>();
   const stocks = board.rotationStocks.filter(stock => {
     const quoted = Date.parse(stock.asOf);
@@ -85,25 +84,11 @@ function archiveFrame(board: MarketLiveBoardData, time: number, earliest: number
     if (!(quoted >= earliest && quoted <= time) || !totals.has(stock.sector) || seen.has(key)) return false;
     if (!/^[0-9A-Z]{6}$/.test(stock.code) || (stock.market !== "KOSPI" && stock.market !== "KOSDAQ")) return false;
     if (!Number.isFinite(stock.price) || stock.price <= 0 || !Number.isFinite(stock.close) || stock.close <= 0) return false;
-    const change = marketLiveChange(stock.price, stock.close)!;
-    const group = groups.get(stock.sector) ?? { count: 0, up: 0, change: 0, oldest: quoted };
-    group.count++;
-    group.up += Number(change > 0);
-    group.change += change;
-    group.oldest = Math.min(group.oldest, quoted);
-    groups.set(stock.sector, group);
     seen.add(key);
     return true;
   });
   if (!stocks.length) return null;
-  const sectors = [...totals].map(([name, total]) => {
-    const group = groups.get(name);
-    return {
-      name, total, changePct: group ? group.change / group.count : null, up: group?.up ?? 0,
-      compared: group?.count ?? 0, asOf: group ? new Date(group.oldest).toISOString() : null,
-    };
-  });
-  return { collectedAt: new Date(time).toISOString(), sectors, stocks };
+  return { collectedAt: new Date(time).toISOString(), sectors: summarizeMarketLiveArchiveSectors(totals, stocks), stocks };
 }
 
 function saveArchiveFrame(file: string, date: string, baselineDate: string, phase: "open" | "auction", frame: MarketLiveArchiveFrame) {

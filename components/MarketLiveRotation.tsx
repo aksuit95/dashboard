@@ -39,8 +39,9 @@ export function MarketLiveRotation({ radar, active }: { radar: MarketLiveRadar |
       </div>
       {data && radar && (
         <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tabular-nums text-zinc-400">
-          <span>{radar.date} · {active && radar.live ? "수집 구간" : "마지막 비교"}</span>
+          <span>{radar.date} · {active && radar.live ? "장중 비교" : "마지막 비교"}</span>
           <span><time dateTime={data.from}>{kstClock.format(Date.parse(data.from))}</time> <span aria-hidden="true">→</span><span className="sr-only">부터 </span> <time dateTime={data.to}>{kstClock.format(Date.parse(data.to))}</time> KST</span>
+          <span>비교 종가 {radar.baselineDate} KRX 15:30</span>
         </p>
       )}
       {!data ? (

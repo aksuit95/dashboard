@@ -46,14 +46,51 @@ function sessionTime(value: unknown, session: Session): string | null {
   return value;
 }
 
-async function readJson(path: string, fetcher: typeof fetch): Promise<unknown> {
+async function readJson(path: string, fetcher: typeof fetch, batchSignal?: AbortSignal): Promise<unknown> {
+  const timeout = AbortSignal.timeout(6000);
   const response = await fetcher(`${NAVER_MARKET_API}${path}`, {
     cache: "no-store",
-    signal: AbortSignal.timeout(6000),
+    signal: batchSignal ? AbortSignal.any([timeout, batchSignal]) : timeout,
     headers: { "user-agent": "Mozilla/5.0", accept: "application/json" },
   });
   if (!response.ok) throw new Error(`네이버 장중 시세 HTTP ${response.status}`);
   return response.json();
+}
+
+export async function fetchNaverStockMinuteChart(code: string, session: Session, signal: AbortSignal, fetcher: typeof fetch = fetch) {
+  const chart = record(await readJson(`/chart/domestic/item/${code}?periodType=day`, fetcher, signal));
+  if (chart.code !== code || chart.stockExchangeType !== "KRX" || chart.infoType !== "item" ||
+      chart.periodType !== "day" || compactDate(chart.tradeBaseAt) !== session.date || !Array.isArray(chart.priceInfos)) {
+    throw new Error("네이버 KRX 종목 분봉 기준 불일치");
+  }
+  return chart;
+}
+
+export function parseNaverStockMinutes(chart: Record<string, unknown>, session: Session) {
+  const points = new Map<number, number>();
+  if (!Array.isArray(chart.priceInfos)) return points;
+  const day = session.date.replaceAll("-", "");
+  const midnight = Date.parse(`${session.date}T00:00:00+09:00`);
+  const latest = Math.min(session.closeAt, session.now);
+  for (const item of chart.priceInfos) {
+    const row = record(item);
+    const stamp = row.localDateTime;
+    if (typeof stamp !== "string" || !stamp.startsWith(day) || !/^(?:[01]\d|2[0-3])[0-5]\d00$/.test(stamp.slice(8))) continue;
+    const at = midnight + (+stamp.slice(8, 10) * 60 + +stamp.slice(10, 12)) * 60_000;
+    // The feed uses minute-start labels and can include off-session rows.
+    if (at < session.openAt || at > latest || (at < session.closeAt && at + 60_000 > session.now)) continue;
+    const price = positive(row.currentPrice);
+    if (price !== null) points.set(at, price);
+  }
+  return points;
+}
+
+export function naverStockPreviousKrxClose(chart: Record<string, unknown>, baselineDate: string) {
+  if (compactDate(chart.lastTradeBaseAt) !== baselineDate || !Array.isArray(chart.lastPriceInfos)) return null;
+  const stamp = baselineDate.replaceAll("-", "") + "153000";
+  const atClose = positive(record(chart.lastPriceInfos.find(item => record(item).localDateTime === stamp)).currentPrice);
+  // The previous series can continue to 20:00; require the regular close bar and its reference price to agree.
+  return atClose !== null && atClose === positive(chart.lastClosePrice) ? atClose : null;
 }
 
 async function stockBatch(codes: string[], session: Session, fetcher: typeof fetch): Promise<StockQuote[]> {

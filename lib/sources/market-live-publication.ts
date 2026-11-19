@@ -2,9 +2,9 @@ import { mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from 
 import path from "node:path";
 import { localDate } from "@/lib/market/market-hours";
 import type { MarketLiveArchiveFrame, MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
-import { compareMarketLiveRotation, marketLiveRotationBounds } from "@/lib/market/market-live-rotation";
+import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
-import { marketLiveRotationWindows, type MarketLiveRadar } from "@/lib/market/market-live";
+import type { MarketLiveRadar } from "@/lib/market/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveArchive, readMarketLiveRotationFrame } from "./market-live-archive";
 
 export const marketLivePublicationDir = path.join(process.cwd(), "data", "market-live-publication");
@@ -18,14 +18,8 @@ type PublishedArchive = {
 };
 
 export function buildMarketLiveRadar(date: string, baselineDate: string, current: MarketLiveArchiveFrame, live: boolean, archiveFile?: string): MarketLiveRadar {
-  const windows: MarketLiveRadar["windows"] = {};
-  for (const minutes of marketLiveRotationWindows) {
-    const { from, through } = marketLiveRotationBounds(Date.parse(current.collectedAt), minutes);
-    const earlier = readMarketLiveRotationFrame(date, baselineDate, from, through, archiveFile);
-    const result = earlier && compareMarketLiveRotation(earlier, current, minutes);
-    if (result) windows[minutes] = result;
-  }
-  return { date, baselineDate, live, windows };
+  return calculateMarketLiveRadar(date, baselineDate, current, live,
+    (from, through) => readMarketLiveRotationFrame(date, baselineDate, from, through, archiveFile));
 }
 
 function publishedDates() {
@@ -58,8 +52,8 @@ export function readMarketLivePublication(date: string): PublishedArchive | null
   return saved;
 }
 
-export function readSharedMarketLiveArchive(date?: string): MarketLiveArchiveResponse {
-  const local = readMarketLiveArchive(date);
+export function readSharedMarketLiveArchive(date?: string, includeLocal = true): MarketLiveArchiveResponse {
+  const local = includeLocal ? readMarketLiveArchive(date) : { dates: [], day: null };
   const dates = [...new Set([...local.dates, ...publishedDates()])].sort().reverse();
   const selected = date ?? dates[0];
   const day = local.day?.date === selected ? local.day : selected ? readMarketLivePublication(selected)?.day ?? null : null;
