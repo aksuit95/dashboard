@@ -1,12 +1,9 @@
-import { CALENDAR_YEAR, KR_UNCONFIRMED } from "@/config/market-calendar";
+import { CALENDAR_YEAR, KR_CSAT_2026, KR_UNCONFIRMED, krxCloseTime } from "@/config/market-calendar";
 import { calendarNote, localDate, sessionsForDate, shiftDate, zonedTime } from "./market-hours";
 import type { MarketLiveBoardData } from "./market-live";
 
 const seoul = "Asia/Seoul";
-const regularCloseMinutes = 15 * 60 + 30;
-// 2027학년도 수능일 한국투자증권 KRX 시장 운영 공지.
-// https://www.truefriend.com/main/customer/notice/Notice.jsp?cmd=TF04ga000002&num=48007
-const exceptionalDay = "2026-11-19";
+const exceptionalDay = KR_CSAT_2026;
 
 type MarketLiveWindow = { openAt: number; auctionAt: number; closeAt: number };
 type MarketLiveSession = Pick<MarketLiveBoardData, "state" | "note" | "date" | "baselineDate"> & MarketLiveWindow;
@@ -37,7 +34,11 @@ function previousSession(date: string) {
 }
 
 export function hasMarketLiveClosingBasis(date: string, closeAt: number) {
-  return closeAt === zonedTime(date, regularCloseMinutes, seoul);
+  return closeAt === Date.parse(`${date}T${krxCloseTime(date)}:00+09:00`);
+}
+
+export function marketLiveCloseBasis(date: string) {
+  return krxCloseTime(date) === "16:30" ? "KRX_REGULAR_CLOSE_1630_KST" : "KRX_REGULAR_CLOSE_1530_KST";
 }
 
 function baseline(date: string) {

@@ -12,13 +12,14 @@ def latest_session(now=None):
     holidays = set(re.findall(r'"(\d{4}-\d{2}-\d{2})"\s*:', text.split('export const KR_HOLIDAYS', 1)[1].split('};', 1)[0]))
     unconfirmed = set(re.findall(r'"(\d{4}-\d{2}-\d{2})"\s*:', text.split('export const KR_UNCONFIRMED', 1)[1].split('};', 1)[0]))
     clock = (now or dt.datetime.now(dt.timezone.utc)).astimezone(KST)
-    day = clock.date() - dt.timedelta(days=clock.hour < 16)
+    cutoff = (16, 30) if clock.date().isoformat() == '2026-11-19' else (16, 0)
+    day = clock.date() - dt.timedelta(days=(clock.hour, clock.minute) < cutoff)
     for _ in range(15):
         value = day.isoformat()
         if day.year != year:
             raise ValueError('한국 거래 캘린더 업데이트 필요')
         if day.weekday() < 5 and value not in holidays:
-            if value in unconfirmed:
+            if value in unconfirmed and value != '2026-11-19':
                 raise ValueError(f'{value} 특별 운영시간 확인 필요')
             return day
         day -= dt.timedelta(days=1)

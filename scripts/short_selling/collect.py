@@ -13,7 +13,7 @@ import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from .model import PRICE, VERSION, build, normalize
+from .model import PRICE, VERSION, build, normalize, price_basis
 from .sources import KST, ROOT, Source, completed_day, known_calendar, number
 
 
@@ -40,6 +40,8 @@ def validate(files):
     for name, payload in files.items():
         json.dumps(payload, allow_nan=False)
         validator.validate(payload)
+        if payload.get("price_basis") != price_basis(payload.get("as_of")):
+            raise ValueError("KRX close time does not match session date")
         ids.add(payload["dataset_id"])
         universes.add(payload.get("universe", "kospi200"))
     if len(ids) != 1 or len(universes) != 1:
@@ -83,7 +85,7 @@ def read_previous(target):
     if not (target / "summary.json").exists():
         return {}, {}
     summary = json.loads((target / "summary.json").read_text(encoding="utf-8"))
-    if summary.get("schema_version") != VERSION or summary.get("price_basis") != PRICE or summary.get("is_sample"):
+    if summary.get("schema_version") != VERSION or summary.get("price_basis") != price_basis(summary.get("as_of")) or summary.get("is_sample"):
         raise ValueError("Incompatible cache; explicit backfill required")
     ident = summary["dataset_id"]
     def read(name):
@@ -144,6 +146,8 @@ def collect(args, config):
         end = requested
     # A fixed KRX 15:30 contract deliberately blocks unverified special sessions.
     year, holidays, uncertain = known_calendar()
+    # KRX confirmed the 2026 CSAT session closed at 16:30.
+    uncertain = uncertain - {"2026-11-19"}
     # 2025 CSAT: KRX equity session closed at 16:30, outside the fixed
     # 15:30 contract. Preserve the session, but not its close as a 15:30 price.
     uncertain = uncertain | {"2025-11-13"}

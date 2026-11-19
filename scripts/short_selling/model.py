@@ -9,6 +9,8 @@ from .sources import number
 
 VERSION = "short-selling.krx-close.v1"
 PRICE = {"exchange": "KRX", "session": "regular", "price_time": "15:30:00", "timezone": "Asia/Seoul", "adjusted": False}
+def price_basis(day):
+    return {**PRICE, "price_time": "16:30:00" if day == "2026-11-19" else "15:30:00"}
 WARNINGS = [
     "공매도 거래비중은 플로우, 순보유잔고는 스톡이며 서로 다른 지표입니다.",
     "순보유잔고는 공시 기준 초과 보유자만 집계되어 종목 전체 숏 합계가 아닙니다.",
@@ -142,7 +144,7 @@ def build(snapshots, index, start, end, config, collected_at, sample=False, univ
     market_rows = [market_by_day.get(d, {"date": d, "session_status": "no_observation", "index_close": None, "short_value": None, "trading_value": None, "short_volume": None, "volume": None, "short_value_ratio_pct": None, "short_volume_ratio_pct": None, "expected_count": None, "observed_count": None, "coverage": "unavailable"}) for d in days]
     fingerprint = hashlib.sha256(json.dumps([snapshots, index, config, sample, universe, "lending-listed-shares-v2"], sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:20]
     meta = {"schema_version": VERSION, "dataset_id": fingerprint, "as_of": end, "collected_at": collected_at,
-            "price_basis": PRICE, "is_sample": sample, "period_start": start,
+            "price_basis": price_basis(end), "is_sample": sample, "period_start": start,
             "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
             "universe": universe, "membership_basis": "point_in_time", "units": {"money": "KRW", "quantity": "shares", "ratio": "percent_0_100"}}
     latest_codes = snapshots[end]["members"]

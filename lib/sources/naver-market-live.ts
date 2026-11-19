@@ -1,3 +1,5 @@
+import { krxCloseTime } from "@/config/market-calendar";
+
 const NAVER_MARKET_API = "https://stock.naver.com/api/securityService";
 const STOCK_BATCH_SIZE = 100;
 
@@ -98,7 +100,7 @@ export function parseNaverStockMinutes(chart: Record<string, unknown>, session: 
 
 export function naverStockPreviousKrxClose(chart: Record<string, unknown>, baselineDate: string) {
   if (compactDate(chart.lastTradeBaseAt) !== baselineDate || !Array.isArray(chart.lastPriceInfos)) return null;
-  const stamp = baselineDate.replaceAll("-", "") + "153000";
+  const stamp = baselineDate.replaceAll("-", "") + krxCloseTime(baselineDate).replace(":", "") + "00";
   const atClose = positive(record(chart.lastPriceInfos.find(item => record(item).localDateTime === stamp)).currentPrice);
   // The previous series can continue to 20:00; require the regular close bar and its reference price to agree.
   return atClose !== null && atClose === positive(chart.lastClosePrice) ? atClose : null;

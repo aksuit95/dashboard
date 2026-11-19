@@ -19,7 +19,7 @@ export async function loadDisparityIndicators() {
       ]);
       const points: unknown = JSON.parse(raw);
       const meta = JSON.parse(metaRaw);
-      if (meta.status !== "ok" || meta.source !== market.source || meta.basis !== market.basis || !Array.isArray(points) || points.length < 50) throw new Error("invalid publication");
+      if (meta.status !== "ok" || meta.source !== market.source || meta.basis !== (market.id === "kospi" || market.id === "kosdaq" ? `KRX 정규장 ${meta.asOf === "2026-11-19" ? "16:30" : "15:30"} KST` : market.basis) || !Array.isArray(points) || points.length < 50) throw new Error("invalid publication");
       let previous = "";
       const bars = points.map((point: { date: string; value: number }) => {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(point.date) || point.date <= previous || !Number.isFinite(point.value) || point.value <= 0) throw new Error("invalid point");
@@ -28,7 +28,7 @@ export async function loadDisparityIndicators() {
       });
       if (previous !== meta.asOf) throw new Error("inconsistent date");
       const closes = bars.map(bar => bar.close);
-      return { ...market, asOf: previous, fetchedAt: meta.fetchedAt as string, latest25: disparity(closes, 25), latest50: disparity(closes, 50), series50: disparitySeries(bars, 50), error: false };
+      return { ...market, basis: meta.basis as string, asOf: previous, fetchedAt: meta.fetchedAt as string, latest25: disparity(closes, 25), latest50: disparity(closes, 50), series50: disparitySeries(bars, 50), error: false };
     } catch {
       return { ...market, asOf: null, fetchedAt: null, latest25: null, latest50: null, series50: [], error: true };
     }

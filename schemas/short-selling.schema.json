@@ -15,7 +15,7 @@
     "flow_scope": {"type": "string", "minLength": 1},
     "membership_basis": {"const": "point_in_time"},
     "units": {"const": {"money": "KRW", "quantity": "shares", "ratio": "percent_0_100"}},
-    "price_basis": {"const": {"exchange": "KRX", "session": "regular", "price_time": "15:30:00", "timezone": "Asia/Seoul", "adjusted": false}}
+    "price_basis": {"enum": [{"exchange": "KRX", "session": "regular", "price_time": "15:30:00", "timezone": "Asia/Seoul", "adjusted": false}, {"exchange": "KRX", "session": "regular", "price_time": "16:30:00", "timezone": "Asia/Seoul", "adjusted": false}]}
   },
   "oneOf": [
     {"required": ["market", "rankings", "warnings", "config", "short_value_change_1d_pct", "short_value_mean_20", "short_value_vs_mean_20_pct", "short_ratio_change_1d_pp", "short_ratio_mean_20"],

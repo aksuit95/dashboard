@@ -1,6 +1,6 @@
 import type { AppDatabase } from "@/lib/db/client";
 import type { MinerviniUniverse } from "@/config/minervini";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { fetchSectorSnapshot, sectorSnapshotVersion, type SectorSnapshot } from "./sector-returns";
 
 export type SectorBoard = { snapshot: SectorSnapshot | null; indexDaily?: import("./sector-index").IndexDaily | null; marketCaps?: Record<string, number>; stale: boolean; expectedDate: string | null; error: string | null; requestedDate?: string; latestDate?: string; earliestDate?: string };

@@ -172,12 +172,13 @@ def completed_day(now=None):
     now = now or datetime.now(KST)
     year, holidays, uncertain = known_calendar()
     day = now.date()
-    if (now.hour, now.minute) < (15, 30):
+    cutoff = (16, 30) if day.isoformat() == "2026-11-19" else (15, 30)
+    if (now.hour, now.minute) < cutoff:
         day -= timedelta(days=1)
     for _ in range(20):
         if day.year != year:
             raise ValueError("Reviewed KRX calendar must be updated")
-        if day.isoformat() in uncertain:
+        if day.isoformat() in uncertain and day.isoformat() != "2026-11-19":
             raise ValueError("Unverified exceptional KRX session: " + day.isoformat())
         if day.weekday() < 5 and day.isoformat() not in holidays:
             return day

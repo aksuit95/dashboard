@@ -7,7 +7,7 @@ import { fetchValuationMarketCaps, type ValuationMarketCaps } from "@/lib/valuat
 export const periods = { "1d": 1, "3d": 3, "1w": 5, "1m": 21, "3m": 63, "6m": 126, "1y": 252 } as const;
 type Period = keyof typeof periods;
 export type StockReturnRow = { code: string; name: string; price: number | null; marketCap: number | null; returns: Record<Period, number | null> };
-export type StockReturnsPublication = { version: 1; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; exchange: "KRX"; priceTime: "15:30 KST"; baseDates: Record<Period, string>; markets: Record<"kospi" | "kosdaq", StockReturnRow[]> };
+export type StockReturnsPublication = { version: 1; asOf: string; fetchedAt: string; priceBasis: "KRX_REGULAR_CLOSE"; exchange: "KRX"; priceTime: "15:30 KST" | "16:30 KST"; baseDates: Record<Period, string>; markets: Record<"kospi" | "kosdaq", StockReturnRow[]> };
 export const stockReturnsPath = path.join(process.cwd(), "data", "stock-returns", "board.json");
 
 export function buildStockReturns(current: ValuationMarketCaps, history: Record<string, ValuationMarketCaps>, baseDates: Record<Period, string>, now = new Date()): StockReturnsPublication {
@@ -23,7 +23,7 @@ export function buildStockReturns(current: ValuationMarketCaps, history: Record<
     markets[security.market === "KOSPI" ? "kospi" : "kosdaq"].push({ code, name: security.name, price, marketCap: current.values[code] ?? null, returns });
   }
   if (markets.kospi.length < 10 || markets.kosdaq.length < 10) throw new Error("KRX 시장별 종목 부족");
-  return { version: 1, asOf: current.asOf, fetchedAt: now.toISOString(), priceBasis: "KRX_REGULAR_CLOSE", exchange: "KRX", priceTime: "15:30 KST", baseDates, markets };
+  return { version: 1, asOf: current.asOf, fetchedAt: now.toISOString(), priceBasis: "KRX_REGULAR_CLOSE", exchange: "KRX", priceTime: current.priceTime, baseDates, markets };
 }
 export async function collectStockReturns(asOf: string): Promise<StockReturnsPublication> {
   const sessions = await fetchKrxDailyCloses("005930", asOf, fetch, 253);
@@ -39,7 +39,7 @@ export async function collectStockReturns(asOf: string): Promise<StockReturnsPub
 export async function readStockReturns(): Promise<StockReturnsPublication | null> {
   try {
     const p = JSON.parse(await fs.readFile(stockReturnsPath, "utf8")) as StockReturnsPublication;
-    if (p.version !== 1 || p.exchange !== "KRX" || p.priceTime !== "15:30 KST" || p.priceBasis !== "KRX_REGULAR_CLOSE" || !/^\d{4}-\d{2}-\d{2}$/.test(p.asOf) || !Number.isFinite(Date.parse(p.fetchedAt)) || !Array.isArray(p.markets?.kospi) || !Array.isArray(p.markets?.kosdaq) || !p.markets.kospi.length || !p.markets.kosdaq.length) throw new Error("종목 등락률 파일 검증 오류");
+    if (p.version !== 1 || p.exchange !== "KRX" || p.priceTime !== (p.asOf === "2026-11-19" ? "16:30 KST" : "15:30 KST") || p.priceBasis !== "KRX_REGULAR_CLOSE" || !/^\d{4}-\d{2}-\d{2}$/.test(p.asOf) || !Number.isFinite(Date.parse(p.fetchedAt)) || !Array.isArray(p.markets?.kospi) || !Array.isArray(p.markets?.kosdaq) || !p.markets.kospi.length || !p.markets.kosdaq.length) throw new Error("종목 등락률 파일 검증 오류");
     return p;
   } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return null; throw error; }
 }

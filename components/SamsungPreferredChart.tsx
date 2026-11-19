@@ -60,10 +60,10 @@ export function SamsungPreferredChart() {
         </div>
         {latest ? <p className={`text-2xl font-semibold tabular-nums ${tone}`}>{formatSigned(latest.value)}%</p> : null}
       </div>
-      <p className="mt-2 text-xs text-zinc-500">005930 / 005935 · KRX 정규장 15:30 종가 · 과거 이력 네이버 정규장 종가</p>
+      <p className="mt-2 text-xs text-zinc-500">005930 / 005935 · KRX 정규장 종가(통상 15:30, 2026-11-19은 16:30) · 과거 이력 네이버 정규장 종가</p>
       {latest ? (
         <p className="mt-2 text-xs text-zinc-400">
-          {latest.date} 15:30 KST · 보통주 ₩{formatNumber(latest.commonKrw, 0)} · 우선주 ₩{formatNumber(latest.preferredKrw, 0)}
+          {latest.date} {latest.date === "2026-11-19" ? "16:30" : "15:30"} KST · 보통주 ₩{formatNumber(latest.commonKrw, 0)} · 우선주 ₩{formatNumber(latest.preferredKrw, 0)}
         </p>
       ) : null}
       <p className="mt-2 text-xs text-zinc-500">거래일 16:00 이후 수집 · 휴장일은 직전 종가 유지{krSource ? ` · 종가 출처 ${krSource === "KRX_OPEN_API" ? "KRX Open API" : "네이버 KRX 정규장"}` : ""}{krFetchedAt ? ` · 한국 수집 ${new Date(krFetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}</p>

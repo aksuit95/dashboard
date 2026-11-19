@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     "/api/briefing": ["./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json", "./data/sectors/board.json", "./data/investor-flow/board.json"],
     "/api/briefing/automatic": ["./public/data/briefing-archive/*.json"],
     "/api/briefing/automatic/pdf": ["./public/data/briefing-archive/*.json"],
-    "/api/market-live": ["./data/sectors/board.json", "./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json"],
+    "/api/market-live": ["./data/sectors/board.json", "./data/valuation/market-caps.json", "./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json"],
     "/api/market-live/archive": ["./data/sectors/board.json", "./data/market-live-publication/*.json"],
     "/api/rising": ["./data/sectors/board.json", "./data/sectors/market-caps.json"],
     "/api/valuation/sectors": ["./data/sectors/board.json", "./data/sectors/index-daily.json", "./data/sectors/market-caps.json"],

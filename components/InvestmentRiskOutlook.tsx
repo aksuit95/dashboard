@@ -129,7 +129,7 @@ export function InvestmentRiskOutlook({ market, query, alerts, observedAt, alert
     .sort((a, b) => Number(Boolean(nearEquityFloor(b))) - Number(Boolean(nearEquityFloor(a)))
       || (b.projectedPct ?? b.impairmentPct ?? -Infinity) - (a.projectedPct ?? a.impairmentPct ?? -Infinity)
       || a.name.localeCompare(b.name, "ko"));
-  const alertStale = price && observedAt && Date.parse(observedAt) < Date.parse(`${price.asOf}T15:30:00+09:00`);
+  const alertStale = price && observedAt && Date.parse(observedAt) < Date.parse(`${price.asOf}T${price.asOf === "2026-11-19" ? "16:30" : "15:30"}:00+09:00`);
   return <div className="mt-5 space-y-4" aria-label="다음 위험 조건">
     <div className="flex flex-wrap items-center gap-2">
       {([["warning", "투자경고 후보"], ["danger", "투자위험·거래정지 후보"], ["financial", "재무·관리종목 점검"]] as const).map(([value, label]) =>
@@ -153,7 +153,7 @@ export function InvestmentRiskOutlook({ market, query, alerts, observedAt, alert
       {financialResults.some(({ data }) => data) && <RiskFinancialTable rows={financialRows} />}
     </> : <>
       <div className="space-y-1 text-xs leading-5 text-zinc-400">
-        <p>{price ? `${price.asOf} KRX 정규장 15:30 종가 · 수집 ${new Date(price.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST · 15거래일 비교 가능 ${price.covered}/${price.total}개` : "KRX 종가 이력을 확인할 수 없습니다."}</p>
+        <p>{price ? `${price.asOf} KRX 정규장 ${price.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가 · 수집 ${new Date(price.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST · 15거래일 비교 가능 ${price.covered}/${price.total}개` : "KRX 종가 이력을 확인할 수 없습니다."}</p>
         {price && price.expectedAsOf !== price.asOf && <p className="text-amber-200">저장된 종가 기준일의 다음 거래일을 가정한 결과입니다. 최신 완료 거래일 여부를 확인해 주세요.</p>}
         {alertStale && <p className="text-amber-200">시장경보 목록이 종가 기준일보다 오래되었습니다. 최근 지정·해제는 KIND에서 확인해 주세요.</p>}
         <p>기준 종가는 급등률과 최근 15거래일 최고 종가 조건을 함께 반영합니다. 지수 조건은 기준 종가에 도달했을 때 적용 지수가 오를 수 있는 최대 폭입니다. 실제 지정은 종목별 예고 기간과 적용 지수, 예외 요건을 확인해야 합니다. 표시 가격은 호가 단위와 개별 가격제한을 반영하기 전의 값입니다.</p>

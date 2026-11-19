@@ -121,7 +121,7 @@ function StockValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq15
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-4">
         <label className="text-xs text-zinc-400">시총 정렬 <select aria-label="시총 정렬" value={sort === "marketCap" ? ascending ? "asc" : "desc" : "none"} onChange={event => { if (event.target.value === "none") { setSort("name"); setAscending(true); } else { setSort("marketCap"); setAscending(event.target.value === "asc"); } }} className="ml-2 rounded-md border border-white/15 bg-[#10141b] px-3 py-2 text-sm"><option value="none">선택 안 함</option><option value="desc">시총 큰 순</option><option value="asc">시총 작은 순</option></select></label>
-        {caps && <p className="text-xs text-zinc-500">시총 기준 {caps.asOf} · KRX 15:30 종가 · 수집 {timestamp(caps.fetchedAt)} KST</p>}
+        {caps && <p className="text-xs text-zinc-500">시총 기준 {caps.asOf} · KRX {caps.priceTime} 종가 · 수집 {timestamp(caps.fetchedAt)} KST</p>}
       </div>
       <div className="flex flex-wrap items-center gap-2 px-4 pb-4" aria-label="비교 종목 선택">
         <span className="mr-1 text-xs text-zinc-400">비교 종목 {comparison.length}개</span>
@@ -153,7 +153,7 @@ function StockValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq15
     {!data && !busy && <p className="rounded-xl border border-dashed border-white/15 py-16 text-center text-sm text-zinc-400">데이터를 불러오지 못했습니다. ‘데이터 반영’을 다시 눌러 주세요.</p>}
     <div className="space-y-1 text-xs leading-relaxed text-zinc-500">
       <p>밸류에이션 출처: QuantiWise Peer Analysis · Fwd.12M. CPD-1TD는 원본 조회일의 직전 거래일 기준입니다.</p>
-      <p>시가총액 출처: KRX 일별매매정보 · 표시 기준일의 15:30 정규장 종가 기준입니다. 시총 열을 누르면 큰 순·작은 순으로 정렬하며 결측은 마지막에 표시합니다.</p>
+      <p>시가총액 출처: KRX 일별매매정보 · 표시 기준일의 KRX 정규장 종가 기준입니다. 2026-11-19에는 16:30에 마감했습니다. 시총 열을 누르면 큰 순·작은 순으로 정렬하며 결측은 마지막에 표시합니다.</p>
       <p>밸류에이션 이력은 저장된 조회일의 스냅샷입니다. 원본 지표의 실제 기준일과 가격 거래소는 확인되지 않았습니다. 결측은 —로, 0과 음수는 원본대로 표시합니다.</p>
       <p>영업이익·FCF는 천원에서 억원으로 환산합니다. 로컬 내보내기 후 배포하고 ‘데이터 반영’을 눌러 주세요.</p>
     </div>

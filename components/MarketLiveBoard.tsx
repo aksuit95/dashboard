@@ -1,5 +1,6 @@
 "use client";
 
+import { krxCloseTime } from "@/config/market-calendar";
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
 import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
@@ -132,7 +133,7 @@ export function MarketLiveBoard() {
         {board && (
           <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-xs tabular-nums">
             <div className="flex gap-1.5"><dt className="text-zinc-400">시세 기준일</dt><dd>{board.date}</dd></div>
-            <div className="flex gap-1.5"><dt className="text-zinc-400">비교 종가</dt><dd>{board.baselineDate ? `${board.baselineDate} KRX 15:30` : "직전 거래일 KRX 15:30 종가 미확인"}</dd></div>
+            <div className="flex gap-1.5"><dt className="text-zinc-400">비교 종가</dt><dd>{board.baselineDate ? `${board.baselineDate} KRX ${krxCloseTime(board.baselineDate)}` : "직전 거래일 KRX 정규장 종가 미확인"}</dd></div>
             <div className="flex gap-1.5"><dt className="text-zinc-400">수집 시각</dt><dd>{timestamp(board.collectedAt)}</dd></div>
           </dl>
         )}

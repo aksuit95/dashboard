@@ -3,6 +3,8 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { localDate } from "@/lib/market/market-hours";
+import { KR_CSAT_2026 } from "@/config/market-calendar";
+import { marketLiveCloseBasis } from "@/lib/market/market-live-session";
 import { MARKET_LIVE_STALE_MS, type MarketLiveBoardData, type MarketLiveSector } from "@/lib/market/market-live";
 import { summarizeMarketLiveArchiveSectors, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { loadMarketLiveBoard, resolveMarketLiveSession } from "@/lib/sources/market-live";
@@ -10,7 +12,6 @@ import { loadMarketLiveBoard, resolveMarketLiveSession } from "@/lib/sources/mar
 export const marketLiveArchivePath = path.join(process.cwd(), "data", "market-live-archive.sqlite");
 const table = "market_live_archive_v1";
 const minuteMs = 60_000;
-const priceBasis = "KRX_REGULAR_CLOSE_1530_KST";
 
 type ArchiveResult =
   | { status: "skipped" }
@@ -95,9 +96,8 @@ function saveArchiveFrame(file: string, date: string, baselineDate: string, phas
   mkdirSync(path.dirname(file), { recursive: true });
   const db = new DatabaseSync(file);
   try {
-    db.exec(`PRAGMA busy_timeout = 5000;
-      PRAGMA journal_mode = WAL;
-      CREATE TABLE IF NOT EXISTS ${table} (
+    db.exec("PRAGMA busy_timeout = 5000; PRAGMA journal_mode = WAL;");
+    const create = `CREATE TABLE IF NOT EXISTS ${table} (
         trade_date TEXT NOT NULL,
         baseline_date TEXT NOT NULL CHECK (baseline_date < trade_date),
         minute_ms INTEGER NOT NULL,
@@ -106,22 +106,43 @@ function saveArchiveFrame(file: string, date: string, baselineDate: string, phas
         exchange TEXT NOT NULL CHECK (exchange = 'KRX'),
         time_zone TEXT NOT NULL CHECK (time_zone = 'Asia/Seoul'),
         session TEXT NOT NULL CHECK (session IN ('open', 'auction')),
-        price_basis TEXT NOT NULL CHECK (price_basis = '${priceBasis}'),
+        price_basis TEXT NOT NULL CHECK (price_basis = CASE
+          WHEN baseline_date = '${KR_CSAT_2026}' THEN '${marketLiveCloseBasis(KR_CSAT_2026)}'
+          ELSE 'KRX_REGULAR_CLOSE_1530_KST' END),
         sectors BLOB NOT NULL,
         stocks BLOB NOT NULL,
         PRIMARY KEY (trade_date, minute_ms)
-      ) STRICT`);
+      ) STRICT`;
+    if (baselineDate === KR_CSAT_2026) {
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        const schema = db.prepare("SELECT sql FROM sqlite_schema WHERE type = 'table' AND name = ?").get(table);
+        if (schema && !String(schema.sql).includes(marketLiveCloseBasis(KR_CSAT_2026))) {
+          const legacy = `${table}_legacy`;
+          db.exec(`ALTER TABLE ${table} RENAME TO ${legacy}; ${create};
+            INSERT INTO ${table} SELECT * FROM ${legacy}; DROP TABLE ${legacy};`);
+        } else {
+          db.exec(create);
+        }
+        db.exec("COMMIT");
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
+    } else {
+      db.exec(create);
+    }
     const time = Date.parse(frame.collectedAt);
     const result = db.prepare(`INSERT INTO ${table}
       (trade_date, baseline_date, minute_ms, collected_ms, collected_at, exchange, time_zone, session, price_basis, sectors, stocks)
       SELECT ?, ?, ?, ?, ?, 'KRX', 'Asia/Seoul', ?, ?, ?, ?
       WHERE NOT EXISTS (SELECT 1 FROM ${table} WHERE trade_date = ? AND baseline_date <> ?)
       ON CONFLICT (trade_date, minute_ms) DO NOTHING`).run(
-      date, baselineDate, minute(time), time, frame.collectedAt, phase, priceBasis,
+      date, baselineDate, minute(time), time, frame.collectedAt, phase, marketLiveCloseBasis(baselineDate),
       gzipSync(JSON.stringify(frame.sectors)), gzipSync(JSON.stringify(frame.stocks)), date, baselineDate,
     );
     if (result.changes === 0 && db.prepare(`SELECT 1 FROM ${table} WHERE trade_date = ? AND baseline_date <> ? LIMIT 1`).get(date, baselineDate)) {
-      throw new Error("저장된 거래일과 새 기록의 KRX 15:30 비교 기준일이 다릅니다.");
+      throw new Error("저장된 거래일과 새 기록의 KRX 정규장 종가 기준일이 다릅니다.");
     }
     return result.changes > 0;
   } finally { db.close(); }
@@ -133,7 +154,7 @@ export async function recordMarketLiveArchive({
   const expected = resolveMarketLiveSession(now);
   if (expected.state !== "open" && expected.state !== "auction") return { status: "skipped" };
   const { date, baselineDate } = expected;
-  if (!baselineDate) return { status: "missing", date, reason: "직전 KRX 15:30 종가 기준일 미확인" };
+  if (!baselineDate) return { status: "missing", date, reason: "직전 KRX 정규장 종가 기준일 미확인" };
 
   const board = await collect();
   const observed = Date.parse(board.collectedAt);

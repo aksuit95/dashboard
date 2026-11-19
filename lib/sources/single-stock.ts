@@ -1,7 +1,7 @@
 import { singleStockNames, type SingleStockProduct, type SingleStockSide } from "@/config/single-stock";
 import { parseDecimal } from "@/lib/sources/proxy-board";
 import { fetchKrxDailyCloses } from "@/lib/sources/krx-daily-prices";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 
 /** 단일종목 레버리지·인버스. 괴리율은 현재가와 iNAV 의 차이다. */
 
@@ -114,7 +114,7 @@ async function loadLiveUnderlying(fetchImpl: FetchLike, code: string, today: str
   try {
     const [payload, closes] = await Promise.all([
       getJson(fetchImpl, `https://stock.naver.com/api/domestic/detail/${code}/detail?codeType=KRX`),
-      previousDate ? fetchKrxDailyCloses(code, previousDate, fetchImpl, 1) : Promise.resolve([]),
+      previousDate ? fetchKrxDailyCloses(code, previousDate, fetchImpl, 1).catch(() => []) : Promise.resolve([]),
     ]);
     const row = payload as Record<string, unknown>, stamp = String(row.tradeTime ?? "");
     const price = parseDecimal(row.nowPrice), previous = closes.at(-1)?.close;

@@ -7,7 +7,7 @@ import { dangerRules, priceThreshold, priceWindowLength, warningRules, type Trad
 
 export type PriceDay = { date: string; closes: Record<string, TradedClose> };
 export type RiskPriceHistory = {
-  version: 1; exchange: "KRX"; priceTime: "15:30 KST"; priceBasis: "KRX_REGULAR_CLOSE";
+  version: 1; exchange: "KRX"; priceTime: "15:30 KST" | "16:30 KST"; priceBasis: "KRX_REGULAR_CLOSE";
   fetchedAt: string; days: PriceDay[];
   verifiedCandidates: string[];
   latestMarket: Record<string, { name: string; market: "KOSPI" | "KOSDAQ"; cap: number | null }>;
@@ -17,7 +17,7 @@ export const riskPricePath = path.join(process.cwd(), "data", "investment-risk",
 export async function readRiskPrices(): Promise<RiskPriceHistory | null> {
   try {
     const p = JSON.parse(await fs.readFile(riskPricePath, "utf8")) as RiskPriceHistory;
-    if (p.version !== 1 || p.exchange !== "KRX" || p.priceTime !== "15:30 KST" || p.priceBasis !== "KRX_REGULAR_CLOSE" ||
+    if (p.version !== 1 || p.exchange !== "KRX" || p.priceTime !== (p.days?.at(-1)?.date === "2026-11-19" ? "16:30 KST" : "15:30 KST") || p.priceBasis !== "KRX_REGULAR_CLOSE" ||
         !Number.isFinite(Date.parse(p.fetchedAt)) || !Array.isArray(p.days) || p.days.length !== priceWindowLength ||
         p.days.some((d, i) => !/^\d{4}-\d{2}-\d{2}$/.test(d.date) || (i > 0 && p.days[i - 1].date >= d.date) || !d.closes)) {
       throw new Error("KRX 급등 비교 자료 검증 실패");
@@ -93,5 +93,5 @@ export async function collectRiskPrices(asOf: string, previous: RiskPriceHistory
     verifiedCandidates.push(...batch.filter(code => code !== null));
   }
   if (shortlist.length && !verifiedCandidates.length) throw new Error("급등 후보의 KRX 정규장 종가 교차검증 실패");
-  return { version: 1, exchange: "KRX", priceTime: "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", fetchedAt: new Date().toISOString(), days, latestMarket, verifiedCandidates };
+  return { version: 1, exchange: "KRX", priceTime: asOf === "2026-11-19" ? "16:30 KST" : "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", fetchedAt: new Date().toISOString(), days, latestMarket, verifiedCandidates };
 }

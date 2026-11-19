@@ -17,7 +17,8 @@ class TestMarketIndicators(unittest.TestCase):
         self.assertEqual(session.latest_session(dt.datetime(2026,11,9,6,59,tzinfo=utc)).isoformat(),'2026-11-06')
         self.assertEqual(session.latest_session(dt.datetime(2026,11,9,7,0,tzinfo=utc)).isoformat(),'2026-11-09')
         self.assertEqual(session.latest_session(dt.datetime(2026,10,5,8,0,tzinfo=utc)).isoformat(),'2026-10-02')
-        with self.assertRaises(ValueError): session.latest_session(dt.datetime(2026,11,19,8,0,tzinfo=utc))
+        self.assertEqual(session.latest_session(dt.datetime(2026,11,19,7,29,tzinfo=utc)).isoformat(),'2026-11-18')
+        self.assertEqual(session.latest_session(dt.datetime(2026,11,19,7,30,tzinfo=utc)).isoformat(),'2026-11-19')
     def test_krx_parses_only_explicit_web_close_and_checks_latest(self):
         start=dt.date(2026,1,1); end=dt.date(2026,1,25)
         rows=[{'TRD_DD':(start+dt.timedelta(days=i)).strftime('%Y/%m/%d'),'CLSPRC_IDX':str(1000+i)} for i in range(25)]
@@ -54,13 +55,16 @@ class TestMarketIndicators(unittest.TestCase):
                 meta=json.loads((target/'kospi.meta.json').read_text(encoding='utf-8'))
                 self.assertEqual(meta['status'],'error'); self.assertEqual(meta['asOf'],'2026-11-05')
     def test_index_collection_only_appends_to_existing_krx_history(self):
-        original = json.loads((collect.DEST/'kospi.json').read_text(encoding='utf-8'))
-        last = original[-1]
-        later = {'date':'2026-11-09','value':last['value']+1}
-        with patch.object(collect.krx,'collect',return_value=[last,later]) as source, patch.object(collect,'atomic') as write:
-            self.assertEqual(collect.run(now=dt.datetime(2026,11,9,8,tzinfo=dt.timezone.utc),only={'kospi'}),[])
-            self.assertEqual(source.call_args.args[0],dt.date.fromisoformat(last['date']))
-            self.assertEqual(write.call_args_list[0].args[1], original+[later])
+        original = [{'date':'2026-11-06','value':100}]
+        last, later = original[-1], {'date':'2026-11-09','value':101}
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp)
+            (target/'kospi.json').write_text(json.dumps(original),encoding='utf-8')
+            (target/'kospi.meta.json').write_text(json.dumps({'status':'ok','source':'KRX 정보데이터시스템','basis':'KRX 정규장 15:30 KST','asOf':'2026-11-06'}),encoding='utf-8')
+            with patch.object(collect,'DEST',target), patch.object(collect.krx,'collect',return_value=[last,later]) as source, patch.object(collect,'atomic') as write:
+                self.assertEqual(collect.run(now=dt.datetime(2026,11,9,8,tzinfo=dt.timezone.utc),only={'kospi'}),[])
+                self.assertEqual(source.call_args.args[0],dt.date.fromisoformat(last['date']))
+                self.assertEqual(write.call_args_list[0].args[1], original+[later])
 
     def test_us_only_does_not_depend_on_krx_calendar_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as temp:

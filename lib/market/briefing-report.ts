@@ -12,7 +12,7 @@ export async function buildBriefing(type: "daily" | "weekly", selected: string, 
       try {
         const dir = path.join(root, "public/data/market-indicators-live");
         const [points, meta] = await Promise.all([fs.readFile(path.join(dir, `${id}.json`), "utf8").then(JSON.parse) as Promise<Point[]>, fs.readFile(path.join(dir, `${id}.meta.json`), "utf8").then(JSON.parse)]);
-        if (meta.status !== "ok" || meta.basis !== "KRX 정규장 15:30 KST" || meta.source !== "KRX 정보데이터시스템" || meta.asOf < period.end) throw new Error("KRX 종가 출처 또는 기준일을 확인할 수 없습니다.");
+        if (meta.status !== "ok" || meta.basis !== `KRX 정규장 ${meta.asOf === "2026-11-19" ? "16:30" : "15:30"} KST` || meta.source !== "KRX 정보데이터시스템" || meta.asOf < period.end) throw new Error("KRX 종가 출처 또는 기준일을 확인할 수 없습니다.");
         const allDates = [period.base, ...period.days];
         const values = allDates.map(date => ({ date, value: points.find(x => x.date === date)?.value ?? null }));
         if (values.some(x => typeof x.value !== "number" || !Number.isFinite(x.value) || x.value <= 0)) throw new Error("대상 거래일 또는 비교일의 KRX 종가가 없습니다.");

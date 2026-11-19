@@ -13,7 +13,9 @@ describe("briefing trading periods", () => {
     expect(resolvePeriod("daily", "2026-11-15", new Date("2026-11-15T03:00:00Z"))).toMatchObject({ end: "2026-11-13", base: "2026-11-12" });
   });
   it("refuses unverified hours and calendars", () => {
-    expect(() => resolvePeriod("weekly", "2026-11-20", new Date("2026-11-21T00:00:00Z"))).toThrow("특별 운영시간");
+    expect(resolvePeriod("weekly", "2026-11-20", new Date("2026-11-21T00:00:00Z")).days).toContain("2026-11-19");
+    expect(resolvePeriod("daily", "2026-11-19", new Date("2026-11-19T07:29:00Z")).end).toBe("2026-11-18");
+    expect(resolvePeriod("daily", "2026-11-19", new Date("2026-11-19T07:30:00Z")).end).toBe("2026-11-19");
     expect(() => resolvePeriod("daily", "2025-11-14", new Date("2026-11-21T00:00:00Z"))).toThrow("캘린더");
   });
 });

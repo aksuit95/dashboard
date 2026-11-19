@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { inflateRawSync, crc32 } from "node:zlib";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
-import { readMarketCaps, type ValuationMarketCaps } from "@/lib/valuation/market-caps";
+import { marketCapCloseTime, readMarketCaps, type ValuationMarketCaps } from "@/lib/valuation/market-caps";
 import { classifyFinancial, parseFinancialReport, type DartAccount } from "./parse";
 import { metricLabels, type FinancialCompany, type FinancialPublication, type FinancialUniverse } from "./types";
 
@@ -39,7 +39,7 @@ export async function readFinancialPublication(file = financialPublicationPath):
       if (r.currency !== "KRW" || !["CFS", "OFS"].includes(r.scope) || !r.values || Object.keys(metricLabels).some(k => !(k in r.values)) || Object.values(r.values).some(n => n !== null && !Number.isFinite(n))) throw new Error("재무 수치 검증 오류");
       if (![1, 2, 3, 4].includes(r.quarter) || r.periodEnd !== `${r.year}-${["03-31", "06-30", "09-30", "12-31"][r.quarter - 1]}` || !/^\d{14}$/.test(r.receipt) || !Number.isFinite(Date.parse(r.fetchedAt))) throw new Error("재무기간·접수번호 검증 오류");
     }
-    if (c.market && (c.market.exchange !== "KRX" || c.market.priceTime !== "15:30" || !/^\d{4}-\d{2}-\d{2}$/.test(c.market.date) || !Number.isFinite(c.market.close) || c.market.close <= 0 || !Number.isFinite(c.market.marketCap) || c.market.marketCap <= 0)) throw new Error("KRX 가격 기준 검증 오류");
+    if (c.market && (c.market.exchange !== "KRX" || c.market.priceTime !== marketCapCloseTime(c.market.date).slice(0, 5) || !/^\d{4}-\d{2}-\d{2}$/.test(c.market.date) || !Number.isFinite(c.market.close) || c.market.close <= 0 || !Number.isFinite(c.market.marketCap) || c.market.marketCap <= 0)) throw new Error("KRX 가격 기준 검증 오류");
   }
   return parsed;
 }
@@ -155,7 +155,7 @@ async function collectReport(corpCode: string, year: number, quarter: 1 | 2 | 3 
 export function applyFinancialMarketCaps(publication: FinancialPublication, caps: ValuationMarketCaps | null): FinancialPublication {
   return { ...publication, companies: publication.companies.map(company => {
     const close = caps?.closes[company.code], marketCap = caps?.values[company.code];
-    const market = caps && close != null && marketCap != null ? { date: caps.asOf, exchange: "KRX" as const, priceTime: "15:30" as const, close, marketCap, fetchedAt: caps.fetchedAt } : null;
+    const market = caps && close != null && marketCap != null ? { date: caps.asOf, exchange: "KRX" as const, priceTime: (caps.priceTime === "16:30 KST" ? "16:30" : "15:30") as "15:30" | "16:30", close, marketCap, fetchedAt: caps.fetchedAt } : null;
     return { ...company, market };
   }) };
 }
@@ -199,7 +199,7 @@ export async function collectFinancials(options: { universe?: FinancialUniverse;
       const ref = references.data?.stocks.find(s => s.code === member.code);
       if (ref && references.data) company.referenceFcf = { value: ref.values.fcf == null ? null : ref.values.fcf * 1e8, source: "QuantiWise E124260.M", compositionDate: references.data.compositionDate, sourceUpdatedAt: references.data.sourceUpdatedAt, definition: "기존 12개월 선행 조회표의 공급자 FCF. 상세 산식·예상기간 미검증. 공시 FCF와 혼합하지 않음" };
       const close = caps?.closes[member.code], marketCap = caps?.values[member.code];
-      if (caps && close != null && marketCap != null) company.market = { date: caps.asOf, exchange: "KRX", priceTime: "15:30", close, marketCap, fetchedAt: caps.fetchedAt };
+      if (caps && close != null && marketCap != null) company.market = { date: caps.asOf, exchange: "KRX", priceTime: caps.priceTime === "16:30 KST" ? "16:30" : "15:30", close, marketCap, fetchedAt: caps.fetchedAt };
       else company.errors.push("KRX 종가·시가총액 저장 자료 없음");
       if (!company.corpCode) { company.errors.push("DART 고유번호 매핑 없음"); return company; }
       try {

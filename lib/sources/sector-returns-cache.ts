@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import type { MinerviniUniverse } from "@/config/minervini";
 import { getDb } from "@/lib/db/client";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { loadSectors, loadSectorsAtDate, readSectors, saveSectors, type SectorBoard } from "./sector-returns-daily";
 import { sectorSnapshotVersion } from "./sector-returns";
 

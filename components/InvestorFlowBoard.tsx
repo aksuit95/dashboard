@@ -108,7 +108,7 @@ function TossMarketFlow({ board, universe }: { board: InvestorBoard; universe: M
   const chartPrices = useMemo(() => (data?.prices ?? []).filter(point => point.date >= from), [data, from]);
   const latest = data?.points.at(-1)?.date;
   return <><section className={`${box} space-y-4`}><h2 className="font-semibold">{universe === "kospi200" ? "코스피" : "코스닥"} 시장 전체 · 투자자별 순매수 대금</h2>
-    <p className="text-xs leading-relaxed text-zinc-400">토스증권 KRX 시장 전체 · 매수대금 − 매도대금 · 억 원 · 외국인에는 등록·미등록 외국인이 포함됩니다. 비교 차트는 {universe === "kospi200" ? "코스피" : "코스닥"} KRX 15:30 종가입니다.</p>
+    <p className="text-xs leading-relaxed text-zinc-400">토스증권 KRX 시장 전체 · 매수대금 − 매도대금 · 억 원 · 외국인에는 등록·미등록 외국인이 포함됩니다. 비교 차트는 {universe === "kospi200" ? "코스피" : "코스닥"} KRX 정규장 종가입니다. 2026-11-19은 16:30 종가입니다.</p>
     {failure && <Notice>{failure}</Notice>}
     {!failure && !data && <p className="text-sm text-zinc-400">저장된 시장 수급을 불러오고 있습니다…</p>}
     {data && <><p className="text-xs text-zinc-500">수급 기준일 {latest ?? "없음"} · 원본 갱신 {data.latestUpdatedAt ? `${kst(data.latestUpdatedAt)} KST` : "미제공"} · 수집 {kst(data.collectedAt)} KST</p>
@@ -234,7 +234,7 @@ function TossFlow({ board, universe }: { board: InvestorBoard; universe: Minervi
       </div>
       <div className="flex flex-wrap justify-between gap-2 text-xs text-zinc-400">
         <span role="status">{filtered.length} / {rows.length}종목 표시</span>
-        <span>시가총액 {board.asOf} KRX 15:30 기준 · 열 제목을 눌러 정렬</span>
+        <span>시가총액 {board.asOf} KRX {board.asOf === "2026-11-19" ? "16:30" : "15:30"} 기준 · 열 제목을 눌러 정렬</span>
       </div>
       {filtered.length ? <div className="max-h-[70vh] overflow-auto" tabIndex={0} role="region" aria-label="구성종목 수급 표">
         <table className="w-full whitespace-nowrap text-right text-sm tabular-nums">
@@ -275,7 +275,7 @@ export function InvestorFlowBoard({ universe, view }: { universe: MinerviniUnive
     <PageHeader title={view === "index" ? `${spec.market === "KOSPI" ? "코스피" : "코스닥"} 시장 수급` : `${spec.name} 종목 수급`} description={view === "index" ? `시장 전체의 투자자별 순매수 대금과 ${spec.market === "KOSPI" ? "코스피" : "코스닥"} 지수를 비교합니다.` : `${spec.name} 구성종목 전체의 투자자별 순매수 수량을 확인합니다.`} />
     <div className="flex flex-wrap gap-2">{(["kospi200", "kosdaq150"] as const).flatMap(u => (["index", "stocks"] as const).map(v => <Link key={`${u}-${v}`} href={`/investor-flow/${u}${v === "stocks" ? "/stocks" : ""}`} aria-current={u === universe && v === view ? "page" : undefined} className={`rounded-lg border px-3 py-2 text-xs ${u === universe && v === view ? "border-rose-500/40 bg-rose-950 text-rose-100" : "border-white/10 text-zinc-400 hover:bg-white/5"}`}>{v === "index" ? `${u === "kospi200" ? "코스피" : "코스닥"} 시장` : `${minerviniUniverses[u].name} 종목`}</Link>))}<Link href="/investor-flow/pension" className="rounded-lg border border-white/10 px-3 py-2 text-xs text-zinc-400 hover:bg-white/5">국민연금 공시</Link></div>
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 px-4 py-3 text-xs text-zinc-400">
-      <div className="space-y-1"><p>현물 기준 {board?.asOf ?? "확인 중"} · KRX 정규장 15:30 KST</p><p>시세 출처 {board?.quoteSource === "KRX_WEB" ? "KRX 정보데이터시스템 · 네이버 종가 대조" : board?.quoteSource === "KRX_OPEN_API" ? "KRX Open API" : "확인 중"} · 거래일 16:00 KST 수집 · 최근 수집 {board ? kst(board.fetchedAt) : "—"} KST</p></div>
+      <div className="space-y-1"><p>현물 기준 {board?.asOf ?? "확인 중"} · KRX 정규장 {board?.asOf === "2026-11-19" ? "16:30" : "15:30"} KST</p><p>시세 출처 {board?.quoteSource === "KRX_WEB" ? "KRX 정보데이터시스템 · 네이버 종가 대조" : board?.quoteSource === "KRX_OPEN_API" ? "KRX Open API" : "확인 중"} · 거래일 16:00 KST 수집 · 최근 수집 {board ? kst(board.fetchedAt) : "—"} KST</p></div>
       <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)} className="rounded-md bg-white/10 px-3 py-2 text-zinc-200 disabled:opacity-40">{loading ? "조회 중…" : "저장 자료 새로고침"}</button>
     </div>
     {loading && <div className={`${box} animate-pulse text-sm text-zinc-400`} role="status">{view === "index" ? "기준일 지수 종가를 불러오고 있습니다." : "저장된 구성종목 목록을 불러오고 있습니다."}</div>}

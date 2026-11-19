@@ -1,5 +1,6 @@
 import { minerviniUniverseIds, minerviniUniverses } from "@/config/minervini";
 import { classifySector } from "@/config/sectors";
+import { KR_CSAT_2026, krxCloseTime } from "@/config/market-calendar";
 import { hasMarketLiveClosingBasis, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 import {
   MARKET_LIVE_POLL_MS, MARKET_LIVE_STALE_MS, marketLiveChange, marketLiveSymbols, summarizeMarketLiveStocks,
@@ -9,6 +10,7 @@ import { requestKrxOpenApi } from "@/lib/sources/krx-openapi";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
 import { fetchNaverLiveIndex, fetchNaverLiveStocks } from "@/lib/sources/naver-market-live";
 import { readSectorPublication, type SectorPublication } from "@/lib/sources/sector-publication";
+import { readMarketCaps } from "@/lib/valuation/market-caps";
 
 export { marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 
@@ -43,8 +45,8 @@ async function publishedIndexClose(symbol: MarketLiveSymbol, date: string): Prom
       readFile(`${file}.json`, "utf8").then(JSON.parse) as Promise<{ date: string; value: unknown }[]>,
       readFile(`${file}.meta.json`, "utf8").then(JSON.parse),
     ]);
-    if (metadata?.status !== "ok" || metadata.basis !== "KRX 정규장 15:30 KST" ||
-        metadata.source !== "KRX 정보데이터시스템" || typeof metadata.asOf !== "string" || metadata.asOf < date) return null;
+    if (metadata?.status !== "ok" || metadata.source !== "KRX 정보데이터시스템" ||
+        typeof metadata.asOf !== "string" || metadata.asOf < date || metadata.basis !== `KRX 정규장 ${krxCloseTime(metadata.asOf)} KST`) return null;
     const value = points.find(point => point.date === date)?.value;
     return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
   } catch {
@@ -53,6 +55,17 @@ async function publishedIndexClose(symbol: MarketLiveSymbol, date: string): Prom
 }
 
 async function collectCloses(symbol: MarketLiveSymbol, date: string): Promise<MarketCloses> {
+  if (date === KR_CSAT_2026) {
+    const [index, caps] = await Promise.all([publishedIndexClose(symbol, date), readMarketCaps().catch(() => null)]);
+    const stocks = new Map<string, DailyStock>();
+    if (caps?.asOf === date) {
+      for (const [code, price] of Object.entries(caps.closes)) {
+        if (price != null && caps.securities?.[code]?.market === symbol) stocks.set(code, { price, turnover: null });
+      }
+    }
+    // The sector publication supplies the same dated close when the latest caps have rolled forward.
+    return { index, stocks };
+  }
   const { stocks, index, indexName } = markets[symbol];
   const key = date.replaceAll("-", "");
   const [stocksResult, indexResult] = await Promise.allSettled([requestKrxOpenApi(stocks, key), requestKrxOpenApi(index, key)]);
@@ -161,7 +174,7 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     const isClosed = state === "closed";
     const price = isClosed ? final[i].index : live.price;
     const asOf = isClosed ? price == null ? null : closedStamp : live.asOf;
-    const base = previous[i].index ?? (baselineDate && live.previousDate === baselineDate ? live.previousClose : null);
+    const base = previous[i].index ?? (baselineDate && baselineDate !== KR_CSAT_2026 && live.previousDate === baselineDate ? live.previousClose : null);
     const changePct = marketLiveChange(price, base ?? undefined);
     return { symbol, price, asOf, changePct, turnover: isClosed ? null : live.turnover, breadth: isClosed ? null : live.breadth, points: live.points };
   });
@@ -176,12 +189,12 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   if (liveStocks.failedBatches) warnings.push(`장중 종목 시세 ${liveStocks.failedBatches}개 묶음 조회 실패`);
   if (indexes.some(index => index.price == null)) {
     warnings.push(state !== "closed" ? "일부 지수 시세를 불러오지 못했습니다." : standardClose
-      ? "일부 지수의 KRX 15:30 종가 반영 대기 중입니다."
-      : "특별 정규장 거래일의 KRX 15:30 종가는 제공되지 않습니다.");
+      ? `일부 지수의 KRX ${krxCloseTime(date)} 종가 반영 대기 중입니다.`
+      : "검증된 KRX 정규장 종가를 확인할 수 없습니다.");
   }
   if (state === "open" && indexes.some(index => index.asOf && now - Date.parse(index.asOf) > MARKET_LIVE_STALE_MS)) warnings.push("일부 지수 시세 수신이 90초 이상 지연됐습니다.");
   if (members.length && !summary.breadth.compared && (state !== "closed" || standardClose)) warnings.push(state === "closed" ? "종목의 KRX 정규장 종가 반영 대기 중입니다." : "최근 체결가와 직전 KRX 종가를 함께 확인한 종목이 없습니다.");
-  if (!baselineDate) warnings.push("비교에 필요한 직전 거래일 KRX 15:30 종가 기준을 확인할 수 없습니다.");
+  if (!baselineDate) warnings.push("비교에 필요한 직전 거래일 KRX 정규장 종가를 확인할 수 없습니다.");
   const rotationStocks = state === "closed" ? [] : summary.rotationStocks;
   return { ...frame, collectedAt: new Date(now).toISOString(), indexes, ...summary, rotationStocks, warnings };
 }

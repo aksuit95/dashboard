@@ -2,6 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 import { fetchValuationMarketCaps, validateMarketCaps } from "./market-caps";
 const rows = (market: string) => Array.from({ length: 10 }, (_, i) => ({ ISU_SRT_CD: `${market === "STK" ? "1" : "2"}${String(i).padStart(5, "0")}`, MKT_ID: market, TDD_CLSPRC: "100", LIST_SHRS: "1000", MKTCAP: "100000" }));
 describe("KRX 웹 시가총액", () => {
+  it("수능일 종가에는 16:30을 기록하고 잘못된 15:30 표기를 거부한다", async () => {
+    const data = await fetchValuationMarketCaps("2026-11-19", async (_bld, p) => ({ OutBlock_1: rows(p.mktId) }));
+    expect(data.priceTime).toBe("16:30 KST");
+    expect(() => validateMarketCaps({ ...data, priceTime: "15:30 KST" })).toThrow();
+  });
   it("같은 기준일에 양 시장을 조회하고 종가와 시총을 보존한다", async () => {
     const query = vi.fn(async (_bld: string, p: Record<string, string>) => ({ OutBlock_1: rows(p.mktId) }));
     const data = await fetchValuationMarketCaps("2026-11-03", query);

@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { type MinerviniUniverse } from "@/config/minervini";
 import { getDb } from "@/lib/db/client";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { loadMinervini, readMinervini, saveMinervini, type MinerviniBoard } from "@/lib/sources/minervini-daily";
 
 const cachedDaily = unstable_cache(async (_session: string, universe: MinerviniUniverse) => {

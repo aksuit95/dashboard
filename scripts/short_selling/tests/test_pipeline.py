@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from scripts.short_selling.collect import collect, publish, read_previous, sample, validate
-from scripts.short_selling.model import FIELDS, PRICE, aggregate, build, derive, normalize, ratio, strict_mean
+from scripts.short_selling.model import FIELDS, PRICE, aggregate, build, derive, normalize, price_basis, ratio, strict_mean
 from scripts.short_selling.sources import KST, ROOT, Source, KrxPriceNotPublished, KrxPriceSchemaMismatch, completed_day, known_calendar, number
 
 
@@ -21,8 +21,8 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(str(completed_day(datetime(2026, 11, 4, 10, tzinfo=KST))), '2026-11-03')
         self.assertEqual(str(completed_day(datetime(2026, 11, 4, 22, tzinfo=KST))), '2026-11-04')
         self.assertEqual(str(completed_day(datetime(2026, 11, 8, 10, tzinfo=KST))), '2026-11-06')
-        with self.assertRaises(ValueError):
-            completed_day(datetime(2026, 11, 19, 22, tzinfo=KST))
+        self.assertEqual(str(completed_day(datetime(2026, 11, 19, 16, 29, tzinfo=KST))), '2026-11-18')
+        self.assertEqual(str(completed_day(datetime(2026, 11, 19, 16, 30, tzinfo=KST))), '2026-11-19')
         with self.assertRaises(ValueError):
             completed_day(datetime(2027, 1, 5, 22, tzinfo=KST))
 
@@ -33,6 +33,16 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(ratio(None, 100))
         self.assertIsNone(ratio(0, 0))
         self.assertIsNone(strict_mean([{'v': 0}, {'v': None}], 'v', 2))
+
+    def test_exceptional_close_time_is_bound_to_the_session_date(self):
+        self.assertEqual(price_basis('2026-11-19')['price_time'], '16:30:00')
+        self.assertEqual(price_basis('2026-11-20')['price_time'], '15:30:00')
+        with tempfile.TemporaryDirectory(dir=ROOT / 'tmp') as tmp:
+            sample(self.config, tmp)
+            summary = json.loads((Path(tmp) / 'summary.json').read_text(encoding='utf-8'))
+            summary['price_basis'] = price_basis('2026-11-19')
+            with self.assertRaises(ValueError):
+                validate({'summary.json': summary})
 
     def test_lending_change_uses_same_day_listed_shares_and_latest_observation(self):
         days = ['2026-11-02', '2026-11-03', '2026-11-04']

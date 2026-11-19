@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { minerviniUniverseIds, minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { fetchMinerviniSnapshot, minerviniSnapshotVersion, type MinerviniSnapshot } from "./minervini";
 import type { MinerviniBoard } from "./minervini-daily";
 

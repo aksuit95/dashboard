@@ -1,5 +1,6 @@
 "use client";
 
+import { krxCloseTime } from "@/config/market-calendar";
 import { useState } from "react";
 import { formatSigned } from "@/lib/format";
 import { marketLiveRotationWindows, type MarketLiveRadar, type MarketLiveRotationData, type MarketLiveRotationWindow } from "@/lib/market/market-live";
@@ -41,7 +42,7 @@ export function MarketLiveRotation({ radar, active }: { radar: MarketLiveRadar |
         <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tabular-nums text-zinc-400">
           <span>{radar.date} · {active && radar.live ? "장중 비교" : "마지막 비교"}</span>
           <span><time dateTime={data.from}>{kstClock.format(Date.parse(data.from))}</time> <span aria-hidden="true">→</span><span className="sr-only">부터 </span> <time dateTime={data.to}>{kstClock.format(Date.parse(data.to))}</time> KST</span>
-          <span>비교 종가 {radar.baselineDate} KRX 15:30</span>
+          <span>비교 종가 {radar.baselineDate} KRX {krxCloseTime(radar.baselineDate)}</span>
         </p>
       )}
       {!data ? (

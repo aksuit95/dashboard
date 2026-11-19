@@ -1,6 +1,6 @@
 import { readFile, writeFile, rename } from "node:fs/promises";
 import { collectDartEarnings } from "@/lib/events/dart-earnings";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { type Snapshot } from "@/lib/events/refresh";
 import { loadEnv } from "@/lib/env";
 

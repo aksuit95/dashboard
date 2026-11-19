@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { financialPath, readFinancialPublication } from "@/lib/financials/source";
 import { financialMarkets, type FinancialMarket } from "@/lib/financials/types";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { readRiskPrices } from "@/lib/investment-risk/history";
 import { capitalScenario, dangerRules, priceThreshold, warningRules } from "@/lib/investment-risk/scenarios";
 import type { MarketFinancialOutlook, RiskOutlook } from "@/lib/investment-risk/types";

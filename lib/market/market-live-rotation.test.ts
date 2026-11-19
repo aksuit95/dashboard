@@ -42,13 +42,14 @@ describe("KRX 장중 섹터 순환매", () => {
 });
 
 describe("장중 기록용 정규장 달력", () => {
-  it("수능일 10:00부터 16:30까지 수집하고 다음 날 16:30 종가를 15:30 기준으로 쓰지 않는다", () => {
+  it("수능일은 16:30 마감하고 다음 날 비교 기준일로 사용한다", () => {
     const session = (date: string, hhmm: string) => resolveMarketLiveSession(Date.parse(`${date}T${hhmm}:00+09:00`));
     expect(session("2026-11-19", "09:59")).toMatchObject({ state: "closed", date: "2026-11-18" });
     expect(session("2026-11-19", "10:00")).toMatchObject({ state: "open", baselineDate: "2026-11-18" });
     expect(session("2026-11-19", "15:30").state).toBe("open");
     expect(session("2026-11-19", "16:20").state).toBe("auction");
     expect(session("2026-11-19", "16:30").state).toBe("closed");
-    expect(session("2026-11-20", "10:00")).toMatchObject({ state: "open", baselineDate: null });
+    expect(session("2026-11-20", "10:00")).toMatchObject({ state: "open", baselineDate: "2026-11-19" });
+    expect(session("2026-11-20", "15:30")).toMatchObject({ state: "closed", closeAt: Date.parse("2026-11-20T15:30:00+09:00") });
   });
 });

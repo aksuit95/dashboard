@@ -4,6 +4,11 @@
 // https://nasdaqtrader.com/Trader.aspx?id=Calendar
 // KRX also closes on Labour Day, election day and the final business day of the year.
 export const CALENDAR_YEAR = 2026;
+// KRX notice: https://kind.krx.co.kr/external/2026/11/05/000141/20261105000216/99303.htm
+export const KR_CSAT_2026 = "2026-11-19";
+export function krxCloseTime(date: string): "15:30" | "16:30" {
+  return date === KR_CSAT_2026 ? "16:30" : "15:30";
+}
 export const KR_HOLIDAYS: Record<string, string> = {
   "2026-01-01": "신정",
   "2026-02-16": "설 연휴", "2026-02-17": "설날", "2026-02-18": "설 연휴",

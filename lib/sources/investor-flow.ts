@@ -1,6 +1,6 @@
 import type { MinerviniUniverse } from "@/config/minervini";
 import { minerviniUniverses } from "@/config/minervini";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { aggregateFlows, alignFlows, type InvestorPoint } from "@/lib/market/investor-flow";
 import type { AppDatabase } from "@/lib/db/client";
 import { createInvestorKrxWebQuery } from "./investor-flow-krx-web";

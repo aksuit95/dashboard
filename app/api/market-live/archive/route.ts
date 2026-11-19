@@ -69,7 +69,7 @@ export async function GET(request: Request) {
         }
         warning = rebuilt.warning;
       } else {
-        warning = "직전 거래일의 KRX 15:30 비교 종가를 확인할 수 없습니다.";
+        warning = "직전 거래일의 KRX 정규장 비교 종가를 확인할 수 없습니다.";
       }
     }
 

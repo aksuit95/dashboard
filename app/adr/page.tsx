@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/PageHeader";
 import { RangeChart } from "@/components/RangeChart";
 import { readAdr } from "@/lib/sources/adr-naver";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { MarketIndicatorChart } from "@/components/MarketIndicatorChart";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +14,7 @@ export default async function AdrPage() {
     <MarketIndicatorChart expectedKrxDate={expected} />
     {!data ? <p className="rounded-xl border border-white/10 p-5 text-zinc-400">ADR 데이터 수집 대기 중입니다. 수집이 완료되면 차트가 표시됩니다.</p> : <>
       {expected !== data.asOf && <p role="status" className="mb-4 rounded-lg border border-amber-500/30 p-3 text-sm text-amber-300">최신 완료 거래일의 수집을 확인하지 못했습니다. 마지막 저장 결과를 표시합니다{expected ? ` · 기대 기준일 ${expected}` : " · 거래일 확인 필요"}.</p>}
-      <p className="mb-4 text-xs text-zinc-400">기준일 {data.asOf} · KRX 정규장 15:30 종가 · 수집 {new Date(data.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })} KST</p>
+      <p className="mb-4 text-xs text-zinc-400">기준일 {data.asOf} · KRX 정규장 {data.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가 · 수집 {new Date(data.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })} KST</p>
       <div className="grid gap-4">{(["KOSPI", "KOSDAQ"] as const).map(market => {
         const entry = data.markets[market]; const last = entry.days.at(-1);
         const points = entry.days.filter((d): d is typeof d & { value: number } => d.value != null).map(d => ({date: d.date, value: d.value}));

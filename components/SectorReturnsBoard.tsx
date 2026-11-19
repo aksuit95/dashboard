@@ -106,7 +106,7 @@ export function SectorReturnsBoard() {
     {snapshot && board?.requestedDate && board.requestedDate !== snapshot.asOf && <p role="status" className="mb-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-zinc-400">선택일 {board.requestedDate}은 휴장일입니다. 직전 거래일 {snapshot.asOf}의 KRX 종가 기준 결과를 표시합니다.</p>}
     {date && <p className="mb-4 text-xs text-zinc-500">과거 가격 비교 · 구성종목과 섹터는 수집 시점 기준이며 과거 편입·편출을 재현하지 않습니다.</p>}
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500">
-      <p>기준일 <span className="text-zinc-300">{snapshot?.asOf ?? "—"}</span> · KRX 15:30 종가 · 거래일 16:00 KST 하루 1회 갱신</p>
+      <p>기준일 <span className="text-zinc-300">{snapshot?.asOf ?? "—"}</span> · KRX {snapshot?.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가 · 거래일 종가 수집</p>
       <p>수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} KST</p>
     </div>
     {(error || board?.stale) && <p role="status" className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-200">{snapshot ? `${snapshot.asOf} 이전 결과 표시 중. ` : "수집된 결과가 없습니다. "}{error ?? board?.error}</p>}
@@ -145,7 +145,7 @@ export function SectorReturnsBoard() {
       {!visible.length && <p role="status" className="px-4 py-14 text-center text-sm text-zinc-500">{busy && !snapshot ? "선택한 날짜의 전체 구성종목 시세를 수집하고 있습니다. 첫 조회는 1~2분 정도 걸릴 수 있습니다." : !snapshot ? "수집된 결과가 없습니다. 결과 새로고침으로 다시 시도해 주세요." : "조건에 맞는 종목이 없습니다."}</p>}
     </div>
     <details className="mt-4 rounded-lg border border-white/10 p-4 text-xs text-zinc-500"><summary className="cursor-pointer text-zinc-400">산정 기준과 섹터 분류 안내</summary><div className="mt-3 space-y-2 leading-relaxed">
-      <p>표시 가격과 모든 기간의 비교 가격은 KRX 정규장 15:30 종가입니다. NXT 저녁 20:00 종가는 포함하지 않습니다. 일간 / 1W / 1M / 3M / 6M / 1Y는 각각 1 / 5 / 21 / 63 / 126 / 252거래일 전 KRX 종가 대비입니다. 배당은 포함하지 않습니다. 일봉 이력이 부족한 기간은 —로 표시하고 해당 기간 평균에서 제외합니다.</p>
+      <p>표시 가격과 모든 기간의 비교 가격은 KRX 정규장 종가입니다(통상 15:30, 2026-11-19은 16:30). NXT 저녁 20:00 종가는 포함하지 않습니다. 일간 / 1W / 1M / 3M / 6M / 1Y는 각각 1 / 5 / 21 / 63 / 126 / 252거래일 전 KRX 종가 대비입니다. 배당은 포함하지 않습니다. 일봉 이력이 부족한 기간은 —로 표시하고 해당 기간 평균에서 제외합니다.</p>
       <p>섹터 등락률은 현재 지수 구성종목 중 유효 수익률의 동일가중 평균 또는 선택 기준일 KRX 종가 기준 시가총액 가중평균입니다. 시총가중은 종가가 일치하는 시총과 수익률이 모두 있는 종목만 산정합니다. 구성종목 평균 카드는 항상 동일가중입니다. 공식 섹터 지수 수익률과는 다릅니다. 상승은 빨강, 하락은 파랑으로 표시합니다.</p>
       <p>네이버 업종을 리서치용 섹터로 묶고, 반도체장비·미용기기·일부 2차전지·원전 종목은 종목코드별 분류를 우선합니다. 한 종목은 한 섹터에만 포함하며 분류가 없는 종목은 기타/미분류에 표시합니다. 상세 업종명은 표의 섹터명에 마우스를 올려 확인할 수 있습니다.</p>
       <p>장중에는 직전 완료 거래일 결과를 표시합니다. 일부 종목의 수집이 실패하면 해당 지수의 마지막 정상 결과와 기준일을 유지합니다. 현재 구성 기준 비교이며 과거 편입·편출을 재현하지 않습니다. 시세·업종 출처: <a href="https://m.stock.naver.com" target="_blank" rel="noreferrer" className="underline">네이버 증권</a>.</p>

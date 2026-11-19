@@ -1,5 +1,6 @@
 "use client";
 
+import { krxCloseTime } from "@/config/market-calendar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketLiveRotation } from "@/components/MarketLiveRotation";
 import { sectorNames } from "@/config/sectors";
@@ -208,7 +209,7 @@ export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
           <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2">
             <div className="text-xs tabular-nums text-zinc-400">
               <span className="font-semibold text-zinc-200">{day.date}</span>
-              <span className="ml-2.5">비교 종가 {day.baselineDate} KRX 15:30</span>
+              <span className="ml-2.5">비교 종가 {day.baselineDate} KRX {krxCloseTime(day.baselineDate)}</span>
               <span className="ml-2.5">기록 {timeline.slots.length}분</span>
               {archive?.coverage && <span className="ml-2.5">분봉 비교 가능 {archive.coverage.compared}/{archive.coverage.total}종목</span>}
             </div>

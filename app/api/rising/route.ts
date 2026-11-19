@@ -1,5 +1,5 @@
 import { isMinerviniUniverse } from "@/config/minervini";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
 import { buildRisingBoard } from "@/lib/market/rising";
 import { matchingCaps, readSectorCaps } from "@/lib/sources/sector-market-caps";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
@@ -15,8 +15,8 @@ export async function GET(request: Request) {
     const earliest = Object.keys(published).sort()[0];
     const dates = new Set<string>();
     for (let i = 0; i < 30; i++) {
-      const date = new Date(Date.parse(`${publication.latestDate}T07:00:00Z`) - i * 86400000);
-      try { const session = minerviniSession(date); if (session >= earliest) dates.add(session); } catch { break; }
+      const date = new Date(Date.parse(`${publication.latestDate}T08:00:00Z`) - i * 86400000);
+      try { const session = reviewedCloseSession(date); if (session >= earliest) dates.add(session); } catch { break; }
     }
     const sessions = [...dates].sort().reverse();
     const data = buildRisingBoard(sessions.map(date => published[date] ?? null));

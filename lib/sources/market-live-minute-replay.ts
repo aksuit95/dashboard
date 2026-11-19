@@ -1,3 +1,4 @@
+import { krxCloseTime } from "@/config/market-calendar";
 import { setTimeout as delay } from "node:timers/promises";
 import { minerviniUniverseIds } from "@/config/minervini";
 import {
@@ -113,7 +114,7 @@ async function collectReplay(session: Session, now: number): Promise<Replay> {
   const replayWarnings = [...warnings];
   const missingCharts = members.length - tracks.length - missingCloses;
   if (missingCharts) replayWarnings.push(`KRX 장중 분봉 미확인 ${missingCharts}/${members.length}종목`);
-  if (missingCloses) replayWarnings.push(`KRX 15:30 비교 종가 미확인 ${missingCloses}/${members.length}종목`);
+  if (missingCloses) replayWarnings.push(`KRX ${krxCloseTime(session.baselineDate)} 비교 종가 미확인 ${missingCloses}/${members.length}종목`);
   return {
     ...result,
     coverage: { compared: tracks.length, total: members.length },

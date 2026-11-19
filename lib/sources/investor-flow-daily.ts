@@ -1,6 +1,6 @@
 import { minerviniUniverseIds, type MinerviniUniverse } from "@/config/minervini";
 import type { AppDatabase } from "@/lib/db/client";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { loadInvestorBoard, type InvestorBoard } from "./investor-flow";
 import { collectInvestorToss } from "./investor-flow-toss";
 

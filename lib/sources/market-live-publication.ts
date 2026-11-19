@@ -3,16 +3,15 @@ import path from "node:path";
 import { localDate } from "@/lib/market/market-hours";
 import type { MarketLiveArchiveFrame, MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
-import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
+import { marketLiveCloseBasis, marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import type { MarketLiveRadar } from "@/lib/market/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveArchive, readMarketLiveRotationFrame } from "./market-live-archive";
 
 export const marketLivePublicationDir = path.join(process.cwd(), "data", "market-live-publication");
-const priceBasis = "KRX_REGULAR_CLOSE_1530_KST";
 type PublishedArchive = {
   version: 1;
   market: "KRX";
-  priceBasis: typeof priceBasis;
+  priceBasis: ReturnType<typeof marketLiveCloseBasis>;
   day: NonNullable<MarketLiveArchiveResponse["day"]>;
   radar: MarketLiveRadar;
 };
@@ -44,8 +43,8 @@ export function readMarketLivePublication(date: string): PublishedArchive | null
     return null;
   }
   const baseline = saved.day?.baselineDate;
-  if (saved.version !== 1 || saved.market !== "KRX" || saved.priceBasis !== priceBasis || saved.day?.date !== date ||
-      !isMarketLiveArchiveDate(baseline) || baseline >= date || !saved.day.frames?.length ||
+  if (saved.version !== 1 || saved.market !== "KRX" || saved.day?.date !== date ||
+      !isMarketLiveArchiveDate(baseline) || baseline >= date || saved.priceBasis !== marketLiveCloseBasis(baseline) || !saved.day.frames?.length ||
       saved.radar?.date !== date || saved.radar.baselineDate !== baseline || saved.radar.live !== false) {
     throw new Error("저장된 KRX 섹터 기록의 기준을 확인할 수 없습니다.");
   }
@@ -74,7 +73,8 @@ export function exportMarketLivePublication(directory: string, now = Date.now(),
   const current = readMarketLiveRotationFrame(date, day.baselineDate, 0, now, archiveFile);
   if (!current) return null;
   const snapshot: PublishedArchive = {
-    version: 1, market: "KRX", priceBasis, day, radar: buildMarketLiveRadar(date, day.baselineDate, current, false, archiveFile),
+    version: 1, market: "KRX", priceBasis: marketLiveCloseBasis(day.baselineDate), day,
+    radar: buildMarketLiveRadar(date, day.baselineDate, current, false, archiveFile),
   };
   mkdirSync(directory, { recursive: true });
   const file = path.join(directory, `${date}.json`);

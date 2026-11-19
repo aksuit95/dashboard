@@ -1,6 +1,6 @@
 import type { AppDatabase } from "@/lib/db/client";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { fetchMinerviniSnapshot, minerviniSnapshotVersion, type MinerviniSnapshot } from "@/lib/sources/minervini";
 
 export type MinerviniBoard = { snapshot: MinerviniSnapshot | null; stale: boolean; error: string | null; expectedDate: string | null };

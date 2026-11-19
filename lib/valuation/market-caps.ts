@@ -4,14 +4,15 @@ import { createInvestorKrxWebQuery } from "@/lib/sources/investor-flow-krx-web";
 type Row = Record<string, unknown>;
 type Query = (bld: string, params: Record<string, string>) => Promise<Row>;
 export type ValuationMarketCaps = {
-  version: 1; source: "KRX_WEB_VERIFIED"; asOf: string; fetchedAt: string; exchange: "KRX"; priceTime: "15:30 KST";
+  version: 1; source: "KRX_WEB_VERIFIED"; asOf: string; fetchedAt: string; exchange: "KRX"; priceTime: "15:30 KST" | "16:30 KST";
   priceBasis: "KRX_REGULAR_CLOSE"; values: Record<string, number | null>; closes: Record<string, number | null>;
   securities?: Record<string, { name: string; market: "KOSPI" | "KOSDAQ" }>;
 };
 export const marketCapsPath = path.join(process.cwd(), "data", "valuation", "market-caps.json");
+export const marketCapCloseTime = (day: string): "15:30 KST" | "16:30 KST" => day === "2026-11-19" ? "16:30 KST" : "15:30 KST";
 export function validateMarketCaps(value: unknown): ValuationMarketCaps {
   const p = value as ValuationMarketCaps;
-  if (p?.version !== 1 || p.source !== "KRX_WEB_VERIFIED" || p.exchange !== "KRX" || p.priceTime !== "15:30 KST" || p.priceBasis !== "KRX_REGULAR_CLOSE" || !/^\d{4}-\d{2}-\d{2}$/.test(p.asOf) || !Number.isFinite(Date.parse(p.fetchedAt)) || !p.values || !p.closes || Object.keys(p.values).length < 10 || Object.keys(p.values).length !== Object.keys(p.closes).length) throw new Error("KRX 시총 파일 형식 오류");
+  if (p?.version !== 1 || p.source !== "KRX_WEB_VERIFIED" || p.exchange !== "KRX" || p.priceTime !== marketCapCloseTime(p.asOf) || p.priceBasis !== "KRX_REGULAR_CLOSE" || !/^\d{4}-\d{2}-\d{2}$/.test(p.asOf) || !Number.isFinite(Date.parse(p.fetchedAt)) || !p.values || !p.closes || Object.keys(p.values).length < 10 || Object.keys(p.values).length !== Object.keys(p.closes).length) throw new Error("KRX 시총 파일 형식 오류");
   for (const [code, cap] of Object.entries(p.values)) {
     const close = p.closes[code];
     if (!/^[0-9A-Z]{6}$/.test(code) || !Object.hasOwn(p.closes, code) || !(cap === null && close === null) && (!Number.isSafeInteger(cap) || cap! <= 0 || !Number.isSafeInteger(close) || close! <= 0)) throw new Error("KRX 시총 종목 검증 오류");
@@ -38,5 +39,5 @@ export async function fetchValuationMarketCaps(asOf: string, query: Query = crea
       if (typeof row.ISU_ABBRV === "string" && row.ISU_ABBRV.trim()) securities[code] = { name: row.ISU_ABBRV.trim(), market: market === "STK" ? "KOSPI" : "KOSDAQ" };
     }
   }
-  return validateMarketCaps({ version: 1, source: "KRX_WEB_VERIFIED", asOf, fetchedAt: now.toISOString(), exchange: "KRX", priceTime: "15:30 KST", priceBasis: "KRX_REGULAR_CLOSE", values, closes, securities });
+  return validateMarketCaps({ version: 1, source: "KRX_WEB_VERIFIED", asOf, fetchedAt: now.toISOString(), exchange: "KRX", priceTime: marketCapCloseTime(asOf), priceBasis: "KRX_REGULAR_CLOSE", values, closes, securities });
 }

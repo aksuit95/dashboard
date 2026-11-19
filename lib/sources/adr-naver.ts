@@ -1,4 +1,4 @@
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { fetchKrxDailyCloses, type KrxDailyClose } from "@/lib/sources/krx-daily-prices";
 import fs from "node:fs/promises";
 import path from "node:path";

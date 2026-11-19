@@ -1,7 +1,7 @@
 import { crc32, inflateRawSync } from "node:zlib";
 import { createInvestorKrxWebQuery } from "@/lib/sources/investor-flow-krx-web";
 import { extractCorpXml, parseCorpCodes } from "@/lib/financials/source";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { addDays, seoulDate, type MarketEvent } from "./calendar";
 
 export type EarningsCompany = { code: string; corpCode: string; name: string; marketCap: number; status: "예정" | "발표완료" | "확인되지 않음" | "공시 확인 필요"; note?: string; source?: string };

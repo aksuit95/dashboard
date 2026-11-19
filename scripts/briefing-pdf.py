@@ -34,7 +34,7 @@ def table(rows,widths=None):
     return t
 flow=[]
 p=data['period']; weekly=data['type']=='weekly'
-flow += [para('MK RESEARCH  /  MARKET BRIEFING',small),para(('주간' if weekly else '일간')+' 시장 브리핑',title),para((f"주간 {p['start']} ~ {p['weekEnd']} · 실제 거래일 {p['days'][0]} ~ {p['end']}" if weekly else f"기준일 {p['end']}")+f" · 비교 {p['base']}",small),para('국내 가격: KRX 정규장 15:30 KST · 작성 '+stamp(data['createdAt']),small)]
+flow += [para('MK RESEARCH  /  MARKET BRIEFING',small),para(('주간' if weekly else '일간')+' 시장 브리핑',title),para((f"주간 {p['start']} ~ {p['weekEnd']} · 실제 거래일 {p['days'][0]} ~ {p['end']}" if weekly else f"기준일 {p['end']}")+f" · 비교 {p['base']}",small),para('국내 가격: KRX 정규장 '+('16:30' if p['end']=='2026-11-19' else '15:30')+' KST · 작성 '+stamp(data['createdAt']),small)]
 flow += [para('01 시장 요약',heading),para('출처: KRX 정보데이터시스템 · 비교일과 기준일 모두 KRX 종가',small)]
 rows=[[para('시장'),para('종가'),para('등락'),para('등락률'),para('수집 시각')]]
 for x in data['indices']: rows.append([para('코스피' if x['id']=='kospi' else '코스닥'),para(f"{x['close']:,.2f}" if x['close'] is not None else '결측'),signed(x['change']),signed(x['percent'],suffix='%'),para(stamp(x['fetchedAt']),small)])

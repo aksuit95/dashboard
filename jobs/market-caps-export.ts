@@ -1,5 +1,5 @@
 import { loadEnv } from "@/lib/env";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { fetchValuationMarketCaps, marketCapsPath, readMarketCaps } from "@/lib/valuation/market-caps";
 import { atomicJson } from "@/lib/financials/source";
 async function main() {

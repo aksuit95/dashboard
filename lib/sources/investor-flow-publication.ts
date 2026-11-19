@@ -3,7 +3,7 @@ import path from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { isMinerviniUniverse, type MinerviniUniverse } from "@/config/minervini";
 import { getDb, type AppDatabase } from "@/lib/db/client";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { collectInvestorDaily, initInvestorDaily, readInvestorDaily } from "./investor-flow-daily";
 import type { InvestorBoard } from "./investor-flow";
 

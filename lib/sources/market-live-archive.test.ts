@@ -1,5 +1,6 @@
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import path from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readMarketLiveArchive, readMarketLiveRotationFrame, recordMarketLiveArchive } from "@/lib/sources/market-live-archive";
 import type { MarketLiveBoardData, MarketLiveRotationStock } from "@/lib/market/market-live";
@@ -30,6 +31,35 @@ describe("KRX 섹터 장중 기록 저장소", () => {
     file = path.join(directory, "archive.sqlite");
   });
   afterEach(async () => { await rm(directory, { recursive: true, force: true }); });
+
+  it("기존 15:30 기록을 유지하면서 다음 거래일의 16:30 비교 기준을 저장한다", async () => {
+    const collect = async () => board("10:00:09", [stock("005930", "10:00:04", 103)]);
+    await recordMarketLiveArchive({ now: at("10:00:08"), file, collect });
+    const table = "market_live_archive_v1";
+    const db = new DatabaseSync(file);
+    try {
+      const schema = String(db.prepare("SELECT sql FROM sqlite_schema WHERE name = ?").get(table)?.sql);
+      const legacy = schema.replace(/price_basis = CASE[\s\S]+? END/, "price_basis = 'KRX_REGULAR_CLOSE_1530_KST'");
+      expect(legacy).not.toBe(schema);
+      db.exec(`ALTER TABLE ${table} RENAME TO fixture; ${legacy};
+        INSERT INTO ${table} SELECT * FROM fixture; DROP TABLE fixture;`);
+    } finally { db.close(); }
+
+    const next = "2026-11-20";
+    const base = "2026-11-19";
+    const nextBoard: MarketLiveBoardData = {
+      ...await collect(), date: next, baselineDate: base, collectedAt: `${next}T10:00:09+09:00`,
+      rotationStocks: [{ ...stock("005930", "10:00:04", 103), close: 100, asOf: `${next}T10:00:04+09:00` }],
+    };
+    expect(await recordMarketLiveArchive({ now: Date.parse(nextBoard.collectedAt), file, collect: async () => nextBoard }))
+      .toMatchObject({ status: "recorded", stocks: 1 });
+    expect(readMarketLiveArchive(undefined, file)).toMatchObject({ dates: [next, date], day: { baselineDate: base } });
+    const reader = new DatabaseSync(file, { readOnly: true });
+    try {
+      expect(reader.prepare(`SELECT price_basis FROM ${table} ORDER BY trade_date`).all().map(row => row.price_basis))
+        .toEqual(["KRX_REGULAR_CLOSE_1530_KST", "KRX_REGULAR_CLOSE_1630_KST"]);
+    } finally { reader.close(); }
+  });
 
   it("같은 분의 재시도는 덧붙이지 않고 유효한 원본 시세와 수집 시간을 함께 보존한다", async () => {
     expect(readMarketLiveArchive(undefined, file)).toEqual({ dates: [], day: null });

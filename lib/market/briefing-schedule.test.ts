@@ -12,6 +12,7 @@ describe("automatic briefing schedule", () => {
   it("does not create on weekends and never assumes unknown sessions", () => {
     expect(scheduledBriefings(new Date("2026-11-14T07:00:00Z"))).toEqual([]);
     expect(scheduledBriefings(new Date("2026-11-18T07:00:00Z")).map(x => x.type)).toEqual(["daily"]);
-    expect(() => scheduledBriefings(new Date("2026-11-19T07:00:00Z"))).toThrow();
+    expect(scheduledBriefings(new Date("2026-11-19T07:00:00Z"))).toEqual([]);
+    expect(scheduledBriefings(new Date("2026-11-19T07:30:00Z")).map(x => x.type)).toEqual(["daily"]);
   });
 });

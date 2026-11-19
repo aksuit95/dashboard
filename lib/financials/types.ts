@@ -29,7 +29,7 @@ export type FinancialCompany = {
   industryCode?: string; financialBasis?: string;
   fiscalMonth: string | null; reports: FinancialReport[]; errors: string[]; attemptedAt: string | null;
   referenceFcf: { value: number | null; source: string; compositionDate: string; sourceUpdatedAt: string | null; definition: string } | null;
-  market: { date: string; exchange: "KRX"; priceTime: "15:30"; close: number; marketCap: number; fetchedAt: string } | null;
+  market: { date: string; exchange: "KRX"; priceTime: "15:30" | "16:30"; close: number; marketCap: number; fetchedAt: string } | null;
 };
 export type FinancialPublication = {
   schemaVersion: 1; publishedAt: string; membershipAt: string; membershipSource: string; companies: FinancialCompany[];

@@ -53,11 +53,12 @@ def run(end=None, now=None, only=None):
     except ValueError: start = end.replace(year=end.year-5, day=28)
     query_start = start
     stamp = now.isoformat()
+    close_basis = 'KRX 정규장 ' + ('16:30' if end.isoformat() == '2026-11-19' else '15:30') + ' KST'
     sources = {
-      'kospi': ('KRX 정보데이터시스템', 'KRX 정규장 15:30 KST', lambda: (krx.collect(query_start,end,'KOSPI',ROOT), stamp)),
-      'kosdaq': ('KRX 정보데이터시스템', 'KRX 정규장 15:30 KST', lambda: (krx.collect(query_start,end,'KOSDAQ',ROOT), stamp)),
-      'adr_kospi': ('네이버 KRX 일봉 자체 계산', 'KRX 정규장 15:30 KST · 20거래일', lambda: adr.collect(start,end,'KOSPI',ROOT)),
-      'adr_kosdaq': ('네이버 KRX 일봉 자체 계산', 'KRX 정규장 15:30 KST · 20거래일', lambda: adr.collect(start,end,'KOSDAQ',ROOT)),
+      'kospi': ('KRX 정보데이터시스템', close_basis, lambda: (krx.collect(query_start,end,'KOSPI',ROOT), stamp)),
+      'kosdaq': ('KRX 정보데이터시스템', close_basis, lambda: (krx.collect(query_start,end,'KOSDAQ',ROOT), stamp)),
+      'adr_kospi': ('네이버 KRX 일봉 자체 계산', close_basis + ' · 20거래일', lambda: adr.collect(start,end,'KOSPI',ROOT)),
+      'adr_kosdaq': ('네이버 KRX 일봉 자체 계산', close_basis + ' · 20거래일', lambda: adr.collect(start,end,'KOSDAQ',ROOT)),
       'usdkrw': ('Yahoo Finance KRW=X', '런던 시간 기준 완료된 일별 환율 · KRX 종가 아님', lambda: (fx.collect(start,end,now),stamp)),
     }
     sources.update({
@@ -76,7 +77,8 @@ def run(end=None, now=None, only=None):
             if incremental:
                 old_points = json.loads(datafile.read_text(encoding='utf-8'))
                 old_meta = json.loads(metafile.read_text(encoding='utf-8'))
-                if old_meta.get('source') != source or old_meta.get('basis') != basis or not old_points:
+                old_basis = ('KRX 정규장 ' + ('16:30' if old_meta.get('asOf') == '2026-11-19' else '15:30') + ' KST') if name in ('kospi','kosdaq') else basis
+                if old_meta.get('source') != source or old_meta.get('basis') != old_basis or not old_points:
                     raise ValueError('검증된 기존 이력이 없어 증분 수집 불가')
                 validate(old_points, dt.date.fromisoformat(old_points[0]['date']), us_end if name in ('nasdaq','sp500') else end)
                 if old_meta.get('asOf') != old_points[-1]['date']: raise ValueError('기존 이력 기준일 불일치')

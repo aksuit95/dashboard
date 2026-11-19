@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { usRefreshDate } from "@/lib/market/daily-close";
 import { adrPremiumSeries, latestAdrPremium, type CloseBar } from "@/lib/market/adr-premium";
 import { preferredDiscountSeries } from "@/lib/market/preferred-discount";

@@ -96,7 +96,7 @@ export function FinancialHealthBoard() {
       </div>
       <div className="text-xs leading-6 text-zinc-400">
         구성 확인 {kst(publication.membershipAt)} KST · 저장 {kst(publication.publishedAt)} KST<br />
-        가격: {priceDates.length ? priceDates.join(", ") : "확보 실패"} · KRX 정규장 15:30 KST. 기업 상세에 가격 수집 시각 별도 표시.<br />
+        가격: {priceDates.length ? priceDates.join(", ") : "확보 실패"} · KRX 정규장 종가(통상 15:30, 2026-11-19은 16:30 KST). 기업 상세에 가격 수집 시각 별도 표시.<br />
         {period !== "latest" && <>2분기 보고서가 없는 기업은 결측으로 표시합니다. 시가총액과 FCF 수익률은 위 가격 기준일을 사용하며 2분기 당시 수치가 아닙니다.<br /></>}
         {publication.membershipSource}. 금융업은 일반기업 FCF 평가에서 제외합니다.
       </div>
@@ -170,7 +170,7 @@ function CompanyDetailContent({ company, loading }: { company: FinancialCompany;
     </>}
     {tab === "accounts" && <div className={`${panel} text-xs leading-6 text-zinc-400`}>{loading ? <p>공시 계정을 불러오는 중입니다.</p> : <DisclosedAccounts report={a.latest} />}</div>}
     {tab === "evidence" && <div className={`${panel} space-y-4 text-xs leading-6 text-zinc-400`}>
-      <p>공시일 {a.latest?.filedAt ?? "—"} (접수번호 기준, 시각 미제공) · 재무 수집 {kst(a.latest?.fetchedAt)} KST<br />가격 기준 {company.market?.date ?? "미확보"} · KRX 15:30 KST · 가격 수집 {kst(company.market?.fetchedAt)} KST<br />DART 업종코드 {company.industryCode ?? "미확인"} · {company.financialBasis ?? "업종 미확인"}</p>
+      <p>공시일 {a.latest?.filedAt ?? "—"} (접수번호 기준, 시각 미제공) · 재무 수집 {kst(a.latest?.fetchedAt)} KST<br />가격 기준 {company.market?.date ?? "미확보"} · KRX {company.market?.priceTime ?? "—"} KST · 가격 수집 {kst(company.market?.fetchedAt)} KST<br />DART 업종코드 {company.industryCode ?? "미확인"} · {company.financialBasis ?? "업종 미확인"}</p>
       <p>FCF = 영업현금흐름 − 유형자산 취득 − 무형자산 취득. 기업 인수대금은 별도입니다. TTM = 직전 연간 + 당기 누적 − 전년 동기 누적. 손익계산서 분·반기는 누적 필드를 사용합니다. 연결과 별도는 혼합하지 않습니다.</p>
       <p>가용 유동성·총차입금·순현금·리스 포함 여부·순차입금/EBITDA·정확한 만기 구조는 주석 확인 전까지 확정하지 않습니다. 점수나 순현금 기업 수를 임의로 산출하지 않습니다. 정정공시는 재수집 시 접수번호를 갱신합니다. 구성종목과 가격은 현재 저장 자료 기준이며 과거 시점 백테스트가 아닙니다.</p>
       {company.referenceFcf && <p className="rounded-lg bg-violet-400/5 p-3 text-violet-200">기존 보유 자료 참고: {company.referenceFcf.source} FCF {money(company.referenceFcf.value)}억원 · 구성일 {company.referenceFcf.compositionDate} · 원본 갱신 {company.referenceFcf.sourceUpdatedAt ?? "미제공"}<br />{company.referenceFcf.definition}</p>}

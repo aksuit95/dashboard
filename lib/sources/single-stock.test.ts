@@ -85,9 +85,18 @@ describe("기초 종목 KRX 종가", () => {
     expect(board.names[0].changePct).toBeCloseTo(10);
     expect(board.names[0].products[0].price).toBe(100);
   });
-  it("거래일 확인이 불가능해도 ETF 시세는 표시한다", async () => {
+  it("다음 거래일 15:30 종가를 수능일 16:30 종가와 비교한다", async () => {
+    const request = fetcher([
+      { tradingDateKst: "2026-11-20", regularMarketClosingPrice: "110", closingPrice: "120" },
+      { tradingDateKst: "2026-11-19", regularMarketClosingPrice: "100", closingPrice: "130" },
+    ]);
+    const board = await loadSingleStockBoard(request, new Date("2026-11-20T15:30:00+09:00"));
+    expect(board.names[0]).toMatchObject({ price: 110, priceAsOf: "2026-11-20", priceBasis: "KRX_REGULAR_CLOSE" });
+    expect(board.names[0].changePct).toBeCloseTo(10);
+  });
+  it("기초 종목의 장중 시세가 없어도 ETF 시세는 표시한다", async () => {
     const board=await loadSingleStockBoard(fetcher([]),new Date("2026-11-20T10:00:00+09:00"));
-    expect(board.names[0]).toMatchObject({price:null,priceNotice:expect.any(String)});
+    expect(board.names[0]).toMatchObject({price:null});
     expect(board.names[0].products[0].price).toBe(100);
   });
   it("직전 특별 거래일의 기준 종가가 없어도 KRX 장중 가격은 표시하되 등락률은 비운다", async () => {
@@ -95,7 +104,7 @@ describe("기초 종목 KRX 종가", () => {
       ? Response.json({itemcode:String(url).includes("005930") ? "005930" : "000660",tradeTime:"20261120100000",nowPrice:"110",marketStatus:"OPEN",tradingSessionType:"REGULAR_MARKET"})
       : Response.json({closePrice:"100",iNav:"100"}));
     const board=await loadSingleStockBoard(request,new Date("2026-11-20T10:00:01+09:00"));
-    expect(board.names[0]).toMatchObject({price:110,changePct:null,priceBasis:"KRX_REGULAR_LIVE",priceNotice:expect.any(String)});
-    expect(request.mock.calls.some(([url])=>String(url).includes("daily-prices"))).toBe(false);
+    expect(board.names[0]).toMatchObject({price:110,changePct:null,priceBasis:"KRX_REGULAR_LIVE"});
+    expect(request.mock.calls.some(([url])=>String(url).includes("daily-prices"))).toBe(true);
   });
 });

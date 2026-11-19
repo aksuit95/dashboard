@@ -74,7 +74,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
     </section>
     <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-zinc-300">
       {country==="KR" ? <>
-        <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 15:30 종가` : "확인되지 않음"}. 한국 매크로는 수동 확인 ({reviewedAt}) 자료입니다.</p>
+        <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 ${feeds.dart.capAsOf === "2026-11-19" ? "16:30" : "15:30"} 종가` : "확인되지 않음"}. 한국 매크로는 수동 확인 ({reviewedAt}) 자료입니다.</p>
         {feedStatus("DART · KRX",feeds.dart)}
         <p className="mt-2 text-xs leading-5 text-zinc-400">공시예고가 없으면 날짜를 추측하지 않습니다. 공시와 IR 설명회는 별개이며 정정·취소될 수 있습니다. 발표일이 4주 밖인 일정은 목록에 표시되지 않습니다.</p>
       </> : <>
