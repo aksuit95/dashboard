@@ -16,8 +16,8 @@ const nextConfig: NextConfig = {
     "/api/stock-returns": ["./data/stock-returns/board.json"],
     "/api/investment-risk": ["./data/valuation/market-caps.json"],
     "/api/investment-risk/outlook": ["./data/investment-risk/closes.json", "./data/financials/board.json"],
-    "/api/financials": ["./data/financials/board.json", "./data/valuation/market-caps.json"],
-    "/api/financials/[code]": ["./data/financials/board.json"],
+    "/api/financials": ["./data/financials/board.json", "./data/financials/kosdaq150.json", "./data/valuation/market-caps.json"],
+    "/api/financials/[code]": ["./data/financials/board.json", "./data/financials/kosdaq150.json"],
     "/api/valuation/stocks/market-caps": ["./data/valuation/market-caps.json"] },
 };
 
