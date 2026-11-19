@@ -40,6 +40,13 @@ jobs:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
         run: npm run valuation:market-caps:export
+      - name: Collect KRX closes for investment risk outlook
+        id: investment-risk
+        continue-on-error: true
+        env:
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
+        run: npx tsx jobs/investment-risk-export.ts
       - name: Collect KRX stock returns
         id: stock-returns
         continue-on-error: true
@@ -126,6 +133,9 @@ jobs:
           if [ -f data/valuation/market-caps.json ]; then
             git add -- data/valuation/market-caps.json
           fi
+          if [ -f data/investment-risk/closes.json ]; then
+            git add -- data/investment-risk/closes.json
+          fi
           if [ -f data/stock-returns/board.json ]; then
             git add -- data/stock-returns/board.json
           fi
@@ -149,5 +159,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.sectors.outcome == 'failure' || steps.sector-caps.outcome == 'failure' || steps.sector-index.outcome == 'failure' || steps.annual-estimates.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.stock-returns.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.sector-caps.outcome == 'failure' || steps.sector-index.outcome == 'failure' || steps.annual-estimates.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.investment-risk.outcome == 'failure' || steps.stock-returns.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
         run: exit 1

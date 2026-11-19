@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { InvestmentRiskOutlook } from "./InvestmentRiskOutlook";
 import { useEffect, useMemo, useState } from "react";
 import { analyzeCompany } from "@/lib/financials/analyze";
 import type { FinancialBoard } from "@/lib/financials/types";
 
 type Alert = { schema_version: string; source: string; source_url: string; observed_at: string; alerts: Record<string, string[]>; securities?: Record<string, { name: string | null; market: string | null }> };
 type Prices = { asOf: string; fetchedAt: string; closes: Record<string, number | null>; securities: Record<string, { name: string; market: string }> };
-const tabs = ["관리", "거래정지", "투자주의", "투자경고", "투자위험", "재무 경고"] as const;
+const tabs = ["위험 후보", "관리", "거래정지", "투자주의", "투자경고", "투자위험", "재무 경고"] as const;
 type Tab = typeof tabs[number];
 const date = (s: string) => new Date(s).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false });
 
@@ -52,8 +53,9 @@ export function InvestmentRiskBoard() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <div className="flex rounded-md border border-white/15" aria-label="시장 필터">{[["전체", "전체"], ["KOSPI", "코스피"], ["KOSDAQ", "코스닥"]].map(([value, label]) => <button type="button" key={value} aria-pressed={market === value} onClick={() => setMarket(value)} className={`px-3 py-2 text-xs ${market === value ? "bg-white/15 text-white" : "text-zinc-400"}`}>{label}</button>)}</div>
         <input value={query} onChange={e => setQuery(e.target.value)} aria-label="종목명 또는 코드 검색" placeholder="종목명 또는 코드 검색" className="rounded-md border border-white/15 bg-[#0c1018] px-3 py-2 text-sm" />
-        <span className="ml-auto text-xs text-zinc-400">{rows.length}개 종목</span>
+        {tab !== "위험 후보" && <span className="ml-auto text-xs text-zinc-400">{rows.length}개 종목</span>}
       </div>
+      {tab === "위험 후보" ? <InvestmentRiskOutlook market={market} query={query} alerts={alerts?.alerts ?? null} observedAt={alerts?.observed_at} alertsFailed={status.alerts === "error"} /> : <>
       <div className="mt-4 space-y-1 text-xs leading-5 text-zinc-400">
         <p>{alerts ? <>시장경보 조회 {date(alerts.observed_at)} KST · <a className="text-cyan-300 underline" href={alerts.source_url} target="_blank" rel="noreferrer">{alerts.source}</a></> : status.alerts === "error" ? "시장경보 자료를 확인할 수 없습니다." : "시장경보 자료를 불러오는 중입니다."}</p>
         <p>{prices ? `가격: ${prices.asOf} KRX 정규장 15:30 종가 · 수집 ${date(prices.fetchedAt)} KST` : status.prices === "error" ? "KRX 종가 자료를 확인할 수 없습니다." : "KRX 종가 자료를 불러오는 중입니다."}</p>
@@ -65,6 +67,7 @@ export function InvestmentRiskBoard() {
       {selectedStatus === "loading" && <p className="py-8 text-center text-sm text-zinc-400">자료를 불러오는 중입니다.</p>}
       {selectedStatus === "error" && <p role="status" className="py-8 text-center text-sm text-amber-300">선택한 목록을 불러오지 못했습니다.</p>}
       {selectedStatus === "ok" && !rows.length && <p className="py-8 text-center text-sm text-zinc-500">조건에 맞는 종목이 없습니다.</p>}
+      </>}
     </div>
   </section>;
 }
