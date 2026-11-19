@@ -5,9 +5,9 @@ import { parseStockValuation, type StockValuationSnapshot } from "./stocks";
 import { addStockSnapshot, type StockHistory } from "./stock-history";
 import { resolveHistoryDates, type SessionPublication } from "./stock-history-dates";
 
-async function saveHistory(output: string, data: StockValuationSnapshot["data"]) {
+async function saveHistory(output: string, data: StockValuationSnapshot["data"], indexCode: string) {
   if (!data.sourceUpdatedAt) return;
-  const historyPath = path.join(path.dirname(output), "stock-history.json");
+  const historyPath = path.join(path.dirname(output), indexCode === "IKQ150" ? "kosdaq150-stock-history.json" : "stock-history.json");
   let history: StockHistory = { schemaVersion: 1, records: {} };
   try { history = JSON.parse(await fs.readFile(historyPath, "utf8")) as StockHistory; }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
@@ -22,12 +22,12 @@ async function saveHistory(output: string, data: StockValuationSnapshot["data"])
   } finally { await fs.unlink(historyTemp).catch(() => undefined); }
 }
 
-export async function exportStockValuation(input: string, output: string, now = new Date()) {
+export async function exportStockValuation(input: string, output: string, now = new Date(), indexCode = "IKS200") {
   const before = await fs.stat(input);
   if (before.size > 20 * 1024 * 1024) throw new Error("엑셀 파일은 20MB 이하여야 합니다.");
   const bytes = await fs.readFile(input);
   const sheets = await readWorkbookSheets(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer);
-  const data = parseStockValuation(sheets, path.basename(input), before.mtime.toISOString());
+  const data = parseStockValuation(sheets, path.basename(input), before.mtime.toISOString(), indexCode);
   const after = await fs.stat(input);
   if (before.mtimeMs !== after.mtimeMs || before.size !== after.size) throw new Error("내보내는 도중 엑셀이 변경됐습니다. 저장 완료 후 다시 실행해 주세요.");
   let previous: StockValuationSnapshot | null = null;
@@ -41,13 +41,13 @@ export async function exportStockValuation(input: string, output: string, now = 
     }
     if (data.compositionDate === previous.data.compositionDate && previous.data.stocks.some(stock => !data.stocks.some(next => next.code === stock.code))) throw new Error("동일 구성일의 종목이 누락됐습니다. 기존 JSON을 유지합니다.");
     if (JSON.stringify(previous.data) === JSON.stringify(data)) {
-      await saveHistory(output, data);
+      await saveHistory(output, data, indexCode);
       return { changed: false, snapshot: previous };
     }
   }
   const snapshot: StockValuationSnapshot = { schemaVersion: 1, exportedAt: now.toISOString(), data };
   await fs.mkdir(path.dirname(output), { recursive: true });
-  await saveHistory(output, data);
+  await saveHistory(output, data, indexCode);
   const temporary = `${output}.${process.pid}.tmp`;
   try {
     await fs.writeFile(temporary, `${JSON.stringify(snapshot, null, 2)}\n`, { encoding: "utf8", flag: "wx" });

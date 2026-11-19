@@ -10,6 +10,10 @@ function number(value: number, digits: number) { return value.toLocaleString("ko
 function timestamp(value: string) { return new Date(value).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }); }
 
 export function ValuationBoard() {
+  const [universe, setUniverse] = useState<"kospi200" | "kosdaq150">("kospi200");
+  return <div className="space-y-4"><div className="flex gap-2" aria-label="지수 선택">{([['kospi200', '코스피200'], ['kosdaq150', '코스닥150']] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={universe === id} onClick={() => setUniverse(id)} className={`rounded-md border px-4 py-2 text-sm ${universe === id ? 'border-sky-400 text-sky-300' : 'border-white/15 text-zinc-400'}`}>{label}</button>)}</div><ValuationUniverse key={universe} universe={universe} /></div>;
+}
+function ValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq150" }) {
   const [data, setData] = useState<ValuationData | null>(null);
   const [exportedAt, setExportedAt] = useState<string | null>(null);
   const [selected, setSelected] = useState("per");
@@ -22,14 +26,14 @@ export function ValuationBoard() {
     reading.current = true;
     setBusy(true);
     try {
-      const response = await fetch("/api/valuation", { cache: "no-store", signal });
+      const response = await fetch(`/api/valuation?universe=${universe}`, { cache: "no-store", signal });
       const result = await response.json() as { data: ValuationData | null; exportedAt?: string; error?: string };
       if (!response.ok || !result.data?.series?.length) throw new Error(result.error ?? "내보낸 데이터를 읽지 못했습니다.");
       if (!signal?.aborted) { setData(result.data); setExportedAt(result.exportedAt ?? null); setError(null); }
     } catch (cause) {
       if (!signal?.aborted) setError(`${cause instanceof Error ? cause.message : "데이터를 읽지 못했습니다."} 마지막 표시값을 유지합니다.`);
     } finally { reading.current = false; if (!signal?.aborted) setBusy(false); }
-  }, []);
+  }, [universe]);
 
   useEffect(() => {
     // One initial read, then explicit refresh only. Ignore legacy browser file caches.
@@ -59,7 +63,7 @@ export function ValuationBoard() {
           </button>;
         })}
       </div>
-      {active && <ValuationChart series={active} />}
+      {active && <ValuationChart series={active} universe={universe} />}
       {data.warnings.length > 0 && <details className="rounded-lg border border-amber-400/15 bg-amber-400/[0.03] px-4 py-3 text-xs text-amber-200">
         <summary className="cursor-pointer">원본 데이터 확인 필요 · {data.warnings.length}건</summary>
         <ul className="mt-3 space-y-2">{data.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
@@ -75,7 +79,7 @@ export function ValuationBoard() {
 }
 
 
-function ValuationChart({ series }: { series: ValuationSeries }) {
+function ValuationChart({ series, universe }: { series: ValuationSeries; universe: "kospi200" | "kosdaq150" }) {
   const [range, setRange] = useState<Range>("1Y");
   const [hover, setHover] = useState<{ date: string; value: number } | null>(null);
   const host = useRef<HTMLDivElement>(null);
@@ -114,7 +118,7 @@ function ValuationChart({ series }: { series: ValuationSeries }) {
   const detail = hover ?? selected.at(-1);
   return <section className="rounded-xl border border-white/10 bg-[#151a22] p-4 sm:p-6" aria-label={`${series.name} 선차트`}>
     <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-      <div><p className="text-xs uppercase tracking-widest text-zinc-500">KOSPI 200 · 12M Forward</p><h2 className="mt-1 text-lg font-semibold">{series.name}</h2>
+      <div><p className="text-xs uppercase tracking-widest text-zinc-500">{universe === "kospi200" ? "KOSPI 200" : "KOSDAQ 150"} · 12M Forward</p><h2 className="mt-1 text-lg font-semibold">{series.name}</h2>
         <p className="mt-3 flex items-baseline gap-3"><span className="text-3xl font-semibold tabular-nums" style={{ color: series.color }}>{detail ? number(detail.value, series.digits) : "—"}<span className="ml-1 text-sm font-normal">{series.unit}</span></span><span className="text-xs text-zinc-500">{detail?.date}</span></p>
       </div>
       <div className="flex flex-wrap gap-1" aria-label="차트 기간">{(Object.keys(ranges) as Range[]).map((value) => <button type="button" key={value} aria-pressed={range === value} onClick={() => setRange(value)} className={`rounded-md px-2.5 py-1.5 text-xs ${range === value ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`}>{value === "ALL" ? "전체" : value}</button>)}</div>

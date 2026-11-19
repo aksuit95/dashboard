@@ -1,0 +1,2319 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-11-19T01:28:44.695Z",
+  "data": {
+    "fileName": "퀀티와이즈_업데이트.xlsx",
+    "savedAt": "2026-11-19T01:22:39.738Z",
+    "sourceUpdatedAt": "2026-11-19 10:21:17",
+    "compositionDate": "2026-11-19",
+    "metrics": [
+      {
+        "id": "per",
+        "itemCode": "E382160.M",
+        "sourceUnit": "X",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "pbr",
+        "itemCode": "E382560.M",
+        "sourceUnit": "X",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "eps",
+        "itemCode": "E312060.M",
+        "sourceUnit": "Local/Shares",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "bps",
+        "itemCode": "E314060.M",
+        "sourceUnit": "Local/Shares",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "evEbitda",
+        "itemCode": "E331060.M",
+        "sourceUnit": "X",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "operatingProfit",
+        "itemCode": "E121560.M",
+        "sourceUnit": "Local thou",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "fcf",
+        "itemCode": "E124260.M",
+        "sourceUnit": "Local thou",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "epsTotal",
+        "itemCode": "E312080.M",
+        "sourceUnit": "Local/Shares",
+        "baseDate": "CPD-1TD"
+      },
+      {
+        "id": "bpsTotal",
+        "itemCode": "E314070.M",
+        "sourceUnit": "Local/Shares",
+        "baseDate": "CPD-1TD"
+      }
+    ],
+    "stocks": [
+      {
+        "code": "000250",
+        "name": "삼천당제약",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "0009K0",
+        "name": "에임드바이오",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "003380",
+        "name": "하림지주",
+        "values": {
+          "per": 4.86,
+          "pbr": 0.28,
+          "eps": 2199,
+          "bps": 37768,
+          "evEbitda": 4.26,
+          "operatingProfit": 11145.833333300001,
+          "fcf": 3950.8333333,
+          "epsTotal": 4827,
+          "bpsTotal": 73474
+        }
+      },
+      {
+        "code": "005290",
+        "name": "동진쎄미켐",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "006730",
+        "name": "서부T&D",
+        "values": {
+          "per": 9.67,
+          "pbr": 0.51,
+          "eps": 964,
+          "bps": 18206,
+          "evEbitda": 14.22,
+          "operatingProfit": 1052.95,
+          "fcf": 246.20000000000002,
+          "epsTotal": 1250,
+          "bpsTotal": 23526
+        }
+      },
+      {
+        "code": "007390",
+        "name": "네이처셀",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "009520",
+        "name": "포스코엠텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "014620",
+        "name": "성광벤드",
+        "values": {
+          "per": 9.04,
+          "pbr": 0.81,
+          "eps": 2122,
+          "bps": 23685,
+          "evEbitda": 4.68,
+          "operatingProfit": 696.3055556,
+          "fcf": 101.25000000000001,
+          "epsTotal": 2122,
+          "bpsTotal": 23685
+        }
+      },
+      {
+        "code": "015750",
+        "name": "성우하이텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "018290",
+        "name": "브이티",
+        "values": {
+          "per": 5.83,
+          "pbr": 1.04,
+          "eps": 1820,
+          "bps": 10236,
+          "evEbitda": 2.96,
+          "operatingProfit": 799.1388889000001,
+          "fcf": 433.75000000000006,
+          "epsTotal": 1888,
+          "bpsTotal": 10706
+        }
+      },
+      {
+        "code": "025320",
+        "name": "시노펙스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "025900",
+        "name": "동화기업",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "025980",
+        "name": "아난티",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "028300",
+        "name": "HLB",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "030520",
+        "name": "한컴",
+        "values": {
+          "per": 8.71,
+          "pbr": 0.79,
+          "eps": 1575,
+          "bps": 17446,
+          "evEbitda": 2.7,
+          "operatingProfit": 546.8055556,
+          "fcf": 473.3611111,
+          "epsTotal": 1522,
+          "bpsTotal": 22858
+        }
+      },
+      {
+        "code": "030530",
+        "name": "원익홀딩스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "031980",
+        "name": "피에스케이홀딩스",
+        "values": {
+          "per": 12.89,
+          "pbr": 3.41,
+          "eps": 9856,
+          "bps": 37276,
+          "evEbitda": 13.11,
+          "operatingProfit": 1819.1250000000002,
+          "fcf": 1162.9166667000002,
+          "epsTotal": 9854,
+          "bpsTotal": 37471
+        }
+      },
+      {
+        "code": "032190",
+        "name": "다우데이타",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "032500",
+        "name": "케이엠더블유",
+        "values": {
+          "per": 18.6,
+          "pbr": 4.86,
+          "eps": 1055,
+          "bps": 4041,
+          "evEbitda": 14.69,
+          "operatingProfit": 476.4444444,
+          "fcf": 53.50000000000001,
+          "epsTotal": 1055,
+          "bpsTotal": 4041
+        }
+      },
+      {
+        "code": "032820",
+        "name": "우리기술",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "033100",
+        "name": "제룡전기",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "033500",
+        "name": "동성화인텍",
+        "values": {
+          "per": 3.47,
+          "pbr": 0.84,
+          "eps": 3278,
+          "bps": 13590,
+          "evEbitda": 1.38,
+          "operatingProfit": 1281.2916667000002,
+          "fcf": 538.4583333,
+          "epsTotal": 3278,
+          "bpsTotal": 13590
+        }
+      },
+      {
+        "code": "035760",
+        "name": "CJ ENM",
+        "values": {
+          "per": 13.67,
+          "pbr": 0.31,
+          "eps": 3083,
+          "bps": 137683,
+          "evEbitda": 1.72,
+          "operatingProfit": 1892.1166667,
+          "fcf": 7157.6203704,
+          "epsTotal": 3530,
+          "bpsTotal": 167599
+        }
+      },
+      {
+        "code": "035900",
+        "name": "JYP Ent.",
+        "values": {
+          "per": 14.86,
+          "pbr": 1.98,
+          "eps": 3147,
+          "bps": 23574,
+          "evEbitda": 7.17,
+          "operatingProfit": 1486.0441176,
+          "fcf": 1078.125,
+          "epsTotal": 3145,
+          "bpsTotal": 23680
+        }
+      },
+      {
+        "code": "036540",
+        "name": "SFA반도체",
+        "values": {
+          "per": 17.99,
+          "pbr": 2.51,
+          "eps": 469,
+          "bps": 3358,
+          "evEbitda": 10.68,
+          "operatingProfit": 901.4642857,
+          "fcf": -563.0555556,
+          "epsTotal": 470,
+          "bpsTotal": 3358
+        }
+      },
+      {
+        "code": "036620",
+        "name": "감성코퍼레이션",
+        "values": {
+          "per": 6.02,
+          "pbr": 1.67,
+          "eps": 570,
+          "bps": 2055,
+          "evEbitda": 3.46,
+          "operatingProfit": 640.3333333,
+          "fcf": 368.3333333,
+          "epsTotal": 570,
+          "bpsTotal": 2055
+        }
+      },
+      {
+        "code": "036810",
+        "name": "에프에스티",
+        "values": {
+          "per": 21.42,
+          "pbr": 1.58,
+          "eps": 980,
+          "bps": 13262,
+          "evEbitda": 9.63,
+          "operatingProfit": 423.16666670000006,
+          "fcf": null,
+          "epsTotal": 1099,
+          "bpsTotal": 13294
+        }
+      },
+      {
+        "code": "036830",
+        "name": "솔브레인홀딩스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "036930",
+        "name": "주성엔지니어링",
+        "values": {
+          "per": 63.41,
+          "pbr": 8.96,
+          "eps": 2373,
+          "bps": 16789,
+          "evEbitda": 44.75,
+          "operatingProfit": 1280.9166667000002,
+          "fcf": 1541.6666667,
+          "epsTotal": 2373,
+          "bpsTotal": 16789
+        }
+      },
+      {
+        "code": "038500",
+        "name": "삼표시멘트",
+        "values": {
+          "per": 14.34,
+          "pbr": 0.69,
+          "eps": 367,
+          "bps": 7664,
+          "evEbitda": 6.13,
+          "operatingProfit": 733.3333333,
+          "fcf": 480.00000000000006,
+          "epsTotal": 367,
+          "bpsTotal": 7664
+        }
+      },
+      {
+        "code": "039030",
+        "name": "이오테크닉스",
+        "values": {
+          "per": 23.01,
+          "pbr": 4.26,
+          "eps": 13883,
+          "bps": 74974,
+          "evEbitda": 15.91,
+          "operatingProfit": 2108.8333333000005,
+          "fcf": 1652.3333333000003,
+          "epsTotal": 13883,
+          "bpsTotal": 74974
+        }
+      },
+      {
+        "code": "039200",
+        "name": "오스코텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "041190",
+        "name": "우리기술투자",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "041510",
+        "name": "에스엠",
+        "values": {
+          "per": 14.68,
+          "pbr": 1.75,
+          "eps": 5989,
+          "bps": 50160,
+          "evEbitda": 4.95,
+          "operatingProfit": 2045.0708333000002,
+          "fcf": 1793.9679487000003,
+          "epsTotal": 6336,
+          "bpsTotal": 66085
+        }
+      },
+      {
+        "code": "042000",
+        "name": "카페24",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "043260",
+        "name": "성호전자",
+        "values": {
+          "per": 25.63,
+          "pbr": 2.34,
+          "eps": 1011,
+          "bps": 11051,
+          "evEbitda": 20.19,
+          "operatingProfit": 704.0555556,
+          "fcf": -109.29166670000001,
+          "epsTotal": 1011,
+          "bpsTotal": 11124
+        }
+      },
+      {
+        "code": "048410",
+        "name": "현대바이오",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "050890",
+        "name": "쏠리드",
+        "values": {
+          "per": 10.12,
+          "pbr": 1.05,
+          "eps": 760,
+          "bps": 7321,
+          "evEbitda": 7.22,
+          "operatingProfit": 480.05,
+          "fcf": 354.30555560000005,
+          "epsTotal": 762,
+          "bpsTotal": 7334
+        }
+      },
+      {
+        "code": "052400",
+        "name": "코나아이",
+        "values": {
+          "per": 4.23,
+          "pbr": 1.08,
+          "eps": 4430,
+          "bps": 17336,
+          "evEbitda": 0.41,
+          "operatingProfit": 1181.7916667000002,
+          "fcf": 1221.5416667000002,
+          "epsTotal": 4595,
+          "bpsTotal": 17303
+        }
+      },
+      {
+        "code": "053800",
+        "name": "안랩",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "056080",
+        "name": "유진로봇",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "056190",
+        "name": "SFA",
+        "values": {
+          "per": 6.27,
+          "pbr": 0.61,
+          "eps": 3709,
+          "bps": 37850,
+          "evEbitda": 2.5,
+          "operatingProfit": 1939.1388889,
+          "fcf": 878.3333333,
+          "epsTotal": 4060,
+          "bpsTotal": 60464
+        }
+      },
+      {
+        "code": "058470",
+        "name": "리노공업",
+        "values": {
+          "per": 17.64,
+          "pbr": 3.7,
+          "eps": 2738,
+          "bps": 13040,
+          "evEbitda": 11.53,
+          "operatingProfit": 2450.452381,
+          "fcf": 1574.7916667,
+          "epsTotal": 2738,
+          "bpsTotal": 13040
+        }
+      },
+      {
+        "code": "058610",
+        "name": "에스피지",
+        "values": {
+          "per": 88.19,
+          "pbr": 6.04,
+          "eps": 866,
+          "bps": 12659,
+          "evEbitda": 51.56,
+          "operatingProfit": 253.01666670000003,
+          "fcf": 46.25000000000001,
+          "epsTotal": 830,
+          "bpsTotal": 12659
+        }
+      },
+      {
+        "code": "060250",
+        "name": "NHN KCP",
+        "values": {
+          "per": 7.38,
+          "pbr": 1.08,
+          "eps": 1502,
+          "bps": 10248,
+          "evEbitda": -1.17,
+          "operatingProfit": 695.0208333,
+          "fcf": 1214,
+          "epsTotal": 1509,
+          "bpsTotal": 10424
+        }
+      },
+      {
+        "code": "060280",
+        "name": "큐렉소",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "060370",
+        "name": "LS마린솔루션",
+        "values": {
+          "per": 31.17,
+          "pbr": 1.76,
+          "eps": 760,
+          "bps": 13454,
+          "evEbitda": 15.35,
+          "operatingProfit": 437.50000000000006,
+          "fcf": -588,
+          "epsTotal": 760,
+          "bpsTotal": 13454
+        }
+      },
+      {
+        "code": "064760",
+        "name": "티씨케이",
+        "values": {
+          "per": 14.27,
+          "pbr": 2.77,
+          "eps": 12002,
+          "bps": 61767,
+          "evEbitda": 8.51,
+          "operatingProfit": 1612.9583333000003,
+          "fcf": 1020.8333333,
+          "epsTotal": 12002,
+          "bpsTotal": 61767
+        }
+      },
+      {
+        "code": "065350",
+        "name": "신성델타테크",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "067160",
+        "name": "SOOP",
+        "values": {
+          "per": 8.72,
+          "pbr": 0.73,
+          "eps": 3978,
+          "bps": 47574,
+          "evEbitda": 1.26,
+          "operatingProfit": 545.6666667000001,
+          "fcf": 571.6666667000001,
+          "epsTotal": 4236,
+          "bpsTotal": 51143
+        }
+      },
+      {
+        "code": "067310",
+        "name": "하나마이크론",
+        "values": {
+          "per": 6.19,
+          "pbr": 1.76,
+          "eps": 3761,
+          "bps": 13252,
+          "evEbitda": 3.66,
+          "operatingProfit": 4175.2083333,
+          "fcf": 2504.1666667,
+          "epsTotal": 4688,
+          "bpsTotal": 18705
+        }
+      },
+      {
+        "code": "068760",
+        "name": "셀트리온제약",
+        "values": {
+          "per": 31.38,
+          "pbr": 3.46,
+          "eps": 1283,
+          "bps": 11640,
+          "evEbitda": 16.5,
+          "operatingProfit": 846.6666667000001,
+          "fcf": null,
+          "epsTotal": 1283,
+          "bpsTotal": 11640
+        }
+      },
+      {
+        "code": "069080",
+        "name": "웹젠",
+        "values": {
+          "per": 14.52,
+          "pbr": 0.48,
+          "eps": 812,
+          "bps": 24714,
+          "evEbitda": 3.38,
+          "operatingProfit": 293.16666670000006,
+          "fcf": 449.16666670000006,
+          "epsTotal": 797,
+          "bpsTotal": 24698
+        }
+      },
+      {
+        "code": "074600",
+        "name": "원익QnC",
+        "values": {
+          "per": 7.7,
+          "pbr": 1.05,
+          "eps": 3242,
+          "bps": 23829,
+          "evEbitda": 5.26,
+          "operatingProfit": 1632.6666667,
+          "fcf": 1068.3333333,
+          "epsTotal": 3613,
+          "bpsTotal": 27436
+        }
+      },
+      {
+        "code": "078340",
+        "name": "컴투스",
+        "values": {
+          "per": 5.93,
+          "pbr": 0.32,
+          "eps": 4733,
+          "bps": 88771,
+          "evEbitda": 4.44,
+          "operatingProfit": 817.4083333000001,
+          "fcf": 476.71726190000004,
+          "epsTotal": 3574,
+          "bpsTotal": 95379
+        }
+      },
+      {
+        "code": "078600",
+        "name": "대주전자재료",
+        "values": {
+          "per": 50.81,
+          "pbr": 4.33,
+          "eps": 1598,
+          "bps": 18773,
+          "evEbitda": 23,
+          "operatingProfit": 450.25000000000006,
+          "fcf": 672.5,
+          "epsTotal": 1592,
+          "bpsTotal": 19061
+        }
+      },
+      {
+        "code": "080220",
+        "name": "제주반도체",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "082270",
+        "name": "젬백스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "082920",
+        "name": "비츠로셀",
+        "values": {
+          "per": 11.18,
+          "pbr": 2.02,
+          "eps": 1798,
+          "bps": 9956,
+          "evEbitda": 6.57,
+          "operatingProfit": 950.725,
+          "fcf": 567.2083333,
+          "epsTotal": 1798,
+          "bpsTotal": 9956
+        }
+      },
+      {
+        "code": "083650",
+        "name": "비에이치아이",
+        "values": {
+          "per": 8.02,
+          "pbr": 2.64,
+          "eps": 4520,
+          "bps": 13747,
+          "evEbitda": 5.4,
+          "operatingProfit": 1791.1708333000004,
+          "fcf": 3509.4166667000004,
+          "epsTotal": 4520,
+          "bpsTotal": 13749
+        }
+      },
+      {
+        "code": "084370",
+        "name": "유진테크",
+        "values": {
+          "per": 11.96,
+          "pbr": 2.39,
+          "eps": 6421,
+          "bps": 32154,
+          "evEbitda": 6.79,
+          "operatingProfit": 1711.4166667,
+          "fcf": 1139.1666667000002,
+          "epsTotal": 6487,
+          "bpsTotal": 33779
+        }
+      },
+      {
+        "code": "085660",
+        "name": "차바이오텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "086520",
+        "name": "에코프로",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "087010",
+        "name": "펩트론",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "089030",
+        "name": "테크윙",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "089970",
+        "name": "브이엠",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "090360",
+        "name": "로보스타",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "090710",
+        "name": "휴림로봇",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "095340",
+        "name": "ISC",
+        "values": {
+          "per": 24.38,
+          "pbr": 4.03,
+          "eps": 5571,
+          "bps": 33676,
+          "evEbitda": 15.67,
+          "operatingProfit": 1406.8095238,
+          "fcf": 843.2083333,
+          "epsTotal": 5601,
+          "bpsTotal": 33756
+        }
+      },
+      {
+        "code": "095610",
+        "name": "테스",
+        "values": {
+          "per": 11.05,
+          "pbr": 2.34,
+          "eps": 7030,
+          "bps": 33146,
+          "evEbitda": 8.18,
+          "operatingProfit": 1411.3690476,
+          "fcf": 1156.75,
+          "epsTotal": 7034,
+          "bpsTotal": 33146
+        }
+      },
+      {
+        "code": "095660",
+        "name": "네오위즈",
+        "values": {
+          "per": 8.26,
+          "pbr": 0.5,
+          "eps": 1878,
+          "bps": 30753,
+          "evEbitda": 0.21,
+          "operatingProfit": 416.51388890000004,
+          "fcf": 423.1111111,
+          "epsTotal": 1807,
+          "bpsTotal": 31892
+        }
+      },
+      {
+        "code": "096530",
+        "name": "씨젠",
+        "values": {
+          "per": 13.79,
+          "pbr": 1.05,
+          "eps": 1719,
+          "bps": 22480,
+          "evEbitda": 4.86,
+          "operatingProfit": 886.3819444000001,
+          "fcf": 667.6666667000001,
+          "epsTotal": 1718,
+          "bpsTotal": 22895
+        }
+      },
+      {
+        "code": "098460",
+        "name": "고영",
+        "values": {
+          "per": 22.7,
+          "pbr": 3.64,
+          "eps": 1037,
+          "bps": 6461,
+          "evEbitda": 16.59,
+          "operatingProfit": 788.3638889000001,
+          "fcf": 119.97916670000001,
+          "epsTotal": 1037,
+          "bpsTotal": 6461
+        }
+      },
+      {
+        "code": "099320",
+        "name": "쎄트렉아이",
+        "values": {
+          "per": 24.68,
+          "pbr": 2.4,
+          "eps": 2581,
+          "bps": 26490,
+          "evEbitda": 13.79,
+          "operatingProfit": 323.5555556,
+          "fcf": 223.41666670000004,
+          "epsTotal": 2157,
+          "bpsTotal": 25387
+        }
+      },
+      {
+        "code": "100790",
+        "name": "미래에셋벤처투자",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "101490",
+        "name": "에스앤에스텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "101730",
+        "name": "위메이드맥스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "108490",
+        "name": "로보티즈",
+        "values": {
+          "per": 213.71,
+          "pbr": 9.65,
+          "eps": 1121,
+          "bps": 24813,
+          "evEbitda": 150.02,
+          "operatingProfit": 162.9674908,
+          "fcf": -329.8148148,
+          "epsTotal": 1120,
+          "bpsTotal": 24973
+        }
+      },
+      {
+        "code": "112040",
+        "name": "위메이드",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "121600",
+        "name": "나노신소재",
+        "values": {
+          "per": 31.08,
+          "pbr": 2.65,
+          "eps": 2168,
+          "bps": 25427,
+          "evEbitda": 17.15,
+          "operatingProfit": 323.125,
+          "fcf": 337.5,
+          "epsTotal": 2168,
+          "bpsTotal": 25427
+        }
+      },
+      {
+        "code": "122870",
+        "name": "와이지엔터테인먼트",
+        "values": {
+          "per": 17.78,
+          "pbr": 1.49,
+          "eps": 2638,
+          "bps": 31399,
+          "evEbitda": 6.46,
+          "operatingProfit": 688.3842593000002,
+          "fcf": 753.3402778000001,
+          "epsTotal": 3120,
+          "bpsTotal": 39623
+        }
+      },
+      {
+        "code": "124500",
+        "name": "아이티센글로벌",
+        "values": {
+          "per": 7.55,
+          "pbr": 1.86,
+          "eps": 2397,
+          "bps": 9719,
+          "evEbitda": 0.06,
+          "operatingProfit": 3213.8750000000005,
+          "fcf": 2382.625,
+          "epsTotal": 10232,
+          "bpsTotal": 40432
+        }
+      },
+      {
+        "code": "125490",
+        "name": "한라캐스트",
+        "values": {
+          "per": 32.06,
+          "pbr": 2.99,
+          "eps": 318,
+          "bps": 3407,
+          "evEbitda": 14.34,
+          "operatingProfit": 175.62500000000003,
+          "fcf": 22.361111100000002,
+          "epsTotal": 317,
+          "bpsTotal": 3408
+        }
+      },
+      {
+        "code": "131290",
+        "name": "티에스이",
+        "values": {
+          "per": 11.28,
+          "pbr": 2.96,
+          "eps": 16485,
+          "bps": 62831,
+          "evEbitda": 6.6,
+          "operatingProfit": 2431.2000000000003,
+          "fcf": 815.8333333,
+          "epsTotal": 17965,
+          "bpsTotal": 72326
+        }
+      },
+      {
+        "code": "131970",
+        "name": "두산테스나",
+        "values": {
+          "per": 16.2,
+          "pbr": 2.53,
+          "eps": 4493,
+          "bps": 28818,
+          "evEbitda": 5.54,
+          "operatingProfit": 1031.1190476000002,
+          "fcf": -330.8333333,
+          "epsTotal": 4493,
+          "bpsTotal": 28818
+        }
+      },
+      {
+        "code": "137400",
+        "name": "피엔티",
+        "values": {
+          "per": 7.49,
+          "pbr": 0.71,
+          "eps": 3217,
+          "bps": 33730,
+          "evEbitda": 5.81,
+          "operatingProfit": 1085.7916667000002,
+          "fcf": -89.16666670000001,
+          "epsTotal": 3428,
+          "bpsTotal": 34344
+        }
+      },
+      {
+        "code": "140860",
+        "name": "파크시스템스",
+        "values": {
+          "per": 21.63,
+          "pbr": 3.23,
+          "eps": 8290,
+          "bps": 55464,
+          "evEbitda": 15.08,
+          "operatingProfit": 663.6547619,
+          "fcf": 312.0833333,
+          "epsTotal": 8282,
+          "bpsTotal": 55464
+        }
+      },
+      {
+        "code": "141080",
+        "name": "리가켐바이오",
+        "values": {
+          "per": -23.75,
+          "pbr": 3.34,
+          "eps": -2269,
+          "bps": 16126,
+          "evEbitda": -14.4,
+          "operatingProfit": -981.3333333,
+          "fcf": -657.75,
+          "epsTotal": -2406,
+          "bpsTotal": 16881
+        }
+      },
+      {
+        "code": "145020",
+        "name": "휴젤",
+        "values": {
+          "per": 13.93,
+          "pbr": 1.75,
+          "eps": 14253,
+          "bps": 113692,
+          "evEbitda": 6.97,
+          "operatingProfit": 2270.8974359000003,
+          "fcf": 1453.5092593000002,
+          "epsTotal": 14876,
+          "bpsTotal": 116889
+        }
+      },
+      {
+        "code": "161580",
+        "name": "필옵틱스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "166090",
+        "name": "하나머티리얼즈",
+        "values": {
+          "per": 8.29,
+          "pbr": 1.07,
+          "eps": 5020,
+          "bps": 38959,
+          "evEbitda": 4.84,
+          "operatingProfit": 1333.0333333,
+          "fcf": 577.9166667000001,
+          "epsTotal": 5021,
+          "bpsTotal": 38959
+        }
+      },
+      {
+        "code": "171090",
+        "name": "선익시스템",
+        "values": {
+          "per": 5.66,
+          "pbr": 1.96,
+          "eps": 12084,
+          "bps": 34888,
+          "evEbitda": 2.92,
+          "operatingProfit": 1382.4883333000002,
+          "fcf": 1091.6666667000002,
+          "epsTotal": 12234,
+          "bpsTotal": 34888
+        }
+      },
+      {
+        "code": "178320",
+        "name": "서진시스템",
+        "values": {
+          "per": 13.08,
+          "pbr": 1.88,
+          "eps": 2408,
+          "bps": 16781,
+          "evEbitda": 7.64,
+          "operatingProfit": 2741.3888889,
+          "fcf": -219.50000000000003,
+          "epsTotal": 2405,
+          "bpsTotal": 16863
+        }
+      },
+      {
+        "code": "183300",
+        "name": "코미코",
+        "values": {
+          "per": 13.37,
+          "pbr": 2.4,
+          "eps": 1373,
+          "bps": 7659,
+          "evEbitda": null,
+          "operatingProfit": 1594.1666667,
+          "fcf": 764.1666667000001,
+          "epsTotal": 2153,
+          "bpsTotal": 10843
+        }
+      },
+      {
+        "code": "189300",
+        "name": "인텔리안테크",
+        "values": {
+          "per": 10.92,
+          "pbr": 1.33,
+          "eps": 4098,
+          "bps": 33611,
+          "evEbitda": 7.14,
+          "operatingProfit": 500.08472220000004,
+          "fcf": 89.38888890000001,
+          "epsTotal": 4094,
+          "bpsTotal": 33611
+        }
+      },
+      {
+        "code": "194480",
+        "name": "데브시스터즈",
+        "values": {
+          "per": 9.99,
+          "pbr": 0.67,
+          "eps": 998,
+          "bps": 14978,
+          "evEbitda": 7.21,
+          "operatingProfit": 155.4166667,
+          "fcf": null,
+          "epsTotal": 1002,
+          "bpsTotal": 15334
+        }
+      },
+      {
+        "code": "195940",
+        "name": "HK이노엔",
+        "values": {
+          "per": 10.36,
+          "pbr": 0.67,
+          "eps": 3512,
+          "bps": 53974,
+          "evEbitda": 6.63,
+          "operatingProfit": 1408.4861111000002,
+          "fcf": 1276.65625,
+          "epsTotal": 3512,
+          "bpsTotal": 53974
+        }
+      },
+      {
+        "code": "196170",
+        "name": "알테오젠",
+        "values": {
+          "per": 34.62,
+          "pbr": 11.93,
+          "eps": 4937,
+          "bps": 14321,
+          "evEbitda": 27.1,
+          "operatingProfit": 4024.5000000000005,
+          "fcf": 2586.625,
+          "epsTotal": 5065,
+          "bpsTotal": 14690
+        }
+      },
+      {
+        "code": "204270",
+        "name": "제이앤티씨",
+        "values": {
+          "per": 10,
+          "pbr": 3.63,
+          "eps": 1655,
+          "bps": 4557,
+          "evEbitda": 8.26,
+          "operatingProfit": 954.0000000000001,
+          "fcf": 701.1666667000001,
+          "epsTotal": 1661,
+          "bpsTotal": 4557
+        }
+      },
+      {
+        "code": "211050",
+        "name": "인카금융서비스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "213420",
+        "name": "덕산네오룩스",
+        "values": {
+          "per": 6.47,
+          "pbr": 0.82,
+          "eps": 3047,
+          "bps": 24166,
+          "evEbitda": 2.51,
+          "operatingProfit": 868.9166667000001,
+          "fcf": 771.6666667000001,
+          "epsTotal": 3093,
+          "bpsTotal": 24980
+        }
+      },
+      {
+        "code": "214150",
+        "name": "클래시스",
+        "values": {
+          "per": 10.31,
+          "pbr": 2.18,
+          "eps": 2153,
+          "bps": 10172,
+          "evEbitda": 6.61,
+          "operatingProfit": 1856.4940476000002,
+          "fcf": 1396.6060606,
+          "epsTotal": 2112,
+          "bpsTotal": 10239
+        }
+      },
+      {
+        "code": "214370",
+        "name": "케어젠",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "214430",
+        "name": "아이쓰리시스템",
+        "values": {
+          "per": 17.44,
+          "pbr": 2.39,
+          "eps": 3256,
+          "bps": 23732,
+          "evEbitda": 12.33,
+          "operatingProfit": 260.8333333,
+          "fcf": null,
+          "epsTotal": 3256,
+          "bpsTotal": 23732
+        }
+      },
+      {
+        "code": "214450",
+        "name": "파마리서치",
+        "values": {
+          "per": 13.47,
+          "pbr": 3.05,
+          "eps": 19669,
+          "bps": 86919,
+          "evEbitda": 6.85,
+          "operatingProfit": 2962.8869048000006,
+          "fcf": 2013.4545455000002,
+          "epsTotal": 19874,
+          "bpsTotal": 90065
+        }
+      },
+      {
+        "code": "215200",
+        "name": "메가스터디교육",
+        "values": {
+          "per": 4.69,
+          "pbr": 0.66,
+          "eps": 8629,
+          "bps": 60934,
+          "evEbitda": 1.41,
+          "operatingProfit": 1164.5833333,
+          "fcf": null,
+          "epsTotal": 9072,
+          "bpsTotal": 63292
+        }
+      },
+      {
+        "code": "218410",
+        "name": "RFHIC",
+        "values": {
+          "per": 22.7,
+          "pbr": 3.35,
+          "eps": 2454,
+          "bps": 16644,
+          "evEbitda": 14.16,
+          "operatingProfit": 803.6111111,
+          "fcf": 606.4472222,
+          "epsTotal": 3057,
+          "bpsTotal": 20012
+        }
+      },
+      {
+        "code": "222080",
+        "name": "SFA넥셀",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "222800",
+        "name": "심텍",
+        "values": {
+          "per": 11.27,
+          "pbr": 3.9,
+          "eps": 9546,
+          "bps": 27599,
+          "evEbitda": 7.44,
+          "operatingProfit": 4934.05,
+          "fcf": 2563.7142857000003,
+          "epsTotal": 9574,
+          "bpsTotal": 27792
+        }
+      },
+      {
+        "code": "225570",
+        "name": "넥슨게임즈",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "226950",
+        "name": "올릭스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "232140",
+        "name": "와이씨",
+        "values": {
+          "per": 21.88,
+          "pbr": 2.65,
+          "eps": 682,
+          "bps": 5634,
+          "evEbitda": 11.43,
+          "operatingProfit": 886.5104167000001,
+          "fcf": 282.16666670000006,
+          "epsTotal": 982,
+          "bpsTotal": 7600
+        }
+      },
+      {
+        "code": "237690",
+        "name": "에스티팜",
+        "values": {
+          "per": 19.93,
+          "pbr": 2.07,
+          "eps": 3522,
+          "bps": 33857,
+          "evEbitda": 11.4,
+          "operatingProfit": 895.1904762000001,
+          "fcf": 669.9074074000001,
+          "epsTotal": 3509,
+          "bpsTotal": 33838
+        }
+      },
+      {
+        "code": "240810",
+        "name": "원익IPS",
+        "values": {
+          "per": 14.26,
+          "pbr": 2.53,
+          "eps": 4966,
+          "bps": 27936,
+          "evEbitda": 9.17,
+          "operatingProfit": 2840.3750000000005,
+          "fcf": 1799.2333333000004,
+          "epsTotal": 4964,
+          "bpsTotal": 27936
+        }
+      },
+      {
+        "code": "241710",
+        "name": "코스메카코리아",
+        "values": {
+          "per": 12.42,
+          "pbr": 2.9,
+          "eps": 8607,
+          "bps": 36839,
+          "evEbitda": 7.57,
+          "operatingProfit": 1396.4166667,
+          "fcf": 509.57291670000006,
+          "epsTotal": 9745,
+          "bpsTotal": 45414
+        }
+      },
+      {
+        "code": "247540",
+        "name": "에코프로비엠",
+        "values": {
+          "per": 1152.29,
+          "pbr": 4.78,
+          "eps": 74,
+          "bps": 17872,
+          "evEbitda": 48.62,
+          "operatingProfit": 973.1833333000001,
+          "fcf": -3585.6000000000004,
+          "epsTotal": 241,
+          "bpsTotal": 20721
+        }
+      },
+      {
+        "code": "251970",
+        "name": "펌텍코리아",
+        "values": {
+          "per": 13.51,
+          "pbr": 2.33,
+          "eps": 5709,
+          "bps": 33118,
+          "evEbitda": 6.7,
+          "operatingProfit": 995.2037879000002,
+          "fcf": 535.0625,
+          "epsTotal": 6845,
+          "bpsTotal": 39991
+        }
+      },
+      {
+        "code": "253450",
+        "name": "스튜디오드래곤",
+        "values": {
+          "per": 16.53,
+          "pbr": 0.81,
+          "eps": 1434,
+          "bps": 29163,
+          "evEbitda": 3.18,
+          "operatingProfit": 571.4250000000001,
+          "fcf": 964.6481481000001,
+          "epsTotal": 1436,
+          "bpsTotal": 29133
+        }
+      },
+      {
+        "code": "253590",
+        "name": "네오셈",
+        "values": {
+          "per": 14.02,
+          "pbr": 3.09,
+          "eps": 928,
+          "bps": 4214,
+          "evEbitda": 10.31,
+          "operatingProfit": 480.94166670000004,
+          "fcf": 192.91666670000004,
+          "epsTotal": 1086,
+          "bpsTotal": 4214
+        }
+      },
+      {
+        "code": "257720",
+        "name": "실리콘투",
+        "values": {
+          "per": 5.7,
+          "pbr": 1.76,
+          "eps": 4157,
+          "bps": 13489,
+          "evEbitda": 3.92,
+          "operatingProfit": 3501.1309524000003,
+          "fcf": 1017.0916667000001,
+          "epsTotal": 4157,
+          "bpsTotal": 13469
+        }
+      },
+      {
+        "code": "263750",
+        "name": "펄어비스",
+        "values": {
+          "per": 12.14,
+          "pbr": 1.4,
+          "eps": 2281,
+          "bps": 19763,
+          "evEbitda": 6.18,
+          "operatingProfit": 1469.5833333000003,
+          "fcf": 1426.6666667,
+          "epsTotal": 2281,
+          "bpsTotal": 19763
+        }
+      },
+      {
+        "code": "272290",
+        "name": "이녹스첨단소재",
+        "values": {
+          "per": 5.85,
+          "pbr": 0.61,
+          "eps": 2547,
+          "bps": 24508,
+          "evEbitda": 5.28,
+          "operatingProfit": 651.1666667000001,
+          "fcf": 425.0833333,
+          "epsTotal": 2449,
+          "bpsTotal": 30746
+        }
+      },
+      {
+        "code": "277810",
+        "name": "레인보우로보틱스",
+        "values": {
+          "per": 159.78,
+          "pbr": 41.21,
+          "eps": 2547,
+          "bps": 9876,
+          "evEbitda": null,
+          "operatingProfit": 624.1666667000001,
+          "fcf": null,
+          "epsTotal": 2547,
+          "bpsTotal": 9876
+        }
+      },
+      {
+        "code": "278280",
+        "name": "천보",
+        "values": {
+          "per": -167.79,
+          "pbr": 0.88,
+          "eps": -171,
+          "bps": 32656,
+          "evEbitda": 3.74,
+          "operatingProfit": 37.33333330000001,
+          "fcf": 763.3333333,
+          "epsTotal": -123,
+          "bpsTotal": 35864
+        }
+      },
+      {
+        "code": "281740",
+        "name": "레이크머티리얼즈",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "290650",
+        "name": "엘앤씨바이오",
+        "values": {
+          "per": 25.12,
+          "pbr": 2.97,
+          "eps": 800,
+          "bps": 6778,
+          "evEbitda": 18.79,
+          "operatingProfit": 557,
+          "fcf": -29.6666667,
+          "epsTotal": 910,
+          "bpsTotal": 6948
+        }
+      },
+      {
+        "code": "293490",
+        "name": "카카오게임즈",
+        "values": {
+          "per": 25.7,
+          "pbr": 1.01,
+          "eps": 459,
+          "bps": 11658,
+          "evEbitda": 10.22,
+          "operatingProfit": 995.7692308000001,
+          "fcf": 1364.6944444,
+          "epsTotal": 621,
+          "bpsTotal": 11848
+        }
+      },
+      {
+        "code": "295310",
+        "name": "에이치브이엠",
+        "values": {
+          "per": 24.15,
+          "pbr": 4.37,
+          "eps": 1905,
+          "bps": 10517,
+          "evEbitda": 20.04,
+          "operatingProfit": 280.59722220000003,
+          "fcf": -727.5000000000001,
+          "epsTotal": 1906,
+          "bpsTotal": 10517
+        }
+      },
+      {
+        "code": "298380",
+        "name": "에이비엘바이오",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "310210",
+        "name": "보로노이",
+        "values": {
+          "per": -27.2,
+          "pbr": -51.91,
+          "eps": -3742,
+          "bps": -1961,
+          "evEbitda": -33.09,
+          "operatingProfit": -618.3333333,
+          "fcf": -1292.5,
+          "epsTotal": -3742,
+          "bpsTotal": -1961
+        }
+      },
+      {
+        "code": "319400",
+        "name": "현대무벡스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "319660",
+        "name": "피에스케이",
+        "values": {
+          "per": 11.7,
+          "pbr": 2.81,
+          "eps": 7173,
+          "bps": 29838,
+          "evEbitda": 7.68,
+          "operatingProfit": 2504.4722222,
+          "fcf": 1421.6333333000002,
+          "epsTotal": 7172,
+          "bpsTotal": 29840
+        }
+      },
+      {
+        "code": "323280",
+        "name": "태성",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "328130",
+        "name": "루닛",
+        "values": {
+          "per": -23.15,
+          "pbr": 5.31,
+          "eps": -681,
+          "bps": 2970,
+          "evEbitda": -55.2,
+          "operatingProfit": -291.25,
+          "fcf": -306.25,
+          "epsTotal": -681,
+          "bpsTotal": 2970
+        }
+      },
+      {
+        "code": "347850",
+        "name": "디앤디파마텍",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "348210",
+        "name": "넥스틴",
+        "values": {
+          "per": 13.72,
+          "pbr": 1.56,
+          "eps": 1735,
+          "bps": 15212,
+          "evEbitda": 8.6,
+          "operatingProfit": 232.77777780000002,
+          "fcf": -49.972222200000004,
+          "epsTotal": 1858,
+          "bpsTotal": 15333
+        }
+      },
+      {
+        "code": "348370",
+        "name": "엔켐",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "352480",
+        "name": "씨앤씨인터내셔널",
+        "values": {
+          "per": 12.87,
+          "pbr": null,
+          "eps": 1296,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": 140.58333330000002,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "357780",
+        "name": "솔브레인",
+        "values": {
+          "per": 9.59,
+          "pbr": 1.38,
+          "eps": 26371,
+          "bps": 183348,
+          "evEbitda": 4.62,
+          "operatingProfit": 2623.8472222,
+          "fcf": 1390.0000000000002,
+          "epsTotal": 27273,
+          "bpsTotal": 200882
+        }
+      },
+      {
+        "code": "358570",
+        "name": "지아이이노베이션",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "376300",
+        "name": "디어유",
+        "values": {
+          "per": 12.75,
+          "pbr": 1.82,
+          "eps": 1554,
+          "bps": 10898,
+          "evEbitda": 7.43,
+          "operatingProfit": 419.66666670000006,
+          "fcf": 324.4861111,
+          "epsTotal": 1552,
+          "bpsTotal": 10930
+        }
+      },
+      {
+        "code": "388720",
+        "name": "유일로보틱스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "399720",
+        "name": "가온칩스",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "403870",
+        "name": "HPSP",
+        "values": {
+          "per": 18.03,
+          "pbr": 5.92,
+          "eps": 2099,
+          "bps": 6389,
+          "evEbitda": 12.31,
+          "operatingProfit": 2138.1000000000004,
+          "fcf": 1733.65,
+          "epsTotal": 2099,
+          "bpsTotal": 6389
+        }
+      },
+      {
+        "code": "417200",
+        "name": "LS머트리얼즈",
+        "values": {
+          "per": 78.99,
+          "pbr": 3.24,
+          "eps": 116,
+          "bps": 2830,
+          "evEbitda": 20.19,
+          "operatingProfit": 93.16666670000001,
+          "fcf": -238.0833333,
+          "epsTotal": 92,
+          "bpsTotal": 3087
+        }
+      },
+      {
+        "code": "420770",
+        "name": "기가비스",
+        "values": {
+          "per": 10.47,
+          "pbr": 3.12,
+          "eps": 7184,
+          "bps": 24132,
+          "evEbitda": 6.89,
+          "operatingProfit": 1139.2895833,
+          "fcf": 512.9166667000001,
+          "epsTotal": 7184,
+          "bpsTotal": 23971
+        }
+      },
+      {
+        "code": "437730",
+        "name": "삼현",
+        "values": {
+          "per": -652.72,
+          "pbr": 16.66,
+          "eps": -81,
+          "bps": 3188,
+          "evEbitda": 268.8,
+          "operatingProfit": -29.610833300000003,
+          "fcf": -159.33333330000002,
+          "epsTotal": -189,
+          "bpsTotal": 3189
+        }
+      },
+      {
+        "code": "445680",
+        "name": "큐리옥스바이오시스템즈",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "466100",
+        "name": "클로봇",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      },
+      {
+        "code": "475830",
+        "name": "오름테라퓨틱",
+        "values": {
+          "per": null,
+          "pbr": null,
+          "eps": null,
+          "bps": null,
+          "evEbitda": null,
+          "operatingProfit": null,
+          "fcf": null,
+          "epsTotal": null,
+          "bpsTotal": null
+        }
+      }
+    ],
+    "warnings": []
+  }
+}

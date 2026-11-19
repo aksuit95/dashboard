@@ -18,6 +18,13 @@ function fixture(): SourceSheet {
 const parse = (sheets: SourceSheet[]) => parseStockValuation(sheets, "코스피200.xlsx", "2026-11-02T08:00:00Z");
 
 describe("종목별 Peer Analysis", () => {
+  it("Sector 코드로 두 지수 종목을 구분하고 잘못된 지수는 거절한다", () => {
+    const kospi = fixture(); kospi.rows.unshift(["Sector", "IKS200"]);
+    const kosdaq = fixture(); kosdaq.rows.unshift(["Sector", "IKQ150"]); kosdaq.rows[7][1] = "코스닥 종목";
+    const result = parseStockValuation([kospi, kosdaq], "test.xlsx", "2026-11-02T08:00:00Z", "IKQ150");
+    expect(result.stocks[0].name).toBe("코스닥 종목");
+    expect(() => parseStockValuation([kospi], "test.xlsx", "2026-11-02T08:00:00Z", "IKQ150")).toThrow("IKQ150");
+  });
   it("가로형 지수 시트와 섞지 않고 지배·전체 EPS, 천원 환산, 결측·음수·0을 보존한다", () => {
     const result = parse([{ name: "지수", rows: [["Code", "IKS200"], ["Item Code", "E382160.M"], ["DATE", "PER"], ["2026-10-30", 15]] }, fixture()]);
     expect(result.stocks).toHaveLength(3);

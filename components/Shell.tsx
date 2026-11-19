@@ -29,7 +29,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
   {
     icon: "company", title: { ko: "기업 · 종목 분석", en: "Company research" },
     items: [
-      { href: "/valuation", ko: "코스피200 밸류에이션", en: "KOSPI 200 valuation" },
+      { href: "/valuation", ko: "지수 밸류에이션", en: "Index valuation" },
       { href: "/valuation/stocks", ko: "개별종목 밸류에이션", en: "Stock valuation" },
       { href: "/financials", ko: "현금 · 재무건전성", en: "Cash & financial health" },
       { href: "/investment-risk", ko: "투자위험", en: "Investment risk" },

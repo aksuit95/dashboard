@@ -30,7 +30,7 @@ export function valuationDate(value: unknown): string | null {
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === iso ? iso : null;
 }
 
-export function parseValuationSheets(sheets: SourceSheet[], fileName: string, savedAt: string, today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10)): ValuationData {
+export function parseValuationSheets(sheets: SourceSheet[], fileName: string, savedAt: string, today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10), indexCode = "IKS200"): ValuationData {
   const candidates = new Map<string, ValuationSeries[]>();
   const warnings = new Set<string>();
   let sourceUpdatedAt: string | null = null;
@@ -42,7 +42,7 @@ export function parseValuationSheets(sheets: SourceSheet[], fileName: string, sa
     const items = metadata("ITEMCODE");
     const units = metadata("UNIT");
     const update = sheet.rows.slice(0, header).flat().map(text).find((v) => v.startsWith("Last Update"));
-    const timestamp = update?.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/)?.[0];
+    const timestamp = codes?.some(code => normalize(code) === indexCode) ? update?.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/)?.[0] : undefined;
     if (timestamp && (!sourceUpdatedAt || timestamp > sourceUpdatedAt)) sourceUpdatedAt = timestamp;
     if (!codes || !items) continue;
     let undated = 0;
@@ -52,7 +52,7 @@ export function parseValuationSheets(sheets: SourceSheet[], fileName: string, sa
     if (undated) warnings.add(`${sheet.name}: 날짜가 없는 ${undated.toLocaleString("ko-KR")}행은 차트에서 제외했습니다.`);
     for (let column = 1; column < items.length; column++) {
       // Do not interpret a leftover metadata column as a second, empty series.
-      if (normalize(codes[column]) !== "IKS200" || !text(sheet.rows[header][column])) continue;
+      if (normalize(codes[column]) !== indexCode || !text(sheet.rows[header][column])) continue;
       const itemCode = text(items[column]);
       const definition = definitions.find((d) => d.code === itemCode.split(".")[0]);
       if (!definition) continue;
@@ -85,6 +85,6 @@ export function parseValuationSheets(sheets: SourceSheet[], fileName: string, sa
     }
     series.push(chosen);
   }
-  if (!series.length) throw new Error("코스피200(IKS200)의 날짜·항목 코드·수치가 있는 QuantiWise 조회표를 찾지 못했습니다.");
+  if (!series.length) throw new Error(`${indexCode}의 날짜·항목 코드·수치가 있는 QuantiWise 조회표를 찾지 못했습니다.`);
   return { fileName, savedAt, sourceUpdatedAt, series, warnings: [...warnings] };
 }

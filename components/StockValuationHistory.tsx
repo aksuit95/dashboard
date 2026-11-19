@@ -6,7 +6,7 @@ import type { StockHistoryPoint } from '@/lib/valuation/stock-history';
 import type { MinerviniBar } from '@/lib/market/minervini';
 import { matchForwardHistory } from '@/lib/valuation/stock-forward';
 
-export function StockValuationHistory({ code }: { code: string }) {
+export function StockValuationHistory({ code, universe = "kospi200" }: { code: string; universe?: "kospi200" | "kosdaq150" }) {
   const [metric, setMetric] = useState<StockMetric>('per');
   const [points, setPoints] = useState<StockHistoryPoint[]>([]);
   const [error, setError] = useState(false);
@@ -15,7 +15,7 @@ export function StockValuationHistory({ code }: { code: string }) {
   useEffect(() => {
     const controller = new AbortController();
     setPoints([]); setError(false); setPriceBook(null); setPriceError(false);
-    fetch(`/api/valuation/stocks/history?code=${encodeURIComponent(code)}`, { signal: controller.signal })
+    fetch(`/api/valuation/stocks/history?code=${encodeURIComponent(code)}&universe=${universe}`, { signal: controller.signal })
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(data => setPoints(data.points))
       .catch(() => { if (!controller.signal.aborted) setError(true); });
@@ -27,7 +27,7 @@ export function StockValuationHistory({ code }: { code: string }) {
         if (!controller.signal.aborted) setPriceBook({code, bars: data.bars, asOf: data.asOf});
       }).catch(() => { if (!controller.signal.aborted) setPriceError(true); });
     return () => controller.abort();
-  }, [code]);
+  }, [code, universe]);
   const definition = stockMetrics.find(item => item.id === metric)!;
   const isRatio = metric === 'per' || metric === 'pbr';
   const unavailable = metric === 'evEbitda';

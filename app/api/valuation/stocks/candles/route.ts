@@ -1,4 +1,5 @@
 import snapshot from "@/data/valuation/stocks.json";
+import kosdaq from "@/data/valuation/kosdaq150-stocks.json";
 import { unstable_cache } from "next/cache";
 import { fetchKrxDailyBars } from "@/lib/sources/krx-daily-prices";
 import { minerviniSession } from "@/lib/market/minervini-session";
@@ -12,7 +13,7 @@ const cachedCandles = unstable_cache(async (code: string, asOf: string) => ({
 
 export async function GET(request: Request) {
   const code = new URL(request.url).searchParams.get("code") ?? "";
-  if (!snapshot.data.stocks.some(stock => stock.code === code)) return Response.json({ error: "밸류에이션 목록에 없는 종목입니다." }, { status: 400 });
+  if (![...snapshot.data.stocks, ...kosdaq.data.stocks].some(stock => stock.code === code)) return Response.json({ error: "밸류에이션 목록에 없는 종목입니다." }, { status: 400 });
   try {
     const asOf = minerviniSession();
     return Response.json(await cachedCandles(code, asOf), { headers: { "Cache-Control": "public, s-maxage=60" } });

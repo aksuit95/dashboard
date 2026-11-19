@@ -79,12 +79,17 @@ describe("엑셀에서 배포 JSON 내보내기", () => {
   it("Vercel에서는 로컬 파일 경로 없이 포함된 JSON을 응답한다", async () => {
     vi.stubEnv("VERCEL", "1");
     vi.stubEnv("VALUATION_WORKBOOK_PATH", "Z:/not-present/workbook.xlsx");
-    const response = GET();
+    const response = GET(new Request("http://localhost/api/valuation"));
     expect(response.status).toBe(200);
     expect(response.headers.get("Cache-Control")).toBe("no-store");
     const body = await response.json();
     expect(body.data.series.length).toBeGreaterThan(0);
     expect(body.exportedAt).toMatch(/^\d{4}-/);
     expect(JSON.stringify(body)).not.toContain("Z:/");
+    const kosdaq = GET(new Request("http://localhost/api/valuation?universe=kosdaq150"));
+    const kosdaqBody = await kosdaq.json();
+    expect(kosdaqBody.data.series.length).toBeGreaterThan(0);
+    expect(kosdaqBody.data.series[0].sheet).toContain("코스닥150");
+    expect(GET(new Request("http://localhost/api/valuation?universe=invalid")).status).toBe(400);
   });
 });

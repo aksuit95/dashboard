@@ -11,6 +11,17 @@ function sheet(name: string, codes: string[], labels: string[], rows: unknown[][
 const parse = (sheets: SourceSheet[]) => parseValuationSheets(sheets, "코스피200.xlsx", "2026-11-02T06:00:00Z", "2026-11-02");
 
 describe("QuantiWise 밸류에이션 가져오기", () => {
+  it("두 지수의 시계열과 갱신 시각을 섞지 않는다", () => {
+    const kospi = sheet("코스피", ["E382160.M"], ["PER"], [["2026-10-30", 10]]);
+    kospi.rows.unshift(["Refresh", "Last Update : 2026-11-02 10:00:00"]);
+    const kosdaq = sheet("코스닥", ["E382160.M"], ["PER"], [["2026-10-30", 20]]);
+    kosdaq.rows[0][1] = "IKQ150";
+    kosdaq.rows.unshift(["Refresh", "Last Update : 2026-11-02 11:00:00"]);
+    const result = parseValuationSheets([kospi, kosdaq], "test.xlsx", "2026-11-02T06:00:00Z", "2026-11-02", "IKQ150");
+    expect(result.series[0].points[0].value).toBe(20);
+    expect(result.sourceUpdatedAt).toBe("2026-11-02 11:00:00");
+    expect(parse([kospi, kosdaq]).sourceUpdatedAt).toBe("2026-11-02 10:00:00");
+  });
   it("기간이 긴 EPS 시계열을 선택하고 잘못 정렬된 중복 시트를 합치지 않는다", () => {
     const result = parse([
       sheet("EPS원본", ["E312060.M"], ["EPS"], [["2021-11-01", 11007], ["2025-10-31", 15401], ["2026-10-30", 61577]]),

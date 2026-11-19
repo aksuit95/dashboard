@@ -21,6 +21,6 @@ export async function readWorkbookSheets(buffer: ArrayBuffer) {
   return sheets;
 }
 
-export async function readValuationWorkbook(buffer: ArrayBuffer, name: string, savedAt: string) {
-  return parseValuationSheets(await readWorkbookSheets(buffer), name, savedAt);
+export async function readValuationWorkbook(buffer: ArrayBuffer, name: string, savedAt: string, indexCode = "IKS200") {
+  return parseValuationSheets(await readWorkbookSheets(buffer), name, savedAt, undefined, indexCode);
 }

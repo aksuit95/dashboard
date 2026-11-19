@@ -5,11 +5,11 @@ import type { ValuationData } from "./types";
 
 export type ValuationSnapshot = { schemaVersion: 1; exportedAt: string; data: ValuationData };
 
-export async function exportValuation(input: string, output: string, now = new Date()) {
+export async function exportValuation(input: string, output: string, now = new Date(), indexCode = "IKS200") {
   const before = await fs.stat(input);
   if (before.size > 20 * 1024 * 1024) throw new Error("엑셀 파일은 20MB 이하여야 합니다.");
   const bytes = await fs.readFile(input);
-  const data = await readValuationWorkbook(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer, path.basename(input), before.mtime.toISOString());
+  const data = await readValuationWorkbook(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer, path.basename(input), before.mtime.toISOString(), indexCode);
   const after = await fs.stat(input);
   if (before.mtimeMs !== after.mtimeMs || before.size !== after.size) throw new Error("내보내는 도중 엑셀이 변경됐습니다. 저장 완료 후 다시 실행해 주세요.");
   if (data.warnings.length) throw new Error(`원본 검증에 실패했습니다. 기존 JSON은 유지합니다.\n${data.warnings.join("\n")}`);

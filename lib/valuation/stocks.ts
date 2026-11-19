@@ -16,10 +16,12 @@ export type StockValuationSnapshot = { schemaVersion: 1; exportedAt: string; dat
 const text = (value: unknown) => String(value ?? "").trim();
 const normalized = (value: unknown) => text(value).replace(/\s/g, "").toUpperCase();
 
-export function parseStockValuation(sheets: SourceSheet[], fileName: string, savedAt: string): StockValuationData {
+export function parseStockValuation(sheets: SourceSheet[], fileName: string, savedAt: string, indexCode = "IKS200"): StockValuationData {
   const candidates = sheets.filter(s => s.rows.some(r => normalized(r[0]) === "CODE" && normalized(r[1]) === "NAME") && s.rows.some(r => normalized(r[1]) === "ACCOUNT"));
-  if (candidates.length !== 1) throw new Error("종목별 QuantiWise Peer Analysis 조회표가 하나 있어야 합니다.");
-  const sheet = candidates[0];
+  const matching = candidates.filter(s => s.rows.some(r => normalized(r[0]) === "SECTOR" && normalized(r[1]) === indexCode));
+  const selected = matching.length ? matching : candidates.length === 1 && indexCode === "IKS200" && !candidates[0].rows.some(r => normalized(r[0]) === "SECTOR") ? candidates : [];
+  if (selected.length !== 1) throw new Error(`${indexCode} 종목별 QuantiWise Peer Analysis 조회표를 확인해 주세요.`);
+  const sheet = selected[0];
   const header = sheet.rows.findIndex(r => normalized(r[0]) === "CODE" && normalized(r[1]) === "NAME");
   const meta = sheet.rows.slice(0, header);
   const accounts = meta.find(r => normalized(r[1]) === "ACCOUNT")!;
