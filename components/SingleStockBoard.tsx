@@ -138,7 +138,7 @@ function NameColumn({ group }: { group: SingleStockGroup }) {
           <p className={`text-sm font-medium tabular-nums ${tone(group.changePct)}`}>
             {group.price == null ? "—" : `₩${formatNumber(group.price, 0)}`} · {group.changePct == null ? "—" : `${formatSigned(group.changePct)}%`}
           </p>
-          <p className="mt-1 text-[11px] text-zinc-500">{group.priceAsOf} · {group.priceBasis === "KRX_REGULAR_LIVE" ? `KRX 정규장 현재가${group.priceTime ? ` (${group.priceTime.slice(11, 19)} KST)` : " · 확인 중"}` : "KRX 15:30 종가"} · 전일 대비</p>
+          <p className="mt-1 text-[11px] text-zinc-500">{group.priceAsOf} · {group.priceBasis === "KRX_REGULAR_LIVE" ? `KRX 정규장 현재가${group.priceTime ? ` (${group.priceTime.slice(11, 19)} KST)` : " · 확인 중"}` : `KRX ${group.priceAsOf === "2026-11-19" ? "16:30" : "15:30"} 종가`} · 전일 대비</p>
           {group.priceNotice ? <p className="mt-1 text-[11px] text-amber-300">{group.priceNotice}</p> : null}
         </div>
       </div>

@@ -70,16 +70,14 @@ export async function loadSingleStockBoard(fetchImpl: FetchLike = fetch, now = n
   const clock = new Date(now.getTime() + 9 * 3_600_000);
   const today = clock.toISOString().slice(0, 10), minutes = clock.getUTCHours() * 60 + clock.getUTCMinutes();
   // KRX: https://kind.krx.co.kr/external/2026/11/05/000141/20261105000216/99303.htm
-  // The 2026-11-19 CSAT session is 10:00–16:30. Its 16:30
-  // close cannot be represented as a 15:30 close under the dashboard contract.
+  // The 2026-11-19 CSAT session is 10:00–16:30; use its actual KRX close.
   const special = today === "2026-11-19";
   let priceAsOf = today, live = false, unavailable = false, previousAvailable = true;
   try {
     if (special) {
       priceAsOf = minerviniSession(new Date(`${today}T15:59:00+09:00`));
       live = minutes >= 10 * 60 && minutes < 16 * 60 + 30;
-      unavailable = minutes >= 16 * 60 + 30;
-      if (unavailable) priceAsOf = today;
+      if (minutes >= 16 * 60 + 30) priceAsOf = today;
     } else {
       priceAsOf = minerviniSession(new Date(now.getTime() + 30 * 60_000));
       live = minutes >= 9 * 60 && minutes < 15 * 60 + 30 && minerviniSession(new Date(`${today}T16:00:00+09:00`)) === today;
