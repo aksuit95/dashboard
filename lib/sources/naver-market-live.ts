@@ -46,6 +46,17 @@ function sessionTime(value: unknown, session: Session): string | null {
   return value;
 }
 
+class NaverMarketHttpError extends Error {
+  constructor(readonly status: number) {
+    super(`네이버 장중 시세 HTTP ${status}`);
+  }
+}
+
+export function isRetryableNaverStockMinuteError(error: unknown) {
+  if (error instanceof NaverMarketHttpError) return error.status === 408 || error.status >= 500;
+  return error instanceof TypeError || (error instanceof DOMException && error.name === "TimeoutError");
+}
+
 async function readJson(path: string, fetcher: typeof fetch, batchSignal?: AbortSignal): Promise<unknown> {
   const timeout = AbortSignal.timeout(6000);
   const response = await fetcher(`${NAVER_MARKET_API}${path}`, {
@@ -53,7 +64,7 @@ async function readJson(path: string, fetcher: typeof fetch, batchSignal?: Abort
     signal: batchSignal ? AbortSignal.any([timeout, batchSignal]) : timeout,
     headers: { "user-agent": "Mozilla/5.0", accept: "application/json" },
   });
-  if (!response.ok) throw new Error(`네이버 장중 시세 HTTP ${response.status}`);
+  if (!response.ok) throw new NaverMarketHttpError(response.status);
   return response.json();
 }
 

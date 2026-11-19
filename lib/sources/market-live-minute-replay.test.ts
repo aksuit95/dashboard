@@ -103,4 +103,50 @@ describe("공유 KRX 섹터 분봉 API", () => {
     expect(naverStockPreviousKrxClose({ ...payload, lastClosePrice: 200 }, baselineDate)).toBeNull();
     expect(naverStockPreviousKrxClose({ ...payload, lastPriceInfos: payload.lastPriceInfos.slice(1) }, baselineDate)).toBeNull();
   });
+
+  it("시간 초과된 종목만 한 번 다시 조회하고 레이더 비교에 포함한다", async () => {
+    vi.stubEnv("VERCEL", "1");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(at("10:05:10"));
+    const attempts = new Map<string, number>();
+    vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockImplementation(async url => {
+      const code = new URL(String(url)).pathname.split("/").at(-1)!;
+      attempts.set(code, (attempts.get(code) ?? 0) + 1);
+      if (code === codes[0] && attempts.get(code) === 1) throw new DOMException("Timed out", "TimeoutError");
+      return Response.json(chart(code));
+    }));
+
+    const result = await (await GET(request())).json();
+    expect(Object.fromEntries(attempts)).toEqual({ [codes[0]]: 2, [codes[1]]: 1 });
+    expect(result.warning).toBeUndefined();
+    expect(result.coverage).toEqual({ compared: 2, total: 2 });
+    expect(result.day.frames.at(-1).sectors[0].compared).toBe(2);
+    expect(result.radar.windows["10"].rows[0].compared).toBe(2);
+  });
+
+  it("확인되지 않은 분봉과 비교 종가를 구분해 안내한다", async () => {
+    vi.stubEnv("VERCEL", "1");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(at("10:09:10"));
+    let limited = true;
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async url => {
+      const code = new URL(String(url)).pathname.split("/").at(-1)!;
+      if (code === codes[0]) {
+        if (limited) return new Response(null, { status: 429 });
+        return Response.json({ ...chart(code), lastPriceInfos: [] });
+      }
+      return Response.json(chart(code));
+    });
+    vi.stubGlobal("fetch", fetcher);
+
+    const missingChart = await (await GET(request())).json();
+    expect(missingChart.warning).toBe("KRX 장중 분봉 미확인 1/2종목");
+    expect(fetcher).toHaveBeenCalledTimes(2);
+
+    limited = false;
+    vi.setSystemTime(at("10:13:10"));
+    const missingClose = await (await GET(request())).json();
+    expect(missingClose.warning).toBe("KRX 15:30 비교 종가 미확인 1/2종목");
+    expect(fetcher).toHaveBeenCalledTimes(4);
+  });
 });

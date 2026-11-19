@@ -205,6 +205,7 @@ export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
               <span className="font-semibold text-zinc-200">{day.date}</span>
               <span className="ml-2.5">비교 종가 {day.baselineDate} KRX 15:30</span>
               <span className="ml-2.5">기록 {timeline.slots.length}분</span>
+              {archive?.coverage && <span className="ml-2.5">분봉 비교 가능 {archive.coverage.compared}/{archive.coverage.total}종목</span>}
             </div>
             <div className="flex gap-2">
               <button type="button" className={control} onClick={togglePlayback} disabled={timeline.slots.length < 2}>{playing ? "일시정지" : "섹터 재생"}</button>

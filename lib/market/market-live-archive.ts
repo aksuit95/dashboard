@@ -54,5 +54,6 @@ export type MarketLiveArchiveResponse = {
 
 export type MarketLiveSectorResponse = MarketLiveArchiveResponse & {
   radar: MarketLiveRadar | null;
+  coverage?: { compared: number; total: number };
   warning?: string;
 };

@@ -1,3 +1,4 @@
+import { setTimeout as delay } from "node:timers/promises";
 import { minerviniUniverseIds } from "@/config/minervini";
 import {
   MARKET_LIVE_SECTOR_REFRESH_SECONDS, summarizeMarketLiveArchiveSectors,
@@ -6,14 +7,18 @@ import {
 import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
 import type { MarketLiveMember, MarketLiveRotationStock } from "@/lib/market/market-live";
 import { loadMarketLiveMembers, type resolveMarketLiveSession } from "./market-live";
-import { fetchNaverStockMinuteChart, naverStockPreviousKrxClose, parseNaverStockMinutes } from "./naver-market-live";
+import {
+  fetchNaverStockMinuteChart, isRetryableNaverStockMinuteError, naverStockPreviousKrxClose, parseNaverStockMinutes,
+} from "./naver-market-live";
 import { readSectorPublication } from "./sector-publication";
 
 type Session = ReturnType<typeof resolveMarketLiveSession> & { baselineDate: string };
 type Track = { member: MarketLiveMember; close: number; prices: Map<number, number> };
-type Replay = Pick<MarketLiveSectorResponse, "day" | "radar" | "warning">;
+type Replay = Pick<MarketLiveSectorResponse, "day" | "radar" | "coverage" | "warning">;
 const minute = 60_000;
-const concurrency = 20;
+const concurrency = 8;
+const retryConcurrency = 4;
+const requestSpacingMs = 12;
 const refreshMs = MARKET_LIVE_SECTOR_REFRESH_SECONDS * 1000;
 let cache: { key: string; until: number; value: Promise<Replay> } | undefined;
 
@@ -67,28 +72,53 @@ async function collectReplay(session: Session, now: number): Promise<Replay> {
   const signal = AbortSignal.timeout(25_000);
   const window = { ...session, now };
   const tracks: Track[] = [];
-  let next = 0;
-  await Promise.all(Array.from({ length: Math.min(concurrency, members.length) }, async () => {
-    while (!signal.aborted && next < members.length) {
-      const member = members[next++];
-      try {
-        const chart = await fetchNaverStockMinuteChart(member.code, window, signal);
-        const close = officialCloses.get(member.code) ?? naverStockPreviousKrxClose(chart, session.baselineDate);
-        if (close === null) continue;
-        const prices = parseNaverStockMinutes(chart, window);
-        if (prices.size) tracks.push({ member, close, prices });
-      } catch {
-        // Keep missing constituent series out of every minute and report reduced coverage.
+  let missingCloses = 0;
+  let nextStart = performance.now();
+
+  async function fetchTracks(batch: MarketLiveMember[], limit: number) {
+    const retry: MarketLiveMember[] = [];
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(limit, batch.length) }, async () => {
+      while (!signal.aborted && next < batch.length) {
+        const member = batch[next++];
+        const start = performance.now();
+        // Spread requests even when connections respond fast enough to sustain a much larger burst.
+        const wait = Math.max(0, nextStart - start);
+        nextStart = start + wait + requestSpacingMs;
+        if (wait > 0) await delay(wait, undefined, { signal }).catch(() => undefined);
+        if (signal.aborted) return;
+        try {
+          const chart = await fetchNaverStockMinuteChart(member.code, window, signal);
+          const prices = parseNaverStockMinutes(chart, window);
+          if (!prices.size) continue;
+          const close = officialCloses.get(member.code) ?? naverStockPreviousKrxClose(chart, session.baselineDate);
+          if (close === null) missingCloses++;
+          else tracks.push({ member, close, prices });
+        } catch (error) {
+          if (!signal.aborted && isRetryableNaverStockMinuteError(error)) retry.push(member);
+        }
       }
-    }
-  }));
+    }));
+    return retry;
+  }
+
+  const retry = await fetchTracks(members, concurrency);
+  // Retry transient misses once, after the first wave has drained.
+  await fetchTracks(retry, retryConcurrency);
   if (tracks.length < members.length / 2) throw new Error("KRX 분봉 및 비교 종가 확보 종목 부족");
   // Restore membership order so concurrent response timing cannot affect the aggregates.
   tracks.sort((a, b) => a.member.code.localeCompare(b.member.code));
   const result = buildMarketLiveMinuteReplay(session, members, tracks, now, new Date().toISOString());
   if (!result.day) throw new Error("비교 가능한 KRX 분봉 없음");
-  const coverage = tracks.length < members.length ? `KRX 분봉 및 비교 종가 확인 ${tracks.length}/${members.length}종목` : null;
-  return { ...result, warning: [...warnings, coverage].filter(Boolean).join(" · ") || undefined };
+  const replayWarnings = [...warnings];
+  const missingCharts = members.length - tracks.length - missingCloses;
+  if (missingCharts) replayWarnings.push(`KRX 장중 분봉 미확인 ${missingCharts}/${members.length}종목`);
+  if (missingCloses) replayWarnings.push(`KRX 15:30 비교 종가 미확인 ${missingCloses}/${members.length}종목`);
+  return {
+    ...result,
+    coverage: { compared: tracks.length, total: members.length },
+    warning: replayWarnings.join(" · ") || undefined,
+  };
 }
 
 export function loadMarketLiveMinuteReplay(session: Session, now: number) {
