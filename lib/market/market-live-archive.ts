@@ -1,4 +1,4 @@
-import { marketLiveChange, type MarketLiveRadar, type MarketLiveRotationStock, type MarketLiveSector } from "./market-live";
+import { marketLiveChange, type MarketLiveBoardData, type MarketLiveRadar, type MarketLiveRotationStock, type MarketLiveSector } from "./market-live";
 
 export const MARKET_LIVE_SECTOR_REFRESH_SECONDS = 180;
 
@@ -79,6 +79,29 @@ export type MarketLiveArchiveResponse = {
     frames: Omit<MarketLiveArchiveFrame, "stocks">[];
   } | null;
 };
+
+export function marketLiveClosingFrame(
+  board: MarketLiveBoardData,
+  session: { date: string; baselineDate: string; closeAt: number },
+): MarketLiveArchiveFrame | null {
+  if (board.state !== "closed" || board.date !== session.date || board.baselineDate !== session.baselineDate ||
+      !board.rotationStocks.length || board.rotationStocks.some(stock => Date.parse(stock.asOf) !== session.closeAt)) return null;
+  return {
+    collectedAt: board.collectedAt,
+    minuteAt: new Date(session.closeAt).toISOString(),
+    sectors: board.sectors,
+    stocks: board.rotationStocks,
+  };
+}
+
+export function appendMarketLiveClosingFrame(
+  day: NonNullable<MarketLiveArchiveResponse["day"]>,
+  closing: MarketLiveArchiveFrame,
+): NonNullable<MarketLiveArchiveResponse["day"]> {
+  const { stocks: _stocks, ...frame } = closing;
+  const closeAt = Date.parse(marketLiveFrameTime(frame));
+  return { ...day, frames: [...day.frames.filter(point => Date.parse(marketLiveFrameTime(point)) < closeAt), frame] };
+}
 
 export type MarketLiveSectorResponse = MarketLiveArchiveResponse & {
   radar: MarketLiveRadar | null;

@@ -22,7 +22,7 @@ export type MarketLiveStock = {
   sector: string;
   price: number;
   changePct: number;
-  turnover: number;
+  turnover: number | null;
   asOf: string;
 };
 export type MarketLiveMember = Pick<MarketLiveStock, "code" | "name" | "market"> & { sector: Sector };
@@ -40,6 +40,7 @@ export type MarketLiveRadar = {
   date: string;
   baselineDate: string;
   live: boolean;
+  closeAt?: string;
   windows: Partial<Record<MarketLiveRotationWindow, MarketLiveRotationData>>;
 };
 export type MarketLiveBoardData = {
@@ -66,6 +67,7 @@ export function summarizeMarketLiveStocks(
   quotes: MarketLiveQuote[],
   closes: ReadonlyMap<string, number>,
   minimumQuoteTime: number,
+  leaderOrder: "turnover" | "change" = "turnover",
 ): Pick<MarketLiveBoardData, "sectors" | "leaders" | "breadth" | "rotationStocks"> {
   const byCode = new Map(quotes.map(quote => [quote.code, quote]));
   const groups = new Map<Sector, MarketLiveStock[]>();
@@ -98,9 +100,10 @@ export function summarizeMarketLiveStocks(
       asOf: rows.reduce<string | null>((oldest, row) => oldest == null || Date.parse(row.asOf) < Date.parse(oldest) ? row.asOf : oldest, null),
     };
   }).sort((a, b) => (b.changePct ?? -Infinity) - (a.changePct ?? -Infinity) || a.name.localeCompare(b.name, "ko"));
-  const rank = (a: MarketLiveStock, b: MarketLiveStock) => b.turnover - a.turnover || b.changePct - a.changePct || a.code.localeCompare(b.code);
+  const rank = (a: MarketLiveStock, b: MarketLiveStock) =>
+    (leaderOrder === "turnover" ? (b.turnover ?? 0) - (a.turnover ?? 0) : 0) || b.changePct - a.changePct || a.code.localeCompare(b.code);
   const leaders = marketLiveSymbols.flatMap(market => stocks
-    .filter(row => row.market === market && row.changePct > 0 && row.turnover > 0)
+    .filter(row => row.market === market && row.changePct > 0 && (leaderOrder === "change" || (row.turnover ?? 0) > 0))
     .sort(rank).slice(0, 12)).sort(rank);
   const up = countUp(stocks);
   const down = stocks.filter(row => row.changePct < 0).length;

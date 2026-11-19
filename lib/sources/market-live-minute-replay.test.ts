@@ -13,6 +13,16 @@ vi.mock("./market-live", () => ({
     members: ["005930", "000660"].map(code => ({ code, market: "KOSPI", sector: "반도체" })),
     warnings: [],
   }),
+  loadMarketLiveBoard: async () => {
+    const asOf = new Date(at("15:30:00")).toISOString();
+    return {
+      state: "closed", date: tradeDate, baselineDate, collectedAt: new Date().toISOString(),
+      sectors: [{ name: "반도체", changePct: 25, up: 2, total: 2, compared: 2, asOf }],
+      rotationStocks: Date.now() < at("15:31:00") ? [] : codes.map(code => ({
+        code, market: "KOSPI", sector: "반도체", price: 125, close: 100, asOf,
+      })),
+    };
+  },
 }));
 vi.mock("./sector-publication", () => ({ readSectorPublication: async () => null }));
 vi.mock("./market-live-publication", () => {
@@ -48,6 +58,10 @@ function chart(code: string) {
       { localDateTime: "20261118095000", currentPrice: 105 },
       { localDateTime: "20261118100000", currentPrice: 110 },
       { localDateTime: "20261118100100", currentPrice: 220 },
+      { localDateTime: "20261118143000", currentPrice: 106 },
+      { localDateTime: "20261118150000", currentPrice: 108 },
+      { localDateTime: "20261118152000", currentPrice: 120 },
+      { localDateTime: "20261118153000", currentPrice: 240 },
       { localDateTime: "20261118195900", currentPrice: 250 },
     ],
   };
@@ -87,10 +101,38 @@ describe("공유 KRX 섹터 분봉 API", () => {
 
     expect((await (await GET(request("?date=2026-11-17"))).json()).day.date).toBe(baselineDate);
     expect((await GET(request("?variant=random"))).status).toBe(400);
+    expect(upstream).toHaveBeenCalledTimes(2);
+  });
+
+  it("마감 확정 전에는 이전 장중 비교를 숨기고 이후에는 공식 종가로 세 구간을 고정한다", async () => {
+    vi.stubEnv("VERCEL", "1");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(at("15:30:05"));
+    const upstream = vi.fn<typeof fetch>().mockImplementation(async url => {
+      const code = new URL(String(url)).pathname.split("/").at(-1)!;
+      const previousDay = chart(code).priceInfos;
+      return Response.json({
+        ...chart(code), tradeBaseAt: "20261119", lastTradeBaseAt: "20261118",
+        priceInfos: [], lastPriceInfos: previousDay,
+      });
+    });
+    vi.stubGlobal("fetch", upstream);
+    const pending = await (await GET(request())).json();
+    expect(pending.radar).toBeNull();
+    expect(pending.warning).toContain("종가 반영");
+    expect(upstream).not.toHaveBeenCalled();
+
     vi.setSystemTime(at("17:00:00"));
     const closed = await (await GET(request())).json();
-    expect(closed.radar).toMatchObject({ date: tradeDate, baselineDate, live: false });
+    const closeAt = new Date(at("15:30:00")).toISOString();
+    expect(closed.radar).toMatchObject({ date: tradeDate, baselineDate, closeAt, live: false });
     expect(closed.day.frames[0]).toHaveProperty("collectedAt", new Date(at("15:29:00")).toISOString());
+    expect(closed.day.frames.at(-1)).toMatchObject({
+      minuteAt: closeAt, collectedAt: new Date(at("17:00:00")).toISOString(), sectors: [{ changePct: 25 }],
+    });
+    expect(Object.keys(closed.radar.windows)).toEqual(["10", "30", "60"]);
+    expect(Object.values(closed.radar.windows).map(window => (window as { to: string }).to)).toEqual([closeAt, closeAt, closeAt]);
+    expect(closed.radar.windows["10"].rows[0].changePp).toBeCloseTo(5);
     expect(upstream).toHaveBeenCalledTimes(2);
   });
 

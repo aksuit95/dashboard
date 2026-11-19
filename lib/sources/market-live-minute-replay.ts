@@ -29,13 +29,14 @@ function buildMarketLiveMinuteReplay(
   tracks: Track[],
   through: number,
   collectedAt: string,
+  closing?: MarketLiveArchiveFrame,
 ): Replay {
   const totals = new Map<string, number>();
   for (const member of members) totals.set(member.sector, (totals.get(member.sector) ?? 0) + 1);
   const frames = new Map<number, MarketLiveArchiveFrame>();
-  for (let at = session.openAt; at <= Math.min(through, session.closeAt); at += minute) {
+  for (let at = session.openAt; at <= through && at < session.closeAt; at += minute) {
     const minuteAt = new Date(at).toISOString();
-    const previousAt = at > session.openAt && at !== session.auctionAt && at !== session.closeAt
+    const previousAt = at > session.openAt && at !== session.auctionAt
       ? at - minute : null;
     const previousStamp = previousAt !== null ? new Date(previousAt).toISOString() : null;
     const stocks: MarketLiveRotationStock[] = [];
@@ -52,15 +53,17 @@ function buildMarketLiveMinuteReplay(
     }
     if (hasPrint) frames.set(at, { minuteAt, collectedAt, stocks, sectors: summarizeMarketLiveArchiveSectors(totals, stocks, 0.5) });
   }
-  const latest = [...frames.values()].findLast(frame => frame.sectors.some(sector => sector.changePct !== null));
+  if (closing) frames.set(session.closeAt, closing);
+  const latest = closing ?? [...frames.values()].findLast(frame => frame.sectors.some(sector => sector.changePct !== null));
   if (!latest) return { day: null, radar: null };
   const { date, baselineDate, state } = session;
   const radar = calculateMarketLiveRadar(date, baselineDate, latest, state !== "closed",
     (from, through) => frames.get(through) ?? (through - minute >= from ? frames.get(through - minute) : undefined) ?? null);
-  return { day: { date, baselineDate, frames: [...frames.values()].map(({ stocks: _stocks, ...frame }) => frame) }, radar };
+  return { day: { date, baselineDate, frames: [...frames.values()].map(({ stocks: _stocks, ...frame }) => frame) },
+    radar: { ...radar, closeAt: closing?.minuteAt } };
 }
 
-async function collectReplay(session: Session, now: number): Promise<Replay> {
+async function collectReplay(session: Session, now: number, closing?: MarketLiveArchiveFrame): Promise<Replay> {
   const publication = readSectorPublication().catch(() => null);
   const [{ members, warnings }, saved] = await Promise.all([loadMarketLiveMembers(session.date, publication), publication]);
   if (!members.length) throw new Error("지수 구성종목 확인 실패");
@@ -70,6 +73,7 @@ async function collectReplay(session: Session, now: number): Promise<Replay> {
       if (row.price !== null) officialCloses.set(row.code, row.price);
     }
   }
+  for (const stock of closing?.stocks ?? []) officialCloses.set(stock.code, stock.close);
   const signal = AbortSignal.timeout(25_000);
   const window = { ...session, now };
   const tracks: Track[] = [];
@@ -106,10 +110,10 @@ async function collectReplay(session: Session, now: number): Promise<Replay> {
   const retry = await fetchTracks(members, concurrency);
   // Retry transient misses once, after the first wave has drained.
   await fetchTracks(retry, retryConcurrency);
-  if (tracks.length < members.length / 2) throw new Error("KRX 분봉 및 비교 종가 확보 종목 부족");
+  if (!closing && tracks.length < members.length / 2) throw new Error("KRX 분봉 및 비교 종가 확보 종목 부족");
   // Restore membership order so concurrent response timing cannot affect the aggregates.
   tracks.sort((a, b) => a.member.code.localeCompare(b.member.code));
-  const result = buildMarketLiveMinuteReplay(session, members, tracks, now, new Date().toISOString());
+  const result = buildMarketLiveMinuteReplay(session, members, tracks, now, new Date().toISOString(), closing);
   if (!result.day) throw new Error("비교 가능한 KRX 분봉 없음");
   const replayWarnings = [...warnings];
   const missingCharts = members.length - tracks.length - missingCloses;
@@ -122,14 +126,14 @@ async function collectReplay(session: Session, now: number): Promise<Replay> {
   };
 }
 
-export function loadMarketLiveMinuteReplay(session: Session, now: number) {
-  const key = `${session.date}:${session.baselineDate}:${session.state === "closed" ? "closed" : "live"}`;
+export function loadMarketLiveMinuteReplay(session: Session, now: number, closing?: MarketLiveArchiveFrame) {
+  const key = `${session.date}:${session.baselineDate}:${closing ? `closed:${closing.stocks.length}` : "live"}`;
   if (!cache || cache.key !== key || cache.until <= now) {
     const entry = {
       key,
       until: now + refreshMs,
-      value: collectReplay(session, now).then(result => {
-        if (session.state === "closed" && result.day?.frames.at(-1)?.minuteAt === new Date(session.closeAt).toISOString()) {
+      value: collectReplay(session, now, closing).then(result => {
+        if (closing && result.radar?.closeAt && Object.keys(result.radar.windows).length === 3 && now >= session.closeAt + 15 * minute) {
           entry.until = now + 60 * minute;
         }
         return result;

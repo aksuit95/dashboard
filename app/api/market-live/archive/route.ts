@@ -1,6 +1,11 @@
 import { localDate } from "@/lib/market/market-hours";
-import { MARKET_LIVE_SECTOR_REFRESH_SECONDS, type MarketLiveSectorResponse } from "@/lib/market/market-live-archive";
+import {
+  appendMarketLiveClosingFrame, MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveClosingFrame,
+  type MarketLiveArchiveResponse, type MarketLiveSectorResponse,
+} from "@/lib/market/market-live-archive";
+import { marketLiveRotationWindows, type MarketLiveRadar } from "@/lib/market/market-live";
 import { marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
+import { loadMarketLiveBoard } from "@/lib/sources/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveRotationFrame } from "@/lib/sources/market-live-archive";
 import { loadMarketLiveMinuteReplay } from "@/lib/sources/market-live-minute-replay";
 import { buildMarketLiveRadar, readMarketLivePublication, readSharedMarketLiveArchive } from "@/lib/sources/market-live-publication";
@@ -28,6 +33,39 @@ function archivedRadar(day: NonNullable<MarketLiveSectorResponse["day"]>, now: n
   return frame ? buildMarketLiveRadar(day.date, day.baselineDate, frame, live) : null;
 }
 
+async function closingArchive(
+  session: ReturnType<typeof resolveMarketLiveSession> & { baselineDate: string },
+  saved: MarketLiveArchiveResponse,
+  now: number,
+  untilBoundary: number,
+  includeLocal: boolean,
+) {
+  const { date, baselineDate } = session;
+  const day = saved.day?.baselineDate === baselineDate ? saved.day : null;
+  const ttl = Math.min(MARKET_LIVE_SECTOR_REFRESH_SECONDS, untilBoundary);
+  const board = await loadMarketLiveBoard(now).catch(() => null);
+  const closing = board && marketLiveClosingFrame(board, session);
+  if (!closing) return cached({ ...saved, day, radar: null, warning: "KRX 정규장 종가 반영을 기다리는 중입니다." }, Math.min(ttl, 60));
+
+  const closeAt = closing.minuteAt;
+  const localRadar: MarketLiveRadar = includeLocal && day
+    ? { ...buildMarketLiveRadar(date, baselineDate, closing, false), closeAt }
+    : { date, baselineDate, live: false, closeAt, windows: {} };
+  if (day && marketLiveRotationWindows.every(minutes => localRadar.windows[minutes])) {
+    return cached({ ...saved, day: appendMarketLiveClosingFrame(day, closing), radar: localRadar }, ttl);
+  }
+
+  const pending = loadMarketLiveMinuteReplay(session, now, closing);
+  const rebuilt = await pending.value;
+  const replay = day ?? rebuilt.day ?? { date, baselineDate, frames: [] };
+  const maxAge = Math.floor((pending.until - Date.now()) / 1000);
+  return cached({
+    dates: [...new Set([date, ...saved.dates])].sort().reverse(),
+    day: appendMarketLiveClosingFrame(replay, closing),
+    radar: { ...localRadar, windows: { ...localRadar.windows, ...rebuilt.radar?.windows } },
+  }, Math.min(maxAge, untilBoundary));
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const date = url.searchParams.get("date");
@@ -52,6 +90,12 @@ export async function GET(request: Request) {
     const nextBoundary = live ? session.closeAt : marketLiveTradingWindow(today)?.openAt ?? 0;
     const untilBoundary = nextBoundary > now ? Math.ceil((nextBoundary - now) / 1000) : Infinity;
     const ttl = Math.min(MARKET_LIVE_SECTOR_REFRESH_SECONDS, untilBoundary);
+
+    if (session.state === "closed") {
+      return baselineDate
+        ? await closingArchive({ ...session, baselineDate }, saved, now, untilBoundary, includeLocal)
+        : cached({ ...saved, radar: null, warning: "직전 거래일의 KRX 정규장 비교 종가를 확인할 수 없습니다." }, ttl);
+    }
 
     if (day && baselineDate && day.baselineDate === baselineDate) {
       return cached({ ...saved, radar: archivedRadar(day, now, includeLocal, live) }, ttl);

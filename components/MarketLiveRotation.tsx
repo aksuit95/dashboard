@@ -12,7 +12,7 @@ const kstClock = new Intl.DateTimeFormat("en-GB", {
 type RotationRow = MarketLiveRotationData["rows"][number];
 const windowLabel: Record<MarketLiveRotationWindow, string> = { 10: "10분", 30: "30분", 60: "1시간" };
 
-export function MarketLiveRotation({ radar, active }: { radar: MarketLiveRadar | null; active: boolean }) {
+export function MarketLiveRotation({ radar, active, closed }: { radar: MarketLiveRadar | null; active: boolean; closed: boolean }) {
   const [minutes, setMinutes] = useState<MarketLiveRotationWindow>(10);
   const data = radar?.windows[minutes];
   const rows = data?.rows ?? [];
@@ -40,14 +40,16 @@ export function MarketLiveRotation({ radar, active }: { radar: MarketLiveRadar |
       </div>
       {data && radar && (
         <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs tabular-nums text-zinc-400">
-          <span>{radar.date} · {active && radar.live ? "장중 비교" : "마지막 비교"}</span>
+          <span>{radar.date} · {radar.closeAt ? "KRX 정규장 종가 기준" : active && radar.live ? "장중 비교" : "마지막 비교"}</span>
           <span><time dateTime={data.from}>{kstClock.format(Date.parse(data.from))}</time> <span aria-hidden="true">→</span><span className="sr-only">부터 </span> <time dateTime={data.to}>{kstClock.format(Date.parse(data.to))}</time> KST</span>
           <span>비교 종가 {radar.baselineDate} KRX {krxCloseTime(radar.baselineDate)}</span>
         </p>
       )}
       {!data ? (
         <p className="mt-3 rounded-lg border border-white/[0.06] bg-white/[0.025] px-3 py-3 text-xs leading-5 text-zinc-400">
-          {active ? `${windowLabel[minutes]} 전의 섹터 기록과 비교할 수 있을 때 표시합니다.` : `저장된 ${windowLabel[minutes]} 비교 구간이 없습니다.`}
+          {closed
+            ? radar?.closeAt ? `종가와 비교할 ${windowLabel[minutes]} 전 섹터 기록이 없습니다.` : "확인된 정규장 종가 비교를 기다리는 중입니다."
+            : active ? `${windowLabel[minutes]} 전의 섹터 기록과 비교할 수 있을 때 표시합니다.` : `저장된 ${windowLabel[minutes]} 비교 구간이 없습니다.`}
         </p>
       ) : (
         <div className="mt-3 grid gap-2.5 md:grid-cols-2">

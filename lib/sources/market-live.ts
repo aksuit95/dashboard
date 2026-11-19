@@ -22,8 +22,7 @@ const markets = {
 } as const;
 
 type Session = ReturnType<typeof resolveMarketLiveSession>;
-type DailyStock = { price: number; turnover: number | null };
-type MarketCloses = { index: number | null; stocks: Map<string, DailyStock> };
+type MarketCloses = { index: number | null; stocks: Map<string, number> };
 
 type CacheEntry<T> = { key: string; until: number; result: Promise<T> };
 const dailyCache = new Map<string, CacheEntry<MarketCloses>>();
@@ -57,10 +56,10 @@ async function publishedIndexClose(symbol: MarketLiveSymbol, date: string): Prom
 async function collectCloses(symbol: MarketLiveSymbol, date: string): Promise<MarketCloses> {
   if (date === KR_CSAT_2026) {
     const [index, caps] = await Promise.all([publishedIndexClose(symbol, date), readMarketCaps().catch(() => null)]);
-    const stocks = new Map<string, DailyStock>();
+    const stocks = new Map<string, number>();
     if (caps?.asOf === date) {
       for (const [code, price] of Object.entries(caps.closes)) {
-        if (price != null && caps.securities?.[code]?.market === symbol) stocks.set(code, { price, turnover: null });
+        if (price != null && caps.securities?.[code]?.market === symbol) stocks.set(code, price);
       }
     }
     // The sector publication supplies the same dated close when the latest caps have rolled forward.
@@ -69,17 +68,17 @@ async function collectCloses(symbol: MarketLiveSymbol, date: string): Promise<Ma
   const { stocks, index, indexName } = markets[symbol];
   const key = date.replaceAll("-", "");
   const [stocksResult, indexResult] = await Promise.allSettled([requestKrxOpenApi(stocks, key), requestKrxOpenApi(index, key)]);
-  const rows = new Map<string, DailyStock>();
+  const rows = new Map<string, number>();
   if (stocksResult.status === "fulfilled") {
     for (const row of stocksResult.value) {
       const price = numberField(row.TDD_CLSPRC);
-      if (typeof row.ISU_CD === "string" && /^[0-9A-Z]{6}$/.test(row.ISU_CD) && row.MKT_NM === symbol && price != null && price > 0) {
-        rows.set(row.ISU_CD, { price, turnover: numberField(row.ACC_TRDVAL) });
+      if (row.BAS_DD === key && typeof row.ISU_CD === "string" && /^[0-9A-Z]{6}$/.test(row.ISU_CD) && row.MKT_NM === symbol && price != null && price > 0) {
+        rows.set(row.ISU_CD, price);
       }
     }
   }
   const indexRows = indexResult.status === "fulfilled"
-    ? indexResult.value.filter(row => String(row.IDX_NM).replace(/\s/g, "") === indexName)
+    ? indexResult.value.filter(row => row.BAS_DD === key && String(row.IDX_NM).replace(/\s/g, "") === indexName)
     : [];
   const close = indexRows.length === 1 ? numberField(indexRows[0].CLSPRC_IDX) : null;
   return { stocks: rows, index: close && close > 0 ? close : await publishedIndexClose(symbol, date) };
@@ -159,7 +158,7 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   const closeByCode = new Map<string, number>();
   const savedFinal = new Map<string, number>();
   minerviniUniverseIds.forEach((universe, i) => {
-    for (const [code, daily] of previous[i].stocks) closeByCode.set(code, daily.price);
+    for (const [code, price] of previous[i].stocks) closeByCode.set(code, price);
     for (const row of (baselineDate && saved?.snapshots[universe][baselineDate]?.rows) || []) {
       if (row.price != null && !closeByCode.has(row.code)) closeByCode.set(row.code, row.price);
     }
@@ -176,16 +175,18 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     const asOf = isClosed ? price == null ? null : closedStamp : live.asOf;
     const base = previous[i].index ?? (baselineDate && baselineDate !== KR_CSAT_2026 && live.previousDate === baselineDate ? live.previousClose : null);
     const changePct = marketLiveChange(price, base ?? undefined);
-    return { symbol, price, asOf, changePct, turnover: isClosed ? null : live.turnover, breadth: isClosed ? null : live.breadth, points: live.points };
+    const points = isClosed ? live.points.filter(point => Date.parse(point.time) < closeAt) : live.points;
+    if (isClosed && price != null) points.push({ time: closedStamp, value: price });
+    return { symbol, price, asOf, changePct, turnover: isClosed ? null : live.turnover, breadth: isClosed ? null : live.breadth, points };
   });
   const quotes = state === "closed" ? members.flatMap(member => {
-    const daily = final[member.market === "KOSPI" ? 0 : 1].stocks.get(member.code);
-    const price = daily?.price ?? savedFinal.get(member.code);
-    return price == null ? [] : [{ code: member.code, price, turnover: daily?.turnover ?? 0, asOf: closedStamp }];
+    const price = final[member.market === "KOSPI" ? 0 : 1].stocks.get(member.code) ?? savedFinal.get(member.code);
+    return price == null ? [] : [{ code: member.code, price, turnover: null, asOf: closedStamp }];
   }) : liveStocks.quotes;
   const now = Date.now();
   const reference = state === "auction" ? session.auctionAt : now;
-  const summary = summarizeMarketLiveStocks(members, quotes, closeByCode, state === "closed" ? closeAt : reference - MARKET_LIVE_STALE_MS);
+  const summary = summarizeMarketLiveStocks(members, quotes, closeByCode,
+    state === "closed" ? closeAt : reference - MARKET_LIVE_STALE_MS, state === "closed" ? "change" : "turnover");
   if (liveStocks.failedBatches) warnings.push(`장중 종목 시세 ${liveStocks.failedBatches}개 묶음 조회 실패`);
   if (indexes.some(index => index.price == null)) {
     warnings.push(state !== "closed" ? "일부 지수 시세를 불러오지 못했습니다." : standardClose
@@ -195,12 +196,11 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   if (state === "open" && indexes.some(index => index.asOf && now - Date.parse(index.asOf) > MARKET_LIVE_STALE_MS)) warnings.push("일부 지수 시세 수신이 90초 이상 지연됐습니다.");
   if (members.length && !summary.breadth.compared && (state !== "closed" || standardClose)) warnings.push(state === "closed" ? "종목의 KRX 정규장 종가 반영 대기 중입니다." : "최근 체결가와 직전 KRX 종가를 함께 확인한 종목이 없습니다.");
   if (!baselineDate) warnings.push("비교에 필요한 직전 거래일 KRX 정규장 종가를 확인할 수 없습니다.");
-  const rotationStocks = state === "closed" ? [] : summary.rotationStocks;
-  return { ...frame, collectedAt: new Date(now).toISOString(), indexes, ...summary, rotationStocks, warnings };
+  return { ...frame, collectedAt: new Date(now).toISOString(), indexes, ...summary, warnings };
 }
 
-export function loadMarketLiveBoard() {
-  const session = resolveMarketLiveSession(Date.now());
+export function loadMarketLiveBoard(now = Date.now()) {
+  const session = resolveMarketLiveSession(now);
   const key = `${session.date}:${session.state}`;
   if (boardCache?.key === key && boardCache.until > Date.now()) return boardCache.result;
   const entry: CacheEntry<MarketLiveBoardData> = {

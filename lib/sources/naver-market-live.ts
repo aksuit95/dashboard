@@ -72,11 +72,14 @@ async function readJson(path: string, fetcher: typeof fetch, batchSignal?: Abort
 
 export async function fetchNaverStockMinuteChart(code: string, session: Session, signal: AbortSignal, fetcher: typeof fetch = fetch) {
   const chart = record(await readJson(`/chart/domestic/item/${code}?periodType=day`, fetcher, signal));
-  if (chart.code !== code || chart.stockExchangeType !== "KRX" || chart.infoType !== "item" ||
-      chart.periodType !== "day" || compactDate(chart.tradeBaseAt) !== session.date || !Array.isArray(chart.priceInfos)) {
+  if (chart.code !== code || chart.stockExchangeType !== "KRX" || chart.infoType !== "item" || chart.periodType !== "day") {
     throw new Error("네이버 KRX 종목 분봉 기준 불일치");
   }
-  return chart;
+  if (compactDate(chart.tradeBaseAt) === session.date && Array.isArray(chart.priceInfos)) return chart;
+  if (session.now >= session.closeAt && compactDate(chart.lastTradeBaseAt) === session.date && Array.isArray(chart.lastPriceInfos)) {
+    return { priceInfos: chart.lastPriceInfos };
+  }
+  throw new Error("네이버 KRX 종목 분봉 기준 불일치");
 }
 
 export function parseNaverStockMinutes(chart: Record<string, unknown>, session: Session) {
@@ -162,17 +165,19 @@ function parseIndexQuote(payload: unknown, symbol: IndexSymbol, session: Session
 function parseIndexChart(payload: unknown, symbol: IndexSymbol, session: Session): IndexChart | null {
   const row = record(payload);
   if (row.code !== symbol || row.stockExchangeType !== "KRX" || row.infoType !== "index" ||
-      row.periodType !== "day" || compactDate(row.tradeBaseAt) !== session.date ||
-      !Array.isArray(row.priceInfos)) return null;
+      row.periodType !== "day") return null;
+  const isToday = compactDate(row.tradeBaseAt) === session.date;
+  const previousDate = compactDate(row.lastTradeBaseAt);
+  const prices = isToday ? row.priceInfos : session.now >= session.closeAt && previousDate === session.date ? row.lastPriceInfos : null;
+  if (!Array.isArray(prices)) return null;
   const pointsByTime = new Map<string, IndexPoint>();
-  for (const item of row.priceInfos) {
+  for (const item of prices) {
     const info = record(item);
     const time = sessionTime(compactTime(info.localDateTime), session);
     const value = positive(info.currentPrice);
     if (time && value !== null) pointsByTime.set(time, { time, value });
   }
-  const previousDate = compactDate(row.lastTradeBaseAt);
-  const previousClose = previousDate && previousDate < session.date ? positive(row.lastClosePrice) : null;
+  const previousClose = isToday && previousDate && previousDate < session.date ? positive(row.lastClosePrice) : null;
   const points = [...pointsByTime.values()].sort((a, b) => a.time.localeCompare(b.time));
   return { points, previousClose, previousDate: previousClose === null ? null : previousDate };
 }

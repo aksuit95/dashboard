@@ -33,7 +33,7 @@ function snapshotTime(value: string | null) {
   return Number.isFinite(time) ? secondClock.format(time) : "—";
 }
 
-function useArchive(date: string | null, refresh: number, live: boolean) {
+function useArchive(date: string | null, refresh: number, live: boolean, closed = false) {
   const [archive, setArchive] = useState<MarketLiveSectorResponse | null>(null);
   const [busy, setBusy] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -75,16 +75,17 @@ function useArchive(date: string | null, refresh: number, live: boolean) {
       reload.current = () => undefined;
     };
   }, [date, refresh]);
+  const waitingForClose = closed && !archive?.radar?.closeAt;
   useEffect(() => {
     if (date === null) return;
     const loadVisible = () => reload.current();
-    const timer = live ? window.setInterval(loadVisible, minute) : undefined;
+    const timer = live || waitingForClose ? window.setInterval(loadVisible, minute) : undefined;
     document.addEventListener("visibilitychange", loadVisible);
     return () => {
       window.clearInterval(timer);
       document.removeEventListener("visibilitychange", loadVisible);
     };
-  }, [date, live]);
+  }, [date, live, waitingForClose]);
   const previousLive = useRef(live);
   useEffect(() => {
     const changed = previousLive.current !== live;
@@ -135,12 +136,12 @@ function buildTimeline(day: ArchiveDay | null) {
   return { slots, byMinute, leads, hourlyLeaders, hourlyCloseAt, start, end, latest };
 }
 
-export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
+export function MarketLiveSectorPanels({ live = false, closed = false }: { live?: boolean; closed?: boolean }) {
   const [date, setDate] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [cursor, setCursor] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
-  const latest = useArchive("", refresh, live);
+  const latest = useArchive("", refresh, live, closed);
   const useLatest = !date || date === latest.archive?.day?.date;
   const history = useArchive(useLatest ? null : date, refresh, false);
   const { archive, busy, failed } = useLatest ? latest : history;
@@ -172,10 +173,11 @@ export function MarketLiveSectorPanels({ live = false }: { live?: boolean }) {
 
   const slot = selected == null ? null : timeline?.byMinute.get(selected);
   const warning = latest.failed ? "섹터 데이터를 갱신하지 못했습니다." : latest.archive?.warning;
+  const radar = latest.archive?.radar;
   return (
     <>
     {warning && <p className="text-xs text-amber-200" role="status">{warning}</p>}
-    <MarketLiveRotation radar={latest.archive?.radar ?? null} active={live && !latest.failed} />
+    <MarketLiveRotation radar={closed && !radar?.closeAt ? null : radar ?? null} active={live && !latest.failed} closed={closed} />
     <section aria-labelledby="market-live-sector-replay" className="min-w-0 rounded-xl border border-white/10 bg-[#151a22] px-4 py-4 sm:px-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>

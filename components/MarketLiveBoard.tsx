@@ -133,6 +133,7 @@ export function MarketLiveBoard() {
         {board && (
           <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-xs tabular-nums">
             <div className="flex gap-1.5"><dt className="text-zinc-400">시세 기준일</dt><dd>{board.date}</dd></div>
+            {closed && <div className="flex gap-1.5"><dt className="text-zinc-400">가격 기준</dt><dd>KRX 정규장 {krxCloseTime(board.date)} 종가</dd></div>}
             <div className="flex gap-1.5"><dt className="text-zinc-400">비교 종가</dt><dd>{board.baselineDate ? `${board.baselineDate} KRX ${krxCloseTime(board.baselineDate)}` : "직전 거래일 KRX 정규장 종가 미확인"}</dd></div>
             <div className="flex gap-1.5"><dt className="text-zinc-400">수집 시각</dt><dd>{timestamp(board.collectedAt)}</dd></div>
           </dl>
@@ -144,30 +145,31 @@ export function MarketLiveBoard() {
 
       <section aria-label="코스피·코스닥 장중 지수" className="grid gap-4 sm:grid-cols-2">
         {marketLiveSymbols.map((symbol) => (
-          <IndexCard key={symbol} symbol={symbol} index={board?.indexes.find((item) => item.symbol === symbol)} loading={!board && refreshing} />
+          <IndexCard key={symbol} symbol={symbol} index={board?.indexes.find((item) => item.symbol === symbol)} loading={!board && refreshing} closed={closed} />
         ))}
       </section>
 
       <BreadthPanel breadth={board?.breadth} />
-      <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} />
+      <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} closed={closed} />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <SectorPanel sectors={board?.sectors ?? []} />
+        <SectorPanel sectors={board?.sectors ?? []} closed={closed} />
         <LeaderPanel leaders={board?.leaders ?? []} closed={closed} />
       </div>
     </div>
   );
 }
 
-function IndexCard({ symbol, index, loading }: { symbol: MarketLiveIndex["symbol"]; index: MarketLiveIndex | undefined; loading: boolean }) {
+function IndexCard({ symbol, index, loading, closed }: { symbol: MarketLiveIndex["symbol"]; index: MarketLiveIndex | undefined; loading: boolean; closed: boolean }) {
   const change = index?.changePct ?? null;
   const marketBreadth = index?.breadth;
+  const closing = closed && index?.price != null;
   return (
     <article className={`${panel} overflow-hidden`}>
       <div className="px-4 pb-2 pt-4">
         <div className="flex items-baseline justify-between gap-2">
           <h2 className="text-sm font-semibold">{indexNames[symbol]}</h2>
-          <span className="text-xs tabular-nums text-zinc-400">시세 {clock(index?.asOf ?? null)}</span>
+          <span className="text-xs tabular-nums text-zinc-400">{closed ? "종가" : "시세"} {clock(index?.asOf ?? null)}</span>
         </div>
         <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 tabular-nums">
           <p className="text-2xl font-semibold tracking-tight">{index?.price == null ? "—" : formatNumber(index.price)}</p>
@@ -184,8 +186,8 @@ function IndexCard({ symbol, index, loading }: { symbol: MarketLiveIndex["symbol
           </dl>
         )}
       </div>
-      {index && index.points.length > 1 ? (
-        <IntradayChart symbol={symbol} points={index.points} change={change} />
+      {index && (index.points.length > 1 || closing) ? (
+        <IntradayChart symbol={symbol} points={index.points} change={change} closing={closing} />
       ) : (
         <div className="flex h-36 items-center justify-center border-t border-white/5 px-3 text-center text-xs text-zinc-400">
           {loading ? "지수를 불러오는 중입니다." : "장중 추이를 표시할 시세가 부족합니다."}
@@ -199,7 +201,9 @@ function chartClock(time: Time): string {
   return typeof time === "number" ? kstClock.format(time * 1000).slice(0, 5) : "";
 }
 
-function IntradayChart({ symbol, points, change }: { symbol: MarketLiveIndex["symbol"]; points: MarketLiveIndex["points"]; change: number | null }) {
+function IntradayChart({ symbol, points, change, closing }: {
+  symbol: MarketLiveIndex["symbol"]; points: MarketLiveIndex["points"]; change: number | null; closing: boolean;
+}) {
   const host = useRef<HTMLDivElement>(null);
   const chart = useRef<IChartApi | null>(null);
   const series = useRef<ISeriesApi<"Area"> | null>(null);
@@ -235,9 +239,12 @@ function IntradayChart({ symbol, points, change }: { symbol: MarketLiveIndex["sy
       if (Number.isFinite(time) && Number.isFinite(point.value)) data.set(time, { time, value: point.value });
     }
     series.current?.applyOptions({ lineColor: color, topColor: `${color}33`, bottomColor: `${color}00` });
-    series.current?.setData([...data.values()].sort((a, b) => Number(a.time) - Number(b.time)));
+    const sorted = [...data.values()].sort((a, b) => Number(a.time) - Number(b.time));
+    series.current?.setData(sorted);
+    const last = sorted.at(-1);
+    series.current?.setMarkers(closing && last ? [{ time: last.time, position: "aboveBar", color, shape: "circle", text: "종가" }] : []);
     chart.current?.timeScale().fitContent();
-  }, [points, change]);
+  }, [points, change, closing]);
 
   return <div ref={host} className="h-36 w-full" role="img" aria-label={`${indexNames[symbol]} 장중 지수 추이, 한국시간 기준`} />;
 }
@@ -266,7 +273,7 @@ function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | u
   );
 }
 
-function SectorPanel({ sectors }: { sectors: MarketLiveSector[] }) {
+function SectorPanel({ sectors, closed }: { sectors: MarketLiveSector[]; closed: boolean }) {
   const [risingFirst, setRisingFirst] = useState(true);
   const ranked = [...sectors].sort((a, b) => {
     if (a.changePct == null) return b.changePct == null ? a.name.localeCompare(b.name, "ko") : 1;
@@ -278,7 +285,7 @@ function SectorPanel({ sectors }: { sectors: MarketLiveSector[] }) {
       <div className="flex flex-wrap items-start justify-between gap-2 px-4 py-3.5">
         <div>
           <h2 id="market-live-sectors" className="font-semibold">섹터 등락률</h2>
-          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 · 섹터별 비교 가능 종목의 동일가중 평균</p>
+          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 · {closed ? "KRX 종가 등락률의 섹터별 동일가중 평균" : "섹터별 비교 가능 종목의 동일가중 평균"}</p>
         </div>
         <button type="button" className={action} onClick={() => setRisingFirst((value) => !value)} aria-label={risingFirst ? "하락률이 큰 섹터부터 정렬" : "상승률이 큰 섹터부터 정렬"}>
           {risingFirst ? "상승순 ↓" : "하락순 ↑"}
@@ -316,7 +323,7 @@ function LeaderPanel({ leaders, closed }: { leaders: MarketLiveStock[]; closed: 
       <div className="flex flex-wrap items-start justify-between gap-2 px-4 py-3.5">
         <div>
           <h2 id="market-live-leaders" className="font-semibold">{closed ? "정규장 주도주" : "장중 주도주"}</h2>
-          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150의 상승 종목 중 누적 거래대금 상위</p>
+          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 {closed ? "KRX 정규장 종가 상승률 상위" : "상승 종목 중 누적 거래대금 상위"}</p>
         </div>
         <div className="flex rounded-md border border-white/10 p-0.5" role="group" aria-label="주도주 시장 선택">
           {(Object.keys(leaderFilters) as (keyof typeof leaderFilters)[]).map((value) => (
@@ -329,7 +336,7 @@ function LeaderPanel({ leaders, closed }: { leaders: MarketLiveStock[]; closed: 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs tabular-nums">
           <thead className="border-y border-white/[0.08] bg-white/[0.025] text-zinc-400">
-            <tr><th scope="col" className={columnHeader}>종목</th><th scope="col" className={`${columnHeader} text-right`}>{closed ? "종가" : "현재가"}</th><th scope="col" className={`${columnHeader} text-right`}>등락률</th><th scope="col" className={`${columnHeader} text-right`}>거래대금</th><th scope="col" className={`${columnHeader} text-right`}>시세 시각</th></tr>
+            <tr><th scope="col" className={columnHeader}>종목</th><th scope="col" className={`${columnHeader} text-right`}>{closed ? "종가" : "현재가"}</th><th scope="col" className={`${columnHeader} text-right`}>등락률</th>{!closed && <th scope="col" className={`${columnHeader} text-right`}>거래대금</th>}<th scope="col" className={`${columnHeader} text-right`}>{closed ? "가격 기준 시각" : "시세 시각"}</th></tr>
           </thead>
           <tbody className="divide-y divide-white/[0.06]">
             {ranked.map((stock) => (
@@ -340,11 +347,11 @@ function LeaderPanel({ leaders, closed }: { leaders: MarketLiveStock[]; closed: 
                 </th>
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{formatNumber(stock.price, 0)}원</td>
                 <td className={`whitespace-nowrap px-3 py-2.5 text-right font-semibold ${direction(stock.changePct)}`}>{percent(stock.changePct)}</td>
-                <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{formatCompact(stock.turnover, "")}원</td>
+                {!closed && <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.turnover == null ? "—" : `${formatCompact(stock.turnover, "")}원`}</td>}
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-400">{clock(stock.asOf)}</td>
               </tr>
             ))}
-            {!ranked.length && <EmptyRow columns={5} text="표시할 장중 주도주가 없습니다." />}
+            {!ranked.length && <EmptyRow columns={closed ? 4 : 5} text={closed ? "표시할 정규장 종가 상승 종목이 없습니다." : "표시할 장중 주도주가 없습니다."} />}
           </tbody>
         </table>
       </div>
