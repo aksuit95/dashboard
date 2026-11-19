@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 306744745,
       "short_volume_ratio_pct": 4.897365374103104,
       "short_value_ratio_pct": 4.894070965188875,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 57285,
+      "balance_value": 767619000,
+      "balance_ratio_pct": 0.02,
       "lending_quantity": 9002178,
       "lending_change": -7868,
       "return_pct": -1.6874541452677931,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "BNK금융지주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "BNK금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0043873063891255734,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.0043873063891255734
     },
     {
       "close": 13280,
       "market_cap": 4074831893280,
       "listed_shares": 306839751,
-      "volume": 654817,
-      "trading_value": 8744199735,
+      "volume": 662624,
+      "trading_value": 8847991845,
       "short_volume": 20816,
       "short_value": 277228460,
-      "short_volume_ratio_pct": 3.1789034188177765,
-      "short_value_ratio_pct": 3.1704268932736133,
+      "short_volume_ratio_pct": 3.141449751291834,
+      "short_value_ratio_pct": 3.133235934848446,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "BNK금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.003820235142871042,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.003820235142871042
     }
   ]
 }

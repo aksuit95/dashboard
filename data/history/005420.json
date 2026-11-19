@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 215248820,
       "short_volume_ratio_pct": 21.965223520108644,
       "short_value_ratio_pct": 21.90887758286217,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1072005,
+      "balance_value": 8854761300,
+      "balance_ratio_pct": 2.79,
       "lending_quantity": 2884069,
       "lending_change": 82588,
       "return_pct": -5.6000000000000085,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "코스모화학",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "코스모화학",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.03284712848507356,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.03284712848507356
     },
     {
       "close": 8210,
       "market_cap": 315331551880,
       "listed_shares": 38408228,
-      "volume": 126727,
-      "trading_value": 1019476985,
-      "short_volume": 23561,
-      "short_value": 189335630,
-      "short_volume_ratio_pct": 18.591933842038397,
-      "short_value_ratio_pct": 18.57183955947765,
+      "volume": 130641,
+      "trading_value": 1051562525,
+      "short_volume": 23758,
+      "short_value": 190952980,
+      "short_volume_ratio_pct": 18.185715051170764,
+      "short_value_ratio_pct": 18.15897537809271,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "코스모화학",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.012041690650242963,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.012041690650242963
     }
   ]
 }

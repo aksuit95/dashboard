@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 228383600,
       "short_volume_ratio_pct": 7.685478501240894,
       "short_value_ratio_pct": 7.676131382187711,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 246124,
+      "balance_value": 14865889600,
+      "balance_ratio_pct": 0.64,
       "lending_quantity": 872109,
       "lending_change": 3222,
       "return_pct": 2.5466893039049125,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "F&F",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "F&F",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.02027040696790345,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.02027040696790345
     },
     {
       "close": 61200,
       "market_cap": 2344392990000,
       "listed_shares": 38307075,
-      "volume": 43821,
-      "trading_value": 2662331900,
+      "volume": 44660,
+      "trading_value": 2713571000,
       "short_volume": 9926,
       "short_value": 602058200,
-      "short_volume_ratio_pct": 22.651240272928504,
-      "short_value_ratio_pct": 22.613942311249772,
+      "short_volume_ratio_pct": 22.225705329153605,
+      "short_value_ratio_pct": 22.186933748923465,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "F&F",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.08959441565298316,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.08959441565298316
     }
   ]
 }

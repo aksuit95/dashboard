@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 370597250,
       "short_volume_ratio_pct": 14.144717284024019,
       "short_value_ratio_pct": 14.147955711645304,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 188390,
+      "balance_value": 4182258000,
+      "balance_ratio_pct": 0.19,
       "lending_quantity": 1393268,
       "lending_change": 25915,
       "return_pct": 0.0,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "롯데지주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "롯데지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.053616270770234516,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.053616270770234516
     },
     {
       "close": 22700,
       "market_cap": 2262367715200,
       "listed_shares": 99663776,
-      "volume": 86423,
-      "trading_value": 1955440150,
-      "short_volume": 8712,
-      "short_value": 197027700,
-      "short_volume_ratio_pct": 10.080649827013643,
-      "short_value_ratio_pct": 10.075874733368853,
+      "volume": 89936,
+      "trading_value": 2034910300,
+      "short_volume": 8713,
+      "short_value": 197050400,
+      "short_volume_ratio_pct": 9.688000355808574,
+      "short_value_ratio_pct": 9.683493174121729,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "롯데지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0005337947460469489,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.0005337947460469489
     }
   ]
 }

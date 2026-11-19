@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3034800250,
       "short_volume_ratio_pct": 6.9397775050125245,
       "short_value_ratio_pct": 6.9292357338794215,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 61871,
+      "balance_value": 14972782000,
+      "balance_ratio_pct": 0.03,
       "lending_quantity": 2160105,
       "lending_change": -4090,
       "return_pct": -4.5364891518737664,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "삼성생명",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "삼성생명",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0092935,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.0092935
     },
     {
       "close": 255500,
       "market_cap": 51100000000000,
       "listed_shares": 200000000,
-      "volume": 262898,
-      "trading_value": 66524960000,
+      "volume": 265986,
+      "trading_value": 67313458500,
       "short_volume": 22618,
       "short_value": 5731365000,
-      "short_volume_ratio_pct": 8.603336655280755,
-      "short_value_ratio_pct": 8.61536030987467,
+      "short_volume_ratio_pct": 8.503455069063785,
+      "short_value_ratio_pct": 8.51444143224345,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "삼성생명",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.006215000000000001,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.006215000000000001
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3819293000,
       "short_volume_ratio_pct": 15.864146668039963,
       "short_value_ratio_pct": 15.856302321705604,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 727335,
+      "balance_value": 112591458000,
+      "balance_ratio_pct": 1.69,
       "lending_quantity": 2865269,
       "lending_change": 24178,
       "return_pct": -2.2727272727272663,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "하이브",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "하이브",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.24890483727453344,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.24890483727453344
     },
     {
       "close": 189400,
       "market_cap": 8164434738400,
       "listed_shares": 43106836,
-      "volume": 1766825,
-      "trading_value": 320566365450,
-      "short_volume": 166741,
-      "short_value": 30070864450,
-      "short_volume_ratio_pct": 9.437324013413892,
-      "short_value_ratio_pct": 9.380542593040776,
+      "volume": 1837262,
+      "trading_value": 333735277250,
+      "short_volume": 167020,
+      "short_value": 30122952350,
+      "short_volume_ratio_pct": 9.090701271783775,
+      "short_value_ratio_pct": 9.026001865375171,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "하이브",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.24033543078875005,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.24033543078875005
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 7656444750,
       "short_volume_ratio_pct": 6.543378433256953,
       "short_value_ratio_pct": 6.5886419057093875,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 583991,
+      "balance_value": 125850060500,
+      "balance_ratio_pct": 0.87,
       "lending_quantity": 2789243,
       "lending_change": -253996,
       "return_pct": 0.0,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한진칼",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한진칼",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.6178878715562045,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.6178878715562045
     },
     {
       "close": 216000,
       "market_cap": 14420651400000,
       "listed_shares": 66762275,
-      "volume": 459340,
-      "trading_value": 102760465500,
+      "volume": 499143,
+      "trading_value": 111366894500,
       "short_volume": 32962,
       "short_value": 7317320750,
-      "short_volume_ratio_pct": 7.175948099447033,
-      "short_value_ratio_pct": 7.120754771201382,
+      "short_volume_ratio_pct": 6.603718773978599,
+      "short_value_ratio_pct": 6.5704631370501225,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한진칼",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.05147967171580058,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.05147967171580058
     }
   ]
 }

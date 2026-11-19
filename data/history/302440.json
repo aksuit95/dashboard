@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 469239800,
       "short_volume_ratio_pct": 6.443570865398495,
       "short_value_ratio_pct": 6.428702417637163,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 770792,
+      "balance_value": 30754600800,
+      "balance_ratio_pct": 0.98,
       "lending_quantity": 2855518,
       "lending_change": 23489,
       "return_pct": 1.5267175572519136,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "SK바이오사이언스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "SK바이오사이언스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.16935487848924488,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.16935487848924488
     },
     {
       "close": 38200,
       "market_cap": 2997040324600,
       "listed_shares": 78456553,
-      "volume": 95445,
-      "trading_value": 3627886800,
+      "volume": 97647,
+      "trading_value": 3711886550,
       "short_volume": 27026,
       "short_value": 1026407850,
-      "short_volume_ratio_pct": 28.315783959348316,
-      "short_value_ratio_pct": 28.292168597983817,
+      "short_volume_ratio_pct": 27.67724558870216,
+      "short_value_ratio_pct": 27.651918671921692,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "SK바이오사이언스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.08121182688207064,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.08121182688207064
     }
   ]
 }

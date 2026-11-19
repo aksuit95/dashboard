@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 654172750,
       "short_volume_ratio_pct": 11.253311729543912,
       "short_value_ratio_pct": 11.250204479522056,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 2624058,
+      "balance_value": 55236420900,
+      "balance_ratio_pct": 1.73,
       "lending_quantity": 6770768,
       "lending_change": 68158,
       "return_pct": -0.23696682464454,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "포스코DX",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "포스코DX",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.00143125193454977,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.00143125193454977
     },
     {
       "close": 22150,
       "market_cap": 3367569247350,
       "listed_shares": 152034729,
-      "volume": 451401,
-      "trading_value": 9889722950,
+      "volume": 483977,
+      "trading_value": 10606407100,
       "short_volume": 79527,
       "short_value": 1736451300,
-      "short_volume_ratio_pct": 17.61781653119953,
-      "short_value_ratio_pct": 17.558138976987216,
+      "short_volume_ratio_pct": 16.431979205623406,
+      "short_value_ratio_pct": 16.371720259540105,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "포스코DX",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06844357252085476,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.06844357252085476
     }
   ]
 }

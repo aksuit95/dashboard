@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 481799350,
       "short_volume_ratio_pct": 17.46632922145727,
       "short_value_ratio_pct": 17.43772941057364,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 10153,
+      "balance_value": 493435800,
+      "balance_ratio_pct": 0.04,
       "lending_quantity": 2741513,
       "lending_change": 158429,
       "return_pct": -2.311557788944725,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "현대위아",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "현대위아",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.07573795601212174,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.07573795601212174
     },
     {
       "close": 49700,
       "market_cap": 1351595625100,
       "listed_shares": 27195083,
-      "volume": 29736,
-      "trading_value": 1470822550,
+      "volume": 30509,
+      "trading_value": 1509304200,
       "short_volume": 4505,
       "short_value": 222995700,
-      "short_volume_ratio_pct": 15.149986548291633,
-      "short_value_ratio_pct": 15.161291890717884,
+      "short_volume_ratio_pct": 14.766134583237733,
+      "short_value_ratio_pct": 14.774735272054501,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "현대위아",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.03163071795000589,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.03163071795000589
     }
   ]
 }

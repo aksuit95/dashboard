@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1406276650,
       "short_volume_ratio_pct": 14.658895622286542,
       "short_value_ratio_pct": 14.68077822966981,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 709331,
+      "balance_value": 38587606400,
+      "balance_ratio_pct": 1.04,
       "lending_quantity": 2358043,
       "lending_change": -112753,
       "return_pct": 2.64150943396227,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한미사이언스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한미사이언스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.16564327025780232,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.16564327025780232
     },
     {
       "close": 51200,
       "market_cap": 3501647360000,
       "listed_shares": 68391550,
-      "volume": 110754,
-      "trading_value": 5665077950,
-      "short_volume": 12837,
-      "short_value": 656293800,
-      "short_volume_ratio_pct": 11.59055203423804,
-      "short_value_ratio_pct": 11.584903258039018,
+      "volume": 119190,
+      "trading_value": 6096322850,
+      "short_volume": 12847,
+      "short_value": 656804800,
+      "short_volume_ratio_pct": 10.778588807785889,
+      "short_value_ratio_pct": 10.773786365333326,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한미사이언스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06653745967155299,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.06653745967155299
     }
   ]
 }

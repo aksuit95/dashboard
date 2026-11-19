@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1228819650,
       "short_volume_ratio_pct": 10.718108251392904,
       "short_value_ratio_pct": 10.729061371663851,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 592562,
+      "balance_value": 16680620300,
+      "balance_ratio_pct": 0.44,
       "lending_quantity": 3547693,
       "lending_change": 14604,
       "return_pct": -1.5734265734265733,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "현대제철",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "현대제철",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.054763063516768254,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.054763063516768254
     },
     {
       "close": 28500,
       "market_cap": 3803204872500,
       "listed_shares": 133445785,
-      "volume": 343389,
-      "trading_value": 9765118900,
+      "volume": 365843,
+      "trading_value": 10404967400,
       "short_volume": 23259,
       "short_value": 662228900,
-      "short_volume_ratio_pct": 6.773367813179805,
-      "short_value_ratio_pct": 6.7815753887031525,
+      "short_volume_ratio_pct": 6.357645219397392,
+      "short_value_ratio_pct": 6.364545649609628,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "현대제철",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.006171045417433005,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.006171045417433005
     }
   ]
 }

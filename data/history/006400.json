@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 45892690750,
       "short_volume_ratio_pct": 12.313673941859992,
       "short_value_ratio_pct": 12.384879207638624,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1418171,
+      "balance_value": 631086095000,
+      "balance_ratio_pct": 1.76,
       "lending_quantity": 4214739,
       "lending_change": -12809,
       "return_pct": -3.7837837837837753,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "삼성SDI",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "삼성SDI",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.021141512626398313,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.021141512626398313
     },
     {
       "close": 428500,
       "market_cap": 34530899605000,
       "listed_shares": 80585530,
-      "volume": 956322,
-      "trading_value": 401167384250,
-      "short_volume": 98529,
-      "short_value": 41558197750,
-      "short_volume_ratio_pct": 10.302910525952557,
-      "short_value_ratio_pct": 10.359316181123464,
+      "volume": 1025104,
+      "trading_value": 430615837750,
+      "short_volume": 98545,
+      "short_value": 41565057750,
+      "short_volume_ratio_pct": 9.613170956312725,
+      "short_value_ratio_pct": 9.652468419921696,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "삼성SDI",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.14559313564110082,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.14559313564110082
     }
   ]
 }

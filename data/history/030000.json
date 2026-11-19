@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 196758470,
       "short_volume_ratio_pct": 4.145762443617947,
       "short_value_ratio_pct": 4.144908606287532,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 687393,
+      "balance_value": 12861123030,
+      "balance_ratio_pct": 0.68,
       "lending_quantity": 5690162,
       "lending_change": 35383,
       "return_pct": -1.939203354297689,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "제일기획",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "제일기획",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.13090705871346622,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.13090705871346622
     },
     {
       "close": 18900,
       "market_cap": 1914167902500,
       "listed_shares": 101278725,
-      "volume": 185996,
-      "trading_value": 3504120305,
+      "volume": 187200,
+      "trading_value": 3526828845,
       "short_volume": 19565,
       "short_value": 367997060,
-      "short_volume_ratio_pct": 10.519043420288607,
-      "short_value_ratio_pct": 10.501838634789681,
+      "short_volume_ratio_pct": 10.45138888888889,
+      "short_value_ratio_pct": 10.434219412765406,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "제일기획",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.002997668068984873,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.002997668068984873
     }
   ]
 }

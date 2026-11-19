@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1839085000,
       "short_volume_ratio_pct": 15.60548945694428,
       "short_value_ratio_pct": 15.602163722421066,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 38448,
+      "balance_value": 13341456000,
+      "balance_ratio_pct": 0.63,
       "lending_quantity": 250551,
       "lending_change": 5715,
       "return_pct": -3.3426183844011206,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "농심",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "농심",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.09597803059920344,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.09597803059920344
     },
     {
       "close": 342000,
       "market_cap": 2080263564000,
       "listed_shares": 6082642,
-      "volume": 25223,
-      "trading_value": 8695609250,
+      "volume": 26502,
+      "trading_value": 9135107250,
       "short_volume": 2725,
       "short_value": 941194500,
-      "short_volume_ratio_pct": 10.803631606073822,
-      "short_value_ratio_pct": 10.82379017893427,
+      "short_volume_ratio_pct": 10.282242849596257,
+      "short_value_ratio_pct": 10.30304816618327,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "농심",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.0958136283542579,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.0958136283542579
     }
   ]
 }

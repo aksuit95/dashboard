@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 56555192500,
       "short_volume_ratio_pct": 1.0370051187808687,
       "short_value_ratio_pct": 1.0358176842966063,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 378262,
+      "balance_value": 415331676000,
+      "balance_ratio_pct": 0.05,
       "lending_quantity": 13188464,
       "lending_change": 167960,
       "return_pct": -1.9642857142857224,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "SK하이닉스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "SK하이닉스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.29144335645037395,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.29144335645037395
     },
     {
       "close": 1183000,
       "market_cap": 836143327019000,
       "listed_shares": 706799093,
-      "volume": 3478338,
-      "trading_value": 4004698669000,
-      "short_volume": 56429,
-      "short_value": 65532096000,
-      "short_volume_ratio_pct": 1.622297775546827,
-      "short_value_ratio_pct": 1.6363801977731276,
+      "volume": 3743448,
+      "trading_value": 4319302510000,
+      "short_volume": 56657,
+      "short_value": 65802830000,
+      "short_volume_ratio_pct": 1.5134977165436785,
+      "short_value_ratio_pct": 1.523459629133501,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "SK하이닉스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.045282316172977885,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.045282316172977885
     }
   ]
 }

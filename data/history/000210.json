@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 178079400,
       "short_volume_ratio_pct": 10.362633217014054,
       "short_value_ratio_pct": 10.374343616510817,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 14026,
+      "balance_value": 563845200,
+      "balance_ratio_pct": 0.07,
       "lending_quantity": 603097,
       "lending_change": -9608,
       "return_pct": -2.663438256658594,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "DL",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "DL",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.020237752795348552,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.020237752795348552
     },
     {
       "close": 41000,
       "market_cap": 859191244000,
       "listed_shares": 20955884,
-      "volume": 59442,
-      "trading_value": 2434805800,
+      "volume": 61303,
+      "trading_value": 2511703900,
       "short_volume": 959,
       "short_value": 39334950,
-      "short_volume_ratio_pct": 1.6133373708825411,
-      "short_value_ratio_pct": 1.6155272013891209,
+      "short_volume_ratio_pct": 1.5643606348792065,
+      "short_value_ratio_pct": 1.566066366341988,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "DL",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.057301328829649945,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.057301328829649945
     }
   ]
 }

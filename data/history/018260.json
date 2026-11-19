@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 5574641500,
       "short_volume_ratio_pct": 13.178219940094138,
       "short_value_ratio_pct": 13.220205444058381,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 669632,
+      "balance_value": 151336832000,
+      "balance_ratio_pct": 0.87,
       "lending_quantity": 2336665,
       "lending_change": 14513,
       "return_pct": -1.310043668122276,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "삼성에스디에스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "삼성에스디에스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.042912825125552806,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.042912825125552806
     },
     {
       "close": 214500,
       "market_cap": 16597538100000,
       "listed_shares": 77377800,
-      "volume": 694650,
-      "trading_value": 148009111347,
-      "short_volume": 42376,
-      "short_value": 8997342000,
-      "short_volume_ratio_pct": 6.100338299863241,
-      "short_value_ratio_pct": 6.078910898198814,
+      "volume": 728036,
+      "trading_value": 155195160847,
+      "short_volume": 42416,
+      "short_value": 9005952000,
+      "short_volume_ratio_pct": 5.826085523243356,
+      "short_value_ratio_pct": 5.802985061421192,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "삼성에스디에스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.005239228822737271,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.005239228822737271
     }
   ]
 }

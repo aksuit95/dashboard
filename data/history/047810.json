@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3748968700,
       "short_volume_ratio_pct": 17.064154430833355,
       "short_value_ratio_pct": 17.0374606602192,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 3185581,
+      "balance_value": 324929262000,
+      "balance_ratio_pct": 3.27,
       "lending_quantity": 9902042,
       "lending_change": 7971,
       "return_pct": -4.939422180801486,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한국항공우주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한국항공우주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06713303736101567,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.06713303736101567
     },
     {
       "close": 103900,
       "market_cap": 10127663617300,
       "listed_shares": 97475107,
-      "volume": 181151,
-      "trading_value": 18699470000,
+      "volume": 186395,
+      "trading_value": 19244663900,
       "short_volume": 15872,
       "short_value": 1640783300,
-      "short_volume_ratio_pct": 8.761751246197923,
-      "short_value_ratio_pct": 8.774490934769808,
+      "short_volume_ratio_pct": 8.515249872582418,
+      "short_value_ratio_pct": 8.525912993471401,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한국항공우주",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.09260825946054105,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.09260825946054105
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 582805200,
       "short_volume_ratio_pct": 5.869571619768777,
       "short_value_ratio_pct": 5.866219442219105,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 23050,
+      "balance_value": 731837500,
+      "balance_ratio_pct": 0.04,
       "lending_quantity": 2102775,
       "lending_change": -476,
       "return_pct": -3.053435114503827,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "미스토홀딩스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "미스토홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.07345949961425334,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.07345949961425334
     },
     {
       "close": 31300,
       "market_cap": 1661774592000,
       "listed_shares": 53091840,
-      "volume": 96382,
-      "trading_value": 3031050350,
+      "volume": 97361,
+      "trading_value": 3061750550,
       "short_volume": 9663,
       "short_value": 304160000,
-      "short_volume_ratio_pct": 10.025730945612251,
-      "short_value_ratio_pct": 10.034805261483037,
+      "short_volume_ratio_pct": 9.924918601904253,
+      "short_value_ratio_pct": 9.934186179863673,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "미스토홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.007470074497323884,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.007470074497323884
     }
   ]
 }

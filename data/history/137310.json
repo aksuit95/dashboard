@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 149959340,
       "short_volume_ratio_pct": 6.817184475597269,
       "short_value_ratio_pct": 6.806311342911199,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 193963,
+      "balance_value": 1425628050,
+      "balance_ratio_pct": 0.16,
       "lending_quantity": 2931805,
       "lending_change": -21582,
       "return_pct": -2.0,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "에스디바이오센서",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "에스디바이오센서",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.012702371898384803,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.012702371898384803
     },
     {
       "close": 7350,
       "market_cap": 887505899700,
       "listed_shares": 120749102,
-      "volume": 112987,
-      "trading_value": 821556855,
+      "volume": 122003,
+      "trading_value": 887665625,
       "short_volume": 7629,
       "short_value": 55646930,
-      "short_volume_ratio_pct": 6.752104224379796,
-      "short_value_ratio_pct": 6.773351066494357,
+      "short_volume_ratio_pct": 6.2531249231576265,
+      "short_value_ratio_pct": 6.268906718112464,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "에스디바이오센서",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.0010136721348039507,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.0010136721348039507
     }
   ]
 }

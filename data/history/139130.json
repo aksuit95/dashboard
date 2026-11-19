@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 174890110,
       "short_volume_ratio_pct": 3.552098401172538,
       "short_value_ratio_pct": 3.5549830464725463,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1388760,
+      "balance_value": 21678543600,
+      "balance_ratio_pct": 0.88,
       "lending_quantity": 8603975,
       "lending_change": -73158,
       "return_pct": -1.4520202020201936,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "iM금융지주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "iM금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.02719567641534969,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.02719567641534969
     },
     {
       "close": 15840,
       "market_cap": 2508476382720,
       "listed_shares": 158363408,
-      "volume": 369355,
-      "trading_value": 5832812450,
+      "volume": 370327,
+      "trading_value": 5848153160,
       "short_volume": 10883,
       "short_value": 171943250,
-      "short_volume_ratio_pct": 2.946487796293539,
-      "short_value_ratio_pct": 2.9478617986422657,
+      "short_volume_ratio_pct": 2.9387541281084015,
+      "short_value_ratio_pct": 2.9401290509293023,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "iM금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.03842049168328077,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.03842049168328077
     }
   ]
 }

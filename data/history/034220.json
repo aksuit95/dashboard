@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 922966555,
       "short_volume_ratio_pct": 9.32471633163267,
       "short_value_ratio_pct": 9.333293419502061,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1510941,
+      "balance_value": 10455711720,
+      "balance_ratio_pct": 0.3,
       "lending_quantity": 22078490,
       "lending_change": -478498,
       "return_pct": -1.9830028328611888,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "LG디스플레이",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "LG디스플레이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.2216288,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.2216288
     },
     {
       "close": 7090,
       "market_cap": 3545000000000,
       "listed_shares": 500000000,
-      "volume": 1571272,
-      "trading_value": 11061315695,
+      "volume": 1669823,
+      "trading_value": 11762869595,
       "short_volume": 44360,
       "short_value": 311301820,
-      "short_volume_ratio_pct": 2.823190383332739,
-      "short_value_ratio_pct": 2.814329041713514,
+      "short_volume_ratio_pct": 2.656568989647406,
+      "short_value_ratio_pct": 2.6464785440818277,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "LG디스플레이",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.26317480000000004,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.26317480000000004
     }
   ]
 }

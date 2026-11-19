@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2709310000,
       "short_volume_ratio_pct": 2.6715938747802412,
       "short_value_ratio_pct": 2.6725279800392876,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 22393,
+      "balance_value": 2062395300,
+      "balance_ratio_pct": 0.01,
       "lending_quantity": 6502140,
       "lending_change": 4354,
       "return_pct": -3.05263157894737,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "기아",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "기아",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.04520699897394297,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.04520699897394297
     },
     {
       "close": 91500,
       "market_cap": 35722789317000,
       "listed_shares": 390412998,
-      "volume": 839960,
-      "trading_value": 76538991250,
-      "short_volume": 53062,
-      "short_value": 4826255600,
-      "short_volume_ratio_pct": 6.317205581218153,
-      "short_value_ratio_pct": 6.305616942658622,
+      "volume": 863727,
+      "trading_value": 78714231550,
+      "short_volume": 53063,
+      "short_value": 4826347300,
+      "short_volume_ratio_pct": 6.143492098776581,
+      "short_value_ratio_pct": 6.131479917877697,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "기아",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.10399807436739081,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.10399807436739081
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 298958940,
       "short_volume_ratio_pct": 7.531669405071771,
       "short_value_ratio_pct": 7.480859921441009,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 98729,
+      "balance_value": 1293349900,
+      "balance_ratio_pct": 0.19,
       "lending_quantity": 2436945,
       "lending_change": -885,
       "return_pct": -5.823148813803016,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한국카본",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한국카본",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.04718393584269642,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.04718393584269642
     },
     {
       "close": 13320,
       "market_cap": 688330793520,
       "listed_shares": 51676486,
-      "volume": 144640,
-      "trading_value": 1908457900,
+      "volume": 154557,
+      "trading_value": 2040457320,
       "short_volume": 9061,
       "short_value": 120092550,
-      "short_volume_ratio_pct": 6.264518805309735,
-      "short_value_ratio_pct": 6.292648635319647,
+      "short_volume_ratio_pct": 5.8625620321305405,
+      "short_value_ratio_pct": 5.88557029950521,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한국카본",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.18145003125793036,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.18145003125793036
     }
   ]
 }

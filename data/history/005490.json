@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3260617750,
       "short_volume_ratio_pct": 6.341796594153777,
       "short_value_ratio_pct": 6.361327161381242,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 99057,
+      "balance_value": 25903405500,
+      "balance_ratio_pct": 0.13,
       "lending_quantity": 2378082,
       "lending_change": -1927,
       "return_pct": -2.6070763500931093,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "POSCO홀딩스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "POSCO홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.009659076862564751,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.009659076862564751
     },
     {
       "close": 259500,
       "market_cap": 20563176256500,
       "listed_shares": 79241527,
-      "volume": 247399,
-      "trading_value": 64252698000,
+      "volume": 256471,
+      "trading_value": 66613894500,
       "short_volume": 15490,
       "short_value": 4019450250,
-      "short_volume_ratio_pct": 6.2611409100279305,
-      "short_value_ratio_pct": 6.255691006158217,
+      "short_volume_ratio_pct": 6.0396692023659595,
+      "short_value_ratio_pct": 6.033951745607667,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "POSCO홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0039915939530039595,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.0039915939530039595
     }
   ]
 }

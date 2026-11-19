@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 304722200,
       "short_volume_ratio_pct": 12.758329818641922,
       "short_value_ratio_pct": 12.700804333313764,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 141517,
+      "balance_value": 23590883900,
+      "balance_ratio_pct": 1.16,
       "lending_quantity": 355869,
       "lending_change": 34074,
       "return_pct": -1.068249258160236,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "영원무역홀딩스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "영원무역홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.14231265373601962,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.14231265373601962
     },
     {
       "close": 164100,
       "market_cap": 2008806683700,
       "listed_shares": 12241357,
-      "volume": 11813,
-      "trading_value": 1959495100,
+      "volume": 11863,
+      "trading_value": 1967709100,
       "short_volume": 1653,
       "short_value": 274206500,
-      "short_volume_ratio_pct": 13.993058494878523,
-      "short_value_ratio_pct": 13.99373236503628,
+      "short_volume_ratio_pct": 13.934080755289555,
+      "short_value_ratio_pct": 13.93531696326454,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "영원무역홀딩스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.2208333602230537,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.2208333602230537
     }
   ]
 }

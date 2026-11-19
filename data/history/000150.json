@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 5951763000,
       "short_volume_ratio_pct": 5.021189923825877,
       "short_value_ratio_pct": 5.033070160595327,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 16433,
+      "balance_value": 8890253000,
+      "balance_ratio_pct": 0.12,
       "lending_quantity": 599515,
       "lending_change": 18037,
       "return_pct": -6.724137931034477,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "두산",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "두산",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.11370044736363936,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.11370044736363936
     },
     {
       "close": 612000,
       "market_cap": 8713295532000,
       "listed_shares": 14237411,
-      "volume": 148922,
-      "trading_value": 85923718000,
-      "short_volume": 29326,
-      "short_value": 16711872500,
-      "short_volume_ratio_pct": 19.69218785673037,
-      "short_value_ratio_pct": 19.449661733678703,
+      "volume": 158039,
+      "trading_value": 91468080000,
+      "short_volume": 29327,
+      "short_value": 16712482500,
+      "short_volume_ratio_pct": 18.556811926170123,
+      "short_value_ratio_pct": 18.27138221333606,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "두산",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.01272703302587809,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.01272703302587809
     }
   ]
 }

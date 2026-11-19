@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 5718751000,
       "short_volume_ratio_pct": 12.902812227246502,
       "short_value_ratio_pct": 12.913042211561907,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 36296,
+      "balance_value": 7785492000,
+      "balance_ratio_pct": 0.05,
       "lending_quantity": 2280639,
       "lending_change": 5935,
       "return_pct": -5.506607929515411,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "LG화학",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "LG화학",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.000562383956072515,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.000562383956072515
     },
     {
       "close": 209500,
       "market_cap": 14789095439500,
       "listed_shares": 70592341,
-      "volume": 177242,
-      "trading_value": 36856669500,
-      "short_volume": 8719,
-      "short_value": 1814898000,
-      "short_volume_ratio_pct": 4.919262928651222,
-      "short_value_ratio_pct": 4.924205102145759,
+      "volume": 182382,
+      "trading_value": 37933418000,
+      "short_volume": 8720,
+      "short_value": 1815107500,
+      "short_volume_ratio_pct": 4.781173580726168,
+      "short_value_ratio_pct": 4.784982729476157,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "LG화학",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.14818038121161048,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.14818038121161048
     }
   ]
 }

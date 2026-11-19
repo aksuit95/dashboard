@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 4706699400,
       "short_volume_ratio_pct": 21.421074323396073,
       "short_value_ratio_pct": 21.432601934258077,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 3000348,
+      "balance_value": 363342142800,
+      "balance_ratio_pct": 1.79,
       "lending_quantity": 5039380,
       "lending_change": -22904,
       "return_pct": -0.2471169686985064,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "메리츠금융지주",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "메리츠금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.008940689460771794,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.008940689460771794
     },
     {
       "close": 125200,
       "market_cap": 20951878579600,
       "listed_shares": 167347273,
-      "volume": 177386,
-      "trading_value": 22226008650,
+      "volume": 178308,
+      "trading_value": 22341109650,
       "short_volume": 57850,
       "short_value": 7247869600,
-      "short_volume_ratio_pct": 32.61249478538329,
-      "short_value_ratio_pct": 32.60985683095197,
+      "short_volume_ratio_pct": 32.443861184018665,
+      "short_value_ratio_pct": 32.4418514279124,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "메리츠금융지주",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.022521430630064704,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.022521430630064704
     }
   ]
 }

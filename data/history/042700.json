@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 26318294600,
       "short_volume_ratio_pct": 25.490001915528442,
       "short_value_ratio_pct": 25.483797725499972,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 6801647,
+      "balance_value": 1124312249100,
+      "balance_ratio_pct": 7.14,
       "lending_quantity": 22067407,
       "lending_change": 160255,
       "return_pct": -2.592810842663525,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한미반도체",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한미반도체",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.27200505286836313,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.27200505286836313
     },
     {
       "close": 172400,
       "market_cap": 16431823280000,
       "listed_shares": 95312200,
-      "volume": 781557,
-      "trading_value": 128707792400,
+      "volume": 839586,
+      "trading_value": 138642304800,
       "short_volume": 261051,
       "short_value": 42842316450,
-      "short_volume_ratio_pct": 33.40140258484026,
-      "short_value_ratio_pct": 33.28649777229805,
+      "short_volume_ratio_pct": 31.092824320557988,
+      "short_value_ratio_pct": 30.90133023380033,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한미반도체",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.17007371564185908,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.17007371564185908
     }
   ]
 }

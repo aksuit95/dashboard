@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3096705700,
       "short_volume_ratio_pct": 27.849296051203794,
       "short_value_ratio_pct": 27.85146820369589,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 2213564,
+      "balance_value": 42411886240,
+      "balance_ratio_pct": 0.28,
       "lending_quantity": 17247578,
       "lending_change": 56251,
       "return_pct": -0.2083333333333286,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "기업은행",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "기업은행",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.02152939936790538,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.02152939936790538
     },
     {
       "close": 19230,
       "market_cap": 15334499460870,
       "listed_shares": 797425869,
-      "volume": 592452,
-      "trading_value": 11365645470,
+      "volume": 597185,
+      "trading_value": 11456416830,
       "short_volume": 128892,
       "short_value": 2472921180,
-      "short_volume_ratio_pct": 21.755686536630815,
-      "short_value_ratio_pct": 21.75785956483825,
+      "short_volume_ratio_pct": 21.583261468389193,
+      "short_value_ratio_pct": 21.585467923307046,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "기업은행",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.005426836735842088,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.005426836735842088
     }
   ]
 }

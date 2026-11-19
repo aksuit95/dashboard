@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 692236400,
       "short_volume_ratio_pct": 14.143193286454578,
       "short_value_ratio_pct": 14.160475521894474,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 685313,
+      "balance_value": 22581063350,
+      "balance_ratio_pct": 1.46,
       "lending_quantity": 2742856,
       "lending_change": -41590,
       "return_pct": -2.5147928994082775,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "HL만도",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "HL만도",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.046706441962369075,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.046706441962369075
     },
     {
       "close": 33050,
       "market_cap": 1551932816000,
       "listed_shares": 46957120,
-      "volume": 139697,
-      "trading_value": 4593272450,
+      "volume": 147997,
+      "trading_value": 4868161300,
       "short_volume": 9071,
       "short_value": 298110850,
-      "short_volume_ratio_pct": 6.493339155457884,
-      "short_value_ratio_pct": 6.490162585500453,
+      "short_volume_ratio_pct": 6.129178294154611,
+      "short_value_ratio_pct": 6.12368472671602,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "HL만도",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.14837579476765184,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.14837579476765184
     }
   ]
 }

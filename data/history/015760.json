@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 3473026250,
       "short_volume_ratio_pct": 4.291605503346952,
       "short_value_ratio_pct": 4.342523479600353,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 675525,
+      "balance_value": 16955677500,
+      "balance_ratio_pct": 0.11,
       "lending_quantity": 6888223,
       "lending_change": -15804,
       "return_pct": -6.343283582089555,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한국전력",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한국전력",
       "lending_published_at": null,
-      "lending_change_shares_pct": -9.361894559716929e-05,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -9.361894559716929e-05
     },
     {
       "close": 25250,
       "market_cap": 16209592944250,
       "listed_shares": 641964077,
-      "volume": 1525791,
-      "trading_value": 38509667450,
-      "short_volume": 194487,
-      "short_value": 4911202925,
-      "short_volume_ratio_pct": 12.746634368665172,
-      "short_value_ratio_pct": 12.753168879935368,
+      "volume": 1594709,
+      "trading_value": 40253266600,
+      "short_volume": 194493,
+      "short_value": 4911354425,
+      "short_volume_ratio_pct": 12.196143622441461,
+      "short_value_ratio_pct": 12.201132578393029,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한국전력",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.02333977949361176,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.02333977949361176
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 9796075,
       "short_volume_ratio_pct": 0.09270782498542633,
       "short_value_ratio_pct": 0.09264022703180616,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 2942678,
+      "balance_value": 46052910700,
+      "balance_ratio_pct": 0.69,
       "lending_quantity": 7676177,
       "lending_change": -15828,
       "return_pct": 0.12795905310301237,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "LG유플러스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "LG유플러스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.00015408983690066698,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.00015408983690066698
     },
     {
       "close": 15180,
       "market_cap": 6442812971760,
       "listed_shares": 424427732,
-      "volume": 636854,
-      "trading_value": 9753288700,
+      "volume": 647398,
+      "trading_value": 9913609630,
       "short_volume": 8809,
       "short_value": 133634830,
-      "short_volume_ratio_pct": 1.3832055698794385,
-      "short_value_ratio_pct": 1.3701514854164012,
+      "short_volume_ratio_pct": 1.3606776665976725,
+      "short_value_ratio_pct": 1.3479936671664163,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "LG유플러스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.00948806992659,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.00948806992659
     }
   ]
 }

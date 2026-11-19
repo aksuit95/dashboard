@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 521029200,
       "short_volume_ratio_pct": 15.09553384231971,
       "short_value_ratio_pct": 15.098989629922771,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 34372,
+      "balance_value": 4636782800,
+      "balance_ratio_pct": 0.37,
       "lending_quantity": 229206,
       "lending_change": 1630,
       "return_pct": -1.8909090909090907,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "롯데웰푸드",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "롯데웰푸드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.019979197299081954,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.019979197299081954
     },
     {
       "close": 139400,
       "market_cap": 1283117615600,
       "listed_shares": 9204574,
-      "volume": 21542,
-      "trading_value": 3008784500,
+      "volume": 21780,
+      "trading_value": 3041975900,
       "short_volume": 2529,
       "short_value": 353153500,
-      "short_volume_ratio_pct": 11.739857023488998,
-      "short_value_ratio_pct": 11.73741422823735,
+      "short_volume_ratio_pct": 11.611570247933885,
+      "short_value_ratio_pct": 11.609345754514361,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "롯데웰푸드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.4753940812469974,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.4753940812469974
     }
   ]
 }

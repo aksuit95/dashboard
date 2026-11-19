@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2335429500,
       "short_volume_ratio_pct": 6.861214467973892,
       "short_value_ratio_pct": 6.872248185486327,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 76107,
+      "balance_value": 17732931000,
+      "balance_ratio_pct": 0.11,
       "lending_quantity": 1533706,
       "lending_change": -1373,
       "return_pct": -2.5104602510460268,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "HD한국조선해양",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "HD한국조선해양",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.09657198080694934,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.09657198080694934
     },
     {
       "close": 231000,
       "market_cap": 16348589796000,
       "listed_shares": 70773116,
-      "volume": 117273,
-      "trading_value": 26943907750,
-      "short_volume": 6067,
-      "short_value": 1394326000,
-      "short_volume_ratio_pct": 5.173398821553128,
-      "short_value_ratio_pct": 5.174921221291666,
+      "volume": 119823,
+      "trading_value": 27533708250,
+      "short_volume": 6068,
+      "short_value": 1394557000,
+      "short_volume_ratio_pct": 5.064136267661468,
+      "short_value_ratio_pct": 5.0649080295967766,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "HD한국조선해양",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.041226106251984154,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.041226106251984154
     }
   ]
 }

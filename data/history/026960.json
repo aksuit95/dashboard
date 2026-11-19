@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 120232400,
       "short_volume_ratio_pct": 5.299226650803093,
       "short_value_ratio_pct": 5.295970944671269,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 1474172,
+      "balance_value": 39581518200,
+      "balance_ratio_pct": 1.48,
       "lending_quantity": 2629942,
       "lending_change": 4256,
       "return_pct": -2.5408348457350343,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "동서",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "동서",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.00800902708124373,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.00800902708124373
     },
     {
       "close": 27700,
       "market_cap": 2761690000000,
       "listed_shares": 99700000,
-      "volume": 142159,
-      "trading_value": 3987804900,
-      "short_volume": 3977,
-      "short_value": 111415100,
-      "short_volume_ratio_pct": 2.7975717330594616,
-      "short_value_ratio_pct": 2.793895458626875,
+      "volume": 144599,
+      "trading_value": 4055677600,
+      "short_volume": 3979,
+      "short_value": 111470500,
+      "short_volume_ratio_pct": 2.7517479373992906,
+      "short_value_ratio_pct": 2.7485049600589555,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "동서",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.012575727181544634,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.012575727181544634
     }
   ]
 }

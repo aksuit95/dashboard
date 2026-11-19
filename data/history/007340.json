@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 598167150,
       "short_volume_ratio_pct": 11.04915729448175,
       "short_value_ratio_pct": 11.029686846822335,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 417476,
+      "balance_value": 14465543400,
+      "balance_ratio_pct": 0.71,
       "lending_quantity": 2015146,
       "lending_change": 12810,
       "return_pct": -0.5738880918220985,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "DN오토모티브",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "DN오토모티브",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.0386030867942219,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.0386030867942219
     },
     {
       "close": 38350,
       "market_cap": 2243891672750,
       "listed_shares": 58510865,
-      "volume": 68082,
-      "trading_value": 2558436825,
+      "volume": 69333,
+      "trading_value": 2606174725,
       "short_volume": 8217,
       "short_value": 308421575,
-      "short_volume_ratio_pct": 12.06926941041685,
-      "short_value_ratio_pct": 12.055078788197164,
+      "short_volume_ratio_pct": 11.85149928605426,
+      "short_value_ratio_pct": 11.834263145960024,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "DN오토모티브",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.01808552992679223,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.01808552992679223
     }
   ]
 }

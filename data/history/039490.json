@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1413925200,
       "short_volume_ratio_pct": 8.274108138238573,
       "short_value_ratio_pct": 8.3376994811309,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 0,
+      "balance_value": 0,
+      "balance_ratio_pct": 0,
       "lending_quantity": 653963,
       "lending_change": 1791,
       "return_pct": -2.3127199597787893,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "키움증권",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "키움증권",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.04171064585313064,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.04171064585313064
     },
     {
       "close": 194600,
       "market_cap": 5104030293600,
       "listed_shares": 26228316,
-      "volume": 98942,
-      "trading_value": 19355269550,
+      "volume": 100893,
+      "trading_value": 19738520150,
       "short_volume": 5794,
       "short_value": 1133374900,
-      "short_volume_ratio_pct": 5.855956014634836,
-      "short_value_ratio_pct": 5.855639969632972,
+      "short_volume_ratio_pct": 5.742717532435352,
+      "short_value_ratio_pct": 5.7419446411741255,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "키움증권",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.09479068347354058,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.09479068347354058
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 26522058500,
       "short_volume_ratio_pct": 29.47453159282118,
       "short_value_ratio_pct": 29.44098348253131,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 390874,
+      "balance_value": 552695836000,
+      "balance_ratio_pct": 0.84,
       "lending_quantity": 1016742,
       "lending_change": -25229,
       "return_pct": -0.6324666198172793,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "삼성바이오로직스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "삼성바이오로직스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.024028454286886436,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.024028454286886436
     },
     {
       "close": 1375000,
       "market_cap": 63650057625000,
       "listed_shares": 46290951,
-      "volume": 43661,
-      "trading_value": 59293004500,
-      "short_volume": 10156,
-      "short_value": 13810882000,
-      "short_volume_ratio_pct": 23.26103387462495,
-      "short_value_ratio_pct": 23.292599382444852,
+      "volume": 44325,
+      "trading_value": 60203139500,
+      "short_volume": 10160,
+      "short_value": 13816354000,
+      "short_volume_ratio_pct": 22.921601804850535,
+      "short_value_ratio_pct": 22.949557306724845,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "삼성바이오로직스",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.01867319597733043,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.01867319597733043
     }
   ]
 }

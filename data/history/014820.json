@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 66788750,
       "short_volume_ratio_pct": 8.519134775374376,
       "short_value_ratio_pct": 8.514368504788226,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 33252,
+      "balance_value": 660384720,
+      "balance_ratio_pct": 0.11,
       "lending_quantity": 349505,
       "lending_change": -160,
       "return_pct": -1.6831683168316829,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "동원시스템즈",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "동원시스템즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.031592255906448014,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.031592255906448014
     },
     {
       "close": 20550,
       "market_cap": 595770845100,
       "listed_shares": 28991282,
-      "volume": 14273,
-      "trading_value": 290883450,
+      "volume": 15250,
+      "trading_value": 310950600,
       "short_volume": 3099,
       "short_value": 63121250,
-      "short_volume_ratio_pct": 21.712323968331816,
-      "short_value_ratio_pct": 21.69984232516494,
+      "short_volume_ratio_pct": 20.321311475409836,
+      "short_value_ratio_pct": 20.299446278605025,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "동원시스템즈",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.000620876303434943,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.000620876303434943
     }
   ]
 }

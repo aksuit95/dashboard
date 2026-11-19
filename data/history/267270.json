@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1207898950,
       "short_volume_ratio_pct": 6.9119602527496316,
       "short_value_ratio_pct": 6.935472250375692,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 22680,
+      "balance_value": 2007180000,
+      "balance_ratio_pct": 0.05,
       "lending_quantity": 1559676,
       "lending_change": 4643,
       "return_pct": -2.533039647577098,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "HD건설기계",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "HD건설기계",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.01684303216181202,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.01684303216181202
     },
     {
       "close": 91300,
       "market_cap": 4336511341800,
       "listed_shares": 47497386,
-      "volume": 416697,
-      "trading_value": 37005633250,
-      "short_volume": 17979,
-      "short_value": 1609439550,
-      "short_volume_ratio_pct": 4.314645893778933,
-      "short_value_ratio_pct": 4.349174459810116,
+      "volume": 430304,
+      "trading_value": 38245685150,
+      "short_volume": 17980,
+      "short_value": 1609530850,
+      "short_volume_ratio_pct": 4.178441288019632,
+      "short_value_ratio_pct": 4.208398525709246,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "HD건설기계",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.00856678723330164,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.00856678723330164
     }
   ]
 }

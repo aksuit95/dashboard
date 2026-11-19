@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 94982180,
       "short_volume_ratio_pct": 4.0587740216019075,
       "short_value_ratio_pct": 4.050339161638183,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 313367,
+      "balance_value": 5111015770,
+      "balance_ratio_pct": 0.54,
       "lending_quantity": 1626893,
       "lending_change": -20223,
       "return_pct": 1.5566625155666287,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "대웅",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "대웅",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.00930308874929956,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:32+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.00930308874929956
     },
     {
       "close": 16300,
       "market_cap": 947714274000,
       "listed_shares": 58141980,
-      "volume": 76508,
-      "trading_value": 1232445445,
+      "volume": 77419,
+      "trading_value": 1247224455,
       "short_volume": 2432,
       "short_value": 39081280,
-      "short_volume_ratio_pct": 3.1787525487530712,
-      "short_value_ratio_pct": 3.171035290734512,
+      "short_volume_ratio_pct": 3.141347731177101,
+      "short_value_ratio_pct": 3.1334600474940175,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "대웅",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.006527125495210174,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.006527125495210174
     }
   ]
 }

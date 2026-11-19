@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 442038010,
       "short_volume_ratio_pct": 19.410510922723542,
       "short_value_ratio_pct": 19.345722945194407,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 867245,
+      "balance_value": 13442297500,
+      "balance_ratio_pct": 1.18,
       "lending_quantity": 2351781,
       "lending_change": 32417,
       "return_pct": -6.850961538461547,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한일시멘트",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한일시멘트",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06798539385481929,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.06798539385481929
     },
     {
       "close": 15490,
       "market_cap": 1139215287410,
       "listed_shares": 73545209,
-      "volume": 47606,
-      "trading_value": 741852415,
+      "volume": 48745,
+      "trading_value": 759510575,
       "short_volume": 7237,
       "short_value": 112556110,
-      "short_volume_ratio_pct": 15.201865311095238,
-      "short_value_ratio_pct": 15.17230485796828,
+      "short_volume_ratio_pct": 14.8466509385578,
+      "short_value_ratio_pct": 14.81955797652982,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한일시멘트",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.0020123676581026506,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.0020123676581026506
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 4011443500,
       "short_volume_ratio_pct": 5.055236411842687,
       "short_value_ratio_pct": 5.080994668841825,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 9650,
+      "balance_value": 3338900000,
+      "balance_ratio_pct": 0.01,
       "lending_quantity": 1872585,
       "lending_change": 9436,
       "return_pct": -2.8089887640449405,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "현대모비스",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "현대모비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.003176332017877639,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.003176332017877639
     },
     {
       "close": 341500,
       "market_cap": 30673729777500,
       "listed_shares": 89820585,
-      "volume": 357050,
-      "trading_value": 121761662006,
+      "volume": 374632,
+      "trading_value": 127776101006,
       "short_volume": 8789,
       "short_value": 2999183750,
-      "short_volume_ratio_pct": 2.461560005601456,
-      "short_value_ratio_pct": 2.463159339802877,
+      "short_volume_ratio_pct": 2.3460355762454888,
+      "short_value_ratio_pct": 2.3472180841229195,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "현대모비스",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.025773601897605098,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.025773601897605098
     }
   ]
 }

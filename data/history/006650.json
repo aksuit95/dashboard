@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 178428300,
       "short_volume_ratio_pct": 11.08645049531749,
       "short_value_ratio_pct": 11.058594904215623,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 33648,
+      "balance_value": 2890363200,
+      "balance_ratio_pct": 0.52,
       "lending_quantity": 314410,
       "lending_change": -1710,
       "return_pct": -1.603665521191303,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "대한유화",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "대한유화",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.024015384615384616,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.024015384615384616
     },
     {
       "close": 88100,
       "market_cap": 572650000000,
       "listed_shares": 6500000,
-      "volume": 19980,
-      "trading_value": 1741424700,
+      "volume": 20255,
+      "trading_value": 1765655700,
       "short_volume": 4742,
       "short_value": 413299900,
-      "short_volume_ratio_pct": 23.733733733733732,
-      "short_value_ratio_pct": 23.73343504315748,
+      "short_volume_ratio_pct": 23.41150333251049,
+      "short_value_ratio_pct": 23.40772892472751,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "대한유화",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.0206,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.0206
     }
   ]
 }

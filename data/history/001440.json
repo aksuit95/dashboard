@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 2094275180,
       "short_volume_ratio_pct": 9.475817270917851,
       "short_value_ratio_pct": 9.464146820373239,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 2209808,
+      "balance_value": 38561149600,
+      "balance_ratio_pct": 1.13,
       "lending_quantity": 10529817,
       "lending_change": -133204,
       "return_pct": -3.1093836757356996,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "대한전선",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "대한전선",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.06197581055561915,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.06197581055561915
     },
     {
       "close": 18130,
       "market_cap": 3553345765480,
       "listed_shares": 195992596,
-      "volume": 782019,
-      "trading_value": 13852549885,
-      "short_volume": 46053,
-      "short_value": 817151360,
-      "short_volume_ratio_pct": 5.88898735196971,
-      "short_value_ratio_pct": 5.898923785034253,
+      "volume": 828572,
+      "trading_value": 14699308035,
+      "short_volume": 46057,
+      "short_value": 817223880,
+      "short_volume_ratio_pct": 5.5585996147588865,
+      "short_value_ratio_pct": 5.559607826804753,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "대한전선",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.036476377913786086,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.036476377913786086
     }
   ]
 }

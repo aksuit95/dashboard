@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 1372339700,
       "short_volume_ratio_pct": 11.592009003939223,
       "short_value_ratio_pct": 11.6145146697897,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 336703,
+      "balance_value": 22289738600,
+      "balance_ratio_pct": 0.88,
       "lending_quantity": 3305721,
       "lending_change": 22145,
       "return_pct": -4.05797101449275,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한전기술",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한전기술",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.15984824699110414,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.15984824699110414
     },
     {
       "close": 67100,
       "market_cap": 2564562000000,
       "listed_shares": 38220000,
-      "volume": 108066,
-      "trading_value": 7119165700,
-      "short_volume": 13929,
-      "short_value": 916127700,
-      "short_volume_ratio_pct": 12.889345400033314,
-      "short_value_ratio_pct": 12.868469966923232,
+      "volume": 117422,
+      "trading_value": 7747156700,
+      "short_volume": 13943,
+      "short_value": 917067500,
+      "short_volume_ratio_pct": 11.874265469843811,
+      "short_value_ratio_pct": 11.83747193341268,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한전기술",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.011279434850863423,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.011279434850863423
     }
   ]
 }

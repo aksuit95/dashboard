@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 614688600,
       "short_volume_ratio_pct": 40.73761261261261,
       "short_value_ratio_pct": 40.53722881322539,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 336384,
+      "balance_value": 11722982400,
+      "balance_ratio_pct": 1.43,
       "lending_quantity": 879576,
       "lending_change": 108178,
       "return_pct": -8.530183727034128,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "한샘",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "한샘",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.3438525009509675,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.3438525009509675
     },
     {
       "close": 33050,
       "market_cap": 777796320400,
       "listed_shares": 23533928,
-      "volume": 46107,
-      "trading_value": 1532578625,
+      "volume": 47651,
+      "trading_value": 1583927625,
       "short_volume": 11321,
       "short_value": 375479000,
-      "short_volume_ratio_pct": 24.55375539505932,
-      "short_value_ratio_pct": 24.499819707455465,
+      "short_volume_ratio_pct": 23.75815827579694,
+      "short_value_ratio_pct": 23.705565461048135,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "한샘",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.017158206653814866,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:33+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.017158206653814866
     }
   ]
 }

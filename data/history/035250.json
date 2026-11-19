@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "1bbe0fdec7a35f0837c1",
+  "dataset_id": "d83b2f202c3682c53c98",
   "as_of": "2026-11-19",
-  "collected_at": "2026-11-19T16:52:22.974275+09:00",
+  "collected_at": "2026-11-20T04:28:47.520690+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -9228,15 +9228,15 @@
       "short_value": 422571190,
       "short_volume_ratio_pct": 6.4310841130778975,
       "short_value_ratio_pct": 6.424190241287084,
-      "balance_quantity": null,
-      "balance_value": null,
-      "balance_ratio_pct": null,
+      "balance_quantity": 2678251,
+      "balance_value": 38031164200,
+      "balance_ratio_pct": 1.25,
       "lending_quantity": 7020949,
       "lending_change": 25317,
       "return_pct": 1.211689237348537,
       "date": "2026-11-17",
       "session_status": "trading",
-      "balance_status": "publication_pending",
+      "balance_status": "reported",
       "lending_status": "reported",
       "name": "강원랜드",
       "lending_published_at": null,
@@ -9267,21 +9267,21 @@
       "lending_status": "reported",
       "name": "강원랜드",
       "lending_published_at": null,
-      "lending_change_shares_pct": 0.03515884089267811,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-18T19:00:31+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": 0.03515884089267811
     },
     {
       "close": 14130,
       "market_cap": 3022979265000,
       "listed_shares": 213940500,
-      "volume": 1467467,
-      "trading_value": 20767341955,
-      "short_volume": 71747,
-      "short_value": 1017783180,
-      "short_volume_ratio_pct": 4.889172976291801,
-      "short_value_ratio_pct": 4.900883233903489,
+      "volume": 1553130,
+      "trading_value": 21997904815,
+      "short_volume": 71801,
+      "short_value": 1018560900,
+      "short_volume_ratio_pct": 4.622987129216486,
+      "short_value_ratio_pct": 4.6302632390038365,
       "balance_quantity": null,
       "balance_value": null,
       "balance_ratio_pct": null,
@@ -9294,10 +9294,10 @@
       "lending_status": "reported",
       "name": "강원랜드",
       "lending_published_at": null,
-      "lending_change_shares_pct": -0.06317457423909918,
       "lending_source": "토스증권",
       "lending_updated_at": "2026-11-19T19:00:38+09:00",
-      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00"
+      "lending_collected_at": "2026-11-19T23:33:04.731353+09:00",
+      "lending_change_shares_pct": -0.06317457423909918
     }
   ]
 }
