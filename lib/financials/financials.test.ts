@@ -4,10 +4,15 @@ import os from "node:os";
 import path from "node:path";
 import { analyzeCompany, discreteQuarters, flowSummary, ratio } from "./analyze";
 import { classifyFinancial, parseAmount, parseFinancialReport, type DartAccount } from "./parse";
-import { applyFinancialMarketCaps, atomicJson, dartRequest, financialSummary, readFinancialPublication, reportRequests, reportRequestsForCompany } from "./source";
+import { applyFinancialMarketCaps, atomicJson, dartRequest, financialPath, financialSummary, readFinancialPublication, reportRequests, reportRequestsForCompany } from "./source";
 import { metricLabels, type FinancialCompany, type FinancialReport, type Metric } from "./types";
 
 const now = new Date("2026-11-04T12:00:00+09:00");
+it("지수별 재무 자료는 별도의 저장 파일을 사용한다", () => {
+  expect(path.basename(financialPath("kospi200"))).toBe("board.json");
+  expect(path.basename(financialPath("kosdaq150"))).toBe("kosdaq150.json");
+  expect(financialPath("kospi200")).not.toBe(financialPath("kosdaq150"));
+});
 function row(id: string, name: string, sj: string, amount: string, extra: Partial<DartAccount> = {}): DartAccount {
   return { rcept_no: "20260814000001", bsns_year: "2026", reprt_code: "11012", corp_code: "00126380", sj_div: sj, account_id: `ifrs-full_${id}`, account_nm: name, thstrm_amount: amount, currency: "KRW", ...extra };
 }

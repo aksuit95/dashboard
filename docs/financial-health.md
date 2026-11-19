@@ -1,4 +1,4 @@
-# 코스피200 현금·재무건전성
+# 코스피200·코스닥150 현금·재무건전성
 
 페이지 `/financials`, 조회 API `/api/financials`, 사이드바 **종목 분석 → 현금·재무건전성**.
 
@@ -28,6 +28,10 @@
 # 최초 전체 수집 / 캐시를 재사용한 이어받기
 npm run financials:export
 
+# 코스닥150 전체 수집 / 실패 기업 재시도
+npm run financials:export -- --universe=kosdaq150
+npm run financials:export -- --universe=kosdaq150 --retry-failed
+
 # 미완료·오류 기업만 재시도
 npm run financials:export -- --retry-failed
 
@@ -51,7 +55,7 @@ npm run financials:export -- --reclassify
 
 수집은 4개 기업씩 처리하고 DART 요청 시작 간격을 최소 400ms로 제한한다. 네트워크 오류·429·5xx는 최대 3회 시도한다. 회사별 오류는 기록하고 기존 보고서를 보존한다. 4개 기업 처리마다 전체 구성에 대한 체크포인트를 원자 교체한다. Windows 파일 잠금은 짧게 재시도하며 기존 파일을 먼저 삭제하지 않는다. 미완료·오류가 남으면 작업 종료 코드는 1이다.
 
-- 배포 자료: `data/financials/board.json`
+- 배포 자료: 코스피200 `data/financials/board.json`, 코스닥150 `data/financials/kosdaq150.json`. 선택 지수별 구성과 공시 상세를 별도로 조회한다.
 - 로컬 작업 캐시: `tmp/financial-cache-v1/` (Git 제외)
 - 기업개황·고유번호: 7일, 최근 재무보고서: 1일, 오래된 보고서: 30일 캐시. 정상적인 데이터 없음도 같은 기간 캐시한다.
 - 최근 5개 사업연도 연간 보고서, 당기와 전기 1·2·3분기 보고서 중 이미 종료된 기간을 조회한다. 아직 미공시된 보고서를 합성하지 않는다.

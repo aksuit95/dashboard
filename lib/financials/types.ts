@@ -1,3 +1,10 @@
+export const financialMarkets = {
+  KOSPI: { universe: "kospi200", label: "코스피200" },
+  KOSDAQ: { universe: "kosdaq150", label: "코스닥150" },
+} as const;
+export type FinancialMarket = keyof typeof financialMarkets;
+export type FinancialUniverse = (typeof financialMarkets)[FinancialMarket]["universe"];
+
 export const metricLabels = {
   cash: "현금및현금성자산", shortInvestments: "단기금융상품", currentAssets: "유동자산", currentLiabilities: "유동부채",
   inventory: "재고자산", receivables: "매출채권", liabilities: "부채총계", equity: "자본총계",

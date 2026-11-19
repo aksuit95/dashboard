@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { analyzeCompany, discreteQuarters } from "@/lib/financials/analyze";
-import { metricLabels, type FinancialBoard, type FinancialCompany, type Metric } from "@/lib/financials/types";
+import { metricLabels, type FinancialBoard, type FinancialCompany, type FinancialUniverse, type Metric } from "@/lib/financials/types";
 import { accountHelp, cardHelp, ratioHelp } from "@/components/financial-help";
 
 const money = (v: number | null | undefined) => v == null ? "—" : (v / 1e8).toLocaleString("ko-KR", { maximumFractionDigits: 0 });
@@ -44,18 +44,21 @@ export function FinancialHealthBoard() {
   const [kind, setKind] = useState("nonfinancial"), [filter, setFilter] = useState("all"), [sort, setSort] = useState<SortKey>("cash"), [desc, setDesc] = useState(true);
   const [selected, setSelected] = useState<string | null>(null);
   const [period, setPeriod] = useState("latest");
+  const [universe, setUniverse] = useState<FinancialUniverse>("kospi200");
   useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get("code");
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("universe") === "kosdaq150") setUniverse("kosdaq150");
+    const code = params.get("code");
     if (code && /^[0-9A-Z]{6}$/.test(code)) { setKind("all"); setQuery(code); setSelected(code); }
   }, []);
   useEffect(() => {
-    const controller = new AbortController(); setBusy(true); setError(null);
-    fetch("/api/financials", { cache: "no-store", signal: controller.signal }).then(async r => {
+    const controller = new AbortController(); setBusy(true); setError(null); setBoard(null);
+    fetch(`/api/financials?universe=${universe}`, { cache: "no-store", signal: controller.signal }).then(async r => {
       const data = await r.json(); if (!r.ok) throw new Error(data.error ?? "저장 자료 조회 실패");
       if (!controller.signal.aborted) { setBoard(data); setError(data.error); }
     }).catch(e => { if (!controller.signal.aborted) setError(e instanceof Error ? e.message : "조회 실패"); }).finally(() => { if (!controller.signal.aborted) setBusy(false); });
     return () => controller.abort();
-  }, [reload]);
+  }, [reload, universe]);
   const companies = board?.publication?.companies;
   const analyzed = useMemo(() => (companies ?? []).map(c => { const company = selectedReports(c, period); return { company, analysis: analyzeCompany(company) }; }), [companies, period]);
   const industries = [...new Set(analyzed.map(r => r.company.industry))].sort((a, b) => a.localeCompare(b, "ko"));
@@ -82,7 +85,7 @@ export function FinancialHealthBoard() {
   const priceDates = [...new Set(analyzed.flatMap(r => r.company.market ? [r.company.market.date] : []))].sort();
   return <section aria-label="현금·재무건전성 분석" className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
-      <div className="flex flex-wrap items-center gap-3"><span>공시 실적 · 단위 억원 · 연결 우선 / 별도 구분</span><label className="flex items-center gap-2">재무 기준 <select aria-label="재무 기준 분기" className={inputClass} value={period} onChange={e => setPeriod(e.target.value)}><option value="latest">최신 공시</option><option value="2026-06-30">2026년 2분기</option></select></label></div>
+      <div className="flex flex-wrap items-center gap-3"><span>공시 실적 · 단위 억원 · 연결 우선 / 별도 구분</span><div role="group" aria-label="지수 선택" className="flex gap-2">{([["kospi200", "코스피200"], ["kosdaq150", "코스닥150"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={universe === id} onClick={() => { if (universe === id) return; setBoard(null); setUniverse(id); setIndustry(""); setSelected(null); }} className={`rounded-lg border px-5 py-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${universe === id ? "border-[#d84f68] bg-[#d84f68] font-semibold text-white" : "border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700"}`}>{label}</button>)}</div><label className="flex items-center gap-2">재무 기준 <select aria-label="재무 기준 분기" className={inputClass} value={period} onChange={e => setPeriod(e.target.value)}><option value="latest">최신 공시</option><option value="2026-06-30">2026년 2분기</option></select></label></div>
       <button type="button" disabled={busy} className={buttonClass} onClick={() => setReload(v => v + 1)}>{busy ? "불러오는 중…" : "저장 자료 새로고침"}</button>
     </div>
     {error && <div role="status" className="rounded-lg border border-amber-500/25 bg-amber-500/10 p-4 text-sm text-amber-200">{error}</div>}
@@ -121,24 +124,24 @@ export function FinancialHealthBoard() {
       </div>
       <CardHelp label="기업 비교표" content={cardHelp["기업 비교표"]} />
       <p className="text-xs leading-5 text-zinc-500">¹ 표기 차입금은 재무상태표에서 식별한 단기차입금·유동성장기부채·장기차입금과 비유동으로 확인된 사채의 부분 합계입니다. 만기 구분이 불명확한 사채와 주석 내 차입·리스·기타 금융부채는 빠질 수 있어 총차입금·순현금으로 확정하지 않습니다. 가용 유동성과 순차입금/EBITDA는 사용제한·주석·감가상각 데이터 검증 전까지 결측입니다. 금융자회사 포함 여부·기업 인수에 따라 연결 FCF와 부채의 업종 간 비교가 제한될 수 있습니다.</p>
-      {active && <CompanyDetail key={`${active.code}-${period}`} company={active} period={period} />}
+      {active && <CompanyDetail key={`${universe}-${active.code}-${period}`} company={active} period={period} universe={universe} />}
     </>}
     {!publication && !busy && <div className={panel}><p className="text-sm text-zinc-400">공식 재무제표가 저장되면 기업 비교와 상세 분석이 표시됩니다.</p></div>}
   </section>;
 }
 
-function CompanyDetail({ company, period }: { company: FinancialCompany; period: string }) {
+function CompanyDetail({ company, period, universe }: { company: FinancialCompany; period: string; universe: "kospi200" | "kosdaq150" }) {
   const [detail, setDetail] = useState<FinancialCompany | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`/api/financials/${encodeURIComponent(company.code)}`, { cache: "no-store", signal: controller.signal }).then(async response => {
+    fetch(`/api/financials/${encodeURIComponent(company.code)}?universe=${universe}`, { cache: "no-store", signal: controller.signal }).then(async response => {
       const data = await response.json();
       if (!response.ok || data.company?.code !== company.code) throw new Error(data.error ?? "공시 계정 조회 실패");
       if (!controller.signal.aborted) setDetail(data.company);
     }).catch(error => { if (!controller.signal.aborted) setDetailError(error instanceof Error ? error.message : "공시 계정 조회 실패"); });
     return () => controller.abort();
-  }, [company]);
+  }, [company, universe]);
   const detailed = detail ? selectedReports({ ...detail, market: company.market }, period) : company;
   return <>{detailError && <p role="alert" className="text-xs text-amber-300">공시 계정 상세: {detailError}</p>}<CompanyDetailContent company={detailed} loading={!detail && !detailError} /></>;
 }

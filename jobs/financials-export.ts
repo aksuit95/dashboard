@@ -10,9 +10,12 @@ const periodArg = process.argv.find(a => a.startsWith("--period="));
 const periodMatch = periodArg?.match(/^--period=(\d{4})Q([1-4])$/);
 if (periodArg && !periodMatch) throw new Error("--period는 2026Q3 형식이어야 합니다.");
 const period = periodMatch ? { year: Number(periodMatch[1]), quarter: Number(periodMatch[2]) as 1 | 2 | 3 | 4 } : undefined;
-const work = process.argv.includes("--enrich") ? enrichFinancialAccounts().then(r => { if (r.failed) process.exitCode = 1; return r.publication; }) : process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, period, onProgress: console.log });
+const universeArg = process.argv.find(a => a.startsWith("--universe="))?.slice(11) ?? "kospi200";
+if (universeArg !== "kospi200" && universeArg !== "kosdaq150") throw new Error("--universe는 kospi200 또는 kosdaq150이어야 합니다.");
+if (universeArg !== "kospi200" && (process.argv.includes("--enrich") || process.argv.includes("--reclassify"))) throw new Error("코스닥150은 전체 수집으로 보강하세요.");
+const work = process.argv.includes("--enrich") ? enrichFinancialAccounts().then(r => { if (r.failed) process.exitCode = 1; return r.publication; }) : process.argv.includes("--reclassify") ? reclassifySavedFinancials() : collectFinancials({ universe: universeArg, refresh: process.argv.includes("--refresh"), retryFailed: process.argv.includes("--retry-failed"), codes, limit, period, onProgress: console.log });
 work.then(p => {
-  console.log(`재무 데이터 저장 완료: ${p.companies.filter(c => c.reports.length).length}/${p.companies.length}개 기업 · data/financials/board.json`);
+  console.log(`재무 데이터 저장 완료: ${p.companies.filter(c => c.reports.length).length}/${p.companies.length}개 기업 · ${universeArg}`);
   const errors = p.companies.filter(c => c.errors.length);
   if (errors.length) console.log(`미완료·확인 필요: ${errors.length}개 기업. 기존 성공 자료는 유지됩니다. --retry-failed로 재시도할 수 있습니다.`);
   if (!p.companies.some(c => c.reports.length) || errors.length) process.exitCode = 1;

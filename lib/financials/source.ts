@@ -4,11 +4,13 @@ import { inflateRawSync, crc32 } from "node:zlib";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
 import { readMarketCaps, type ValuationMarketCaps } from "@/lib/valuation/market-caps";
 import { classifyFinancial, parseFinancialReport, type DartAccount } from "./parse";
-import { metricLabels, type FinancialCompany, type FinancialPublication } from "./types";
+import { metricLabels, type FinancialCompany, type FinancialPublication, type FinancialUniverse } from "./types";
 
 const root = path.join(process.cwd(), "data", "financials");
 const cacheRoot = path.join(process.cwd(), "tmp", "financial-cache-v1");
 export const financialPublicationPath = path.join(root, "board.json");
+export type { FinancialUniverse } from "./types";
+export function financialPath(universe: FinancialUniverse) { return universe === "kospi200" ? financialPublicationPath : path.join(root, "kosdaq150.json"); }
 export async function atomicJson(file: string, value: unknown) {
   await fs.mkdir(path.dirname(file), { recursive: true });
   const tmp = `${file}.${process.pid}.tmp`;
@@ -165,17 +167,18 @@ export function financialSummary(publication: FinancialPublication): FinancialPu
     return { ...rest, evidence: _evidence.bonds ? { bonds: _evidence.bonds } : {} };
   }) })) };
 }
-export async function collectFinancials(options: { refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; period?: ReportPeriod; onProgress?: (text: string) => void } = {}) {
+export async function collectFinancials(options: { universe?: FinancialUniverse; refresh?: boolean; codes?: string[]; retryFailed?: boolean; limit?: number; period?: ReportPeriod; onProgress?: (text: string) => void } = {}) {
   const now = new Date(), refresh = options.refresh ?? false;
+  const universe = options.universe ?? "kospi200", destination = financialPath(universe);
   reportRequestsForCompany(now, options.period, true); // Validate before any network request or checkpoint.
-  const previous = await readFinancialPublication();
-  const [members, codes] = await Promise.all([fetchIndexMembers("kospi200"), corpCodes(refresh)]);
-  if (options.codes?.some(code => !members.some(m => m.code === code))) throw new Error("선택 종목이 현재 코스피200 구성에 없습니다.");
+  const previous = await readFinancialPublication(destination);
+  const [members, codes] = await Promise.all([fetchIndexMembers(universe), corpCodes(refresh)]);
+  if (options.codes?.some(code => !members.some(m => m.code === code))) throw new Error("선택 종목이 현재 지수 구성에 없습니다.");
   // Public, saved FCF is reusable only as a separately labelled vendor reference.
   let references: { data?: { compositionDate: string; sourceUpdatedAt: string | null; stocks: { code: string; values: { fcf?: number | null } }[] } } = {};
   try { references = JSON.parse(await fs.readFile(path.join(process.cwd(), "data/valuation/stocks.json"), "utf8")); } catch { /* optional */ }
   let sectors: Record<string, string> = {};
-  try { const s = JSON.parse(await fs.readFile(path.join(process.cwd(), "data/sectors/board.json"), "utf8")); sectors = Object.fromEntries(s.snapshots.kospi200[s.latestDate].rows.map((r: { code: string; industry: string }) => [r.code, r.industry])); } catch { /* DART profile still classifies finance */ }
+  try { const s = JSON.parse(await fs.readFile(path.join(process.cwd(), "data/sectors/board.json"), "utf8")); sectors = Object.fromEntries(s.snapshots[universe][s.latestDate].rows.map((r: { code: string; industry: string }) => [r.code, r.industry])); } catch { /* DART profile still classifies finance */ }
   let caps: ValuationMarketCaps | null = null;
   try { caps = await readMarketCaps(); } catch { /* failed market data remains missing */ }
   const companies: FinancialCompany[] = [];
@@ -234,10 +237,10 @@ export async function collectFinancials(options: { refresh?: boolean; codes?: st
     // Checkpoint full membership, retaining last successful company reports when interrupted.
     const collected = new Map(companies.map(c => [c.code, c]));
     const all = members.map(m => collected.get(m.code) ?? oldByCode.get(m.code) ?? ({ code: m.code, name: m.name, corpCode: codes[m.code] ?? null, industry: sectors[m.code] ?? "미확인", financial: null, fiscalMonth: null, reports: [], errors: ["수집 대기"], attemptedAt: null, referenceFcf: null, market: null } satisfies FinancialCompany));
-    const publication: FinancialPublication = { schemaVersion: 1, publishedAt: new Date().toISOString(), membershipAt: now.toISOString(), membershipSource: "NAVER 코스피200 구성종목 API (현재 구성·과거 시점 구성 아님)", companies: all };
-    await atomicJson(financialPublicationPath, publication);
+    const publication: FinancialPublication = { schemaVersion: 1, publishedAt: new Date().toISOString(), membershipAt: now.toISOString(), membershipSource: `NAVER ${universe === "kospi200" ? "코스피200" : "코스닥150"} 구성종목 API (현재 구성·과거 시점 구성 아님)`, companies: all };
+    await atomicJson(destination, publication);
   }
-  return (await readFinancialPublication())!;
+  return (await readFinancialPublication(destination))!;
 }
 
 /** Re-evaluate sector rules using saved public company profiles without external requests. */

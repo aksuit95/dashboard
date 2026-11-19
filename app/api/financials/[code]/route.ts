@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { readFinancialPublication } from "@/lib/financials/source";
+import { financialPath, readFinancialPublication } from "@/lib/financials/source";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export async function GET(_request: Request, { params }: { params: Promise<{ code: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   if (!/^[0-9A-Z]{6}$/.test(code)) return NextResponse.json({ error: "종목코드 형식 오류" }, { status: 400 });
+  const universe = new URL(request.url).searchParams.get("universe") ?? "kospi200";
+  if (universe !== "kospi200" && universe !== "kosdaq150") return NextResponse.json({ error: "지수 구분 오류" }, { status: 400 });
   try {
-    const publication = await readFinancialPublication();
+    const publication = await readFinancialPublication(financialPath(universe));
     const company = publication?.companies.find(c => c.code === code);
     if (!company) return NextResponse.json({ error: "저장된 기업 자료가 없습니다." }, { status: 404 });
     return NextResponse.json({ company }, { headers: { "Cache-Control": "no-store" } });
