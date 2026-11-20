@@ -2,10 +2,30 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { localDate } from "@/lib/market/market-hours";
 import { recordMarketLiveArchive } from "@/lib/sources/market-live-archive";
 import { exportMarketLivePublication } from "@/lib/sources/market-live-publication";
-import { marketLiveTradingWindow } from "@/lib/sources/market-live";
+import { loadMarketLiveBoard, marketLiveTradingWindow } from "@/lib/sources/market-live";
+import { readMarketLiveClose, saveMarketLiveClose, withinClosingCapture } from "@/lib/sources/market-live-close";
+import type { MarketLiveClosingSnapshot } from "@/lib/market/market-live";
 
 const minute = 60_000;
 const captureOffset = 8_000;
+
+async function captureClose(date: string, closeAt: number) {
+  if (readMarketLiveClose(date)) return;
+  let best: MarketLiveClosingSnapshot | undefined;
+  for (const delay of [Math.max(0, closeAt + captureOffset - Date.now()), 17_000, 20_000]) {
+    if (!withinClosingCapture(Date.now() + delay, closeAt)) break;
+    if (delay) await sleep(delay);
+    const board = await loadMarketLiveBoard().catch(() => null);
+    const snapshot = board?.closingSnapshot;
+    if (snapshot?.date !== date) continue;
+    if (!best || snapshot.stocks.length > best.stocks.length) best = snapshot;
+    if (snapshot.stocks.length === board?.breadth.total) break;
+  }
+  if (best) {
+    saveMarketLiveClose(best);
+    console.log(`${best.collectedAt} KRX 정규장 마감 거래대금 저장 · ${date} · ${best.stocks.length}종목`);
+  }
+}
 
 async function main() {
   const exportIndex = process.argv.indexOf("--export");
@@ -24,8 +44,9 @@ async function main() {
   }
 
   const now = Date.now();
-  const window = marketLiveTradingWindow(localDate(now));
-  if (!window || now >= window.closeAt) return;
+  const date = localDate(now);
+  const window = marketLiveTradingWindow(date);
+  if (!window || (now >= window.closeAt && !withinClosingCapture(now, window.closeAt))) return;
   if (now < window.openAt + captureOffset) await sleep(window.openAt + captureOffset - now);
 
   let lastError: string | null = null;
@@ -50,6 +71,11 @@ async function main() {
     const next = (Math.floor((after - captureOffset) / minute) + 1) * minute + captureOffset;
     if (next >= window.closeAt) break;
     await sleep(next - after);
+  }
+  try {
+    await captureClose(date, window.closeAt);
+  } catch (failure) {
+    console.error(`${new Date().toISOString()} KRX 마감 거래대금 저장 실패`, failure);
   }
 }
 

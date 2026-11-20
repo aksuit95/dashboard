@@ -4,6 +4,7 @@ import { krxCloseTime } from "@/config/market-calendar";
 import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp, type WhitespaceData } from "lightweight-charts";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { MarketLiveGlobalQuotes } from "@/components/MarketLiveGlobalQuotes";
 import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
 import { MarketLiveSectorStocks, MarketLiveSectorToggle } from "@/components/MarketLiveSectorStocks";
 import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
@@ -154,6 +155,7 @@ export function MarketLiveBoard() {
         ))}
       </section>
 
+      <MarketLiveGlobalQuotes />
       <BreadthPanel breadth={board?.breadth} />
       <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} closed={closed} />
 
@@ -367,7 +369,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
       <div className="flex flex-wrap items-start justify-between gap-2 px-4 py-3.5">
         <div>
           <h2 id="market-live-leaders" className="font-semibold">{closed ? "정규장 주도주" : "장중 주도주"}</h2>
-          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 {closed ? "KRX 정규장 종가 상승률 상위" : showBuyStrength ? "상승 종목 중 시총 대비 매수강도 상위" : "상승 종목 중 누적 거래대금 상위"}</p>
+          <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 {showBuyStrength ? (closed ? "KRX 정규장 종가 상승 종목의 시총 대비 매수강도 상위" : "상승 종목 중 시총 대비 매수강도 상위") : closed ? "KRX 정규장 종가 상승률 상위" : "상승 종목 중 누적 거래대금 상위"}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {buyStrengthLeaders !== undefined && (
@@ -386,7 +388,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
         </div>
         {showBuyStrength && (
           <p className="basis-full text-xs leading-relaxed text-zinc-400">
-            KRX 정규장 누적 거래대금 ÷ 직전 거래일 시가총액. 전체 거래대금으로 상승 종목의 매수강도를 추정합니다.
+            KRX 정규장{closed ? " 마감" : ""} 누적 거래대금 ÷ 직전 거래일 시가총액. 전체 거래대금으로 상승 종목의 매수강도를 추정합니다.
             {baselineDate && <span className="mt-1 block">시총 기준 {baselineDate} KRX 정규장 {krxCloseTime(baselineDate)} KST</span>}
           </p>
         )}
@@ -398,7 +400,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
               <th scope="col" className={columnHeader}>종목</th>
               <th scope="col" className={`${columnHeader} text-right`}>{closed ? "종가" : "현재가"}</th>
               <th scope="col" className={`${columnHeader} text-right`}>등락률</th>
-              {!closed && <th scope="col" className={`${columnHeader} text-right`}>거래대금</th>}
+              {(!closed || showBuyStrength) && <th scope="col" className={`${columnHeader} text-right`}>{closed ? "정규장 거래대금" : "거래대금"}</th>}
               {showBuyStrength && <>
                 <th scope="col" className={`${columnHeader} text-right`}>시가총액</th>
                 <th scope="col" aria-sort="descending" className={`${columnHeader} text-right`}>매수강도</th>
@@ -415,7 +417,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
                 </th>
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{formatNumber(stock.price, 0)}원</td>
                 <td className={`whitespace-nowrap px-3 py-2.5 text-right font-semibold ${direction(stock.changePct)}`}>{percent(stock.changePct)}</td>
-                {!closed && <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.turnover == null ? "—" : `${formatCompact(stock.turnover, "")}원`}</td>}
+                {(!closed || showBuyStrength) && <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.turnover == null ? "—" : `${formatCompact(stock.turnover, "")}원`}</td>}
                 {showBuyStrength && <>
                   <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.marketCap == null ? "—" : `${formatCompact(stock.marketCap, "")}원`}</td>
                   <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-emerald-200">{stock.buyStrengthPct == null ? "—" : `${formatNumber(stock.buyStrengthPct, 3)}%`}</td>
@@ -423,8 +425,8 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-400">{clock(stock.asOf)}</td>
               </tr>
             ))}
-            {!ranked.length && <EmptyRow columns={closed ? 4 : showBuyStrength ? 7 : 5}
-              text={closed ? "표시할 정규장 종가 상승 종목이 없습니다." : showBuyStrength ? "거래대금과 기준 시가총액이 확인된 상승 종목이 없습니다." : "표시할 장중 주도주가 없습니다."} />}
+            {!ranked.length && <EmptyRow columns={showBuyStrength ? 7 : closed ? 4 : 5}
+              text={showBuyStrength ? (closed ? "정규장 마감 거래대금과 기준 시가총액이 확인된 상승 종목이 없습니다." : "거래대금과 기준 시가총액이 확인된 상승 종목이 없습니다.") : closed ? "표시할 정규장 종가 상승 종목이 없습니다." : "표시할 장중 주도주가 없습니다."} />}
           </tbody>
         </table>
       </div>

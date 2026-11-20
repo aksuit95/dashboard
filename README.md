@@ -13,14 +13,14 @@
 
 | 화면 | 경로 | 내용 |
 | --- | --- | --- |
-| 장중 시장 | `/market-live` | KRX 지수 분봉, 등락 종목 수, 주도주, 섹터 순환매와 리플레이 |
+| 장중 시장 | `/`, `/market-live` | 기본 화면. KRX 지수 분봉, 등락 종목 수, 주도주, 섹터 순환매와 리플레이 |
 | 장 마감 브리핑 | `/briefing` | 일간·주간 리서치와 PDF 보관 |
 | 매크로·실적 캘린더 | `/events` | 국내·미국 주요 지표 일정과 국내 공시·실적 일정 |
 | 섹터·종목 등락률 | `/valuation/sectors`, `/rising`, `/stock-returns` | 기간별 수익률과 연속 상승 종목·섹터 |
 | 시장 심리 | `/adr`, `/risk` | 등락비율, 시장 지표 장기 비교, 공포·탐욕과 이격도 |
 | 수급·ETF | `/investor-flow/kospi200`, `/short-selling`, `/etf-holdings` | 외국인·기관·개인 수급, 국민연금 공시, 공매도, ETF 보유종목 |
 | 기업 분석 | `/valuation`, `/valuation/stocks`, `/financials`, `/investment-risk`, `/minervini` | 밸류에이션, 재무건전성, 투자위험, 기술적 분석 |
-| 글로벌·야간 시장 | `/`, `/futures`, `/single-stock`, `/market-hours` | ADR·GDR·야간선물·ETF 프록시와 장 운영시간 |
+| 글로벌·야간 시장 | `/proxy`, `/futures`, `/single-stock`, `/market-hours` | ADR·GDR·야간선물·ETF 프록시와 장 운영시간 |
 
 ## 장중 시장과 자동 기록
 

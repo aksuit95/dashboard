@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { asiaMarketSession, clockSession, loadMarketBoard, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession, vendorCashSession } from "@/lib/sources/futures-board";
+import { asiaMarketSession, clockSession, loadMarketBoard, loadMarketLiveGlobalQuotes, parseNaverFuturesQuote, parseYahooChartQuote, usCashSession, vendorCashSession } from "@/lib/sources/futures-board";
 
 describe("선물·매크로 시세", () => {
   it("26개 지표를 성격별로 묶고 개별 조회 실패가 다른 지표를 가리지 않는다", async () => {
@@ -34,6 +34,26 @@ describe("선물·매크로 시세", () => {
     expect(board.asia[2]).toMatchObject({ price: null, session: "missing" });
     expect(board.asia[0].price).toBe(100);
     expect(board.usIndicators[1]).toMatchObject({ price: 100, unit: "points" });
+  });
+
+  it("장중 화면은 요청한 여섯 지수만 조회하고 시세 실패를 종목별로 처리한다", async () => {
+    const requested: string[] = [];
+    const fetchImpl: typeof fetch = async input => {
+      const url = new URL(String(input));
+      const id = decodeURIComponent(url.pathname.split("/").at(-1)!);
+      requested.push(id);
+      expect(url.searchParams.get("range")).toBe("1d");
+      if (id === "HSTECH.HK") return new Response(null, { status: 503 });
+      return Response.json({ chart: { result: [{ meta: {
+        regularMarketPrice: 101.5, chartPreviousClose: 100, fulldayChangePercent: 1.5,
+        regularMarketTime: Date.parse("2026-11-20T01:35:00Z") / 1000,
+      } }] } });
+    };
+
+    const quotes = await loadMarketLiveGlobalQuotes(fetchImpl, new Date("2026-11-20T01:36:00Z"));
+    expect(requested).toEqual(["NQ=F", "ES=F", "^N225", "^TWII", "000688.SS", "HSTECH.HK"]);
+    expect(quotes.slice(0, 5).every(quote => quote.changePct === 1.5)).toBe(true);
+    expect(quotes.at(-1)).toMatchObject({ id: "HSTECH.HK", changePct: null, session: "missing" });
   });
 
   it("야후 전일 대비는 fulldayChange 를 쓴다", () => {

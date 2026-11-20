@@ -8,8 +8,9 @@ import { marketLiveCloseBasis, marketLiveTradingWindow } from "@/lib/market/mark
 import { MARKET_LIVE_STALE_MS, type MarketLiveBoardData, type MarketLiveSector } from "@/lib/market/market-live";
 import { packMarketLiveReplayStocks, summarizeMarketLiveArchiveSectors, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { loadMarketLiveBoard, resolveMarketLiveSession } from "@/lib/sources/market-live";
+import { marketLiveArchivePath } from "./market-live-close";
 
-export const marketLiveArchivePath = path.join(process.cwd(), "data", "market-live-archive.sqlite");
+export { marketLiveArchivePath };
 const table = "market_live_archive_v1";
 const minuteMs = 60_000;
 

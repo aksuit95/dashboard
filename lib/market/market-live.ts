@@ -29,6 +29,13 @@ export type MarketLiveBuyStrengthStock = MarketLiveStock & {
   marketCap: number;
   buyStrengthPct: number;
 };
+export type MarketLiveClosingSnapshot = {
+  date: string;
+  baselineDate: string;
+  basis: "KRX_REGULAR_CLOSE";
+  collectedAt: string;
+  stocks: { code: string; price: number; turnover: number; baselineClose?: number; marketCap?: number }[];
+};
 export type MarketLiveMember = Pick<MarketLiveStock, "code" | "name" | "market"> & { sector: Sector };
 export type MarketLiveQuote = Pick<MarketLiveStock, "code" | "price" | "turnover" | "asOf">;
 export type MarketLiveRotationStock = Pick<MarketLiveStock, "code" | "market" | "sector" | "asOf"> & { price: number; close: number };
@@ -63,12 +70,13 @@ export type MarketLiveBoardData = {
   sectors: MarketLiveSector[];
   leaders: MarketLiveStock[];
   buyStrengthLeaders?: MarketLiveBuyStrengthStock[];
+  closingSnapshot?: MarketLiveClosingSnapshot;
   rotationStocks: MarketLiveRotationStock[];
   sectorStocks?: (MarketLiveSectorStock & { sector: Sector })[];
   breadth: { up: number; flat: number; down: number; compared: number; total: number };
   warnings: string[];
 };
-export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks" | "sectorStocks"> & {
+export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks" | "sectorStocks" | "closingSnapshot"> & {
   sectorDetail?: { name: string; stocks: MarketLiveSectorStock[] };
 };
 

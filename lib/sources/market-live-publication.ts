@@ -5,8 +5,9 @@ import { localDate } from "@/lib/market/market-hours";
 import type { MarketLiveArchiveFrame, MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
 import { marketLiveCloseBasis, marketLiveTradingWindow } from "@/lib/market/market-live-session";
-import type { MarketLiveRadar } from "@/lib/market/market-live";
+import type { MarketLiveClosingSnapshot, MarketLiveRadar } from "@/lib/market/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveArchive, readMarketLiveRotationFrame } from "./market-live-archive";
+import { readMarketLiveClose, validMarketLiveClose } from "./market-live-close";
 import { readSectorPublication } from "./sector-publication";
 
 export const marketLivePublicationDir = path.join(process.cwd(), "data", "market-live-publication");
@@ -16,6 +17,7 @@ type PublishedArchive = {
   priceBasis: ReturnType<typeof marketLiveCloseBasis>;
   day: NonNullable<MarketLiveArchiveResponse["day"]>;
   radar: MarketLiveRadar;
+  closingSnapshot?: MarketLiveClosingSnapshot;
 };
 
 export function buildMarketLiveRadar(date: string, baselineDate: string, current: MarketLiveArchiveFrame, live: boolean, archiveFile?: string): MarketLiveRadar {
@@ -84,9 +86,11 @@ export async function exportMarketLivePublication(directory: string, now = Date.
   if (!day) return null;
   const current = readMarketLiveRotationFrame(date, day.baselineDate, 0, now, archiveFile);
   if (!current) return null;
-  const snapshot: PublishedArchive = published?.day.stockTape ? published : {
+  const closingSnapshot = published?.closingSnapshot ?? validMarketLiveClose(readMarketLiveClose(date, archiveFile), date, day.baselineDate) ?? undefined;
+  const snapshot: PublishedArchive = published?.day.stockTape ? { ...published, closingSnapshot } : {
     version: 1, market: "KRX", priceBasis: marketLiveCloseBasis(day.baselineDate), day,
     radar: buildMarketLiveRadar(date, day.baselineDate, current, false, archiveFile),
+    closingSnapshot,
   };
   mkdirSync(directory, { recursive: true });
   const file = path.join(directory, `${date}.json`);

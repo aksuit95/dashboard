@@ -1,5 +1,6 @@
 import { parseDecimal } from "@/lib/sources/proxy-board";
 import { loadNightFutures } from "@/lib/sources/night-futures";
+import { marketLiveGlobalQuotes } from "@/config/market-live-global";
 
 /** 글로벌 시장 카드. 해외 지표는 Yahoo, 코스피200 주간은 Naver, 야간은 PreKOSPI 수집 기록. */
 
@@ -209,9 +210,10 @@ async function yahooCard(
   fetchImpl: FetchLike,
   spec: (typeof futuresSpec)[number] | (typeof macroSpec)[number] | (typeof asiaSpec)[number] | (typeof usIndicesSpec)[number] | (typeof europeSpec)[number] | (typeof usIndicatorsSpec)[number] | (typeof currenciesSpec)[number],
   now: Date,
+  range: "1d" | "5d" = "5d",
 ): Promise<MarketCard> {
   try {
-    const payload = await getJson(fetchImpl, `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(spec.id)}?interval=1d&range=5d`);
+    const payload = await getJson(fetchImpl, `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(spec.id)}?interval=1d&range=${range}`);
     const quote = parseYahooChartQuote(payload);
     if (!quote) return blank(spec, "응답에 시세가 없습니다.");
     const isAsia = asiaSpec.some((item) => item.id === spec.id);
@@ -230,6 +232,11 @@ async function yahooCard(
 
 function blank(spec: { id: string; name: string; symbol: string; venue: string; unit: MarketCard["unit"] }, error: string): MarketCard {
   return { ...spec, price: null, change: null, changePct: null, session: "missing", error };
+}
+
+export function loadMarketLiveGlobalQuotes(fetchImpl: FetchLike = fetch, now = new Date()) {
+  const specs = [...futuresSpec, ...asiaSpec].filter(spec => marketLiveGlobalQuotes.some(({ id }) => id === spec.id));
+  return Promise.all(specs.map(spec => yahooCard(fetchImpl, spec, now, "1d")));
 }
 
 export async function loadMarketBoard(fetchImpl: FetchLike = fetch, now = new Date()): Promise<MarketBoard> {

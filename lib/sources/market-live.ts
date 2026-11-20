@@ -5,13 +5,14 @@ import { KR_CSAT_2026, krxCloseTime } from "@/config/market-calendar";
 import { hasMarketLiveClosingBasis, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 import {
   MARKET_LIVE_POLL_MS, MARKET_LIVE_STALE_MS, marketLiveChange, marketLiveSymbols, summarizeMarketLiveStocks,
-  type MarketLiveBoardData, type MarketLiveIndex, type MarketLiveMember, type MarketLiveQuote, type MarketLiveSymbol,
+  type MarketLiveBoardData, type MarketLiveClosingSnapshot, type MarketLiveIndex, type MarketLiveMember, type MarketLiveQuote, type MarketLiveSymbol,
 } from "@/lib/market/market-live";
 import { requestKrxOpenApi } from "@/lib/sources/krx-openapi";
 import { fetchIndexMembers } from "@/lib/sources/minervini";
 import { fetchNaverLiveIndex, fetchNaverLiveStocks } from "@/lib/sources/naver-market-live";
 import { readSectorPublication, type SectorPublication } from "@/lib/sources/sector-publication";
 import { readMarketCaps } from "@/lib/valuation/market-caps";
+import { readMarketLiveClose, validMarketLiveClose, withinClosingCapture } from "./market-live-close";
 
 export { marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 
@@ -161,6 +162,18 @@ const emptyIndex = (symbol: MarketLiveSymbol): MarketLiveIndex => ({
   symbol, price: null, asOf: null, changePct: null, turnover: null, breadth: null, points: [],
 });
 
+async function loadSavedClose(date: string, baselineDate: string | null) {
+  if (!baselineDate) return null;
+  if (!process.env.VERCEL) {
+    try {
+      const local = validMarketLiveClose(readMarketLiveClose(date), date, baselineDate);
+      if (local) return local;
+    } catch { /* Use the published archive if the local reader is unavailable. */ }
+  }
+  const { readMarketLivePublication } = await import("./market-live-publication");
+  return validMarketLiveClose(readMarketLivePublication(date)?.closingSnapshot, date, baselineDate);
+}
+
 async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   const { state, note, date, baselineDate, openAt, closeAt } = session;
   const frame = { state, note, date, baselineDate };
@@ -176,11 +189,17 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     ? Promise.all(marketLiveSymbols.map(symbol => loadCloses(symbol, standardClose ? date : null)))
     : Promise.resolve([]);
   const membership = loadMarketLiveMembers(date, publication);
-  const stockFeed = state === "closed"
-    ? Promise.resolve({ quotes: [] as MarketLiveQuote[], failedBatches: 0 })
-    : membership.then(({ members }) => fetchNaverLiveStocks(members.map(member => member.code), date, openAt, closeAt, Date.now()));
-  const [saved, liveIndexes, previous, final, { members, warnings: memberWarnings }, liveStocks] = await Promise.all([
-    publication, Promise.all(indexFeed), Promise.all(previousCloses), finalCloses, membership, stockFeed,
+  const savedClose = state === "closed" && standardClose ? loadSavedClose(date, baselineDate).catch(() => null) : Promise.resolve(null);
+  const stockFeed = membership.then(async ({ members }) => {
+    const at = Date.now();
+    if (state === "closed" && (!standardClose || !baselineDate || !withinClosingCapture(at, closeAt) || await savedClose)) {
+      return { quotes: [] as MarketLiveQuote[], failedBatches: 0, collectedAt: null };
+    }
+    const result = await fetchNaverLiveStocks(members.map(member => member.code), date, openAt, closeAt, at);
+    return { ...result, collectedAt: new Date().toISOString() };
+  });
+  const [saved, liveIndexes, previous, final, { members, warnings: memberWarnings }, liveStocks, storedClose] = await Promise.all([
+    publication, Promise.all(indexFeed), Promise.all(previousCloses), finalCloses, membership, stockFeed, savedClose,
   ]);
   const warnings = [...memberWarnings];
   const closeByCode = new Map<string, number>();
@@ -200,6 +219,29 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     if (snapshot?.rows.some(row => savedFinal.has(row.code))) publishedCloseUpdates.push(snapshot.fetchedAt);
   });
 
+  const confirmedClosePrices = new Map([...savedFinal, ...final.flatMap(market => [...market.stocks])]);
+  const capturedClose = state === "closed" && baselineDate && liveStocks.collectedAt
+    ? validMarketLiveClose({
+      date, baselineDate, basis: "KRX_REGULAR_CLOSE", collectedAt: liveStocks.collectedAt,
+      stocks: liveStocks.quotes.flatMap(quote => {
+        const confirmed = confirmedClosePrices.get(quote.code);
+        if (Date.parse(quote.asOf) !== closeAt || quote.turnover == null || (confirmed != null && confirmed !== quote.price)) return [];
+        return [{
+          code: quote.code, price: quote.price, turnover: quote.turnover,
+          baselineClose: closeByCode.get(quote.code), marketCap: baselineCaps.get(quote.code),
+        }];
+      }),
+    }, date, baselineDate)
+    : null;
+  const closingSnapshot: MarketLiveClosingSnapshot | undefined = storedClose ?? capturedClose ?? undefined;
+  const closingByCode = new Map(closingSnapshot?.stocks.map(stock => [stock.code, stock]));
+  for (const stock of closingByCode.values()) {
+    if (stock.baselineClose != null && !closeByCode.has(stock.code)) closeByCode.set(stock.code, stock.baselineClose);
+    if (stock.marketCap != null && stock.baselineClose === closeByCode.get(stock.code) && !baselineCaps.has(stock.code)) {
+      baselineCaps.set(stock.code, stock.marketCap);
+    }
+  }
+
   const closedStamp = new Date(closeAt).toISOString();
   const indexes = marketLiveSymbols.map((symbol, i) => {
     const live = liveIndexes[i];
@@ -213,14 +255,15 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     return { symbol, price, asOf, changePct, turnover: isClosed ? null : live.turnover, breadth: isClosed ? null : live.breadth, points };
   });
   const quotes = state === "closed" ? members.flatMap(member => {
-    const price = final[member.market === "KOSPI" ? 0 : 1].stocks.get(member.code) ?? savedFinal.get(member.code);
-    return price == null ? [] : [{ code: member.code, price, turnover: null, asOf: closedStamp }];
+    const closing = closingByCode.get(member.code);
+    const price = confirmedClosePrices.get(member.code) ?? closing?.price;
+    return price == null ? [] : [{ code: member.code, price, turnover: closing?.price === price ? closing.turnover : null, asOf: closedStamp }];
   }) : liveStocks.quotes;
   const now = Date.now();
   const reference = state === "auction" ? session.auctionAt : now;
   const summary = summarizeMarketLiveStocks(members, quotes, closeByCode,
     state === "closed" ? closeAt : reference - MARKET_LIVE_STALE_MS, state === "closed" ? "change" : "turnover",
-    state === "closed" ? undefined : baselineCaps);
+    baselineCaps);
   if (liveStocks.failedBatches) warnings.push(`장중 종목 시세 ${liveStocks.failedBatches}개 묶음 조회 실패`);
   if (indexes.some(index => index.price == null)) {
     warnings.push(state !== "closed" ? "일부 지수 시세를 불러오지 못했습니다." : standardClose
@@ -232,9 +275,9 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
   if (!baselineDate) warnings.push("비교에 필요한 직전 거래일 KRX 정규장 종가를 확인할 수 없습니다.");
   const collectedAt = new Date(now).toISOString();
   const updatedAt = state === "closed"
-    ? latestDataTime([...final.map(result => result.fetchedAt), ...publishedCloseUpdates])
+    ? latestDataTime([...final.map(result => result.fetchedAt), ...publishedCloseUpdates, closingSnapshot?.collectedAt])
     : collectedAt;
-  return { ...frame, collectedAt, updatedAt, indexes, ...summary, warnings };
+  return { ...frame, collectedAt, updatedAt, indexes, ...summary, closingSnapshot, warnings };
 }
 
 export function loadMarketLiveBoard(now = Date.now()) {

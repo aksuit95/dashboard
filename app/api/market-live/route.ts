@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   }
   try {
     const board = await loadMarketLiveBoard();
-    const { rotationStocks: _stocks, sectorStocks, ...result } = board;
+    const { rotationStocks: _stocks, sectorStocks, closingSnapshot: _closing, ...result } = board;
     const detail = sector ? {
       name: sector,
       stocks: (sectorStocks ?? []).filter(stock => stock.sector === sector),

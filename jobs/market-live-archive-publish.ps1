@@ -40,10 +40,31 @@ Invoke-ArchiveGit sparse-checkout set 'data/market-live-publication'
 Invoke-ArchiveGit pull --rebase origin $branch
 $destination = Join-Path $runner $relative
 if (Test-Path -LiteralPath $destination -PathType Leaf) {
-  if ((Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash -ne $hash) { throw 'A different archive for the same trading date is already published.' }
+  if ((Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash -ne $hash) {
+    $mergeClosingSnapshot = @'
+const fs = require("node:fs");
+const assert = require("node:assert/strict");
+const [destination, incoming] = process.argv.slice(2);
+const existing = JSON.parse(fs.readFileSync(destination, "utf8"));
+const next = JSON.parse(fs.readFileSync(incoming, "utf8"));
+assert(next.closingSnapshot && existing.version === next.version && existing.market === "KRX" && next.market === "KRX");
+assert(existing.day.date === next.closingSnapshot.date && existing.day.baselineDate === next.closingSnapshot.baselineDate);
+if (existing.closingSnapshot) {
+  assert.deepEqual(existing.closingSnapshot, next.closingSnapshot);
+} else {
+  const staged = destination + "." + process.pid + ".tmp";
+  fs.writeFileSync(staged, JSON.stringify({...existing, closingSnapshot: next.closingSnapshot}) + "\n", {flag:"wx"});
+  fs.renameSync(staged, destination);
+}
+'@
+    $mergeClosingSnapshot | & $NodePath - $destination $file.FullName
+    if ($LASTEXITCODE -ne 0) { throw 'A different archive for the same trading date is already published.' }
+  }
 } else {
   New-Item -ItemType Directory -Path (Split-Path -Parent $destination) -Force | Out-Null
   Copy-Item -LiteralPath $file.FullName -Destination $destination
+}
+if (Invoke-ArchiveGit status --porcelain -- $relative) {
   Invoke-ArchiveGit add -- $relative
   if ((Invoke-ArchiveGit diff --cached --name-only) -ne $relative) { throw 'Unexpected files are staged for publication.' }
   Invoke-ArchiveGit -c 'user.name=Dashboard Collector' -c 'user.email=dashboard-collector@users.noreply.github.com' commit --author='aksuit95 <338998390+aksuit95@users.noreply.github.com>' -m 'chore(data): publish KRX sector replay'

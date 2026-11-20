@@ -39,7 +39,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
   {
     icon: "global", title: { ko: "글로벌 · 야간 시장", en: "Global & after-hours" },
     items: [
-      { href: "/", ko: "글로벌 프록시", en: "Global proxy" },
+      { href: "/proxy", ko: "글로벌 프록시", en: "Global proxy" },
       { href: "/futures", ko: "글로벌 시장", en: "Global markets" },
       { href: "/single-stock", ko: "단일종목 ETF", en: "Single-stock ETF" },
       { href: "/market-hours", ko: "시장 운영시간", en: "Market hours" },
@@ -76,7 +76,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     setLang(next);
     window.localStorage.setItem("dashboard-lang", next);
   }
-  const current = pathname === "/guide" ? { ko: "리서치보드 사용법", en: "Research board guide" } : groups.flatMap((group) => group.items).find((item) => isActive(pathname, item.href));
+  const current = groups.flatMap((group) => group.items).find((item) => isActive(pathname, item.href));
 
   return (
     <div className="min-h-screen md:grid md:grid-cols-[250px_minmax(0,1fr)]">
@@ -93,7 +93,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-2.5 text-xs text-zinc-500 md:hidden"><span>{lang === "ko" ? "현재 화면" : "Current page"}</span><span className="font-medium text-zinc-300">{current?.[lang] ?? (pathname === "/health" ? (lang === "ko" ? "수집 상태" : "Data status") : "mk리서치")}</span></div>
         <nav id="main-navigation" aria-label={lang === "ko" ? "주요 메뉴" : "Main navigation"} className={`${menuOpen ? "block" : "hidden"} border-t border-white/[0.06] px-3 pb-5 pt-2 md:block md:border-t-0 md:px-3 md:pb-2 md:pt-0`}>
-          <Link href="/guide" onClick={() => setMenuOpen(false)} aria-current={pathname === "/guide" ? "page" : undefined} className={`mb-3 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition focus-visible:outline-2 focus-visible:outline-emerald-400 md:mb-1 md:py-1.5 ${pathname === "/guide" ? "bg-emerald-400/10 text-emerald-300" : "text-zinc-300 hover:bg-white/[0.05] hover:text-white"}`}><span aria-hidden="true" className="text-emerald-400">◈</span>{lang === "ko" ? "리서치보드 사용법" : "Research board guide"}</Link>
           {groups.map((group) => (
             <section key={group.icon} className="mb-4 md:mb-1">
               <h2 className="flex items-center gap-2 px-2.5 pb-1.5 pt-2 text-[11px] font-semibold tracking-wide text-zinc-400 md:pb-0 md:pt-1"><span className="text-emerald-400/80"><SectionIcon name={group.icon} /></span>{group.title[lang]}</h2>
