@@ -28,6 +28,11 @@ export type MarketLiveStock = {
 export type MarketLiveMember = Pick<MarketLiveStock, "code" | "name" | "market"> & { sector: Sector };
 export type MarketLiveQuote = Pick<MarketLiveStock, "code" | "price" | "turnover" | "asOf">;
 export type MarketLiveRotationStock = Pick<MarketLiveStock, "code" | "market" | "sector" | "asOf"> & { price: number; close: number };
+export type MarketLiveSectorStock = Pick<MarketLiveMember, "code" | "name" | "market"> & {
+  price: number | null;
+  changePct: number | null;
+  asOf: string | null;
+};
 export const marketLiveRotationWindows = [10, 30, 60] as const;
 export type MarketLiveRotationWindow = typeof marketLiveRotationWindows[number];
 export type MarketLiveRotationData = {
@@ -53,10 +58,13 @@ export type MarketLiveBoardData = {
   sectors: MarketLiveSector[];
   leaders: MarketLiveStock[];
   rotationStocks: MarketLiveRotationStock[];
+  sectorStocks?: (MarketLiveSectorStock & { sector: Sector })[];
   breadth: { up: number; flat: number; down: number; compared: number; total: number };
   warnings: string[];
 };
-export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks">;
+export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks" | "sectorStocks"> & {
+  sectorDetail?: { name: string; stocks: MarketLiveSectorStock[] };
+};
 
 export function marketLiveChange(price: number | null, close: number | undefined): number | null {
   return price != null && close != null && close > 0 ? (price / close - 1) * 100 : null;
@@ -68,20 +76,22 @@ export function summarizeMarketLiveStocks(
   closes: ReadonlyMap<string, number>,
   minimumQuoteTime: number,
   leaderOrder: "turnover" | "change" = "turnover",
-): Pick<MarketLiveBoardData, "sectors" | "leaders" | "breadth" | "rotationStocks"> {
+): Pick<MarketLiveBoardData, "sectors" | "leaders" | "breadth" | "rotationStocks" | "sectorStocks"> {
   const byCode = new Map(quotes.map(quote => [quote.code, quote]));
   const groups = new Map<Sector, MarketLiveStock[]>();
   const sizes = new Map<Sector, number>();
   const stocks: MarketLiveStock[] = [];
   const rotationStocks: MarketLiveRotationStock[] = [];
+  const sectorStocks: NonNullable<MarketLiveBoardData["sectorStocks"]> = [];
   for (const member of members) {
     sizes.set(member.sector, (sizes.get(member.sector) ?? 0) + 1);
     const quote = byCode.get(member.code);
-    if (!quote || Date.parse(quote.asOf) < minimumQuoteTime) continue;
-    const close = closes.get(member.code) ?? 0;
-    const changePct = marketLiveChange(quote.price, close);
-    if (changePct == null) continue;
-    const stock = { ...member, ...quote, changePct };
+    const fresh = quote && Date.parse(quote.asOf) >= minimumQuoteTime ? quote : undefined;
+    const close = closes.get(member.code);
+    const changePct = marketLiveChange(fresh?.price ?? null, close);
+    sectorStocks.push({ ...member, price: fresh?.price ?? null, changePct, asOf: fresh?.asOf ?? null });
+    if (!fresh || close === undefined || changePct == null) continue;
+    const stock = { ...member, ...fresh, changePct };
     stocks.push(stock);
     rotationStocks.push({ code: stock.code, market: stock.market, sector: stock.sector, asOf: stock.asOf, price: stock.price, close });
     const group = groups.get(member.sector) ?? [];
@@ -107,5 +117,5 @@ export function summarizeMarketLiveStocks(
     .sort(rank).slice(0, 12)).sort(rank);
   const up = countUp(stocks);
   const down = stocks.filter(row => row.changePct < 0).length;
-  return { sectors, leaders, rotationStocks, breadth: { up, down, flat: stocks.length - up - down, compared: stocks.length, total: members.length } };
+  return { sectors, leaders, rotationStocks, sectorStocks, breadth: { up, down, flat: stocks.length - up - down, compared: stocks.length, total: members.length } };
 }

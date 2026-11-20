@@ -48,11 +48,12 @@ async function closingArchive(
   if (!closing) return cached({ ...saved, day, radar: null, warning: "KRX 정규장 종가 반영을 기다리는 중입니다." }, Math.min(ttl, 60));
 
   const closeAt = closing.minuteAt;
+  const names = new Map(board?.sectorStocks?.map(stock => [stock.code, stock.name]));
   const localRadar: MarketLiveRadar = includeLocal && day
     ? { ...buildMarketLiveRadar(date, baselineDate, closing, false), closeAt }
     : { date, baselineDate, live: false, closeAt, windows: {} };
   if (day && marketLiveRotationWindows.every(minutes => localRadar.windows[minutes])) {
-    return cached({ ...saved, day: appendMarketLiveClosingFrame(day, closing), radar: localRadar }, ttl);
+    return cached({ ...saved, day: appendMarketLiveClosingFrame(day, closing, session.openAt, names), radar: localRadar }, ttl);
   }
 
   const pending = loadMarketLiveMinuteReplay(session, now, closing);
@@ -61,7 +62,7 @@ async function closingArchive(
   const maxAge = Math.floor((pending.until - Date.now()) / 1000);
   return cached({
     dates: [...new Set([date, ...saved.dates])].sort().reverse(),
-    day: appendMarketLiveClosingFrame(replay, closing),
+    day: appendMarketLiveClosingFrame(replay, closing, session.openAt, names),
     radar: { ...localRadar, windows: { ...localRadar.windows, ...rebuilt.radar?.windows } },
   }, Math.min(maxAge, untilBoundary));
 }
@@ -76,7 +77,7 @@ export async function GET(request: Request) {
   try {
     const includeLocal = process.env.VERCEL !== "1";
     if (date) {
-      const history = readSharedMarketLiveArchive(date, includeLocal);
+      const history = await readSharedMarketLiveArchive(date, includeLocal);
       return cached({ ...history, radar: null }, history.day ? 3600 : 60);
     }
 
@@ -84,7 +85,7 @@ export async function GET(request: Request) {
     const today = localDate(now);
     const session = resolveMarketLiveSession(now);
     const live = session.state === "open" || session.state === "auction";
-    const saved = readSharedMarketLiveArchive(session.date, includeLocal);
+    const saved = await readSharedMarketLiveArchive(session.date, includeLocal);
     const { day, dates } = saved;
     const { baselineDate } = session;
     const nextBoundary = live ? session.closeAt : marketLiveTradingWindow(today)?.openAt ?? 0;
@@ -118,7 +119,7 @@ export async function GET(request: Request) {
     }
 
     const earlierDates = dates.filter(date => date < session.date);
-    const fallback = earlierDates.length ? readSharedMarketLiveArchive(earlierDates[0], includeLocal).day : null;
+    const fallback = earlierDates.length ? (await readSharedMarketLiveArchive(earlierDates[0], includeLocal)).day : null;
     return cached({
       dates: earlierDates, day: fallback, warning,
       radar: fallback ? archivedRadar(fallback, now, includeLocal, false) : null,

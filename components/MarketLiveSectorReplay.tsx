@@ -3,10 +3,11 @@
 import { krxCloseTime } from "@/config/market-calendar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketLiveRotation } from "@/components/MarketLiveRotation";
+import { MarketLiveSectorStocks, MarketLiveSectorToggle } from "@/components/MarketLiveSectorStocks";
 import { sectorNames } from "@/config/sectors";
 import { formatSigned } from "@/lib/format";
 import {
-  MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveFrameTime, summarizeMarketLiveHourlyLeaders,
+  MARKET_LIVE_SECTOR_REFRESH_SECONDS, marketLiveFrameTime, marketLiveReplaySectorStocks, summarizeMarketLiveHourlyLeaders,
   type MarketLiveArchiveResponse, type MarketLiveHourlyLeader, type MarketLiveSectorResponse,
 } from "@/lib/market/market-live-archive";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
@@ -226,7 +227,7 @@ export function MarketLiveSectorPanels({ live = false, closed = false }: { live?
           </div>
           <TimelineTrack timeline={timeline} selected={selected} seek={seek} />
           <div className="mt-4 grid items-start gap-3 lg:grid-cols-2">
-            <SectorRanks slot={slot ?? null} />
+            <SectorRanks key={day.date} slot={slot ?? null} day={day} />
             <LeadHistory hours={timeline.hourlyLeaders} selected={selected} closeAt={timeline.hourlyCloseAt} seek={seek} />
           </div>
         </>
@@ -271,7 +272,10 @@ function TimelineTrack({ timeline, selected, seek }: { timeline: NonNullable<Ret
   );
 }
 
-function SectorRanks({ slot }: { slot: Slot | null }) {
+function SectorRanks({ slot, day }: { slot: Slot | null; day: ArchiveDay }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const stocks = selected && slot && day.stockTape ? marketLiveReplaySectorStocks(day.stockTape, slot.time, selected) : [];
+  const toggle = (name: string) => setSelected(current => current === name ? null : name);
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border border-white/[0.07] bg-black/15">
       <div className="flex flex-wrap items-baseline justify-between gap-2 px-3 py-2.5">
@@ -291,9 +295,12 @@ function SectorRanks({ slot }: { slot: Slot | null }) {
             </thead>
             <tbody className="divide-y divide-white/[0.06]">
               {slot.ranks.map((sector, index) => (
-                <tr className={index === 0 ? "bg-white/[0.04]" : ""} key={sector.name}>
+                <tr className={`cursor-pointer hover:bg-white/[0.06] ${index === 0 ? "bg-white/[0.04]" : ""}`}
+                  key={sector.name} onClick={() => toggle(sector.name)}>
                   <th scope="row" className="px-3 py-2 font-medium">
-                    <span className="mr-1.5 text-zinc-500">{index + 1}</span>{sector.name}
+                    <span className="mr-1.5 text-zinc-500">{index + 1}</span>
+                    <MarketLiveSectorToggle name={sector.name} expanded={selected === sector.name}
+                      controls="market-live-replay-sector-stocks" onToggle={() => toggle(sector.name)} />
                   </th>
                   <td className={`whitespace-nowrap px-2 py-2 text-right font-semibold ${sector.changePct > 0 ? "text-rose-400" : sector.changePct < 0 ? "text-sky-400" : "text-zinc-300"}`}>
                     {formatSigned(Math.abs(sector.changePct) < 0.005 ? 0 : sector.changePct)}%
@@ -306,6 +313,11 @@ function SectorRanks({ slot }: { slot: Slot | null }) {
           </table>
         </div>
       ) : <p className="px-3 pb-3 text-xs text-zinc-400">선택한 분의 섹터 순위를 확인할 기록이 없습니다.</p>}
+      {selected && <div className="border-t border-white/[0.07] p-2.5">
+        <MarketLiveSectorStocks id="market-live-replay-sector-stocks" name={selected} stocks={stocks}
+          priceLabel="기록 가격" selectedTime={slot ? `${minuteClock.format(slot.time)} KST 기록` : undefined}
+          status="선택한 시각의 종목별 기록이 없습니다." />
+      </div>}
     </div>
   );
 }

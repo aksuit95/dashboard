@@ -4,9 +4,9 @@ import { DatabaseSync } from "node:sqlite";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { localDate } from "@/lib/market/market-hours";
 import { KR_CSAT_2026 } from "@/config/market-calendar";
-import { marketLiveCloseBasis } from "@/lib/market/market-live-session";
+import { marketLiveCloseBasis, marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import { MARKET_LIVE_STALE_MS, type MarketLiveBoardData, type MarketLiveSector } from "@/lib/market/market-live";
-import { summarizeMarketLiveArchiveSectors, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
+import { packMarketLiveReplayStocks, summarizeMarketLiveArchiveSectors, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { loadMarketLiveBoard, resolveMarketLiveSession } from "@/lib/sources/market-live";
 
 export const marketLiveArchivePath = path.join(process.cwd(), "data", "market-live-archive.sqlite");
@@ -44,7 +44,7 @@ function unpackSectors(bytes: Uint8Array): MarketLiveSector[] {
   return JSON.parse(gunzipSync(bytes).toString("utf8")) as MarketLiveSector[];
 }
 
-export function readMarketLiveArchive(date?: string, file = marketLiveArchivePath): MarketLiveArchiveResponse {
+export function readMarketLiveArchive(date?: string, file = marketLiveArchivePath, names?: ReadonlyMap<string, string>): MarketLiveArchiveResponse {
   if (date != null && !isMarketLiveArchiveDate(date)) throw new Error("올바른 거래일을 선택해 주세요.");
   const db = openReader(file);
   if (!db) return { dates: [], day: null };
@@ -52,10 +52,17 @@ export function readMarketLiveArchive(date?: string, file = marketLiveArchivePat
     const dates = db.prepare(`SELECT DISTINCT trade_date FROM ${table} ORDER BY trade_date DESC`).all().map(row => String(row.trade_date));
     const selected = date ?? dates[0];
     if (!selected || !dates.includes(selected)) return { dates, day: null };
-    const rows = db.prepare(`SELECT baseline_date, collected_at, sectors FROM ${table} WHERE trade_date = ? ORDER BY minute_ms`).all(selected);
-    return { dates, day: { date: selected, baselineDate: String(rows[0].baseline_date), frames: rows.map(row => ({
+    const openAt = names && marketLiveTradingWindow(selected)?.openAt;
+    const rows = db.prepare(`SELECT baseline_date, collected_at, sectors${openAt ? ", stocks" : ""} FROM ${table} WHERE trade_date = ? ORDER BY minute_ms`).all(selected);
+    const frames: MarketLiveArchiveFrame[] = rows.map(row => ({
       collectedAt: String(row.collected_at), sectors: unpackSectors(row.sectors as Uint8Array),
-    })) } };
+      stocks: openAt ? JSON.parse(gunzipSync(row.stocks as Uint8Array).toString("utf8")) as MarketLiveArchiveFrame["stocks"] : [],
+    }));
+    return { dates, day: {
+      date: selected, baselineDate: String(rows[0].baseline_date),
+      frames: frames.map(({ stocks: _stocks, ...frame }) => frame),
+      stockTape: names && openAt ? packMarketLiveReplayStocks(openAt, frames, names) : undefined,
+    } };
   } finally { db.close(); }
 }
 

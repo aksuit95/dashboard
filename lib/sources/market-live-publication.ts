@@ -1,11 +1,13 @@
 import { mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { minerviniUniverseIds } from "@/config/minervini";
 import { localDate } from "@/lib/market/market-hours";
 import type { MarketLiveArchiveFrame, MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
 import { marketLiveCloseBasis, marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import type { MarketLiveRadar } from "@/lib/market/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveArchive, readMarketLiveRotationFrame } from "./market-live-archive";
+import { readSectorPublication } from "./sector-publication";
 
 export const marketLivePublicationDir = path.join(process.cwd(), "data", "market-live-publication");
 type PublishedArchive = {
@@ -51,16 +53,25 @@ export function readMarketLivePublication(date: string): PublishedArchive | null
   return saved;
 }
 
-export function readSharedMarketLiveArchive(date?: string, includeLocal = true): MarketLiveArchiveResponse {
-  const local = includeLocal ? readMarketLiveArchive(date) : { dates: [], day: null };
+export async function marketLiveReplayNames(date?: string): Promise<Map<string, string>> {
+  const source = await readSectorPublication().catch(() => null);
+  return new Map(minerviniUniverseIds.flatMap(universe => {
+    const snapshots = source?.snapshots[universe];
+    const selected = Object.keys(snapshots ?? {}).sort().findLast(day => !date || day <= date);
+    return selected ? snapshots?.[selected].rows.map(row => [row.code, row.name] as const) ?? [] : [];
+  }));
+}
+
+export async function readSharedMarketLiveArchive(date?: string, includeLocal = true): Promise<MarketLiveArchiveResponse> {
+  const local = includeLocal ? readMarketLiveArchive(date, undefined, await marketLiveReplayNames(date)) : { dates: [], day: null };
   const dates = [...new Set([...local.dates, ...publishedDates()])].sort().reverse();
   const selected = date ?? dates[0];
   const day = local.day?.date === selected ? local.day : selected ? readMarketLivePublication(selected)?.day ?? null : null;
   return { dates, day };
 }
 
-/** Export only aggregate sectors and comparison results from the latest completed recorded session. */
-export function exportMarketLivePublication(directory: string, now = Date.now(), archiveFile?: string) {
+/** Export the latest completed session, including the captured per-stock replay samples. */
+export async function exportMarketLivePublication(directory: string, now = Date.now(), archiveFile?: string) {
   const { dates } = readMarketLiveArchive(undefined, archiveFile);
   const today = localDate(now);
   const date = dates.find(date => {
@@ -68,11 +79,12 @@ export function exportMarketLivePublication(directory: string, now = Date.now(),
     return date <= today && window && window.closeAt <= now;
   });
   if (!date) return null;
-  const { day } = readMarketLiveArchive(date, archiveFile);
+  const published = readMarketLivePublication(date);
+  const { day } = readMarketLiveArchive(date, archiveFile, await marketLiveReplayNames(date));
   if (!day) return null;
   const current = readMarketLiveRotationFrame(date, day.baselineDate, 0, now, archiveFile);
   if (!current) return null;
-  const snapshot: PublishedArchive = {
+  const snapshot: PublishedArchive = published?.day.stockTape ? published : {
     version: 1, market: "KRX", priceBasis: marketLiveCloseBasis(day.baselineDate), day,
     radar: buildMarketLiveRadar(date, day.baselineDate, current, false, archiveFile),
   };

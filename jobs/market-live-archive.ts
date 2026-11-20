@@ -12,7 +12,7 @@ async function main() {
   if (exportIndex !== -1) {
     const directory = process.argv[exportIndex + 1];
     if (!directory) throw new Error("--export에 내보낼 폴더가 필요합니다.");
-    const file = exportMarketLivePublication(directory);
+    const file = await exportMarketLivePublication(directory);
     if (file) console.log(file);
     return;
   }

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GET } from "@/app/api/market-live/archive/route";
+import { marketLiveReplaySectorStocks } from "@/lib/market/market-live-archive";
 import { fetchNaverStockMinuteChart, naverStockPreviousKrxClose } from "./naver-market-live";
 
 const tradeDate = "2026-11-18";
@@ -96,6 +97,9 @@ describe("공유 KRX 섹터 분봉 API", () => {
     );
     expect(response.day.frames.at(-1).collectedAt).toBe(new Date(at("10:01:10")).toISOString());
     expect(response.day.frames.at(-1)).not.toHaveProperty("stocks");
+    expect(marketLiveReplaySectorStocks(response.day.stockTape, at("09:00:00"), "반도체").map(stock => stock.price)).toEqual([101, 101]);
+    expect(marketLiveReplaySectorStocks(response.day.stockTape, at("10:00:00"), "반도체").map(stock => stock.price)).toEqual([110, 110]);
+    expect(marketLiveReplaySectorStocks(response.day.stockTape, at("09:15:00"), "반도체").map(stock => stock.price)).toEqual([null, null]);
     expect(Object.keys(response.radar.windows)).toEqual(["10", "30", "60"]);
     expect(response.radar.windows["10"].rows[0].changePp).toBeCloseTo(5);
 
@@ -130,6 +134,7 @@ describe("공유 KRX 섹터 분봉 API", () => {
     expect(closed.day.frames.at(-1)).toMatchObject({
       minuteAt: closeAt, collectedAt: new Date(at("17:00:00")).toISOString(), sectors: [{ changePct: 25 }],
     });
+    expect(marketLiveReplaySectorStocks(closed.day.stockTape, at("15:30:00"), "반도체").map(stock => stock.price)).toEqual([125, 125]);
     expect(Object.keys(closed.radar.windows)).toEqual(["10", "30", "60"]);
     expect(Object.values(closed.radar.windows).map(window => (window as { to: string }).to)).toEqual([closeAt, closeAt, closeAt]);
     expect(closed.radar.windows["10"].rows[0].changePp).toBeCloseTo(5);

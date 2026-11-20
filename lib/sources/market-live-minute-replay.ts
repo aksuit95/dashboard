@@ -2,7 +2,7 @@ import { krxCloseTime } from "@/config/market-calendar";
 import { setTimeout as delay } from "node:timers/promises";
 import { minerviniUniverseIds } from "@/config/minervini";
 import {
-  MARKET_LIVE_SECTOR_REFRESH_SECONDS, summarizeMarketLiveArchiveSectors,
+  MARKET_LIVE_SECTOR_REFRESH_SECONDS, packMarketLiveReplayStocks, summarizeMarketLiveArchiveSectors,
   type MarketLiveArchiveFrame, type MarketLiveSectorResponse,
 } from "@/lib/market/market-live-archive";
 import { calculateMarketLiveRadar } from "@/lib/market/market-live-rotation";
@@ -59,7 +59,8 @@ function buildMarketLiveMinuteReplay(
   const { date, baselineDate, state } = session;
   const radar = calculateMarketLiveRadar(date, baselineDate, latest, state !== "closed",
     (from, through) => frames.get(through) ?? (through - minute >= from ? frames.get(through - minute) : undefined) ?? null);
-  return { day: { date, baselineDate, frames: [...frames.values()].map(({ stocks: _stocks, ...frame }) => frame) },
+  const stockTape = packMarketLiveReplayStocks(session.openAt, frames.values(), new Map(members.map(member => [member.code, member.name])));
+  return { day: { date, baselineDate, frames: [...frames.values()].map(({ stocks: _stocks, ...frame }) => frame), stockTape },
     radar: { ...radar, closeAt: closing?.minuteAt } };
 }
 

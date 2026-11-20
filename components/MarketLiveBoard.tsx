@@ -2,8 +2,9 @@
 
 import { krxCloseTime } from "@/config/market-calendar";
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp, type WhitespaceData } from "lightweight-charts";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
+import { MarketLiveSectorStocks, MarketLiveSectorToggle } from "@/components/MarketLiveSectorStocks";
 import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import {
@@ -53,7 +54,7 @@ function percent(value: number | null): string {
   return value == null ? "—" : `${formatSigned(value)}%`;
 }
 
-function useMarketLiveBoard() {
+function useMarketLiveBoard(sector: string | null) {
   const [board, setBoard] = useState<MarketLiveResponse | null>(null);
   const [failed, setFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
@@ -64,6 +65,7 @@ function useMarketLiveBoard() {
     let timer: number | undefined;
     let pending: AbortController | null = null;
     let delay = MARKET_LIVE_POLL_MS;
+    const url = sector ? `/api/market-live?sector=${encodeURIComponent(sector)}` : "/api/market-live";
 
     async function load() {
       window.clearTimeout(timer);
@@ -72,7 +74,7 @@ function useMarketLiveBoard() {
       pending = controller;
       setRefreshing(true);
       try {
-        const response = await fetch("/api/market-live", { signal: controller.signal, cache: "no-store" });
+        const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const value: MarketLiveResponse = await response.json();
         if (!active) return;
@@ -105,13 +107,14 @@ function useMarketLiveBoard() {
       document.removeEventListener("visibilitychange", onVisibility);
       refresh.current = () => undefined;
     };
-  }, []);
+  }, [sector]);
 
   return { board, failed, refreshing, refresh: () => refresh.current() };
 }
 
 export function MarketLiveBoard() {
-  const { board, failed, refreshing, refresh } = useMarketLiveBoard();
+  const [sector, setSector] = useState<string | null>(null);
+  const { board, failed, refreshing, refresh } = useMarketLiveBoard(sector);
   const status = failed
     ? { text: "갱신 실패", style: "border-amber-400/25 bg-amber-400/10 text-amber-200" }
     : board ? stateLabels[board.state] : { text: "장 상태 확인 중", style: "border-white/10 bg-white/5 text-zinc-300" };
@@ -157,7 +160,8 @@ export function MarketLiveBoard() {
       <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} closed={closed} />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <SectorPanel sectors={board?.sectors ?? []} closed={closed} />
+        <SectorPanel sectors={board?.sectors ?? []} closed={closed} selected={sector}
+          detail={board?.sectorDetail} failed={failed} onToggle={name => setSector(current => current === name ? null : name)} />
         <LeaderPanel leaders={board?.leaders ?? []} closed={closed} />
       </div>
     </div>
@@ -292,7 +296,10 @@ function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | u
   );
 }
 
-function SectorPanel({ sectors, closed }: { sectors: MarketLiveSector[]; closed: boolean }) {
+function SectorPanel({ sectors, closed, selected, detail, failed, onToggle }: {
+  sectors: MarketLiveSector[]; closed: boolean; selected: string | null; detail: MarketLiveResponse["sectorDetail"];
+  failed: boolean; onToggle: (name: string) => void;
+}) {
   const [risingFirst, setRisingFirst] = useState(true);
   const ranked = [...sectors].sort((a, b) => {
     if (a.changePct == null) return b.changePct == null ? a.name.localeCompare(b.name, "ko") : 1;
@@ -317,12 +324,22 @@ function SectorPanel({ sectors, closed }: { sectors: MarketLiveSector[]; closed:
           </thead>
           <tbody className="divide-y divide-white/[0.06]">
             {ranked.map((sector) => (
-              <tr key={sector.name}>
-                <th scope="row" className="px-3 py-2.5 font-medium">{sector.name}</th>
+              <Fragment key={sector.name}>
+              <tr onClick={() => onToggle(sector.name)} className="cursor-pointer hover:bg-white/[0.04]">
+                <th scope="row" className="px-3 py-2.5 font-medium">
+                  <MarketLiveSectorToggle name={sector.name} expanded={selected === sector.name}
+                    controls="market-live-sector-stocks" onToggle={() => onToggle(sector.name)} />
+                </th>
                 <td className={`whitespace-nowrap px-3 py-2.5 text-right font-semibold ${direction(sector.changePct)}`}>{percent(sector.changePct)}</td>
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-300" title={`비교 가능 ${sector.compared} / 전체 ${sector.total} 종목`}>{sector.up}/{sector.compared} <span className="text-zinc-500">({sector.total})</span></td>
                 <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-400">{clock(sector.asOf)}</td>
               </tr>
+              {selected === sector.name && <tr><td colSpan={4} className="bg-black/15 p-2.5">
+                <MarketLiveSectorStocks id="market-live-sector-stocks" name={sector.name}
+                  stocks={detail?.name === sector.name ? detail.stocks : []} showQuoteTime priceLabel={closed ? "종가" : "현재가"}
+                  status={detail?.name === sector.name ? undefined : failed ? "종목 현황을 불러오지 못했습니다." : "종목 현황을 불러오는 중입니다."} />
+              </td></tr>}
+              </Fragment>
             ))}
             {!ranked.length && <EmptyRow columns={4} text="표시할 장중 섹터 등락률이 없습니다." />}
           </tbody>
