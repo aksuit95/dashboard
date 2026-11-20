@@ -1,11 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { krxCloseTime } from "@/config/market-calendar";
 import type { MinerviniUniverse } from "@/config/minervini";
 import { krxClient } from "@/lib/sources/krx-client";
 import { fetchKrxDailyCloses } from "@/lib/sources/krx-daily-prices";
 
-export type IndexDaily = { close: number; previousDate: string; previousClose: number; change: number };
-export type IndexPublication = { version: 1; exchange: "KRX"; priceTime: "15:30 KST"; fetchedAt: string; series: Record<MinerviniUniverse, Record<string, IndexDaily>> };
+type IndexPriceTime = `${ReturnType<typeof krxCloseTime>} KST`;
+export type IndexDaily = { priceTime?: IndexPriceTime; close: number; previousDate: string; previousClose: number; change: number };
+export type IndexPublication = { version: 1; exchange: "KRX"; priceTime: IndexPriceTime; fetchedAt: string; series: Record<MinerviniUniverse, Record<string, IndexDaily>> };
 export const indexPath = path.join(process.cwd(), "data", "sectors", "index-daily.json");
 export function parseIndexHistory(payload: unknown, through: string, sessions: string[]): Record<string, IndexDaily> {
   const rows = (payload as { output?: Record<string, unknown>[] })?.output;
@@ -22,7 +24,7 @@ export function parseIndexHistory(payload: unknown, through: string, sessions: s
   const previous = new Map(sessions.slice(1).map((date, i) => [date, sessions[i]]));
   return Object.fromEntries(parsed.slice(0, -1).filter((row, i) => previous.get(row.date) === parsed[i + 1].date).map((row, i) => {
     const prior = parsed.find(item => item.date === previous.get(row.date))!;
-    return [row.date, { close: row.close, previousDate: prior.date, previousClose: prior.close, change: (row.close / prior.close - 1) * 100 }];
+    return [row.date, { priceTime: `${krxCloseTime(row.date)} KST`, close: row.close, previousDate: prior.date, previousClose: prior.close, change: (row.close / prior.close - 1) * 100 }];
   }));
 }
 export async function collectIndexPublication(through: string): Promise<IndexPublication> {
@@ -34,12 +36,12 @@ export async function collectIndexPublication(through: string): Promise<IndexPub
     series[universe] = parseIndexHistory(await krxClient.query("MDCSTAT00301", { indIdx, indIdx2, strtDd: start, endDd: end }), through, sessions);
     if (!series[universe][through]) throw new Error(`${universe} 전 거래일 지수 종가 없음`);
   }
-  return { version: 1, exchange: "KRX", priceTime: "15:30 KST", fetchedAt: new Date().toISOString(), series };
+  return { version: 1, exchange: "KRX", priceTime: `${krxCloseTime(through)} KST`, fetchedAt: new Date().toISOString(), series };
 }
 export async function readIndexPublication(): Promise<IndexPublication | null> {
   try {
     const p = JSON.parse(await fs.readFile(indexPath, "utf8")) as IndexPublication;
-    if (p.version !== 1 || p.exchange !== "KRX" || p.priceTime !== "15:30 KST" || !p.series?.kospi200 || !p.series?.kosdaq150 || !Number.isFinite(Date.parse(p.fetchedAt))) throw new Error("KRX 지수 파일 오류");
+    if (p.version !== 1 || p.exchange !== "KRX" || (p.priceTime !== "15:30 KST" && p.priceTime !== "16:30 KST") || !p.series?.kospi200 || !p.series?.kosdaq150 || !Number.isFinite(Date.parse(p.fetchedAt))) throw new Error("KRX 지수 파일 오류");
     return p;
   } catch (e) { if ((e as NodeJS.ErrnoException).code === "ENOENT") return null; throw e; }
 }

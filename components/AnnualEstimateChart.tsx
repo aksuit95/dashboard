@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { krxCloseTime } from '@/config/market-calendar';
 import type { AnnualPoint } from '@/lib/valuation/annual-estimates';
 
 type Kind = 'per' | 'pbr';
@@ -35,7 +36,7 @@ export function AnnualEstimateChart({code}: {code:string}) {
     <h2 className="font-semibold">예상 결산연도 PER·PBR</h2>
     <p className="mt-1 text-xs leading-relaxed text-zinc-400">네이버 재무정보의 가장 가까운 예상 결산연도 EPS·BPS와 같은 날 KRX 15:30 종가로 계산합니다. 12개월 선행 지표와는 다릅니다.</p>
     <div className="mt-4 grid grid-cols-2 gap-3">{(['per','pbr'] as const).map(k=>{const n=latest ? ratio(latest,k) : null; return <div key={k} className="rounded-lg border border-white/10 bg-white/[0.03] p-4"><p className="text-xs text-zinc-400">예상 {k.toUpperCase()}</p><p className="mt-2 text-2xl font-semibold tabular-nums">{loading ? '불러오는 중…' : n === null ? '—' : n.toLocaleString('ko-KR',{minimumFractionDigits:2,maximumFractionDigits:2})} {n !== null && !loading && <span className="text-xs font-normal text-zinc-500">배</span>}</p></div>})}</div>
-    {failed ? <p role="status" className="mt-3 text-xs text-amber-200">예상치 이력을 불러오지 못했습니다.</p> : <p className="mt-3 text-xs text-zinc-500">{latest ? `예상 결산 ${latest.fiscalPeriod ?? '결측'} · KRX 15:30 종가 기준일 ${latest.date} · 수집 ${new Date(latest.observedAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})} KST` : loading ? '데이터를 불러오고 있습니다.' : '표시할 예상치와 KRX 종가가 없습니다.'}</p>}
+    {failed ? <p role="status" className="mt-3 text-xs text-amber-200">예상치 이력을 불러오지 못했습니다.</p> : <p className="mt-3 text-xs text-zinc-500">{latest ? `예상 결산 ${latest.fiscalPeriod ?? '결측'} · KRX ${krxCloseTime(latest.date)} 종가 기준일 ${latest.date} · 수집 ${new Date(latest.observedAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})} KST` : loading ? '데이터를 불러오고 있습니다.' : '표시할 예상치와 KRX 종가가 없습니다.'}</p>}
     {!failed && !loading && <div className="mt-4 border-t border-white/10 pt-4">
       <div className="flex flex-wrap items-center gap-2"><button type="button" onClick={()=>setExpanded(v=>!v)} aria-expanded={expanded} disabled={!canChart} className="rounded-md border border-white/15 px-3 py-1.5 text-xs text-zinc-200 disabled:opacity-40">{expanded && canChart ? '추이 차트 닫기' : '추이 차트 보기'}</button>{(['per','pbr'] as const).map(k=><button type="button" key={k} aria-pressed={kind===k} onClick={()=>setKind(k)} className={`rounded-md border px-3 py-1.5 text-xs ${kind===k?'border-sky-400 text-sky-300':'border-white/10 text-zinc-400'}`}>{k.toUpperCase()}</button>)}</div>
       {!canChart && <p className="mt-2 text-xs text-zinc-500">같은 예상 결산연도의 {kind.toUpperCase()}가 2개 이상 쌓이면 차트를 볼 수 있습니다.</p>}

@@ -1,11 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { krxCloseTime } from "@/config/market-calendar";
 import { krxClient } from "@/lib/sources/krx-client";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
 import { atomicJson } from "@/lib/financials/source";
 
 type CapRow = { close: number; cap: number };
-type Publication = { version: 2; exchange: "KRX"; priceBasis: "KRX_REGULAR_CLOSE"; priceTime: "15:30 KST"; fetchedAt: string; dates: Record<string, Record<string, CapRow>> };
+type Publication = { version: 2; exchange: "KRX"; priceBasis: "KRX_REGULAR_CLOSE"; priceTime: SectorCapPriceTime; priceTimeByDate?: Record<string, SectorCapPriceTime>; fetchedAt: string; dates: Record<string, Record<string, CapRow>> };
+type SectorCapPriceTime = `${ReturnType<typeof krxCloseTime>} KST`;
+const closeTimeFor = (date: string): SectorCapPriceTime => `${krxCloseTime(date)} KST`;
 export const sectorCapsPath = path.join(process.cwd(), "data", "sectors", "market-caps.json");
 export function parseSectorCaps(payload: unknown, market: "STK" | "KSQ"): Record<string, CapRow> {
   const rows = (payload as { OutBlock_1?: Record<string, unknown>[] })?.OutBlock_1;
@@ -24,7 +27,12 @@ export function parseSectorCaps(payload: unknown, market: "STK" | "KSQ"): Record
 export async function readSectorCaps(): Promise<Publication | null> {
   try {
     const p = JSON.parse(await fs.readFile(sectorCapsPath, "utf8")) as Publication;
-    if (p.version !== 2 || p.exchange !== "KRX" || p.priceBasis !== "KRX_REGULAR_CLOSE" || p.priceTime !== "15:30 KST" || !p.dates || !Number.isFinite(Date.parse(p.fetchedAt))) throw new Error("KRX 시총 이력 파일 오류");
+    if (p.version !== 2 || p.exchange !== "KRX" || p.priceBasis !== "KRX_REGULAR_CLOSE" || !p.dates || !Number.isFinite(Date.parse(p.fetchedAt))) throw new Error("KRX 시총 이력 파일 오류");
+    const dates = Object.keys(p.dates).sort();
+    const latest = dates.at(-1);
+    if (!latest || (p.priceTimeByDate
+      ? p.priceTime !== closeTimeFor(latest) || dates.some(date => p.priceTimeByDate?.[date] !== closeTimeFor(date))
+      : p.priceTime !== "15:30 KST")) throw new Error("KRX 시총 종가 시각 오류");
     return p;
   } catch (e) { if ((e as NodeJS.ErrnoException).code === "ENOENT") return null; throw e; }
 }
@@ -35,6 +43,8 @@ export async function collectSectorCaps() {
   const sectors = await readSectorPublication();
   if (!sectors) throw new Error("섹터 자료 없음");
   const dates = Object.keys(sectors.snapshots.kospi200).sort();
+  const latest = dates.at(-1);
+  if (!latest) throw new Error("섹터 거래일 없음");
   const old = await readSectorCaps().catch(() => null);
   const collected: Publication["dates"] = {};
   for (const date of dates) {
@@ -50,6 +60,13 @@ export async function collectSectorCaps() {
     collected[date] = day;
     console.log(`${date} KRX 시총 확인`);
   }
-  const publication: Publication = { version: 2, exchange: "KRX", priceBasis: "KRX_REGULAR_CLOSE", priceTime: "15:30 KST", fetchedAt: new Date().toISOString(), dates: collected };
+  const priceTimeByDate = Object.fromEntries(dates.map(date => [date, closeTimeFor(date)]));
+  const reusedAll = old && dates.length === Object.keys(old.dates).length && dates.every(date => old.dates[date]);
+  if (reusedAll && old.priceTimeByDate) return;
+  const publication: Publication = {
+    version: 2, exchange: "KRX", priceBasis: "KRX_REGULAR_CLOSE",
+    priceTime: closeTimeFor(latest), priceTimeByDate,
+    fetchedAt: reusedAll ? old.fetchedAt : new Date().toISOString(), dates: collected,
+  };
   await atomicJson(sectorCapsPath, publication);
 }

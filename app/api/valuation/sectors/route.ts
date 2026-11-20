@@ -1,5 +1,5 @@
 import { isMinerviniUniverse } from "@/config/minervini";
-import { resolveSectorDate, sectorDateRange } from "@/lib/market/sector-date";
+import { resolveSectorDate, sectorDateRange, sectorPublicationClock } from "@/lib/market/sector-date";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
 import { readIndexPublication } from "@/lib/sources/sector-index";
 import { matchingCaps, readSectorCaps } from "@/lib/sources/sector-market-caps";
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const date = params.get("date");
   const publication = await readSectorPublication();
   if (!publication) return Response.json({ error: "섹터 데이터 수집·배포 대기 중입니다." }, { status: 503 });
-  const publicationClock = new Date(`${publication.latestDate}T07:00:00Z`);
+  const publicationClock = sectorPublicationClock(publication.latestDate);
   const range = sectorDateRange(publicationClock);
   let session: string;
   try { session = date ? resolveSectorDate(date, publicationClock) : publication.latestDate; }
@@ -24,5 +24,5 @@ export async function GET(request: Request) {
   const indexDaily = indices?.series[universe]?.[session] ?? null;
   const caps = await readSectorCaps().catch(() => null);
   const marketCaps = matchingCaps(snapshot.rows, caps?.dates[session]);
-  return Response.json({ snapshot, indexDaily, marketCaps, stale: false, expectedDate: session, error: null, ...range, requestedDate: date ?? range.latestDate, publishedAt: publication.publishedAt }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json({ snapshot, indexDaily, marketCaps, marketCapsPriceTime: caps?.priceTimeByDate?.[session] ?? null, stale: false, expectedDate: session, error: null, ...range, requestedDate: date ?? range.latestDate, publishedAt: publication.publishedAt }, { headers: { "Cache-Control": "no-store" } });
 }

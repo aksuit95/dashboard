@@ -1,22 +1,24 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { minerviniSession } from '@/lib/market/minervini-session';
+import { reviewedCloseSession } from '@/lib/market/reviewed-close-session';
 import { parseAnnualEstimate, type AnnualHistory, type AnnualPoint } from '@/lib/valuation/annual-estimates';
 import stocks from '@/data/valuation/stocks.json';
 import sectors from '@/data/sectors/board.json';
 
 async function main() {
-  const now = new Date(), date = minerviniSession(now);
-  const kst = new Date(now.getTime() + 9 * 3600_000);
-  if (date !== kst.toISOString().slice(0, 10) || kst.getUTCHours() < 16) { console.log('완료된 오늘 거래일이 없어 수집을 건너뜁니다.'); return; }
+  const now = new Date(), date = reviewedCloseSession(now);
   const snap = sectors.snapshots.kospi200[date as keyof typeof sectors.snapshots.kospi200];
-  if (!snap || snap.asOf !== date || snap.priceBasis !== 'KRX_REGULAR_CLOSE') throw new Error('오늘 검증된 KRX 섹터 종가가 없습니다.');
+  if (!snap || snap.asOf !== date || snap.priceBasis !== 'KRX_REGULAR_CLOSE') throw new Error(date + ' 검증된 KRX 섹터 종가가 없습니다.');
   const prices = new Map(snap.rows.map(row => [row.code, row.price]));
   const output = path.resolve('data/valuation/annual-estimates.json');
   let history: AnnualHistory = {schemaVersion: 1, source: 'Naver Finance annual consensus', priceBasis: 'KRX_REGULAR_CLOSE', records: {}};
   try { history = JSON.parse(await fs.readFile(output, 'utf8')) as AnnualHistory; } catch (e) { if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw e; }
   if (history.schemaVersion !== 1 || history.priceBasis !== 'KRX_REGULAR_CLOSE' || !history.records) throw new Error('예상연도 이력 형식 오류');
   const codes = stocks.data.stocks.map(s => s.code);
+  if (codes.every(code => history.records[code]?.some(point => point.date === date))) {
+    console.log(date + ' 예상 재무 저장 자료 유지');
+    return;
+  }
   let cursor = 0, failures = 0, successes = 0;
   const result = new Map<string, AnnualPoint>();
   async function worker() {

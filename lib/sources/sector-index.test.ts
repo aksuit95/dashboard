@@ -8,6 +8,12 @@ describe("KRX 지수 일간 등락률", () => {
     expect(p["2026-11-11"].change).toBeCloseTo(10);
     expect(p["2026-11-11"].previousDate).toBe("2026-11-10");
   });
+  it("수능일 16:30과 다음 거래일 15:30 종가 시각을 각각 기록한다", () => {
+    const dates = ["2026-11-18", "2026-11-19", "2026-11-20"];
+    const p = parseIndexHistory({ output: [row("2026/11/20", "1050"), row("2026/11/19", "1100"), row("2026/11/18", "1000")] }, "2026-11-20", dates);
+    expect(p["2026-11-19"].priceTime).toBe("16:30 KST");
+    expect(p["2026-11-20"].priceTime).toBe("15:30 KST");
+  });
   it("중간 거래일이 빠지면 다른 날짜로 대체하지 않는다", () => {
     const p = parseIndexHistory({ output: [row("2026/11/11", "1100"), row("2026/11/09", "1000")] }, "2026-11-11", sessions);
     expect(p["2026-11-11"]).toBeUndefined();
