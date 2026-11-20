@@ -4701,6 +4701,654 @@
     },
     {
       "etfCode": "0167A0",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:42.869Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 133,
+          "weight": 26.41
+        },
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 653,
+          "weight": 20.51
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 161,
+          "weight": 19.44
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 143,
+          "weight": 16.75
+        },
+        {
+          "code": "011070",
+          "name": "LG이노텍",
+          "quantity": 93,
+          "weight": 8.04
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 362,
+          "weight": 5.01
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 68,
+          "weight": 1.5
+        },
+        {
+          "code": "218410",
+          "name": "RFHIC",
+          "quantity": 110,
+          "weight": 1.15
+        },
+        {
+          "code": "007810",
+          "name": "코리아써키트",
+          "quantity": 77,
+          "weight": 0.78
+        },
+        {
+          "code": "092870",
+          "name": "엑시콘",
+          "quantity": 49,
+          "weight": 0.17
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 140600000,
+        "netAssetsKrw": 2580520084007,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:57.559Z"
+      }
+    },
+    {
+      "etfCode": "395160",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:45.273Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 1072,
+          "weight": 30.24
+        },
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 3378,
+          "weight": 24.79
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 513,
+          "weight": 23.8
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 833,
+          "weight": 6.37
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1091,
+          "weight": 3.53
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 605,
+          "weight": 2.61
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 985,
+          "weight": 2.53
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 949,
+          "weight": 1.22
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 386,
+          "weight": 1.1
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 204,
+          "weight": 1.05
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 230,
+          "weight": 1.01
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 318,
+          "weight": 0.62
+        },
+        {
+          "code": "195870",
+          "name": "해성디에스",
+          "quantity": 199,
+          "weight": 0.42
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 1471,
+          "weight": 0.3
+        },
+        {
+          "code": "108320",
+          "name": "LX세미콘",
+          "quantity": 217,
+          "weight": 0.3
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 64600000,
+        "netAssetsKrw": 2474929171829,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:02.210Z"
+      }
+    },
+    {
+      "etfCode": "395270",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:52.628Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 432,
+          "weight": 27.77
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 662,
+          "weight": 25.87
+        },
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2284,
+          "weight": 23.22
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 509,
+          "weight": 5.39
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 407,
+          "weight": 2.68
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 370,
+          "weight": 2.21
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 601,
+          "weight": 2.14
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 102,
+          "weight": 1.74
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 387,
+          "weight": 1.6
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 588,
+          "weight": 1.05
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 580,
+          "weight": 1.01
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 123,
+          "weight": 0.88
+        },
+        {
+          "code": "005290",
+          "name": "동진쎄미켐",
+          "quantity": 406,
+          "weight": 0.83
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 167,
+          "weight": 0.75
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 51,
+          "weight": 0.74
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 64,
+          "weight": 0.65
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 194,
+          "weight": 0.53
+        },
+        {
+          "code": "281740",
+          "name": "레이크머티리얼즈",
+          "quantity": 447,
+          "weight": 0.29
+        },
+        {
+          "code": "232140",
+          "name": "와이씨",
+          "quantity": 468,
+          "weight": 0.29
+        },
+        {
+          "code": "108320",
+          "name": "LX세미콘",
+          "quantity": 132,
+          "weight": 0.25
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 57200000,
+        "netAssetsKrw": 3148873313443,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:10.303Z"
+      }
+    },
+    {
+      "etfCode": "396500",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:40.690Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 433,
+          "weight": 34.65
+        },
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2117,
+          "weight": 26.79
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 1002,
+          "weight": 13.21
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 728,
+          "weight": 5.41
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1183,
+          "weight": 5.25
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 200,
+          "weight": 4.24
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 762,
+          "weight": 3.91
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 1140,
+          "weight": 2.53
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 243,
+          "weight": 2.17
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 100,
+          "weight": 1.8
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 293800000,
+        "netAssetsKrw": 12785227808371,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:55.177Z"
+      }
+    },
+    {
+      "etfCode": "455850",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:50.152Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 975,
+          "weight": 19.77
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1159,
+          "weight": 9.94
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 780,
+          "weight": 9.82
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1152,
+          "weight": 7.86
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 195,
+          "weight": 6.35
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 742,
+          "weight": 5.86
+        },
+        {
+          "code": "011790",
+          "name": "SKC",
+          "quantity": 565,
+          "weight": 4.9
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 563,
+          "weight": 4.11
+        },
+        {
+          "code": "014680",
+          "name": "한솔케미칼",
+          "quantity": 206,
+          "weight": 4.02
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 1127,
+          "weight": 3.85
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 1113,
+          "weight": 3.7
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 237,
+          "weight": 3.25
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 320,
+          "weight": 2.76
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 98,
+          "weight": 2.71
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 122,
+          "weight": 2.39
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 620,
+          "weight": 2.1
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 372,
+          "weight": 1.93
+        },
+        {
+          "code": "140860",
+          "name": "파크시스템스",
+          "quantity": 106,
+          "weight": 1.86
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 165,
+          "weight": 1.44
+        },
+        {
+          "code": "232140",
+          "name": "와이씨",
+          "quantity": 896,
+          "weight": 1.07
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 39850000,
+        "netAssetsKrw": 1121624884266,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:07.836Z"
+      }
+    },
+    {
+      "etfCode": "471990",
+      "asOf": "2026-05-20",
+      "collectedAt": "2026-11-20T18:59:47.520Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 1331,
+          "weight": 27.53
+        },
+        {
+          "code": "000150",
+          "name": "두산",
+          "quantity": 190,
+          "weight": 20.2
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1378,
+          "weight": 9.58
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1088,
+          "weight": 9.52
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 582,
+          "weight": 8.14
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 648,
+          "weight": 6.2
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 136,
+          "weight": 4.52
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 532,
+          "weight": 3.96
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 889,
+          "weight": 3.1
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 758,
+          "weight": 2.57
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 133,
+          "weight": 1.71
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 278,
+          "weight": 0.96
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 54,
+          "weight": 0.48
+        },
+        {
+          "code": "140860",
+          "name": "파크시스템스",
+          "quantity": 25,
+          "weight": 0.45
+        },
+        {
+          "code": "089970",
+          "name": "브이엠",
+          "quantity": 109,
+          "weight": 0.41
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 29,
+          "weight": 0.35
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 6,
+          "weight": 0.1
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-05-20",
+        "sharesOutstanding": 17550000,
+        "netAssetsKrw": 482405978990,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:04.889Z"
+      }
+    },
+    {
+      "etfCode": "0167A0",
       "asOf": "2026-08-10",
       "collectedAt": "2026-11-11T04:51:36.121Z",
       "source": "KRX_PDF",
@@ -9279,6 +9927,660 @@
     },
     {
       "etfCode": "0167A0",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:42.284Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 856,
+          "weight": 26.14
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 116,
+          "weight": 22.1
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 96,
+          "weight": 15.1
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 112,
+          "weight": 14.17
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 576,
+          "weight": 6.81
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 351,
+          "weight": 4.48
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 338,
+          "weight": 4.34
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 206,
+          "weight": 3.02
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 121,
+          "weight": 1.94
+        },
+        {
+          "code": "089970",
+          "name": "브이엠",
+          "quantity": 236,
+          "weight": 1.67
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 322900000,
+        "netAssetsKrw": 5737264420760,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:57.559Z"
+      }
+    },
+    {
+      "etfCode": "395160",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:44.744Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 3945,
+          "weight": 26.64
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 855,
+          "weight": 23.93
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 556,
+          "weight": 23.43
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 521,
+          "weight": 18.12
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 401,
+          "weight": 2.25
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 519,
+          "weight": 1.36
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 473,
+          "weight": 0.82
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 613,
+          "weight": 0.73
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 291,
+          "weight": 0.7
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 185,
+          "weight": 0.6
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 97,
+          "weight": 0.41
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 111,
+          "weight": 0.23
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 153,
+          "weight": 0.16
+        },
+        {
+          "code": "195870",
+          "name": "해성디에스",
+          "quantity": 96,
+          "weight": 0.13
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 707,
+          "weight": 0.11
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 101100000,
+        "netAssetsKrw": 4064972120524,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:02.210Z"
+      }
+    },
+    {
+      "etfCode": "395270",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:52.071Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2752,
+          "weight": 26.22
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 415,
+          "weight": 24.68
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 547,
+          "weight": 21.6
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 328,
+          "weight": 16.1
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 252,
+          "weight": 2
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 198,
+          "weight": 1.23
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 326,
+          "weight": 1.2
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 192,
+          "weight": 0.77
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 50,
+          "weight": 0.73
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 298,
+          "weight": 0.73
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 386,
+          "weight": 0.65
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 183,
+          "weight": 0.62
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 117,
+          "weight": 0.54
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 83,
+          "weight": 0.39
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 288,
+          "weight": 0.37
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 61,
+          "weight": 0.36
+        },
+        {
+          "code": "005290",
+          "name": "동진쎄미켐",
+          "quantity": 199,
+          "weight": 0.3
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 25,
+          "weight": 0.29
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 30,
+          "weight": 0.24
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 70,
+          "weight": 0.2
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 63200000,
+        "netAssetsKrw": 3597624534492,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:10.303Z"
+      }
+    },
+    {
+      "etfCode": "396500",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:40.138Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2042,
+          "weight": 30.51
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 265,
+          "weight": 24.71
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 338,
+          "weight": 20.93
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 405,
+          "weight": 5.04
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 469,
+          "weight": 4.58
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 756,
+          "weight": 4.38
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 461,
+          "weight": 2.9
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 112,
+          "weight": 2.56
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 414,
+          "weight": 2.21
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 552,
+          "weight": 2.12
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 268100000,
+        "netAssetsKrw": 9758238847061,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:55.177Z"
+      }
+    },
+    {
+      "etfCode": "455850",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:49.594Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 892,
+          "weight": 16.64
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 702,
+          "weight": 10.3
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1155,
+          "weight": 10.04
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 704,
+          "weight": 6.61
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 678,
+          "weight": 6.39
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1053,
+          "weight": 6.06
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 1365,
+          "weight": 5.42
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 518,
+          "weight": 4.93
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 413,
+          "weight": 4.45
+        },
+        {
+          "code": "011790",
+          "name": "SKC",
+          "quantity": 517,
+          "weight": 3.69
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 292,
+          "weight": 3.25
+        },
+        {
+          "code": "014680",
+          "name": "한솔케미칼",
+          "quantity": 189,
+          "weight": 3.17
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 1017,
+          "weight": 3.11
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 216,
+          "weight": 3.02
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 243,
+          "weight": 2.86
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 89,
+          "weight": 2.45
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 567,
+          "weight": 2.4
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 107,
+          "weight": 2.03
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 151,
+          "weight": 1.44
+        },
+        {
+          "code": "007810",
+          "name": "코리아써키트",
+          "quantity": 245,
+          "weight": 1.25
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 42450000,
+        "netAssetsKrw": 1022365624640,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:07.836Z"
+      }
+    },
+    {
+      "etfCode": "471990",
+      "asOf": "2026-08-20",
+      "collectedAt": "2026-11-20T18:59:47.017Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 2479,
+          "weight": 21.67
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 1049,
+          "weight": 19.69
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 1004,
+          "weight": 14.82
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 1168,
+          "weight": 11.03
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 766,
+          "weight": 7.33
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 196,
+          "weight": 6.77
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1105,
+          "weight": 6.39
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 336,
+          "weight": 4.72
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 457,
+          "weight": 1.83
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 556,
+          "weight": 1.71
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 111,
+          "weight": 1.07
+        },
+        {
+          "code": "089970",
+          "name": "브이엠",
+          "quantity": 163,
+          "weight": 0.85
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 30,
+          "weight": 0.6
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 65,
+          "weight": 0.44
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 98,
+          "weight": 0.42
+        },
+        {
+          "code": "140860",
+          "name": "파크시스템스",
+          "quantity": 12,
+          "weight": 0.27
+        },
+        {
+          "code": "356860",
+          "name": "티엘비",
+          "quantity": 62,
+          "weight": 0.18
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 97,
+          "weight": 0.05
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-08-20",
+        "sharesOutstanding": 16400000,
+        "netAssetsKrw": 396420401711,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:04.889Z"
+      }
+    },
+    {
+      "etfCode": "0167A0",
       "asOf": "2026-10-08",
       "collectedAt": "2026-11-11T04:37:30.196Z",
       "source": "KRX_PDF",
@@ -12545,6 +13847,660 @@
         "netAssetsKrw": 585985306183,
         "source": "KRX_ETF_DAILY",
         "fetchedAt": "2026-11-20T01:22:50.376Z"
+      }
+    },
+    {
+      "etfCode": "0167A0",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:41.749Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 883,
+          "weight": 26.42
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 138,
+          "weight": 23.88
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 89,
+          "weight": 14.54
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 125,
+          "weight": 13.1
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 474,
+          "weight": 6.43
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 289,
+          "weight": 5.41
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 279,
+          "weight": 4.07
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 169,
+          "weight": 2.9
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 100,
+          "weight": 1.66
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 38,
+          "weight": 1.41
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 304700000,
+        "netAssetsKrw": 4315596356108,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:57.559Z"
+      }
+    },
+    {
+      "etfCode": "395160",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:44.134Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 3945,
+          "weight": 27.21
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 556,
+          "weight": 22.18
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 855,
+          "weight": 20.66
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 521,
+          "weight": 19.63
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 401,
+          "weight": 2.61
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 519,
+          "weight": 1.62
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 473,
+          "weight": 1.04
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 613,
+          "weight": 1.01
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 291,
+          "weight": 0.95
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 185,
+          "weight": 0.73
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 97,
+          "weight": 0.5
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 111,
+          "weight": 0.37
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 153,
+          "weight": 0.21
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 707,
+          "weight": 0.21
+        },
+        {
+          "code": "195870",
+          "name": "해성디에스",
+          "quantity": 96,
+          "weight": 0.15
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 99900000,
+        "netAssetsKrw": 3072629109785,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:02.210Z"
+      }
+    },
+    {
+      "etfCode": "395270",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:51.539Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2761,
+          "weight": 26.58
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 417,
+          "weight": 23.21
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 549,
+          "weight": 18.52
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 329,
+          "weight": 17.3
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 253,
+          "weight": 2.3
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 199,
+          "weight": 1.79
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 327,
+          "weight": 1.43
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 51,
+          "weight": 0.98
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 299,
+          "weight": 0.92
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 192,
+          "weight": 0.9
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 387,
+          "weight": 0.89
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 184,
+          "weight": 0.84
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 117,
+          "weight": 0.65
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 288,
+          "weight": 0.49
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 83,
+          "weight": 0.44
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 61,
+          "weight": 0.43
+        },
+        {
+          "code": "005290",
+          "name": "동진쎄미켐",
+          "quantity": 200,
+          "weight": 0.37
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 25,
+          "weight": 0.36
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 70,
+          "weight": 0.33
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 30,
+          "weight": 0.3
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 61800000,
+        "netAssetsKrw": 2713284693079,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:10.303Z"
+      }
+    },
+    {
+      "etfCode": "396500",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:39.631Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 1839,
+          "weight": 27.19
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 287,
+          "weight": 24.53
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 424,
+          "weight": 21.96
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 402,
+          "weight": 5.62
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 374,
+          "weight": 5.18
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 615,
+          "weight": 4.12
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 95,
+          "weight": 2.8
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 561,
+          "weight": 2.65
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 361,
+          "weight": 2.6
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 345,
+          "weight": 2.43
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 256350000,
+        "netAssetsKrw": 7356683383296,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:55.177Z"
+      }
+    },
+    {
+      "etfCode": "455850",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:49.020Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 892,
+          "weight": 14.92
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 702,
+          "weight": 11.64
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1155,
+          "weight": 9.27
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 704,
+          "weight": 7.79
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1053,
+          "weight": 5.95
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 678,
+          "weight": 5.85
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 1365,
+          "weight": 5.74
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 518,
+          "weight": 5.37
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 413,
+          "weight": 4.19
+        },
+        {
+          "code": "011790",
+          "name": "SKC",
+          "quantity": 517,
+          "weight": 3.99
+        },
+        {
+          "code": "014680",
+          "name": "한솔케미칼",
+          "quantity": 189,
+          "weight": 3.57
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 1017,
+          "weight": 3.21
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 292,
+          "weight": 2.86
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 216,
+          "weight": 2.83
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 243,
+          "weight": 2.38
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 89,
+          "weight": 2.35
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 151,
+          "weight": 2.26
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 107,
+          "weight": 2
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 567,
+          "weight": 1.9
+        },
+        {
+          "code": "007810",
+          "name": "코리아써키트",
+          "quantity": 245,
+          "weight": 1.49
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 48700000,
+        "netAssetsKrw": 1186843547329,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:07.836Z"
+      }
+    },
+    {
+      "etfCode": "471990",
+      "asOf": "2026-10-20",
+      "collectedAt": "2026-11-20T18:59:46.502Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 2479,
+          "weight": 19.77
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 1049,
+          "weight": 17.43
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 1004,
+          "weight": 16.54
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 1168,
+          "weight": 12.85
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 766,
+          "weight": 7.9
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 196,
+          "weight": 6.86
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1105,
+          "weight": 6.2
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 336,
+          "weight": 4.37
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 457,
+          "weight": 1.91
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 556,
+          "weight": 1.75
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 111,
+          "weight": 1.65
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 30,
+          "weight": 0.66
+        },
+        {
+          "code": "089970",
+          "name": "브이엠",
+          "quantity": 163,
+          "weight": 0.63
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 65,
+          "weight": 0.55
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 98,
+          "weight": 0.33
+        },
+        {
+          "code": "140860",
+          "name": "파크시스템스",
+          "quantity": 12,
+          "weight": 0.25
+        },
+        {
+          "code": "356860",
+          "name": "티엘비",
+          "quantity": 62,
+          "weight": 0.2
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 97,
+          "weight": 0.07
+        }
+      ],
+      "market": {},
+      "fundMetrics": {
+        "asOf": "2026-10-20",
+        "sharesOutstanding": 23450000,
+        "netAssetsKrw": 567669790015,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:04.889Z"
       }
     },
     {
@@ -24102,11 +26058,1073 @@
         "priceTime": "16:30 KST",
         "fetchedAt": "2026-11-19T07:55:15.554Z"
       }
+    },
+    {
+      "etfCode": "0167A0",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:41.216Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 883,
+          "weight": 28.34
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 138,
+          "weight": 26.92
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 125,
+          "weight": 14.83
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 89,
+          "weight": 12.08
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 474,
+          "weight": 5.78
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 289,
+          "weight": 3.74
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 279,
+          "weight": 3.21
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 169,
+          "weight": 2.37
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 100,
+          "weight": 1.37
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 38,
+          "weight": 1.12
+        }
+      ],
+      "market": {
+        "131290": {
+          "close": 168000,
+          "cap": 1858320072000
+        },
+        "240810": {
+          "close": 65600,
+          "cap": 3219903905600
+        },
+        "319660": {
+          "close": 79900,
+          "cap": 2314440448600
+        },
+        "353200": {
+          "close": 73900,
+          "cap": 3651910757500
+        },
+        "402340": {
+          "close": 677000,
+          "cap": 89312546646000
+        },
+        "005930": {
+          "close": 183100,
+          "cap": 1070453613124800
+        },
+        "000660": {
+          "close": 1113000,
+          "cap": 786667390509000
+        },
+        "009150": {
+          "close": 774000,
+          "cap": 57812920704000
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "095610": {
+          "close": 78200,
+          "cap": 1513952000000
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 311050000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:57.559Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
+    },
+    {
+      "etfCode": "395160",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:43.531Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 3945,
+          "weight": 28.2
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 556,
+          "weight": 24.16
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 855,
+          "weight": 22.6
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 521,
+          "weight": 15.74
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 401,
+          "weight": 2.41
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 519,
+          "weight": 1.41
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 613,
+          "weight": 0.9
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 473,
+          "weight": 0.84
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 291,
+          "weight": 0.78
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 185,
+          "weight": 0.58
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 97,
+          "weight": 0.48
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 111,
+          "weight": 0.29
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 707,
+          "weight": 0.22
+        },
+        {
+          "code": "101490",
+          "name": "에스앤에스텍",
+          "quantity": 153,
+          "weight": 0.19
+        },
+        {
+          "code": "195870",
+          "name": "해성디에스",
+          "quantity": 96,
+          "weight": 0.15
+        }
+      ],
+      "market": {
+        "101490": {
+          "close": 32550,
+          "cap": 694450311450
+        },
+        "131970": {
+          "close": 66600,
+          "cap": 1287194050800
+        },
+        "195870": {
+          "close": 39200,
+          "cap": 666400000000
+        },
+        "319660": {
+          "close": 79900,
+          "cap": 2314440448600
+        },
+        "402340": {
+          "close": 677000,
+          "cap": 89312546646000
+        },
+        "403870": {
+          "close": 37800,
+          "cap": 3110940000000
+        },
+        "005930": {
+          "close": 183100,
+          "cap": 1070453613124800
+        },
+        "000660": {
+          "close": 1113000,
+          "cap": 786667390509000
+        },
+        "009150": {
+          "close": 774000,
+          "cap": 57812920704000
+        },
+        "042700": {
+          "close": 153800,
+          "cap": 14659016360000
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "058470": {
+          "close": 45350,
+          "cap": 3456207397500
+        },
+        "000990": {
+          "close": 68500,
+          "cap": 2980064278000
+        },
+        "095340": {
+          "close": 127100,
+          "cap": 2694146071800
+        },
+        "036540": {
+          "close": 8110,
+          "cap": 1333773057330
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 102700000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:02.210Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
+    },
+    {
+      "etfCode": "395270",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:50.909Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 2772,
+          "weight": 27.8
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 418,
+          "weight": 25.48
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 551,
+          "weight": 20.43
+        },
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "quantity": 330,
+          "weight": 13.99
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 254,
+          "weight": 2.14
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 200,
+          "weight": 1.59
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 329,
+          "weight": 1.25
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 389,
+          "weight": 0.81
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 51,
+          "weight": 0.8
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 300,
+          "weight": 0.75
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 193,
+          "weight": 0.69
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 184,
+          "weight": 0.69
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 117,
+          "weight": 0.51
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 62,
+          "weight": 0.43
+        },
+        {
+          "code": "005290",
+          "name": "동진쎄미켐",
+          "quantity": 201,
+          "weight": 0.35
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 290,
+          "weight": 0.35
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 25,
+          "weight": 0.33
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 83,
+          "weight": 0.32
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 30,
+          "weight": 0.27
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 70,
+          "weight": 0.26
+        }
+      ],
+      "market": {
+        "131970": {
+          "close": 66600,
+          "cap": 1287194050800
+        },
+        "240810": {
+          "close": 65600,
+          "cap": 3219903905600
+        },
+        "319660": {
+          "close": 79900,
+          "cap": 2314440448600
+        },
+        "357780": {
+          "close": 239000,
+          "cap": 1859077274000
+        },
+        "402340": {
+          "close": 677000,
+          "cap": 89312546646000
+        },
+        "403870": {
+          "close": 37800,
+          "cap": 3110940000000
+        },
+        "005930": {
+          "close": 183100,
+          "cap": 1070453613124800
+        },
+        "000660": {
+          "close": 1113000,
+          "cap": 786667390509000
+        },
+        "009150": {
+          "close": 774000,
+          "cap": 57812920704000
+        },
+        "042700": {
+          "close": 153800,
+          "cap": 14659016360000
+        },
+        "036930": {
+          "close": 145100,
+          "cap": 6744410657100
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "039030": {
+          "close": 288000,
+          "cap": 3548030400000
+        },
+        "058470": {
+          "close": 45350,
+          "cap": 3456207397500
+        },
+        "000990": {
+          "close": 68500,
+          "cap": 2980064278000
+        },
+        "095340": {
+          "close": 127100,
+          "cap": 2694146071800
+        },
+        "005290": {
+          "close": 32200,
+          "cap": 1641238057200
+        },
+        "067310": {
+          "close": 21900,
+          "cap": 1456150031100
+        },
+        "084370": {
+          "close": 71000,
+          "cap": 1627038982000
+        },
+        "064760": {
+          "close": 167000,
+          "cap": 1866962472000
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 60800000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:10.303Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
+    },
+    {
+      "etfCode": "396500",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:38.929Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "quantity": 1839,
+          "weight": 27.84
+        },
+        {
+          "code": "000660",
+          "name": "SK하이닉스",
+          "quantity": 287,
+          "weight": 26.41
+        },
+        {
+          "code": "402340",
+          "name": "SK스퀘어",
+          "quantity": 424,
+          "weight": 23.74
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 402,
+          "weight": 5.11
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 374,
+          "weight": 4.49
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 615,
+          "weight": 3.54
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 95,
+          "weight": 2.26
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 561,
+          "weight": 2.1
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 361,
+          "weight": 1.96
+        },
+        {
+          "code": "000990",
+          "name": "DB하이텍",
+          "quantity": 345,
+          "weight": 1.95
+        }
+      ],
+      "market": {
+        "240810": {
+          "close": 65600,
+          "cap": 3219903905600
+        },
+        "402340": {
+          "close": 677000,
+          "cap": 89312546646000
+        },
+        "005930": {
+          "close": 183100,
+          "cap": 1070453613124800
+        },
+        "000660": {
+          "close": 1113000,
+          "cap": 786667390509000
+        },
+        "042700": {
+          "close": 153800,
+          "cap": 14659016360000
+        },
+        "036930": {
+          "close": 145100,
+          "cap": 6744410657100
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "039030": {
+          "close": 288000,
+          "cap": 3548030400000
+        },
+        "058470": {
+          "close": 45350,
+          "cap": 3456207397500
+        },
+        "000990": {
+          "close": 68500,
+          "cap": 2980064278000
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 258050000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T18:59:55.177Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
+    },
+    {
+      "etfCode": "455850",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:48.177Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 892,
+          "weight": 15.97
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 702,
+          "weight": 11.86
+        },
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 1155,
+          "weight": 9.36
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 704,
+          "weight": 6.06
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 518,
+          "weight": 6.01
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 1365,
+          "weight": 6.01
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1053,
+          "weight": 5.56
+        },
+        {
+          "code": "240810",
+          "name": "원익IPS",
+          "quantity": 678,
+          "weight": 5.18
+        },
+        {
+          "code": "011790",
+          "name": "SKC",
+          "quantity": 517,
+          "weight": 3.97
+        },
+        {
+          "code": "319660",
+          "name": "피에스케이",
+          "quantity": 413,
+          "weight": 3.84
+        },
+        {
+          "code": "014680",
+          "name": "한솔케미칼",
+          "quantity": 189,
+          "weight": 3.74
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 216,
+          "weight": 3.2
+        },
+        {
+          "code": "007810",
+          "name": "코리아써키트",
+          "quantity": 245,
+          "weight": 2.6
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 1017,
+          "weight": 2.59
+        },
+        {
+          "code": "357780",
+          "name": "솔브레인",
+          "quantity": 89,
+          "weight": 2.48
+        },
+        {
+          "code": "084370",
+          "name": "유진테크",
+          "quantity": 292,
+          "weight": 2.41
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 567,
+          "weight": 2.25
+        },
+        {
+          "code": "095610",
+          "name": "테스",
+          "quantity": 243,
+          "weight": 2.21
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 151,
+          "weight": 2.09
+        },
+        {
+          "code": "064760",
+          "name": "티씨케이",
+          "quantity": 107,
+          "weight": 2.08
+        }
+      ],
+      "market": {
+        "222800": {
+          "close": 99700,
+          "cap": 3890096494300
+        },
+        "240810": {
+          "close": 65600,
+          "cap": 3219903905600
+        },
+        "319660": {
+          "close": 79900,
+          "cap": 2314440448600
+        },
+        "353200": {
+          "close": 73900,
+          "cap": 3651910757500
+        },
+        "357780": {
+          "close": 239000,
+          "cap": 1859077274000
+        },
+        "403870": {
+          "close": 37800,
+          "cap": 3110940000000
+        },
+        "042700": {
+          "close": 153800,
+          "cap": 14659016360000
+        },
+        "036930": {
+          "close": 145100,
+          "cap": 6744410657100
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "058470": {
+          "close": 45350,
+          "cap": 3456207397500
+        },
+        "011790": {
+          "close": 66000,
+          "cap": 3273487668000
+        },
+        "014680": {
+          "close": 170000,
+          "cap": 1834986120000
+        },
+        "095340": {
+          "close": 127100,
+          "cap": 2694146071800
+        },
+        "007810": {
+          "close": 91000,
+          "cap": 2182418420000
+        },
+        "067310": {
+          "close": 21900,
+          "cap": 1456150031100
+        },
+        "084370": {
+          "close": 71000,
+          "cap": 1627038982000
+        },
+        "089030": {
+          "close": 34050,
+          "cap": 1261676612250
+        },
+        "095610": {
+          "close": 78200,
+          "cap": 1513952000000
+        },
+        "031980": {
+          "close": 119000,
+          "cap": 2565925005000
+        },
+        "064760": {
+          "close": 167000,
+          "cap": 1866962472000
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 51600000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:07.836Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
+    },
+    {
+      "etfCode": "471990",
+      "asOf": "2026-11-20",
+      "collectedAt": "2026-11-20T18:59:45.944Z",
+      "source": "KRX_PDF",
+      "holdings": [
+        {
+          "code": "007660",
+          "name": "이수페타시스",
+          "quantity": 2479,
+          "weight": 20.08
+        },
+        {
+          "code": "042700",
+          "name": "한미반도체",
+          "quantity": 1049,
+          "weight": 18.78
+        },
+        {
+          "code": "036930",
+          "name": "주성엔지니어링",
+          "quantity": 1004,
+          "weight": 16.96
+        },
+        {
+          "code": "353200",
+          "name": "대덕전자",
+          "quantity": 1168,
+          "weight": 10.05
+        },
+        {
+          "code": "222800",
+          "name": "심텍",
+          "quantity": 766,
+          "weight": 8.89
+        },
+        {
+          "code": "039030",
+          "name": "이오테크닉스",
+          "quantity": 196,
+          "weight": 6.57
+        },
+        {
+          "code": "058470",
+          "name": "리노공업",
+          "quantity": 1105,
+          "weight": 5.83
+        },
+        {
+          "code": "095340",
+          "name": "ISC",
+          "quantity": 336,
+          "weight": 4.97
+        },
+        {
+          "code": "403870",
+          "name": "HPSP",
+          "quantity": 457,
+          "weight": 2.01
+        },
+        {
+          "code": "031980",
+          "name": "피에스케이홀딩스",
+          "quantity": 111,
+          "weight": 1.54
+        },
+        {
+          "code": "067310",
+          "name": "하나마이크론",
+          "quantity": 556,
+          "weight": 1.42
+        },
+        {
+          "code": "089970",
+          "name": "브이엠",
+          "quantity": 163,
+          "weight": 0.71
+        },
+        {
+          "code": "131290",
+          "name": "티에스이",
+          "quantity": 30,
+          "weight": 0.59
+        },
+        {
+          "code": "131970",
+          "name": "두산테스나",
+          "quantity": 65,
+          "weight": 0.5
+        },
+        {
+          "code": "089030",
+          "name": "테크윙",
+          "quantity": 98,
+          "weight": 0.39
+        },
+        {
+          "code": "356860",
+          "name": "티엘비",
+          "quantity": 62,
+          "weight": 0.31
+        },
+        {
+          "code": "140860",
+          "name": "파크시스템스",
+          "quantity": 12,
+          "weight": 0.25
+        },
+        {
+          "code": "036540",
+          "name": "SFA반도체",
+          "quantity": 97,
+          "weight": 0.09
+        }
+      ],
+      "market": {
+        "131290": {
+          "close": 168000,
+          "cap": 1858320072000
+        },
+        "131970": {
+          "close": 66600,
+          "cap": 1287194050800
+        },
+        "140860": {
+          "close": 178600,
+          "cap": 1250640963400
+        },
+        "222800": {
+          "close": 99700,
+          "cap": 3890096494300
+        },
+        "353200": {
+          "close": 73900,
+          "cap": 3651910757500
+        },
+        "356860": {
+          "close": 42550,
+          "cap": 1008488613000
+        },
+        "403870": {
+          "close": 37800,
+          "cap": 3110940000000
+        },
+        "007660": {
+          "close": 69600,
+          "cap": 5109281642400
+        },
+        "042700": {
+          "close": 153800,
+          "cap": 14659016360000
+        },
+        "036930": {
+          "close": 145100,
+          "cap": 6744410657100
+        },
+        "039030": {
+          "close": 288000,
+          "cap": 3548030400000
+        },
+        "058470": {
+          "close": 45350,
+          "cap": 3456207397500
+        },
+        "095340": {
+          "close": 127100,
+          "cap": 2694146071800
+        },
+        "031980": {
+          "close": 119000,
+          "cap": 2565925005000
+        },
+        "067310": {
+          "close": 21900,
+          "cap": 1456150031100
+        },
+        "089970": {
+          "close": 37250,
+          "cap": 990330921250
+        },
+        "089030": {
+          "close": 34050,
+          "cap": 1261676612250
+        },
+        "036540": {
+          "close": 8110,
+          "cap": 1333773057330
+        }
+      },
+      "fundMetrics": {
+        "asOf": "2026-11-20",
+        "sharesOutstanding": 23900000,
+        "netAssetsKrw": null,
+        "source": "KRX_ETF_DAILY",
+        "fetchedAt": "2026-11-20T19:00:04.889Z"
+      },
+      "marketBasis": {
+        "exchange": "KRX",
+        "priceTime": "15:30 KST",
+        "fetchedAt": "2026-11-20T15:57:35.646Z"
+      }
     }
   ],
   "lastAttempt": {
-    "at": "2026-11-20T01:22:22.740Z",
-    "expected": "2026-11-19",
+    "at": "2026-11-20T18:59:36.968Z",
+    "expected": "2026-11-20",
     "error": null
   }
 }
