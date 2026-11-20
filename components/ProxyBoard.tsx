@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { proxyNames, proxyRanges, type ProxyRange, type ProxyVenue } from "@/config/proxy";
@@ -50,16 +51,6 @@ function compactKrw(value: number): string {
   return `₩${formatNumber(value, 0)}`;
 }
 
-function seoulClockText(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("ko-KR", {
-    timeZone: "Asia/Seoul",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(date);
-}
 
 function convertCandles(candles: Candle[], unit: "KRW" | "USD", rate: number | null): Candle[] {
   if (unit === "KRW" || rate == null) return candles;
@@ -170,15 +161,20 @@ export function ProxyBoard() {
   });
   const rate = board ? fxRate(board.fx, kimchiOn) : null;
   const kimchi = board ? kimchiPercent(board.fx.upbitUsdt, board.fx.naverUsdKrw) : null;
+  const lastTrade = latestDataTime(board?.names.map(name => name.naver?.asOf) ?? []);
+  const lastQuote = board?.names.find(name => name.naver?.asOf === lastTrade);
+  const hasServerQuotes = board?.names.some(name => name.naver || name.binance?.markUsd != null || name.hyperliquid?.markUsd != null);
 
   return (
     <section className="mb-10">
+      <DataFreshness basis={lastTrade} basisDetail={lastQuote ? `${lastQuote.name} · 네이버 ${lastQuote.naver?.sessionLabel}` : "국내 기초종목 시세"}
+        updatedAt={hasServerQuotes ? board?.asOf : null} updateDetail="서버 시세 수집" />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span>업비트 USDT {board?.fx.upbitUsdt == null ? "—" : krw(board.fx.upbitUsdt)}</span>
           <span>네이버 환율 {board?.fx.naverUsdKrw == null ? "—" : krw(board.fx.naverUsdKrw, 2)}</span>
           <span className={tone(kimchi)}>김프 {kimchi == null ? "—" : `${formatSigned(kimchi)}%`}</span>
-          {board ? <span>서버 수집 {seoulClockText(board.asOf)}</span> : null}<span>바이낸스 WebSocket {socketStatus} · 하이퍼리퀴드 WebSocket {hyperStatus} · 실시간 수신 없으면 서버 저장 시세</span>
+          <span>바이낸스 WebSocket {socketStatus} · 하이퍼리퀴드 WebSocket {hyperStatus} · 실시간 수신 없으면 서버 저장 시세</span>
         </div>
         <button
           type="button"

@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useRef, useState } from "react";
 import { formatClock, formatHm, seoulMinutes, seoulSession, sessionSpans, usCashSpan, type SessionKind } from "@/lib/market/kr-session";
@@ -63,8 +64,13 @@ export function SingleStockBoard() {
     return () => window.clearInterval(timer);
   }, []);
 
+  const underlying = board?.names.filter(group => group.price != null) ?? [];
+  const liveTime = latestDataTime(underlying.map(group => group.priceTime));
+  const priceDate = latestDataTime(underlying.filter(group => group.priceBasis === "KRX_REGULAR_CLOSE").map(group => group.priceAsOf));
   return (
     <div className="space-y-8">
+      <DataFreshness basis={liveTime ?? priceDate} updatedAt={underlying.length ? board?.asOf : null}
+        basisDetail={liveTime ? "기초종목 · KRX 정규장 시세" : `기초종목 · ${krxCloseDetail(priceDate)}`} />
       <SessionStrip now={now} />
       {problem ? <p className="text-xs text-amber-300">{problem}</p> : null}
       <div className="grid gap-6 sm:grid-cols-2">

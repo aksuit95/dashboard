@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
+import { DataFreshness } from "@/components/DataFreshness";
 import { getDb } from "@/lib/db/client";
 import { listIngestRuns } from "@/lib/db/quotes";
 import { revalidatePath } from "next/cache";
@@ -6,12 +7,15 @@ import { ingestQuotes } from "@/lib/ingest/run";
 
 export default function HealthPage() {
   const runs = listIngestRuns(getDb(), 40);
+  const lastSuccess = runs.find(run => run.status === "ok");
   return (
     <div>
       <PageHeader
         title="수집 상태"
         description="시세 수집은 서버에서만 외부 API 를 호출합니다. 실패해도 마지막 가격은 남고, 여기 로그에 이유가 쌓입니다. 장중 반복은 npm run job:poll, 과거 일봉은 npm run job:backfill 입니다."
       />
+      <DataFreshness basis={lastSuccess?.startedAt} updatedAt={lastSuccess?.finishedAt}
+        basisDetail="최근 성공한 수집의 시작" updateDetail="수집 완료" />
       <form
         action={async () => {
           "use server";

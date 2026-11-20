@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness } from "@/components/DataFreshness";
 
 import { ColorType, createChart, LineStyle, type LineData } from "lightweight-charts";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -17,9 +18,6 @@ function color(score: number) {
   return bands[score < 25 ? 0 : score < 45 ? 1 : score <= 55 ? 2 : score <= 75 ? 3 : 4].color;
 }
 
-function timestamp(value: string) {
-  return new Date(value).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false });
-}
 
 export function FearGreedBoard() {
   const [board, setBoard] = useState<Board | null>(null);
@@ -66,7 +64,8 @@ export function FearGreedBoard() {
 
   const snapshot = board?.snapshot;
   const delta = snapshot && snapshot.previousClose != null ? snapshot.score - snapshot.previousClose : null;
-  return (
+  return (<>
+    <DataFreshness basis={snapshot?.asOf} updatedAt={board?.fetchedAt} basisDetail="CNN 공포·탐욕 지수" />
     <section className="mb-6 rounded-xl border border-white/10 bg-[#151a22] p-4 sm:p-6" aria-label="CNN 공포·탐욕 지수">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -104,11 +103,11 @@ export function FearGreedBoard() {
           </div>
         </div>
         <div className="mt-6"><HistoryChart points={snapshot.points} /></div>
-        <p className="mt-3 text-xs text-zinc-500">지수 기준 {timestamp(snapshot.asOf)} KST · 수집 {board?.fetchedAt ? timestamp(board.fetchedAt) : "—"} KST{board?.stale ? " · 갱신 지연" : ""}</p>
+        {board?.stale && <p className="mt-3 text-xs text-amber-200">갱신 지연</p>}
       </>}
       <p className="mt-3 text-xs text-zinc-500"><a href="https://www.cnn.com/markets/fear-and-greed" target="_blank" rel="noreferrer" className="underline">출처: CNN</a> · 매일 오전 10시 이후 확인 (KST) · 같은 날에는 저장값 표시 · 마지막 점은 수집 시점의 최신 수치</p>
     </section>
-  );
+  </>);
 }
 
 function HistoryChart({ points }: { points: { date: string; value: number }[] }) {

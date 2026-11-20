@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { useEffect, useMemo, useState } from "react";
 
 type Period = { selected: string; start: string; end: string; base: string; days: string[]; weekEnd: string };
@@ -55,8 +56,17 @@ export function BriefingBoard() {
     try { localStorage.setItem(KEY, JSON.stringify(next)); setReports(next); setReport(next[0]); setSaved(true); setError(""); }
     catch { setError("브라우저에 저장하지 못했습니다. 저장 공간 및 브라우저 설정을 확인하세요."); }
   }
+  const freshnessReport = report ?? (type === "weekly" ? selectedWeekly : [...automatic.map(entry => entry.report), ...reports]
+    .filter(entry => entry.type === "daily").sort((a, b) => b.period.end.localeCompare(a.period.end) || b.createdAt.localeCompare(a.createdAt))[0]);
+  const updatedAt = freshnessReport ? latestDataTime([
+    ...freshnessReport.indices.map(item => item.fetchedAt),
+    ...freshnessReport.sectors.map(item => item.fetchedAt),
+    ...freshnessReport.flows.map(item => item.collectedAt),
+  ]) : null;
   return <section>
     <div className="briefing-controls space-y-5">
+      <DataFreshness basis={freshnessReport?.period.end} basisDetail={`${report ? "선택 브리핑 · " : ""}${krxCloseDetail(freshnessReport?.period.end)}`}
+        updatedAt={updatedAt} updateDetail="브리핑 원자료 수집" />
       <div className={panel}>
         <div className="flex flex-wrap items-end gap-4"><div><label htmlFor="brief-type" className="mb-2 block text-xs text-zinc-400">브리핑 종류</label><select id="brief-type" value={type} onChange={e => { setType(e.target.value as typeof type); setReport(null); setError(""); }} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2"><option value="daily">일간</option><option value="weekly">주간</option></select></div><div><label htmlFor="brief-date" className="mb-2 block text-xs text-zinc-400">{type === "weekly" ? "생성된 주간 브리핑" : "선택 날짜"}</label>{type === "weekly" ? <select id="brief-date" value={selectedWeekly?.period.end ?? ""} onChange={e => { setWeeklyDate(e.target.value); setReport(null); setError(""); }} disabled={!weeklyReports.length} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2 disabled:opacity-50">{weeklyReports.length ? weeklyReports.map(r => <option key={r.period.end} value={r.period.end}>{r.period.end} 마감 · {r.period.start} ~ {r.period.end}</option>) : <option value="">생성된 주간 브리핑 없음</option>}</select> : <input id="brief-date" type="date" value={date} onChange={e => setDate(e.target.value)} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2" />}</div><button type="button" onClick={review} disabled={busy || (type === "weekly" ? !selectedWeekly : !date)} className="rounded-lg bg-emerald-400 px-5 py-2.5 text-sm font-bold text-zinc-950 disabled:opacity-40">{busy ? "자료 확인 중…" : type === "weekly" ? "주간 브리핑 보기" : "자료 확인 · 미리보기"}</button></div>
         <p className="mt-4 text-sm text-zinc-400">{type === "weekly" ? "생성되어 보관된 주간 브리핑의 마지막 거래일만 선택할 수 있습니다." : "일간은 선택일의 직전 완료 거래일을 기준으로 합니다."} KRX 정규장 종가 기준입니다(통상 15:30, 2026-11-19은 16:30).</p>

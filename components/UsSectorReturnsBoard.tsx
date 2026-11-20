@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness } from "@/components/DataFreshness";
 import { useEffect, useMemo, useState } from "react";
 import { returnPeriods, type Returns, type ReturnPeriod } from "@/lib/market/sector-returns";
 type Row = { code: string; name: string; sector: string; industry: string; membership: string; price: number | null; returns: Returns };
@@ -29,8 +30,9 @@ export function UsSectorReturnsBoard() {
   }).sort((a,b) => compare(a.value,b.value)), [rows,period]);
   const visible = rows.filter(r => (!sector || r.sector === sector) && `${r.name} ${r.code}`.toLowerCase().includes(query.trim().toLowerCase())).sort((a,b) => compare(a.returns[period],b.returns[period],descending) || a.name.localeCompare(b.name));
   return <section aria-label="미국 섹터별 등락률 분석">
+    <DataFreshness basis={board?.asOf} updatedAt={board?.fetchedAt}
+      basisDetail={`${date ? "선택 거래일 · " : ""}미국 정규장 종가 · 뉴욕 거래일(ET)`} />
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-zinc-300">S&amp;P 500 + NASDAQ 100 중복 제거</p><div className="flex gap-2"><select aria-label="미국 기준 날짜 선택" value={date} onChange={e => setDate(e.target.value)} className="rounded-md border border-white/15 bg-[#151a22] px-3 py-2 text-xs text-zinc-100"><option value="">최신 거래일</option>{board?.dates.slice().reverse().map(d => <option key={d}>{d}</option>)}</select><button onClick={() => setReload(n => n+1)} className="rounded-md border border-white/15 px-3 py-2 text-xs">결과 새로고침</button></div></div>
-    <p className="mb-4 text-xs text-zinc-500">기준일 {board?.asOf ?? "—"} · 미국 정규장 종가 · 뉴욕 거래일 ET (통상 16:00, 조기 폐장일은 별도) · 수집 {board ? new Date(board.fetchedAt).toLocaleString("ko-KR", { timeZone:"Asia/Seoul", hour12:false }) : "—"} KST</p>
     {error && <p role="status" className="mb-4 rounded-lg border border-amber-500/20 p-3 text-sm text-amber-200">{error}</p>}
     <div className="mb-5 flex flex-wrap gap-2">{returnPeriods.map(p => <button key={p.id} onClick={() => {setPeriod(p.id);setDescending(true);}} aria-pressed={period===p.id} className={`rounded-md px-3 py-2 text-xs ${period===p.id ? "bg-zinc-100 text-zinc-950" : "bg-white/5 text-zinc-400"}`}>{p.label}</button>)}</div>
     <div className="mb-3 flex justify-between text-sm"><span>섹터별 흐름 · 동일가중 평균</span><button onClick={() => setSector(null)} className="text-zinc-400">전체 종목</button></div>

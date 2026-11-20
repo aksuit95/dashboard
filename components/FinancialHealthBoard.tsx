@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
 import { analyzeCompany, discreteQuarters } from "@/lib/financials/analyze";
@@ -83,7 +84,10 @@ export function FinancialHealthBoard() {
   const selectSort = (key: SortKey) => { if (sort === key) setDesc(v => !v); else { setSort(key); setDesc(true); } };
   const reportDates = [...new Set(analyzed.flatMap(r => r.analysis.latest ? [r.analysis.latest.periodEnd] : []))].sort();
   const priceDates = [...new Set(analyzed.flatMap(r => r.company.market ? [r.company.market.date] : []))].sort();
+  const latestFiling = latestDataTime(analyzed.flatMap(({ company, analysis }) =>
+    company.reports.filter(report => report.periodEnd === analysis.latest?.periodEnd).map(report => report.filedAt)));
   return <section aria-label="현금·재무건전성 분석" className="space-y-5">
+    <DataFreshness basis={latestFiling} updatedAt={publication?.publishedAt} basisDetail="표시 자료 중 최근 DART 공시 접수일" updateDetail="재무 자료 저장" />
     <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
       <div className="flex flex-wrap items-center gap-3"><span>공시 실적 · 단위 억원 · 연결 우선 / 별도 구분</span><div role="group" aria-label="지수 선택" className="flex gap-2">{([["kospi200", "코스피200"], ["kosdaq150", "코스닥150"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={universe === id} onClick={() => { if (universe === id) return; setBoard(null); setUniverse(id); setIndustry(""); setSelected(null); }} className={`rounded-lg border px-5 py-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${universe === id ? "border-[#d84f68] bg-[#d84f68] font-semibold text-white" : "border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700"}`}>{label}</button>)}</div><label className="flex items-center gap-2">재무 기준 <select aria-label="재무 기준 분기" className={inputClass} value={period} onChange={e => setPeriod(e.target.value)}><option value="latest">최신 공시</option><option value="2026-06-30">2026년 2분기</option></select></label></div>
       <button type="button" disabled={busy} className={buttonClass} onClick={() => setReload(v => v + 1)}>{busy ? "불러오는 중…" : "저장 자료 새로고침"}</button>
@@ -95,7 +99,7 @@ export function FinancialHealthBoard() {
         {[["현금 잔액 확보", `${covered} / ${analyzed.length}개`, "현재 구성종목 기준"], ["TTM FCF 흑자", fcfCovered.length ? `${pct(fcfPositive / fcfCovered.length * 100)}` : "—", `비금융 ${fcfPositive} / ${fcfCovered.length}개 · 결측 제외`], ["유동성·현금흐름 경고", `${warningCount}개`, "비금융 · 근거 확인 필요"], ["공시 재무기간", reportDates.length ? reportDates.at(-1)! : "—", reportDates.length > 1 ? `기업별 상이 · ${reportDates[0]} ~ ${reportDates.at(-1)}` : "최근 확보한 결산일"]].map(([label, value, hint], index) => <div key={label} className={panel}><p className="text-xs text-zinc-400">{label}</p><p className="my-2 text-2xl font-semibold tabular-nums">{value}</p><p className="text-xs text-zinc-500">{hint}</p><CardHelp label={label} content={cardHelp[label]} alignRight={index % 2 === 1} /></div>)}
       </div>
       <div className="text-xs leading-6 text-zinc-400">
-        구성 확인 {kst(publication.membershipAt)} KST · 저장 {kst(publication.publishedAt)} KST<br />
+        구성 확인 {kst(publication.membershipAt)} KST<br />
         가격: {priceDates.length ? priceDates.join(", ") : "확보 실패"} · KRX 정규장 종가(통상 15:30, 2026-11-19은 16:30 KST). 기업 상세에 가격 수집 시각 별도 표시.<br />
         {period !== "latest" && <>2분기 보고서가 없는 기업은 결측으로 표시합니다. 시가총액과 FCF 수익률은 위 가격 기준일을 사용하며 2분기 당시 수치가 아닙니다.<br /></>}
         {publication.membershipSource}. 금융업은 일반기업 FCF 평가에서 제외합니다.

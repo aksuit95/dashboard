@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
 import { CALENDAR_YEAR } from "@/config/market-calendar";
@@ -38,6 +39,7 @@ export function MarketHoursBoard() {
   const dateLabel = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric", weekday: "long" }).format(start);
   const dst = timeText(zonedTime(localDate(now, "America/New_York"), 570, "America/New_York")) === "22:30";
   return <div className="space-y-5">
+    <DataFreshness basis={date} basisDetail="표시 시간표 날짜 · 한국시간(KST)" updateDetail="공식 거래시간 규칙으로 계산" />
     <section className="flex flex-wrap items-center justify-between gap-5 rounded-2xl border border-white/10 bg-gradient-to-br from-[#19262a] to-[#151a22] p-5 sm:p-6">
       <div>
         <div className="flex items-center gap-2 text-xs font-medium text-emerald-300"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" /> LIVE SESSION CLOCK</div>

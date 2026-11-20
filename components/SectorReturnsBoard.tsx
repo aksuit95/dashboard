@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
 import { minerviniUniverses, type MinerviniUniverse } from "@/config/minervini";
@@ -89,6 +90,8 @@ export function SectorReturnsBoard() {
   }
 
   return <section aria-label="섹터별 등락률 분석">
+    <DataFreshness basis={snapshot?.asOf} updatedAt={snapshot?.fetchedAt}
+      basisDetail={`${date ? "선택 거래일 · " : ""}${krxCloseDetail(snapshot?.asOf)}`} />
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
       <div className="flex rounded-lg border border-white/10 bg-[#151a22] p-1" aria-label="지수 선택">
         {(Object.keys(minerviniUniverses) as MinerviniUniverse[]).map(id => <button key={id} type="button" aria-pressed={universe === id} onClick={() => { setUniverse(id); setSelected(null); setQuery(""); setError(null); }} className={`rounded-md px-4 py-2 text-sm font-medium ${universe === id ? "bg-rose-950 text-rose-100" : "text-zinc-400 hover:text-white"}`}>{minerviniUniverses[id].name}</button>)}
@@ -105,10 +108,6 @@ export function SectorReturnsBoard() {
     </div>
     {snapshot && board?.requestedDate && board.requestedDate !== snapshot.asOf && <p role="status" className="mb-4 rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-zinc-400">선택일 {board.requestedDate}은 휴장일입니다. 직전 거래일 {snapshot.asOf}의 KRX 종가 기준 결과를 표시합니다.</p>}
     {date && <p className="mb-4 text-xs text-zinc-500">과거 가격 비교 · 구성종목과 섹터는 수집 시점 기준이며 과거 편입·편출을 재현하지 않습니다.</p>}
-    <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-500">
-      <p>기준일 <span className="text-zinc-300">{snapshot?.asOf ?? "—"}</span> · KRX {snapshot?.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가 · 거래일 종가 수집</p>
-      <p>수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} KST</p>
-    </div>
     {(error || board?.stale) && <p role="status" className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-200">{snapshot ? `${snapshot.asOf} 이전 결과 표시 중. ` : "수집된 결과가 없습니다. "}{error ?? board?.error}</p>}
     <div className="mb-5 flex flex-wrap items-center gap-2" aria-label="비교 기간">
       {returnPeriods.map(p => <button key={p.id} type="button" aria-pressed={period === p.id} onClick={() => { setPeriod(p.id); setDescending(true); }} className={`min-w-14 rounded-md px-3 py-2 text-xs ${period === p.id ? "bg-zinc-100 font-semibold text-zinc-950" : "bg-white/5 text-zinc-400 hover:bg-white/10"}`}>{p.label}</button>)}

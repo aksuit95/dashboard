@@ -25,6 +25,10 @@ export type MarketLiveStock = {
   turnover: number | null;
   asOf: string;
 };
+export type MarketLiveBuyStrengthStock = MarketLiveStock & {
+  marketCap: number;
+  buyStrengthPct: number;
+};
 export type MarketLiveMember = Pick<MarketLiveStock, "code" | "name" | "market"> & { sector: Sector };
 export type MarketLiveQuote = Pick<MarketLiveStock, "code" | "price" | "turnover" | "asOf">;
 export type MarketLiveRotationStock = Pick<MarketLiveStock, "code" | "market" | "sector" | "asOf"> & { price: number; close: number };
@@ -54,9 +58,11 @@ export type MarketLiveBoardData = {
   date: string;
   baselineDate: string | null;
   collectedAt: string;
+  updatedAt?: string | null;
   indexes: MarketLiveIndex[];
   sectors: MarketLiveSector[];
   leaders: MarketLiveStock[];
+  buyStrengthLeaders?: MarketLiveBuyStrengthStock[];
   rotationStocks: MarketLiveRotationStock[];
   sectorStocks?: (MarketLiveSectorStock & { sector: Sector })[];
   breadth: { up: number; flat: number; down: number; compared: number; total: number };
@@ -76,7 +82,8 @@ export function summarizeMarketLiveStocks(
   closes: ReadonlyMap<string, number>,
   minimumQuoteTime: number,
   leaderOrder: "turnover" | "change" = "turnover",
-): Pick<MarketLiveBoardData, "sectors" | "leaders" | "breadth" | "rotationStocks" | "sectorStocks"> {
+  marketCaps?: ReadonlyMap<string, number>,
+): Pick<MarketLiveBoardData, "sectors" | "leaders" | "buyStrengthLeaders" | "breadth" | "rotationStocks" | "sectorStocks"> {
   const byCode = new Map(quotes.map(quote => [quote.code, quote]));
   const groups = new Map<Sector, MarketLiveStock[]>();
   const sizes = new Map<Sector, number>();
@@ -115,7 +122,20 @@ export function summarizeMarketLiveStocks(
   const leaders = marketLiveSymbols.flatMap(market => stocks
     .filter(row => row.market === market && row.changePct > 0 && (leaderOrder === "change" || (row.turnover ?? 0) > 0))
     .sort(rank).slice(0, 12)).sort(rank);
+  const buyStrengthLeaders = marketCaps && rankBuyStrength(stocks, marketCaps);
   const up = countUp(stocks);
   const down = stocks.filter(row => row.changePct < 0).length;
-  return { sectors, leaders, rotationStocks, sectorStocks, breadth: { up, down, flat: stocks.length - up - down, compared: stocks.length, total: members.length } };
+  return { sectors, leaders, buyStrengthLeaders, rotationStocks, sectorStocks, breadth: { up, down, flat: stocks.length - up - down, compared: stocks.length, total: members.length } };
+}
+
+function rankBuyStrength(stocks: MarketLiveStock[], marketCaps: ReadonlyMap<string, number>) {
+  const eligible = stocks.flatMap(stock => {
+    const marketCap = marketCaps.get(stock.code);
+    if (stock.changePct <= 0 || stock.turnover == null || !Number.isFinite(stock.turnover) || stock.turnover <= 0 ||
+        marketCap == null || !Number.isFinite(marketCap) || marketCap <= 0) return [];
+    return [{ ...stock, marketCap, buyStrengthPct: stock.turnover / marketCap * 100 }];
+  });
+  const rank = (a: MarketLiveBuyStrengthStock, b: MarketLiveBuyStrengthStock) =>
+    b.buyStrengthPct - a.buyStrengthPct || b.changePct - a.changePct || a.code.localeCompare(b.code);
+  return marketLiveSymbols.flatMap(market => eligible.filter(stock => stock.market === market).sort(rank).slice(0, 12)).sort(rank);
 }

@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import Link from "next/link";
 import { InvestmentRiskOutlook } from "./InvestmentRiskOutlook";
@@ -69,6 +70,7 @@ export function InvestmentRiskBoard() {
     : selectedFinancialStatuses.includes("loading") ? "loading"
       : selectedFinancialStatuses.includes("ok") ? "ok" : "error";
   return <section className="space-y-5" aria-label="투자위험 목록">
+    <DataFreshness basis={prices?.asOf} updatedAt={prices?.fetchedAt} basisDetail={`주가 · ${krxCloseDetail(prices?.asOf)}`} />
     <div className="rounded-xl border border-white/10 bg-[#121720] p-4 sm:p-5">
       <div role="tablist" aria-label="위험 분류" className="flex gap-5 overflow-x-auto border-b border-white/10 whitespace-nowrap">
         {tabs.map(item => <button role="tab" type="button" aria-selected={tab === item} key={item} onClick={() => setTab(item)} className={`border-b-2 pb-3 text-sm font-medium ${tab === item ? "border-rose-400 text-white" : "border-transparent text-zinc-400 hover:text-white"}`}>{item}</button>)}
@@ -81,7 +83,7 @@ export function InvestmentRiskBoard() {
       {tab === "위험 후보" ? <InvestmentRiskOutlook market={market} query={query} alerts={alerts?.alerts ?? null} observedAt={alerts?.observed_at} alertsFailed={status.alerts === "error"} /> : <>
       <div className="mt-4 space-y-1 text-xs leading-5 text-zinc-400">
         <p>{alerts ? <>시장경보 조회 {date(alerts.observed_at)} KST · <a className="text-cyan-300 underline" href={alerts.source_url} target="_blank" rel="noreferrer">{alerts.source}</a></> : status.alerts === "error" ? "시장경보 자료를 확인할 수 없습니다." : "시장경보 자료를 불러오는 중입니다."}</p>
-        <p>{prices ? `가격: ${prices.asOf} KRX 정규장 ${prices.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가 · 수집 ${date(prices.fetchedAt)} KST` : status.prices === "error" ? "KRX 종가 자료를 확인할 수 없습니다." : "KRX 종가 자료를 불러오는 중입니다."}</p>
+        {status.prices === "error" && <p>KRX 종가 자료를 확인할 수 없습니다.</p>}
         <p>재무 신호는 현금·재무건전성의 코스피200·코스닥150 공시 자료를 연결하며, 기업별 재무 기준일이 다릅니다. 결측은 위험이 없다는 뜻이 아닙니다. 시장 미확인 종목은 전체에서만 표시됩니다.</p>
         {selectedMarkets.filter(listing => financialStatus[listing] === "error").map(listing =>
           <p className="text-amber-300" key={listing}>{financialMarkets[listing].label} 재무 자료를 확인할 수 없습니다.</p>

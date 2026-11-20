@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useRef, useState } from "react";
 import { formatNumber, formatSigned } from "@/lib/format";
@@ -63,8 +64,14 @@ export function FuturesBoard() {
     return () => window.clearInterval(timer);
   }, []);
 
+  const available = board ? [...board.futures, ...board.asia, ...board.usIndices, ...board.europe, ...board.usIndicators, ...board.currencies, ...board.macro]
+    .filter(card => card.price != null) : [];
+  const lastTrade = latestDataTime(available.map(card => card.tradedAt));
+  const lastCard = available.find(card => card.tradedAt === lastTrade);
   return (
     <div className="space-y-8">
+      <DataFreshness basis={lastTrade} basisDetail={lastCard ? `${lastCard.name} · ${lastCard.venue} ${sessionLabel(lastCard.session)}` : undefined}
+        updatedAt={available.length ? board?.asOf : null} />
       {problem ? <p className="text-xs text-amber-300">{problem}</p> : null}
       <Section title="지수 선물" description="코스피200 야간·주간선물과 미국 주요 지수 선물. 야간 등락은 야간 시가 대비입니다." cards={board?.futures} />
       <Section title="미국 증시" description="나스닥 종합·S&P 500·다우·러셀2000 현물 지수." cards={board?.usIndices} />

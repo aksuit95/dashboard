@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 import { readFile } from "node:fs/promises";
 import { addDays, events, reviewedAt, seoulDate, upcomingEvents } from "@/lib/events/calendar";
 import type { Feed, Snapshot } from "@/lib/events/refresh";
@@ -41,12 +42,18 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
   const items=all.filter(e=>!e.tentative), tentative=all.filter(e=>e.tentative);
   const recent=mergedShow.filter(e=>e.time && e.date>=addDays(today,-7) && Date.parse(`${e.date}T${e.time}:00+09:00`)<=now.getTime() && !e.tentative).sort((a,b)=>`${b.date}${b.time}`.localeCompare(`${a.date}${a.time}`));
   const unknown=(feeds.dart?.companies ?? []).filter(c=>c.status==="확인되지 않음" || c.status==="공시 확인 필요");
+  const checkedEvents = country === "KR" ? [...manual, ...(feeds.dart?.events ?? [])].filter(e => e.country === "KR") : [...recent, ...ism];
+  const lastEvent = latestDataTime(checkedEvents.filter(e => !e.tentative && e.date <= today).map(e =>
+    e.time ? `${e.date}T${e.time}:00+09:00` : e.date).filter(time => Date.parse(time) <= now.getTime()));
+  const updatedAt = latestDataTime(country === "KR" ? [feeds.dart?.updatedAt] : [feeds.show?.updatedAt, feeds.ism?.updatedAt]);
   return <div>
     <header className="mb-6">
       <p className="mb-2 text-xs font-semibold tracking-widest text-rose-300">MARKET CALENDAR</p>
       <h1 className="text-2xl font-semibold tracking-tight">주요 매크로 · 실적 캘린더</h1>
       <p className="mt-2 text-sm text-zinc-400">오늘부터 28일 · 모든 날짜와 시간은 한국시간 (KST)</p>
     </header>
+    <DataFreshness basis={lastEvent} updatedAt={updatedAt ?? reviewedAt} basisDetail="최근 확인 일정 · 한국시간(KST)"
+      updateDetail={updatedAt ? "저장한 일정 자료 갱신" : "수동 일정 확인일"} />
     <nav aria-label="국가별 캘린더" className="mb-5 flex gap-2 border-b border-white/10">
       {([ ["KR","한국 캘린더","/events?country=kr"], ["US","미국 캘린더","/events?country=us"] ] as const).map(([id,label,href])=><Link key={id} href={href} aria-current={country===id?"page":undefined} className={`border-b-2 px-4 py-3 text-sm font-medium ${country===id?"border-rose-400 text-white":"border-transparent text-zinc-400 hover:text-white"}`}>{label}</Link>)}
     </nav>

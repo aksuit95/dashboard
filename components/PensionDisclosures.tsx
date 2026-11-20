@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -27,12 +28,12 @@ export function PensionDisclosures() {
   const counts = { increase: data?.rows.filter(r => r.changeShares != null && r.changeShares > 0).length ?? 0, decrease: data?.rows.filter(r => r.changeShares != null && r.changeShares < 0).length ?? 0, major: data?.rows.filter(r => r.type === "major").length ?? 0, executive: data?.rows.filter(r => r.type === "executive").length ?? 0 };
   return <div className="space-y-5">
     <div><h1 className="text-2xl font-bold">국민연금 전체 공시</h1><p className="mt-2 text-sm text-zinc-400">국민연금공단이 제출한 지분 공시를 모아봅니다.</p></div>
+    <DataFreshness basis={latestDataTime(data?.rows.map(row => row.filedAt) ?? [])} basisDetail="DART 최근 공시 접수일" updatedAt={data?.collectedAt} />
     <div className="flex flex-wrap gap-2"><Link href="/investor-flow/kospi200" className={chip(false)}>코스피 시장</Link><Link href="/investor-flow/kosdaq150" className={chip(false)}>코스닥 시장</Link><Link href="/investor-flow/kospi200/stocks" className={chip(false)}>코스피200 종목</Link><Link href="/investor-flow/kosdaq150/stocks" className={chip(false)}>코스닥150 종목</Link><span className={chip(true)}>국민연금 공시</span></div>
     <section className="rounded-xl border border-white/10 bg-[#151a22] p-5">
-      <div className="flex flex-wrap gap-2 text-xs text-zinc-400"><span className="rounded bg-sky-400/10 px-2 py-1 text-sky-300">{data ? `${Number(data.month.slice(5))}월 공시` : "공시 조회"}</span><span className="rounded bg-white/5 px-2 py-1">최근 제출일 {data?.rows[0]?.filedAt ?? "—"}</span></div>
       <p className="mt-4 text-sm text-zinc-400">{data ? `${data.month} 기준` : "월별"} 국민연금 지분 공시</p><p className="mt-1 text-3xl font-bold">{data ? data.rows.length : "—"}<span className="ml-1 text-sm text-zinc-500">건</span></p>
       <div className="mt-4 flex flex-wrap gap-4 text-xs"><span className="text-rose-400">▲ 보유수량 증가 {counts.increase}</span><span className="text-sky-400">▼ 보유수량 감소 {counts.decrease}</span><span className="text-zinc-400">대량보유 {counts.major} · 임원주요주주 {counts.executive}</span></div>
-      {data && <p className="mt-3 text-xs text-zinc-500">수집 {new Date(data.collectedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST · 상세 미반영 {data.rows.filter(r=>r.detailPending).length}건</p>}
+      {data && <p className="mt-3 text-xs text-zinc-500">상세 미반영 {data.rows.filter(r=>r.detailPending).length}건</p>}
     </section>
     <p className="rounded-xl border border-white/10 bg-[#151a22] px-5 py-4 text-xs leading-6 text-zinc-400">대량보유와 임원·주요주주 소유상황 보고서를 함께 표시합니다. 제출일은 DART 접수일입니다. 보유수량 증감은 보고된 수치이며 실제 매수·매도를 뜻하지 않을 수 있습니다. 정정 공시는 원문을 확인해 주세요.</p>
     <div className="flex flex-wrap items-center gap-2"><select aria-label="제출일 정렬" value={sort} onChange={e=>setSort(e.target.value)} className="rounded-full border border-white/10 bg-[#151a22] px-3 py-1.5 text-xs"><option value="latest">제출일 최신순</option><option value="oldest">제출일 오래된순</option></select>{([["all","전체 증감"],["increase","수량 증가"],["decrease","수량 감소"]] as const).map(([key,label])=><button key={key} onClick={()=>setDirection(key)} aria-pressed={direction===key} className={chip(direction===key)}>{label}</button>)}</div>

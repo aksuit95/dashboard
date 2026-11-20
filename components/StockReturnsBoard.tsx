@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -68,13 +69,13 @@ export function StockReturnsBoard() {
   }
   const sortLabel = (key: SortKey) => sort === key ? descending ? "↓" : "↑" : "↕";
   return <section aria-label="종목별 등락률">
+    <DataFreshness basis={snapshot?.asOf} updatedAt={snapshot?.fetchedAt} basisDetail={krxCloseDetail(snapshot?.asOf)} />
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <div className="flex rounded-lg border border-white/10 bg-[#151a22] p-1" aria-label="시장 선택">
         {(["kospi", "kosdaq"] as const).map(id => <button key={id} type="button" aria-pressed={market === id} onClick={() => { setMarket(id); setPage(1); }} className={`rounded-md px-4 py-2 text-sm font-medium ${market === id ? "bg-emerald-400/15 text-emerald-200" : "text-zinc-400 hover:text-white"}`}>{id === "kospi" ? "코스피" : "코스닥"}</button>)}
       </div>
       <button type="button" disabled={busy} onClick={() => setReload(n => n + 1)} className="rounded-md border border-white/15 px-3 py-2 text-xs text-zinc-300 disabled:opacity-40">{busy ? "불러오는 중…" : "새로고침"}</button>
     </div>
-    <div className="mb-5 flex flex-wrap justify-between gap-2 text-xs text-zinc-500"><p>기준일 <span className="text-zinc-300">{snapshot?.asOf ?? "—"}</span> · KRX 정규장 {snapshot?.asOf === "2026-11-19" ? "16:30" : "15:30"} 종가</p><p>수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} KST</p></div>
     {(error || board?.stale) && <p role="status" className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-sm text-amber-200">{snapshot ? `${snapshot.asOf} 기준 결과 표시 중. ` : "수집된 결과가 없습니다. "}{error ?? "이전 결과입니다."}</p>}
     <div className="overflow-hidden rounded-xl border border-white/10 bg-[#151a22]">
       <div className="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 p-4">

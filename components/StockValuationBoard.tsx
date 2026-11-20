@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { stockMetrics, type StockMetric, type StockValuationData, type StockValuationSnapshot } from "@/lib/valuation/stocks";
@@ -81,12 +82,14 @@ function StockValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq15
   }
   function order(column: Sort) { if (sort === column) setAscending(value => !value); else { setSort(column); setAscending(column !== "marketCap"); } }
 
+  const metricDate = latestDataTime(data?.metrics.map(metric => metric.baseDate).filter(date => /^\d{4}-\d{2}-\d{2}$/.test(date)) ?? []);
   return <div className="space-y-5">
+    <DataFreshness basis={metricDate} updatedAt={exportedAt ?? data?.savedAt} basisDetail={metricDate ? "QuantiWise 선행 컨센서스" : data ? "QuantiWise 원본에서 날짜 미제공" : "QuantiWise 선행 컨센서스"}
+      updateDetail={exportedAt ? "스냅샷 내보내기" : data ? "원본 파일 저장" : undefined} />
     <section className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-[#151a22] p-4">
       <div className="text-sm"><p className="font-medium">{data ? `${data.stocks.length}개 종목 · 구성일 ${data.compositionDate}` : "개별종목 데이터 확인 중…"}</p>
-        {data && <p className="mt-1 text-xs text-zinc-400">{data.fileName} · 종목별 밸류에이션 · 엑셀 저장 {timestamp(data.savedAt)} KST</p>}
+        {data && <p className="mt-1 text-xs text-zinc-400">{data.fileName} · 종목별 밸류에이션</p>}
         {data?.sourceUpdatedAt && <p className="mt-1 text-xs text-zinc-500">QuantiWise 갱신 {data.sourceUpdatedAt} KST</p>}
-        {exportedAt && <p className="mt-1 text-xs text-zinc-500">데이터 내보내기 {timestamp(exportedAt)} KST</p>}
       </div>
       <button type="button" disabled={busy} onClick={() => void refresh()} className="rounded-md border border-white/10 px-3 py-2 text-xs text-zinc-300 disabled:opacity-40">{busy ? "읽는 중…" : "데이터 반영"}</button>
     </section>

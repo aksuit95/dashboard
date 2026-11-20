@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness } from "@/components/DataFreshness";
 
 import { ColorType, createChart, LineStyle, type LineData } from "lightweight-charts";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -7,11 +8,14 @@ import type { ValuationData, ValuationSeries } from "@/lib/valuation/types";
 const ranges = { "1M": 31, "3M": 92, "6M": 183, "1Y": 366, "3Y": 1096, "5Y": 1827, ALL: Infinity };
 type Range = keyof typeof ranges;
 function number(value: number, digits: number) { return value.toLocaleString("ko-KR", { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
-function timestamp(value: string) { return new Date(value).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }); }
 
 export function ValuationBoard() {
   const [universe, setUniverse] = useState<"kospi200" | "kosdaq150">("kospi200");
-  return <div className="space-y-4"><div className="flex gap-2" aria-label="지수 선택">{([['kospi200', '코스피200'], ['kosdaq150', '코스닥150']] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={universe === id} onClick={() => setUniverse(id)} className={`rounded-md border px-4 py-2 text-sm ${universe === id ? 'border-sky-400 text-sky-300' : 'border-white/15 text-zinc-400'}`}>{label}</button>)}</div><ValuationUniverse key={universe} universe={universe} /></div>;
+  const controls = <div className="flex gap-2" aria-label="지수 선택">{([["kospi200", "코스피200"], ["kosdaq150", "코스닥150"]] as const).map(([id, label]) => (
+    <button key={id} type="button" aria-pressed={universe === id} onClick={() => setUniverse(id)}
+      className={`rounded-md border px-4 py-2 text-sm ${universe === id ? "border-sky-400 text-sky-300" : "border-white/15 text-zinc-400"}`}>{label}</button>
+  ))}</div>;
+  return <div className="space-y-4">{controls}<ValuationUniverse key={universe} universe={universe} /></div>;
 }
 function ValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq150" }) {
   const [data, setData] = useState<ValuationData | null>(null);
@@ -43,11 +47,13 @@ function ValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq150" })
 
   const active = data?.series.find((series) => series.id === selected) ?? data?.series[0];
   return <div className="space-y-5">
+    <DataFreshness basis={active?.points.at(-1)?.date} updatedAt={exportedAt ?? data?.savedAt}
+      basisDetail={active ? `QuantiWise · ${active.name}` : "QuantiWise 선행 컨센서스"}
+      updateDetail={exportedAt ? "스냅샷 내보내기" : data ? "원본 파일 저장" : undefined} />
     <section className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-[#151a22] p-4">
       <div className="min-w-0 text-sm">
         <div className="flex items-center gap-2"><span className={`h-2 w-2 rounded-full ${data && !error ? "bg-emerald-400" : "bg-zinc-500"}`} /><span className="font-medium">{data?.fileName ?? "코스피200 데이터"}</span><span className="text-xs text-zinc-500">JSON 스냅샷 · 수동 반영</span></div>
-        <p className="mt-1 text-xs text-zinc-400">{data ? `엑셀 저장 ${timestamp(data.savedAt)} KST` : "내보낸 데이터를 확인하고 있습니다…"}</p>
-        {exportedAt && <p className="mt-1 text-xs text-zinc-500">데이터 내보내기 {timestamp(exportedAt)} KST</p>}
+
       </div>
       <button type="button" disabled={busy} onClick={() => void refresh()} className="rounded-md border border-white/10 px-3 py-2 text-xs text-zinc-300 disabled:opacity-40">{busy ? "읽는 중…" : "데이터 반영"}</button>
     </section>

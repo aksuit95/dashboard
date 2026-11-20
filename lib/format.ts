@@ -1,3 +1,17 @@
+export function latestDataTime(values: readonly (string | null | undefined)[]) {
+  let latest: string | null = null;
+  let latestTime = -Infinity;
+  for (const value of values) {
+    if (!value) continue;
+    const time = Date.parse(value);
+    if (Number.isFinite(time) && time > latestTime) {
+      latest = value;
+      latestTime = time;
+    }
+  }
+  return latest;
+}
+
 export function formatNumber(value: number, digits = 2): string {
   return new Intl.NumberFormat("ko-KR", {
     minimumFractionDigits: digits,

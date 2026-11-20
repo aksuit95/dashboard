@@ -1,4 +1,5 @@
 "use client";
+import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import { Fragment, useEffect, useState } from "react";
 import { MinerviniGuide } from "@/components/MinerviniGuide";
@@ -65,10 +66,10 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
     { label: "04 거래량 돌파", count: rows.filter(r => r.status === "breakout").length, note: "종가 돌파 + 거래량 ≥ 1.5배", filter: "breakout" as Filter },
   ];
   return <section aria-label={`${spec.name} 미너비니 스크리너`}>
+    <DataFreshness basis={snapshot?.asOf} updatedAt={snapshot?.fetchedAt} basisDetail={krxCloseDetail(snapshot?.asOf)} />
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 text-xs text-zinc-400">
       <div className="space-y-1">
-        <p><span className="mr-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-1 text-emerald-300">{spec.label}</span>KRX {snapshot?.asOf === "2026-11-19" ? "16:30" : "15:30"} 정규장 종가 기준 · 거래일 종가 수집</p>
-        <p className="pt-1">분석 기준일 {snapshot?.asOf ?? "—"} · 수집 {snapshot ? new Date(snapshot.fetchedAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) : "—"} · RS 산정 {snapshot?.rankedSize ?? 0}/{snapshot?.universeSize ?? 0}종목</p>
+        <p>RS 산정 {snapshot?.rankedSize ?? 0}/{snapshot?.universeSize ?? 0}종목</p>
       </div>
       {busy ? <span>결과를 불러오는 중…</span> : null}
     </div>
