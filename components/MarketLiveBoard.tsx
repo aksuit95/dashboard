@@ -229,7 +229,7 @@ function IntradayChart({ symbol, points, change, closing, session: { openAt, clo
       rightPriceScale: { borderColor: "rgba(255,255,255,0.08)" },
       timeScale: {
         borderColor: "rgba(255,255,255,0.08)", timeVisible: true, secondsVisible: false,
-        tickMarkFormatter: chartClock, fixLeftEdge: true, fixRightEdge: true,
+        tickMarkFormatter: chartClock, lockVisibleTimeRangeOnResize: true, minBarSpacing: 0.1,
       },
       localization: { timeFormatter: chartClock },
       handleScale: false,
@@ -260,7 +260,8 @@ function IntradayChart({ symbol, points, change, closing, session: { openAt, clo
     series.current?.setData([...data.values()]);
     const last = data.get(end);
     series.current?.setMarkers(closing && last && "value" in last ? [{ time: end, position: "aboveBar", color, shape: "circle", text: "종가" }] : []);
-    chart.current?.timeScale().fitContent();
+    // Keep the full scheduled range visible while the latest actual print is still near the open.
+    chart.current?.timeScale().setVisibleLogicalRange({ from: -1, to: data.size });
   }, [points, change, closing, openAt, closeAt]);
 
   const range = tradingRange(openAt, closeAt);
