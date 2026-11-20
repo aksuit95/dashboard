@@ -1,6 +1,7 @@
 import { krxCloseTime } from "@/config/market-calendar";
 
 const NAVER_MARKET_API = "https://stock.naver.com/api/securityService";
+const NAVER_INDEX_CHART_API = "https://api.stock.naver.com/chart/domestic/index";
 const STOCK_BATCH_SIZE = 100;
 
 type IndexSymbol = "KOSPI" | "KOSDAQ";
@@ -59,9 +60,9 @@ export function isRetryableNaverStockMinuteError(error: unknown) {
   return error instanceof TypeError || (error instanceof DOMException && error.name === "TimeoutError");
 }
 
-async function readJson(path: string, fetcher: typeof fetch, batchSignal?: AbortSignal): Promise<unknown> {
+async function readJson(url: string, fetcher: typeof fetch, batchSignal?: AbortSignal): Promise<unknown> {
   const timeout = AbortSignal.timeout(6000);
-  const response = await fetcher(`${NAVER_MARKET_API}${path}`, {
+  const response = await fetcher(url, {
     cache: "no-store",
     signal: batchSignal ? AbortSignal.any([timeout, batchSignal]) : timeout,
     headers: { "user-agent": "Mozilla/5.0", accept: "application/json" },
@@ -71,7 +72,7 @@ async function readJson(path: string, fetcher: typeof fetch, batchSignal?: Abort
 }
 
 export async function fetchNaverStockMinuteChart(code: string, session: Session, signal: AbortSignal, fetcher: typeof fetch = fetch) {
-  const chart = record(await readJson(`/chart/domestic/item/${code}?periodType=day`, fetcher, signal));
+  const chart = record(await readJson(`${NAVER_MARKET_API}/chart/domestic/item/${code}?periodType=day`, fetcher, signal));
   if (chart.code !== code || chart.stockExchangeType !== "KRX" || chart.infoType !== "item" || chart.periodType !== "day") {
     throw new Error("네이버 KRX 종목 분봉 기준 불일치");
   }
@@ -110,7 +111,7 @@ export function naverStockPreviousKrxClose(chart: Record<string, unknown>, basel
 }
 
 async function stockBatch(codes: string[], session: Session, fetcher: typeof fetch): Promise<StockQuote[]> {
-  const body = record(await readJson(`/integration/price?domesticKrxCodes=${codes.join(",")}`, fetcher));
+  const body = record(await readJson(`${NAVER_MARKET_API}/integration/price?domesticKrxCodes=${codes.join(",")}`, fetcher));
   const krx = record(body.domesticKrx);
   if (!Object.keys(krx).length) throw new Error("네이버 KRX 장중 종목 응답 없음");
   const quotes: StockQuote[] = [];
@@ -162,14 +163,8 @@ function parseIndexQuote(payload: unknown, symbol: IndexSymbol, session: Session
   return { price, asOf, turnover: nonNegative(data.tradingValue), breadth: parseBreadth(row.breadth) };
 }
 
-function parseIndexChart(payload: unknown, symbol: IndexSymbol, session: Session): IndexChart | null {
-  const row = record(payload);
-  if (row.code !== symbol || row.stockExchangeType !== "KRX" || row.infoType !== "index" ||
-      row.periodType !== "day") return null;
-  const isToday = compactDate(row.tradeBaseAt) === session.date;
-  const previousDate = compactDate(row.lastTradeBaseAt);
-  const prices = isToday ? row.priceInfos : session.now >= session.closeAt && previousDate === session.date ? row.lastPriceInfos : null;
-  if (!Array.isArray(prices)) return null;
+function indexPoints(prices: unknown, session: Session): IndexPoint[] {
+  if (!Array.isArray(prices)) return [];
   const pointsByTime = new Map<string, IndexPoint>();
   for (const item of prices) {
     const info = record(item);
@@ -177,24 +172,55 @@ function parseIndexChart(payload: unknown, symbol: IndexSymbol, session: Session
     const value = positive(info.currentPrice);
     if (time && value !== null) pointsByTime.set(time, { time, value });
   }
-  const previousClose = isToday && previousDate && previousDate < session.date ? positive(row.lastClosePrice) : null;
-  const points = [...pointsByTime.values()].sort((a, b) => a.time.localeCompare(b.time));
-  return { points, previousClose, previousDate: previousClose === null ? null : previousDate };
+  return [...pointsByTime.values()].sort((a, b) => a.time.localeCompare(b.time));
+}
+
+function parseIndexChart(payload: unknown, symbol: IndexSymbol, session: Session): IndexChart | null {
+  const row = record(payload);
+  if (row.code !== symbol || row.stockExchangeType !== "KRX" || row.infoType !== "index" ||
+      row.periodType !== "day" || compactDate(row.tradeBaseAt) !== session.date) return null;
+  const previousDate = compactDate(row.lastTradeBaseAt);
+  const previousClose = previousDate && previousDate < session.date ? positive(row.lastClosePrice) : null;
+  return { points: indexPoints(row.priceInfos, session), previousClose, previousDate: previousClose === null ? null : previousDate };
+}
+
+function seoulStamp(time: number) {
+  return new Date(time + 9 * 60 * 60_000).toISOString().slice(0, 19).replace(/\D/g, "");
+}
+
+async function fetchIndexMinuteRange(symbol: IndexSymbol, session: Session, fetcher: typeof fetch) {
+  const query = new URLSearchParams({
+    startDateTime: seoulStamp(session.openAt),
+    endDateTime: seoulStamp(Math.min(session.now, session.closeAt)),
+  });
+  return readJson(`${NAVER_INDEX_CHART_API}/${symbol}/minute?${query}`, fetcher)
+    .then(payload => indexPoints(payload, session)).catch(() => []);
 }
 
 export async function fetchNaverLiveIndex(symbol: IndexSymbol, date: string, openAt: number, closeAt: number, now: number, fetcher: typeof fetch = fetch) {
   const session = { date, openAt, closeAt, now };
-  const [quote, chart] = await Promise.all([
-    readJson(`/integration/v1/indicators?domesticIndexCodes=${symbol}&includeBreadth=true`, fetcher)
+  const closed = now >= closeAt;
+  const [quote, chart, closedPoints] = await Promise.all([
+    readJson(`${NAVER_MARKET_API}/integration/v1/indicators?domesticIndexCodes=${symbol}&includeBreadth=true`, fetcher)
       .then(payload => parseIndexQuote(payload, symbol, session)).catch(() => null),
-    readJson(`/chart/domestic/index/${symbol}?periodType=day`, fetcher)
+    readJson(`${NAVER_MARKET_API}/chart/domestic/index/${symbol}?periodType=day`, fetcher)
       .then(payload => parseIndexChart(payload, symbol, session)).catch(() => null),
+    closed ? fetchIndexMinuteRange(symbol, session, fetcher) : Promise.resolve([]),
   ]);
-  const point = chart?.points.at(-1);
+  const dayPoints = chart?.points ?? [];
+  // The day feed may roll over before the KRX opens and carries only a shortened previous chart.
+  const missingOpening = !dayPoints[0] || Date.parse(dayPoints[0].time) > openAt;
+  const ranged = !closed && missingOpening && now >= openAt + 60_000
+    ? await fetchIndexMinuteRange(symbol, session, fetcher)
+    : closedPoints;
+  const points = ranged.length
+    ? [...new Map([...dayPoints, ...ranged].map(point => [point.time, point])).values()].sort((a, b) => a.time.localeCompare(b.time))
+    : dayPoints;
+  const point = points.at(-1);
   return {
     price: quote?.price ?? point?.value ?? null,
     asOf: quote?.asOf ?? point?.time ?? null,
-    points: chart?.points ?? [],
+    points,
     previousClose: chart?.previousClose ?? null,
     previousDate: chart?.previousDate ?? null,
     turnover: quote?.turnover ?? null,

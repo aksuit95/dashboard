@@ -1,10 +1,11 @@
 "use client";
 
 import { krxCloseTime } from "@/config/market-calendar";
-import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp } from "lightweight-charts";
+import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp, type WhitespaceData } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
 import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
 import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
+import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import {
   MARKET_LIVE_POLL_MS,
   marketLiveSymbols,
@@ -25,6 +26,7 @@ const kstDate = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
 });
 const indexNames = { KOSPI: "코스피", KOSDAQ: "코스닥" } as const;
+type TradingWindow = NonNullable<ReturnType<typeof marketLiveTradingWindow>>;
 const stateLabels: Record<MarketLiveBoardData["state"], { text: string; style: string }> = {
   open: { text: "정규장 운영 중", style: "border-emerald-400/25 bg-emerald-400/10 text-emerald-300" },
   auction: { text: "종가 동시호가", style: "border-amber-400/25 bg-amber-400/10 text-amber-200" },
@@ -114,6 +116,7 @@ export function MarketLiveBoard() {
     ? { text: "갱신 실패", style: "border-amber-400/25 bg-amber-400/10 text-amber-200" }
     : board ? stateLabels[board.state] : { text: "장 상태 확인 중", style: "border-white/10 bg-white/5 text-zinc-300" };
   const closed = board?.state === "closed";
+  const session = board && marketLiveTradingWindow(board.date);
   const statusText = !failed && closed ? board.note ?? status.text : status.text;
 
   return (
@@ -124,7 +127,7 @@ export function MarketLiveBoard() {
             <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${status.style}`} aria-live="polite">
               <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />{statusText}
             </span>
-            <span className="text-xs text-zinc-400">KRX 정규장 · 네이버페이 증권 / KRX Open API · 한국시간(KST)</span>
+            <span className="text-xs text-zinc-400">KRX 정규장{session ? ` ${tradingRange(session.openAt, session.closeAt)}` : ""} · 네이버페이 증권 / KRX Open API · 한국시간(KST)</span>
           </div>
           <button type="button" className={action} onClick={refresh} disabled={refreshing} aria-busy={refreshing}>
             {refreshing ? "갱신 중" : "새로고침"}
@@ -145,7 +148,8 @@ export function MarketLiveBoard() {
 
       <section aria-label="코스피·코스닥 장중 지수" className="grid gap-4 sm:grid-cols-2">
         {marketLiveSymbols.map((symbol) => (
-          <IndexCard key={symbol} symbol={symbol} index={board?.indexes.find((item) => item.symbol === symbol)} loading={!board && refreshing} closed={closed} />
+          <IndexCard key={symbol} symbol={symbol} index={board?.indexes.find((item) => item.symbol === symbol)}
+            loading={!board && refreshing} closed={closed} session={session} />
         ))}
       </section>
 
@@ -160,7 +164,9 @@ export function MarketLiveBoard() {
   );
 }
 
-function IndexCard({ symbol, index, loading, closed }: { symbol: MarketLiveIndex["symbol"]; index: MarketLiveIndex | undefined; loading: boolean; closed: boolean }) {
+function IndexCard({ symbol, index, loading, closed, session }: {
+  symbol: MarketLiveIndex["symbol"]; index: MarketLiveIndex | undefined; loading: boolean; closed: boolean; session: TradingWindow | null;
+}) {
   const change = index?.changePct ?? null;
   const marketBreadth = index?.breadth;
   const closing = closed && index?.price != null;
@@ -186,8 +192,8 @@ function IndexCard({ symbol, index, loading, closed }: { symbol: MarketLiveIndex
           </dl>
         )}
       </div>
-      {index && (index.points.length > 1 || closing) ? (
-        <IntradayChart symbol={symbol} points={index.points} change={change} closing={closing} />
+      {index && session && index.points.length > 0 ? (
+        <IntradayChart symbol={symbol} points={index.points} change={change} closing={closing} session={session} />
       ) : (
         <div className="flex h-36 items-center justify-center border-t border-white/5 px-3 text-center text-xs text-zinc-400">
           {loading ? "지수를 불러오는 중입니다." : "장중 추이를 표시할 시세가 부족합니다."}
@@ -201,8 +207,12 @@ function chartClock(time: Time): string {
   return typeof time === "number" ? kstClock.format(time * 1000).slice(0, 5) : "";
 }
 
-function IntradayChart({ symbol, points, change, closing }: {
-  symbol: MarketLiveIndex["symbol"]; points: MarketLiveIndex["points"]; change: number | null; closing: boolean;
+function tradingRange(openAt: number, closeAt: number) {
+  return `${kstClock.format(openAt).slice(0, 5)}–${kstClock.format(closeAt).slice(0, 5)}`;
+}
+
+function IntradayChart({ symbol, points, change, closing, session: { openAt, closeAt } }: {
+  symbol: MarketLiveIndex["symbol"]; points: MarketLiveIndex["points"]; change: number | null; closing: boolean; session: TradingWindow;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const chart = useRef<IChartApi | null>(null);
@@ -217,7 +227,10 @@ function IntradayChart({ symbol, points, change, closing }: {
       layout: { background: { type: ColorType.Solid, color: "#151a22" }, textColor: "#a1a1aa", fontSize: 10 },
       grid: { vertLines: { visible: false }, horzLines: { color: "rgba(255,255,255,0.07)" } },
       rightPriceScale: { borderColor: "rgba(255,255,255,0.08)" },
-      timeScale: { borderColor: "rgba(255,255,255,0.08)", timeVisible: true, secondsVisible: false, tickMarkFormatter: chartClock },
+      timeScale: {
+        borderColor: "rgba(255,255,255,0.08)", timeVisible: true, secondsVisible: false,
+        tickMarkFormatter: chartClock, fixLeftEdge: true, fixRightEdge: true,
+      },
       localization: { timeFormatter: chartClock },
       handleScale: false,
       handleScroll: false,
@@ -233,20 +246,25 @@ function IntradayChart({ symbol, points, change, closing }: {
 
   useEffect(() => {
     const color = change == null || change === 0 ? "#a1a1aa" : change > 0 ? "#fb7185" : "#38bdf8";
-    const data = new Map<UTCTimestamp, AreaData>();
+    const data = new Map<UTCTimestamp, AreaData<UTCTimestamp> | WhitespaceData<UTCTimestamp>>();
+    const start = openAt / 1000 as UTCTimestamp;
+    const end = closeAt / 1000 as UTCTimestamp;
+    for (let time = start; time <= end; time = (time + 60) as UTCTimestamp) data.set(time, { time });
     for (const point of points) {
-      const time = Math.floor(Date.parse(point.time) / 1000) as UTCTimestamp;
-      if (Number.isFinite(time) && Number.isFinite(point.value)) data.set(time, { time, value: point.value });
+      const time = (Math.floor(Date.parse(point.time) / 60_000) * 60) as UTCTimestamp;
+      if (data.has(time) && Number.isFinite(point.value)) data.set(time, { time, value: point.value });
     }
-    series.current?.applyOptions({ lineColor: color, topColor: `${color}33`, bottomColor: `${color}00` });
-    const sorted = [...data.values()].sort((a, b) => Number(a.time) - Number(b.time));
-    series.current?.setData(sorted);
-    const last = sorted.at(-1);
-    series.current?.setMarkers(closing && last ? [{ time: last.time, position: "aboveBar", color, shape: "circle", text: "종가" }] : []);
+    series.current?.applyOptions({
+      lineColor: color, topColor: `${color}33`, bottomColor: `${color}00`, pointMarkersVisible: points.length === 1,
+    });
+    series.current?.setData([...data.values()]);
+    const last = data.get(end);
+    series.current?.setMarkers(closing && last && "value" in last ? [{ time: end, position: "aboveBar", color, shape: "circle", text: "종가" }] : []);
     chart.current?.timeScale().fitContent();
-  }, [points, change, closing]);
+  }, [points, change, closing, openAt, closeAt]);
 
-  return <div ref={host} className="h-36 w-full" role="img" aria-label={`${indexNames[symbol]} 장중 지수 추이, 한국시간 기준`} />;
+  const range = tradingRange(openAt, closeAt);
+  return <div ref={host} className="h-36 w-full" role="img" aria-label={`${indexNames[symbol]} KRX 정규장 지수 추이 ${range} KST`} />;
 }
 
 function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | undefined }) {

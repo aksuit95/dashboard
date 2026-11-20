@@ -87,9 +87,41 @@ describe("Naver KRX intraday index", () => {
           price: { currentPrice: "5052.25", localTradedAt: quoteAt },
         } },
       }))
-      .mockResolvedValueOnce(Response.json({ ...chart, tradeBaseAt: "20261117" }));
+      .mockResolvedValueOnce(Response.json({ ...chart, tradeBaseAt: "20261117" }))
+      .mockResolvedValueOnce(Response.json([]));
     expect(await fetchNaverLiveIndex("KOSPI", date, openAt, closeAt, now, fetcher)).toMatchObject({
       price: null, asOf: null, points: [], previousClose: null,
     });
+  });
+
+  it("재개장 전 일별 차트가 넘어가도 특별장 전체를 지정해 복원한다", async () => {
+    const special = "2026-11-19";
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json({}))
+      .mockResolvedValueOnce(Response.json({
+        ...chart, tradeBaseAt: "20261120", lastTradeBaseAt: "20261119", priceInfos: [],
+        lastPriceInfos: [{ localDateTime: "20261119121900", currentPrice: 4999 }],
+      }))
+      .mockResolvedValueOnce(Response.json([
+        { localDateTime: "20261119095900", currentPrice: 4910 },
+        { localDateTime: "20261119100000", currentPrice: 5100 },
+        { localDateTime: "20261119121900", currentPrice: 5150 },
+        { localDateTime: "20261119163000", currentPrice: 5200 },
+        { localDateTime: "20261119163100", currentPrice: 5250 },
+        { localDateTime: "20261120100000", currentPrice: 5300 },
+      ]));
+    const result = await fetchNaverLiveIndex(
+      "KOSPI", special, Date.parse(`${special}T10:00:00+09:00`), Date.parse(`${special}T16:30:00+09:00`),
+      Date.parse("2026-11-20T08:55:00+09:00"), fetcher,
+    );
+    expect(fetcher.mock.calls[2][0]).toBe(
+      "https://api.stock.naver.com/chart/domestic/index/KOSPI/minute?startDateTime=20261119100000&endDateTime=20261119163000",
+    );
+    expect(result.points).toEqual([
+      { time: `${special}T10:00:00+09:00`, value: 5100 },
+      { time: `${special}T12:19:00+09:00`, value: 5150 },
+      { time: `${special}T16:30:00+09:00`, value: 5200 },
+    ]);
+    expect(result.previousClose).toBeNull();
   });
 });
