@@ -30,4 +30,19 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual(collector.eastern(datetime(2026,3,8,6,59,tzinfo=timezone.utc)).utcoffset().total_seconds(), -18000)
         self.assertEqual(collector.eastern(datetime(2026,3,8,7,0,tzinfo=timezone.utc)).utcoffset().total_seconds(), -14400)
         self.assertEqual(collector.eastern(datetime(2026,11,1,6,0,tzinfo=timezone.utc)).utcoffset().total_seconds(), -18000)
+
+    def test_regular_quote_fills_a_missing_bar_only_after_the_right_session_closes(self):
+        quote = {"meta": {"regularMarketPrice": 25.31, "postMarketPrice": 27}}
+        quote["meta"]["regularMarketTime"] = datetime(2026, 11, 19, 20, 59, tzinfo=timezone.utc).timestamp()
+        self.assertIsNone(collector.latest_regular_close(quote, "2026-11-19", 16))
+        quote["meta"]["regularMarketTime"] = datetime(2026, 11, 19, 21, tzinfo=timezone.utc).timestamp()
+        self.assertEqual(collector.latest_regular_close(quote, "2026-11-19", 16), 25.31)
+        self.assertIsNone(collector.latest_regular_close(quote, "2026-11-20", 16))
+
+    def test_market_cap_uses_shares_on_or_before_the_requested_date(self):
+        shares = [("2026-11-01", 100), ("2026-11-15", 200)]
+        splits = [("2026-11-12", 2)]
+        self.assertIsNone(collector.estimate_market_cap("2026-10-31", 40, shares, splits))
+        self.assertEqual(collector.estimate_market_cap("2026-11-10", 40, shares, splits), 8000)
+        self.assertEqual(collector.estimate_market_cap("2026-11-19", 41, shares, splits), 8200)
 if __name__ == '__main__': unittest.main()

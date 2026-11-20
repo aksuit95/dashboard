@@ -17,8 +17,13 @@ export function calculateReturns(bars: { close: number | null }[]): Returns {
   })) as Returns;
 }
 export type SectorWeight = "equal" | "marketCap";
-export function summarizeSectors(rows: SectorStock[], weight: SectorWeight = "equal", caps: Record<string, number> = {}) {
-  return sectorNames.map(sector => {
+export function summarizeSectors<T extends string>(
+  rows: readonly { code: string; sector: T; returns: Returns }[],
+  weight: SectorWeight = "equal",
+  caps: Record<string, number> = {},
+  sectors: readonly string[] = sectorNames,
+) {
+  return sectors.map(sector => {
     const members = rows.filter(r => r.sector === sector);
     const coverage = {} as Record<ReturnPeriod, number>;
     const returns = Object.fromEntries(returnPeriods.map(p => {

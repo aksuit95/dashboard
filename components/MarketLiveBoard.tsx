@@ -17,6 +17,7 @@ import {
   type MarketLiveIndex,
   type MarketLiveResponse,
   type MarketLiveSector,
+  type MarketLiveSectorStock,
   type MarketLiveStock,
 } from "@/lib/market/market-live";
 
@@ -49,7 +50,7 @@ function percent(value: number | null): string {
   return value == null ? "—" : `${formatSigned(value)}%`;
 }
 
-function useMarketLiveBoard(sector: string | null) {
+function useMarketLiveBoard() {
   const [board, setBoard] = useState<MarketLiveResponse | null>(null);
   const [failed, setFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
@@ -60,7 +61,6 @@ function useMarketLiveBoard(sector: string | null) {
     let timer: number | undefined;
     let pending: AbortController | null = null;
     let delay = MARKET_LIVE_POLL_MS;
-    const url = sector ? `/api/market-live?sector=${encodeURIComponent(sector)}` : "/api/market-live";
 
     async function load() {
       window.clearTimeout(timer);
@@ -69,7 +69,7 @@ function useMarketLiveBoard(sector: string | null) {
       pending = controller;
       setRefreshing(true);
       try {
-        const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
+        const response = await fetch("/api/market-live", { signal: controller.signal });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const value: MarketLiveResponse = await response.json();
         if (!active) return;
@@ -102,14 +102,15 @@ function useMarketLiveBoard(sector: string | null) {
       document.removeEventListener("visibilitychange", onVisibility);
       refresh.current = () => undefined;
     };
-  }, [sector]);
+  }, []);
 
   return { board, failed, refreshing, refresh: () => refresh.current() };
 }
 
 export function MarketLiveBoard() {
   const [sector, setSector] = useState<string | null>(null);
-  const { board, failed, refreshing, refresh } = useMarketLiveBoard(sector);
+  const { board, failed, refreshing, refresh } = useMarketLiveBoard();
+  const sectorStocks = sector == null ? [] : board?.sectorStocks?.filter(stock => stock.sector === sector) ?? [];
   const status = failed
     ? { text: "갱신 실패", style: "border-amber-400/25 bg-amber-400/10 text-amber-200" }
     : board ? stateLabels[board.state] : { text: "장 상태 확인 중", style: "border-white/10 bg-white/5 text-zinc-300" };
@@ -161,7 +162,7 @@ export function MarketLiveBoard() {
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
         <SectorPanel sectors={board?.sectors ?? []} closed={closed} selected={sector}
-          detail={board?.sectorDetail} failed={failed} onToggle={name => setSector(current => current === name ? null : name)} />
+          stocks={sectorStocks} onToggle={name => setSector(current => current === name ? null : name)} />
         <LeaderPanel leaders={board?.leaders ?? []} buyStrengthLeaders={board?.buyStrengthLeaders}
           baselineDate={board?.baselineDate} closed={closed} />
       </div>
@@ -297,9 +298,9 @@ function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | u
   );
 }
 
-function SectorPanel({ sectors, closed, selected, detail, failed, onToggle }: {
-  sectors: MarketLiveSector[]; closed: boolean; selected: string | null; detail: MarketLiveResponse["sectorDetail"];
-  failed: boolean; onToggle: (name: string) => void;
+function SectorPanel({ sectors, closed, selected, stocks, onToggle }: {
+  sectors: MarketLiveSector[]; closed: boolean; selected: string | null; stocks: MarketLiveSectorStock[];
+  onToggle: (name: string) => void;
 }) {
   const [risingFirst, setRisingFirst] = useState(true);
   const ranked = [...sectors].sort((a, b) => {
@@ -337,8 +338,7 @@ function SectorPanel({ sectors, closed, selected, detail, failed, onToggle }: {
               </tr>
               {selected === sector.name && <tr><td colSpan={4} className="bg-black/15 p-2.5">
                 <MarketLiveSectorStocks id="market-live-sector-stocks" name={sector.name}
-                  stocks={detail?.name === sector.name ? detail.stocks : []} showQuoteTime priceLabel={closed ? "종가" : "현재가"}
-                  status={detail?.name === sector.name ? undefined : failed ? "종목 현황을 불러오지 못했습니다." : "종목 현황을 불러오는 중입니다."} />
+                  stocks={stocks} showQuoteTime priceLabel={closed ? "종가" : "현재가"} />
               </td></tr>}
               </Fragment>
             ))}

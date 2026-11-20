@@ -77,7 +77,7 @@ export type MarketLiveBoardData = {
   warnings: string[];
 };
 export type MarketLiveResponse = Omit<MarketLiveBoardData, "rotationStocks" | "sectorStocks" | "closingSnapshot"> & {
-  sectorDetail?: { name: string; stocks: MarketLiveSectorStock[] };
+  sectorStocks: NonNullable<MarketLiveBoardData["sectorStocks"]>;
 };
 
 export function marketLiveChange(price: number | null, close: number | undefined): number | null {

@@ -10,6 +10,6 @@ export async function GET(request: Request) {
     if (requested && (!/^\d{4}-\d{2}-\d{2}$/.test(requested) || requested < dates[0] || requested > data.latestDate)) return Response.json({ error: "조회 가능한 날짜 범위를 벗어났습니다." }, { status: 400 });
     const asOf = requested ? dates.filter(d => d <= requested).at(-1) : data.latestDate;
     if (!asOf) return Response.json({ error: "해당 날짜의 데이터가 없습니다." }, { status: 404 });
-    return Response.json({ asOf, requestedDate: requested, latestDate: data.latestDate, dates, fetchedAt: data.fetchedAt, rows: data.snapshots[asOf] }, { headers: { "Cache-Control": "no-store" } });
+    return Response.json({ asOf, requestedDate: requested, latestDate: data.latestDate, dates, fetchedAt: data.fetchedAt, rows: data.snapshots[asOf], indexDaily: data.indexDaily?.[asOf] ?? null }, { headers: { "Cache-Control": "no-store" } });
   } catch { return Response.json({ error: "미국 섹터 데이터 수집·배포 대기 중입니다." }, { status: 503 }); }
 }

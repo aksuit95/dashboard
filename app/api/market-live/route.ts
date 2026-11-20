@@ -1,23 +1,34 @@
+import { MARKET_LIVE_POLL_MS, type MarketLiveResponse } from "@/lib/market/market-live";
+import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import { loadMarketLiveBoard } from "@/lib/sources/market-live";
-import { sectorNames } from "@/config/sectors";
 
 export const dynamic = "force-dynamic";
 
+const noStore = { "Cache-Control": "no-store" };
+
+function boardCacheHeaders(board: MarketLiveResponse, now: number): HeadersInit {
+  if (process.env.VERCEL !== "1" || (board.state !== "open" && board.state !== "auction")) return noStore;
+  const window = marketLiveTradingWindow(board.date);
+  if (!window) return noStore;
+  const [start, end] = board.state === "open" ? [window.openAt, window.auctionAt] : [window.auctionAt, window.closeAt];
+  const ttl = Math.floor(Math.min(MARKET_LIVE_POLL_MS, end - now) / 1000);
+  if (now < start || ttl < 1) return noStore;
+  return {
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "Vercel-CDN-Cache-Control": `public, s-maxage=${ttl}`,
+  };
+}
+
 export async function GET(request: Request) {
-  const headers = { "Cache-Control": "no-store" };
-  const sector = new URL(request.url).searchParams.get("sector");
-  if (sector !== null && !sectorNames.some(name => name === sector)) {
-    return Response.json({ error: "올바른 섹터를 선택해 주세요." }, { status: 400, headers });
+  if (new URL(request.url).search) {
+    return Response.json({ error: "장중 시세는 조회 옵션 없이 요청해 주세요." }, { status: 400, headers: noStore });
   }
   try {
     const board = await loadMarketLiveBoard();
     const { rotationStocks: _stocks, sectorStocks, closingSnapshot: _closing, ...result } = board;
-    const detail = sector ? {
-      name: sector,
-      stocks: (sectorStocks ?? []).filter(stock => stock.sector === sector),
-    } : undefined;
-    return Response.json({ ...result, sectorDetail: detail }, { headers });
+    const response: MarketLiveResponse = { ...result, sectorStocks: sectorStocks ?? [] };
+    return Response.json(response, { headers: boardCacheHeaders(response, Date.now()) });
   } catch {
-    return Response.json({ error: "장중 시세를 불러오지 못했습니다." }, { status: 503, headers });
+    return Response.json({ error: "장중 시세를 불러오지 못했습니다." }, { status: 503, headers: noStore });
   }
 }
