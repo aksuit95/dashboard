@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
 import { parseKrxHoldings, previousSession, selectComparison, type Publication } from "./holdings";
 const rows = ["005930","000660","402340","042700","036930"].map((code, i) => ({ COMPST_ISU_CD: code, COMPST_ISU_NM: `종목${i}`, COMPST_ISU_CU1_SHRS: "1,234.00", COMPST_RTO: "10.50" }));
 describe("KRX ETF holdings", () => {
@@ -24,6 +25,13 @@ describe("KRX ETF holdings", () => {
 
 import { comparisonDate } from "./holdings";
 describe("ETF comparison periods", () => {
+  it("uses the confirmed 16:30 CSAT close and retains it as the next session's comparison", () => {
+    expect(reviewedCloseSession(new Date("2026-11-19T16:29:59+09:00"))).toBe("2026-11-18");
+    expect(reviewedCloseSession(new Date("2026-11-19T20:00:00+09:00"))).toBe("2026-11-19");
+    expect(reviewedCloseSession(new Date("2026-11-20T10:00:00+09:00"))).toBe("2026-11-19");
+    expect(comparisonDate("2026-11-20", "1d")).toBe("2026-11-19");
+    expect(comparisonDate("2026-11-26", "1w")).toBe("2026-11-19");
+  });
   it("uses the previous session, calendar week and calendar month anchors", () => {
     expect(comparisonDate("2026-11-10", "1d")).toBe("2026-11-09");
     expect(comparisonDate("2026-11-10", "1w")).toBe("2026-11-03");

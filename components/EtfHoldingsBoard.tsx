@@ -1,5 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
+import { krxCloseTime } from "@/config/market-calendar";
 import { periodOptions, type Holding, type Snapshot, type Publication, type Period } from "@/lib/etf/holdings";
 
 type Sort = "strength" | "change" | "weight";
@@ -12,6 +13,10 @@ export function EtfHoldingsBoard({ latest, periods, expected, stale, lastAttempt
   const [query, setQuery] = useState("");
   const rows = useMemo(() => {
     if (!latest) return [];
+    const priceTime = `${krxCloseTime(latest.asOf)} KST`;
+    const marketVerified = latest.marketBasis
+      ? latest.marketBasis.exchange === "KRX" && latest.marketBasis.priceTime === priceTime
+      : priceTime === "15:30 KST"; // Older snapshots predate marketBasis on standard sessions.
     const earlier = new Map((previous?.holdings ?? []).map(r => [r.code, r]));
     const later = new Map(latest.holdings.map(r => [r.code, r]));
     const codes = new Set([...later.keys(), ...(previous ? earlier.keys() : [])]);
@@ -21,8 +26,8 @@ export function EtfHoldingsBoard({ latest, periods, expected, stale, lastAttempt
       const oldWeight = previous ? a?.weight ?? 0 : null, newWeight = b?.weight ?? 0;
       const delta = oldQty == null ? null : newQty - oldQty;
       const change = delta == null || !oldQty ? null : delta / oldQty * 100;
-      const market = latest.market[code];
-      const ratio = delta != null && market?.cap > 0 && market?.close > 0 ? delta * market.close / market.cap : null;
+      const market = marketVerified ? latest.market[code] : undefined;
+      const ratio = delta != null && market && market.cap > 0 && market.close > 0 ? delta * market.close / market.cap : null;
       return { ...item, oldQty, newQty, oldWeight, newWeight, delta, change, ratio };
     });
     const max = Math.max(0, ...all.map(r => Math.abs(r.ratio ?? 0)));
@@ -42,7 +47,7 @@ export function EtfHoldingsBoard({ latest, periods, expected, stale, lastAttempt
       {!previous && <p className="mt-4 rounded-lg bg-amber-400/10 p-3 text-sm text-amber-200">{periods[period].date ?? "선택 기간"} 기준 자료가 없어 변화량은 표시하지 않습니다.</p>}
       <div className="mt-5 flex flex-wrap gap-2"><label className="min-w-[180px] flex-1"><span className="sr-only">종목 검색</span><input className="w-full rounded-lg border border-white/10 bg-[#0e131a] px-3 py-2.5 text-sm" placeholder="종목명 또는 종목코드 검색" value={query} onChange={e=>setQuery(e.target.value)} /></label>{([["strength","시총 대비 강도순"],["change","절대 변화율순"],["weight","비중순"]] as const).map(([key,label])=><button key={key} onClick={()=>setSort(key)} aria-pressed={sort===key} className={`rounded-lg px-3 py-2 text-sm ${sort===key ? "bg-emerald-400 font-bold text-[#0c1813]" : "bg-white/5 text-zinc-400"}`}>{label}</button>)}</div>
       <div aria-live="polite" className="mt-3">{rows.map(row=><div key={row.code} className="border-b border-white/[0.07] py-4 last:border-0"><div className="flex justify-between gap-2"><div className="font-semibold">{row.name}<span className="ml-2 text-xs font-normal text-zinc-500">{row.code}</span></div><span className={`text-sm font-bold ${color(row.delta ?? 0)}`}>{row.delta == null ? "—" : `${signed(row.delta, Number.isInteger(row.delta) ? 0 : 2)}주`}</span></div><div className="mt-2 h-1.5 rounded-full bg-white/[0.06]"><div className={`h-full rounded-full ${(row.delta ?? 0) >= 0 ? "bg-rose-400" : "bg-sky-400"}`} style={{width:`${Math.abs(row.score ?? 0)}%`}} /></div><div className="mt-2 flex flex-wrap justify-between gap-x-3 gap-y-1 text-xs leading-5 text-zinc-400"><span>{row.oldQty == null ? "—" : row.oldQty.toLocaleString()} → {row.newQty.toLocaleString()}주 · 비중 {row.oldWeight == null ? "—" : `${row.oldWeight.toFixed(2)}%`} → {row.newWeight.toFixed(2)}% {row.oldWeight != null && <span className={color(row.newWeight-row.oldWeight)}>({signed(row.newWeight-row.oldWeight,2)}%p)</span>}</span><span>강도 <b className={color(row.score ?? 0)}>{row.score == null ? "—" : signed(row.score,1)}</b> · 변화율 <b className="text-zinc-200">{row.change == null ? row.oldQty === 0 && row.newQty > 0 ? "신규" : "—" : `${signed(row.change,1)}%`}</b></span></div></div>)}{!rows.length && <p className="py-8 text-center text-sm text-zinc-500">검색 결과가 없습니다.</p>}</div>
-      <div className="mt-5 rounded-xl bg-white/[0.04] p-4 text-xs leading-5 text-zinc-400"><p>1D는 전 거래일, 1W는 7일 전, 1M·3M·6M은 각각 1·3·6개월 전 기준이며 휴장일이면 그 이전의 최근 거래일을 사용합니다. 비중 변화는 퍼센트포인트(%p)입니다. 비중은 종목 가격 변화로도 달라질 수 있습니다. 수량은 ETF 전체가 아닌 1CU당 구성 수량이며 실제 매매량이 아닙니다. 기간 중 1CU 설정단위 변경이나 종목 액면분할·병합이 있었다면 수량 증감에 영향을 줄 수 있습니다.</p><p className="mt-2">강도 = 수량 증감 × 해당일 KRX 종가 ÷ 시가총액을 종목 간 최대 절댓값 100으로 정규화한 상대 점수. 가격·시총은 {latest.asOf} KRX 정규장 15:30 기준이며 자료가 없으면 강도를 표시하지 않습니다.</p><p className="mt-2">자료: KRX ETF PDF · <a className="text-emerald-400 underline" href="https://data.krx.co.kr/" target="_blank" rel="noreferrer">한국거래소</a></p></div>
+      <div className="mt-5 rounded-xl bg-white/[0.04] p-4 text-xs leading-5 text-zinc-400"><p>1D는 전 거래일, 1W는 7일 전, 1M·3M·6M은 각각 1·3·6개월 전 기준이며 휴장일이면 그 이전의 최근 거래일을 사용합니다. 비중 변화는 퍼센트포인트(%p)입니다. 비중은 종목 가격 변화로도 달라질 수 있습니다. 수량은 ETF 전체가 아닌 1CU당 구성 수량이며 실제 매매량이 아닙니다. 기간 중 1CU 설정단위 변경이나 종목 액면분할·병합이 있었다면 수량 증감에 영향을 줄 수 있습니다.</p><p className="mt-2">강도 = 수량 증감 × 해당일 KRX 종가 ÷ 시가총액을 종목 간 최대 절댓값 100으로 정규화한 상대 점수. 가격·시총은 {latest.asOf} KRX 정규장 {krxCloseTime(latest.asOf)} KST 종가 기준이며 자료가 없으면 강도를 표시하지 않습니다.</p><p className="mt-2">자료: KRX ETF PDF · <a className="text-emerald-400 underline" href="https://data.krx.co.kr/" target="_blank" rel="noreferrer">한국거래소</a></p></div>
     </section>}
   </div>;
 }

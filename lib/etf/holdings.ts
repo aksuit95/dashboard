@@ -1,11 +1,11 @@
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
 
 export type Holding = { code: string; name: string; quantity: number; weight: number };
 export type FundMetrics = { asOf: string; sharesOutstanding: number | null; netAssetsKrw: number | null; source: "KRX_ETF_DAILY"; fetchedAt: string };
-export type Snapshot = { fundMetrics?: FundMetrics; etfCode?: string; asOf: string; collectedAt: string; source: "KRX_PDF"; holdings: Holding[]; market: Record<string, { close: number; cap: number }> };
+export type Snapshot = { fundMetrics?: FundMetrics; etfCode?: string; asOf: string; collectedAt: string; source: "KRX_PDF"; holdings: Holding[]; market: Record<string, { close: number; cap: number }>; marketBasis?: { exchange: "KRX"; priceTime: "15:30 KST" | "16:30 KST"; fetchedAt: string } };
 export type Publication = { version: 1 | 2; snapshots: Snapshot[]; lastAttempt: { at: string; expected: string; error: string | null } | null };
 export const emptyPublication: Publication = { version: 1, snapshots: [], lastAttempt: null };
-export function previousSession(date: string) { return minerviniSession(new Date(`${date}T06:00:00Z`)); }
+export function previousSession(date: string) { return reviewedCloseSession(new Date(`${date}T06:00:00Z`)); }
 function numeric(value: unknown) { const s = String(value ?? "").replaceAll(",", "").trim(); return s && /^\d+(?:\.\d+)?$/.test(s) ? Number(s) : NaN; }
 export function parseKrxHoldings(payload: Record<string, unknown>): Holding[] {
   const rows = payload.output ?? payload.OutBlock_1 ?? payload.block1;
@@ -47,7 +47,7 @@ export function comparisonDate(date: string, period: Period): string {
     const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
     d.setUTCDate(Math.min(day, lastDay));
   }
-  return minerviniSession(new Date(`${d.toISOString().slice(0, 10)}T08:00:00Z`));
+  return reviewedCloseSession(new Date(`${d.toISOString().slice(0, 10)}T08:00:00Z`));
 }
 
 

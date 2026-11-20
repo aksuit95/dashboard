@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { krxClient } from "@/lib/sources/krx-client";
-import { fetchValuationMarketCaps, readMarketCaps } from "@/lib/valuation/market-caps";
+import { fetchValuationMarketCaps, marketCapCloseTime, readMarketCaps } from "@/lib/valuation/market-caps";
 import { comparisonDate, emptyPublication, parseKrxHoldings, type Publication, type Snapshot } from "@/lib/etf/holdings";
 import { semiconductorEtfs } from "@/lib/etf/config";
 import { parseKrxFundMetrics } from "@/lib/etf/fund-metrics";
-import { minerviniSession } from "@/lib/market/minervini-session";
+import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
 export const publicationPath = path.join(process.cwd(), "data", "etf", "holdings.json");
 export async function readEtfPublication(): Promise<Publication> {
   try { const p = JSON.parse(await fs.readFile(publicationPath, "utf8")) as Publication; if (![1, 2].includes(p.version) || !Array.isArray(p.snapshots)) throw new Error("ETF 저장 자료 형식 오류"); return p; }
@@ -13,7 +13,7 @@ export async function readEtfPublication(): Promise<Publication> {
 }
 async function save(p: Publication) { await fs.mkdir(path.dirname(publicationPath), { recursive: true }); const tmp = `${publicationPath}.${process.pid}.tmp`; try { await fs.writeFile(tmp, JSON.stringify(p, null, 2) + "\n"); await fs.rename(tmp, publicationPath); } finally { await fs.unlink(tmp).catch(() => undefined); } }
 export async function collectEtf(now = new Date()) {
-  const expected = minerviniSession(now), p = await readEtfPublication(), errors: string[] = [];
+  const expected = reviewedCloseSession(now), p = await readEtfPublication(), errors: string[] = [];
   // Existing v1 snapshots were exclusively TIGER 396500.
   for (const snapshot of p.snapshots) snapshot.etfCode ??= "396500";
   p.version = 2;
@@ -52,7 +52,7 @@ export async function collectEtf(now = new Date()) {
     } catch (e) { errors.push(`${etf.code} ETF 좌수·순자산: ${e instanceof Error ? e.message : "수집 실패"}`); }
   }
   const latest = p.snapshots.filter(s => s.asOf === expected && semiconductorEtfs.some(e => e.code === s.etfCode));
-  if (latest.some(s => s.holdings.some(r => !s.market[r.code]))) {
+  if (latest.some(s => s.marketBasis?.priceTime !== marketCapCloseTime(expected) || s.holdings.some(r => !s.market[r.code]))) {
     try {
       let caps = await readMarketCaps().catch(() => null);
       if (!caps || caps.asOf !== expected) caps = await fetchValuationMarketCaps(expected);
@@ -60,6 +60,7 @@ export async function collectEtf(now = new Date()) {
         const market: Snapshot["market"] = {};
         for (const row of snapshot.holdings) { const close = caps.closes[row.code], cap = caps.values[row.code]; if (close && cap) market[row.code] = { close, cap }; }
         snapshot.market = market;
+        snapshot.marketBasis = { exchange: caps.exchange, priceTime: caps.priceTime, fetchedAt: caps.fetchedAt };
       }
     } catch (e) { errors.push(`${expected} 시총: ${e instanceof Error ? e.message : "수집 실패"}`); }
   }
