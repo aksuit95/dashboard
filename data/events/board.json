@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-20T15:57:01.298Z",
+      "updatedAt": "2026-11-20T18:54:27.833Z",
       "error": null,
       "events": [
         {
@@ -94,7 +94,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
-          "forecast": "3.4%",
+          "forecast": "3.5%",
           "previous": "3.4%"
         },
         {
@@ -108,7 +108,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
-          "forecast": "0%",
+          "forecast": "0.5%",
           "previous": "1.8%"
         },
         {
@@ -122,6 +122,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "0.5%",
           "previous": "0.5%"
         },
         {
@@ -590,10 +591,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-20T15:55:33Z"
+      "generatedAt": "2026-11-20T18:51:33Z"
     },
     "ism": {
-      "updatedAt": "2026-11-20T15:57:01.298Z",
+      "updatedAt": "2026-11-20T18:54:27.833Z",
       "error": null,
       "events": [
         {
@@ -623,11 +624,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-20T15:55:33Z"
+      "generatedAt": "2026-11-20T18:51:33Z"
     },
     "dart": {
-      "updatedAt": "2026-11-20T07:10:08.798Z",
-      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
+      "updatedAt": "2026-11-20T18:54:27.833Z",
+      "error": null,
       "capAsOf": "2026-11-20",
       "companies": [
         {
@@ -758,7 +759,7 @@
           "corpCode": "00164788",
           "name": "현대모비스",
           "marketCap": 29012048955000,
-          "status": "예정"
+          "status": "발표완료"
         },
         {
           "code": "034020",
@@ -858,17 +859,6 @@
           "title": "하나금융지주 실적 설명회",
           "detail": "실적 공시 시각과 다를 수 있음",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261118800225",
-          "sourceName": "DART"
-        },
-        {
-          "id": "dart-012330-ir",
-          "date": "2026-11-20",
-          "time": "13:10",
-          "country": "KR",
-          "category": "실적",
-          "title": "현대모비스 실적 설명회",
-          "detail": "실적 공시 시각과 다를 수 있음",
-          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261119800372",
           "sourceName": "DART"
         }
       ]
