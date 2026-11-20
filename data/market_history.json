@@ -1,17 +1,17 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "dee5a3fd1a87ddc26bf0",
-  "as_of": "2026-11-19",
-  "collected_at": "2026-11-20T04:28:47.520690+09:00",
+  "dataset_id": "0ce1534490c65184f39e",
+  "as_of": "2026-11-20",
+  "collected_at": "2026-11-21T04:04:38.222312+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
-    "price_time": "16:30:00",
+    "price_time": "15:30:00",
     "timezone": "Asia/Seoul",
     "adjusted": false
   },
   "is_sample": false,
-  "period_start": "2025-11-19",
+  "period_start": "2025-11-20",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
   "universe": "kospi200",
   "membership_basis": "point_in_time",
@@ -21,20 +21,6 @@
     "ratio": "percent_0_100"
   },
   "rows": [
-    {
-      "date": "2025-11-19",
-      "session_status": "trading",
-      "index_close": 552.66,
-      "short_value": 729153834698,
-      "trading_value": 16103244998611,
-      "short_volume": 8111241,
-      "volume": 148880220,
-      "short_value_ratio_pct": 4.527993176287723,
-      "short_volume_ratio_pct": 5.448165646181876,
-      "expected_count": 200,
-      "observed_count": 200,
-      "coverage": "complete"
-    },
     {
       "date": "2025-11-20",
       "session_status": "trading",
@@ -5141,6 +5127,20 @@
       "volume": 108445831,
       "short_value_ratio_pct": 5.209602324701885,
       "short_volume_ratio_pct": 7.6501281086591515,
+      "expected_count": 201,
+      "observed_count": 201,
+      "coverage": "complete"
+    },
+    {
+      "date": "2026-11-20",
+      "session_status": "trading",
+      "index_close": 755.34,
+      "short_value": 1076596092874,
+      "trading_value": 17994685909492,
+      "short_volume": 9739203,
+      "volume": 126439679,
+      "short_value_ratio_pct": 5.982855706895708,
+      "short_volume_ratio_pct": 7.702647679135597,
       "expected_count": 201,
       "observed_count": 201,
       "coverage": "complete"
