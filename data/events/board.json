@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-22T10:28:29.689Z",
+      "updatedAt": "2026-11-22T15:06:24.066Z",
       "error": null,
       "events": [
         {
@@ -589,12 +589,36 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false
+        },
+        {
+          "id": "smt-usd-durable-goods-orders.20261222T1330",
+          "date": "2026-12-22",
+          "time": "22:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "Durable Goods Orders",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-durable-goods-orders-ex-transportation.20261222T1330",
+          "date": "2026-12-22",
+          "time": "22:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "Durable Goods Orders ex Transportation",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
         }
       ],
-      "generatedAt": "2026-11-22T10:28:39Z"
+      "generatedAt": "2026-11-22T15:06:33Z"
     },
     "ism": {
-      "updatedAt": "2026-11-22T10:28:29.689Z",
+      "updatedAt": "2026-11-22T15:06:24.066Z",
       "error": null,
       "events": [
         {
@@ -624,10 +648,10 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-22T10:28:39Z"
+      "generatedAt": "2026-11-22T15:06:33Z"
     },
     "dart": {
-      "updatedAt": "2026-11-21T15:08:48.308Z",
+      "updatedAt": "2026-11-22T15:06:24.066Z",
       "error": null,
       "capAsOf": "2026-11-20",
       "companies": [
