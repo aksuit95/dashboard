@@ -691,8 +691,8 @@
       "generatedAt": "2026-11-23T19:00:59Z"
     },
     "dart": {
-      "updatedAt": "2026-11-23T07:10:08.961Z",
-      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
+      "updatedAt": "2026-11-23T19:10:07.414Z",
+      "error": null,
       "capAsOf": "2026-11-23",
       "companies": [
         {
@@ -852,7 +852,7 @@
           "corpCode": "01350869",
           "name": "우리금융지주",
           "marketCap": 22396567315200,
-          "status": "발표완료"
+          "status": "예정"
         },
         {
           "code": "000810",
@@ -934,6 +934,17 @@
           "title": "하나금융지주 실적 설명회",
           "detail": "실적 공시 시각과 다를 수 있음",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261118800225",
+          "sourceName": "DART"
+        },
+        {
+          "id": "dart-316140-ir",
+          "date": "2026-11-26",
+          "time": null,
+          "country": "KR",
+          "category": "실적",
+          "title": "우리금융지주 실적 설명회",
+          "detail": "실적 공시 시각과 다를 수 있음",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261123800471",
           "sourceName": "DART"
         }
       ]
