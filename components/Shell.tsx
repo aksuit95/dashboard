@@ -10,19 +10,18 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
     icon: "market", title: { ko: "시장 한눈에", en: "Market overview" },
     items: [
       { href: "/market-live", ko: "한국시장 장중 현황", en: "Intraday market" },
-      { href: "/briefing", ko: "장 마감 브리핑", en: "Market briefing" },
       { href: "/events", ko: "매크로 · 실적 캘린더", en: "Macro & earnings" },
       { href: "/valuation/sectors", ko: "섹터/종목 등락률", en: "Sector & stock performance" },
       { href: "/rising", ko: "연속 상승 섹터/종목", en: "Rising sectors & stocks" },
       { href: "/stock-radar", ko: "신고가·신저가 레이더 / MDD", en: "Highs, lows & MDD" },
-      { href: "/adr", ko: "코스피 · 코스닥 ADR", en: "KOSPI · KOSDAQ ADR" },
+      { href: "/adr", ko: "시장지표 비교(ADR등)", en: "KOSPI · KOSDAQ ADR" },
       { href: "/risk", ko: "공포 · 탐욕 지수", en: "Fear & greed" },
     ],
   },
   {
     icon: "flow", title: { ko: "수급 · ETF", en: "Flows & ETFs" },
     items: [
-      { href: "/investor-flow/kospi200", ko: "투자자별 수급", en: "Investor flows" },
+      { href: "/investor-flow/kospi200", ko: "수급지표", en: "Investor flows" },
       { href: "/short-selling", ko: "공매도 분석", en: "Short selling" },
       { href: "/etf-holdings", ko: "ETF 보유 종목", en: "ETF holdings" },
     ],
@@ -46,6 +45,10 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
       { href: "/market-hours", ko: "시장 운영시간", en: "Market hours" },
     ],
   },
+];
+const bottomLinks = [
+  { href: "/health", ko: "데이터 수집 상태", en: "Data status" },
+  { href: "/briefing", ko: "장 마감 브리핑", en: "Market briefing" },
 ];
 
 function SectionIcon({ name }: { name: IconName }) {
@@ -77,7 +80,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     setLang(next);
     window.localStorage.setItem("dashboard-lang", next);
   }
-  const current = groups.flatMap((group) => group.items).find((item) => isActive(pathname, item.href));
+  const current = groups.flatMap((group) => group.items).concat(bottomLinks).find((item) => isActive(pathname, item.href));
 
   return (
     <div className="min-h-screen md:grid md:grid-cols-[250px_minmax(0,1fr)]">
@@ -92,7 +95,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">{menuOpen ? <path d="m4 4 10 10M14 4 4 14" /> : <path d="M3 5h12M3 9h12M3 13h12" />}</svg>
           </button>
         </div>
-        <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-2.5 text-xs text-zinc-500 md:hidden"><span>{lang === "ko" ? "현재 화면" : "Current page"}</span><span className="font-medium text-zinc-300">{current?.[lang] ?? (pathname === "/health" ? (lang === "ko" ? "수집 상태" : "Data status") : "mk리서치")}</span></div>
+        <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-2.5 text-xs text-zinc-500 md:hidden"><span>{lang === "ko" ? "현재 화면" : "Current page"}</span><span className="font-medium text-zinc-300">{pathname === "/health" && lang === "ko" ? "수집 상태" : current?.[lang] ?? "mk리서치"}</span></div>
         <nav id="main-navigation" aria-label={lang === "ko" ? "주요 메뉴" : "Main navigation"} className={`${menuOpen ? "block" : "hidden"} border-t border-white/[0.06] px-3 pb-5 pt-2 md:block md:border-t-0 md:px-3 md:pb-2 md:pt-0`}>
           {groups.map((group) => (
             <section key={group.icon} className="mb-4 md:mb-1">
@@ -105,7 +108,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
               </ul>
             </section>
           ))}
-          <div className="mt-5 border-t border-white/[0.07] pt-3 md:mt-1 md:pt-1"><Link href="/health" onClick={() => setMenuOpen(false)} aria-current={pathname === "/health" ? "page" : undefined} className={`block rounded-lg px-3 py-2 text-xs transition md:py-1.5 ${pathname === "/health" ? "bg-emerald-400/10 font-semibold text-emerald-300" : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"}`}>{lang === "ko" ? "데이터 수집 상태" : "Data status"} <span aria-hidden="true" className="float-right">↗</span></Link></div>
+          <div className="mt-5 border-t border-white/[0.07] pt-3 md:mt-1 md:pt-1">
+            {bottomLinks.map(item => (
+              <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} aria-current={pathname === item.href ? "page" : undefined}
+                className={`block rounded-lg px-3 py-2 text-xs transition focus-visible:outline-2 focus-visible:outline-emerald-400 md:py-1.5 ${pathname === item.href ? "bg-emerald-400/10 font-semibold text-emerald-300" : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"}`}>
+                {item[lang]} {item.href === "/health" && <span aria-hidden="true" className="float-right">↗</span>}
+              </Link>
+            ))}
+          </div>
         </nav>
       </aside>
       <div className="min-w-0">

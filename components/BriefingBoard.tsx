@@ -13,8 +13,20 @@ function Signed({ value, digits = 2, suffix = "" }: { value: number | null; digi
 }
 const stamp = (x: string | null) => x ? new Date(x).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false }) + " KST" : "확인 불가";
 const market = (x: string) => x === "kospi" ? "코스피" : x === "kosdaq" ? "코스닥" : x === "kospi200" ? "코스피200" : "코스닥150";
-const button = "rounded-lg border border-white/15 px-4 py-2 text-sm font-semibold hover:bg-white/10 disabled:opacity-40";
+const buttonBase = "rounded-lg border px-4 py-2 text-sm font-semibold disabled:opacity-40";
+const button = `${buttonBase} border-white/15 hover:bg-white/10`;
 const panel = "rounded-xl border border-white/10 bg-white/[0.03] p-5";
+const deleteButton = `${buttonBase} border-rose-400/30 text-rose-200 hover:bg-rose-400/10 focus-visible:outline-2 focus-visible:outline-rose-300`;
+
+function savedReportKey(report: Report) {
+  return `${report.type}:${report.period.end}:${report.createdAt}`;
+}
+
+function readSavedReports(): Report[] {
+  const parsed: unknown = JSON.parse(localStorage.getItem(KEY) ?? "[]");
+  if (!Array.isArray(parsed)) throw new Error("Invalid briefing history");
+  return parsed;
+}
 
 export function BriefingBoard() {
   const [type, setType] = useState<"daily" | "weekly">("daily");
@@ -27,6 +39,8 @@ export function BriefingBoard() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [historyNotice, setHistoryNotice] = useState<{ text: string; error?: boolean } | null>(null);
   const weeklyReports = useMemo(() => {
     const sorted = [...automatic.map(x => x.report), ...reports].filter(r => r.type === "weekly" && r.period?.end).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     return [...new Map<string, Report>(sorted.map(r => [r.period.end, r] as const).reverse()).values()].sort((a, b) => b.period.end.localeCompare(a.period.end));
@@ -34,7 +48,7 @@ export function BriefingBoard() {
   const selectedWeekly = weeklyReports.find(r => r.period.end === weeklyDate) ?? weeklyReports[0];
   useEffect(() => {
     setDate(new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10));
-    try { const parsed = JSON.parse(localStorage.getItem(KEY) || "[]"); if (Array.isArray(parsed)) setReports(parsed); } catch { setError("저장된 브리핑 이력을 읽을 수 없습니다."); }
+    try { setReports(readSavedReports()); } catch { setError("저장된 브리핑 이력을 읽을 수 없습니다."); }
     fetch("/api/briefing/automatic", { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(data => setAutomatic(data.reports)).catch(() => setAutomaticError("자동 생성 이력을 읽지 못했습니다."));
   }, []);
   async function review() {
@@ -52,9 +66,27 @@ export function BriefingBoard() {
   }
   function save() {
     if (!report || report.indices.some(i => i.error)) return;
-    const next = [{ ...report, createdAt: new Date().toISOString() }, ...reports];
-    try { localStorage.setItem(KEY, JSON.stringify(next)); setReports(next); setReport(next[0]); setSaved(true); setError(""); }
+    try {
+      const next = [{ ...report, createdAt: new Date().toISOString() }, ...readSavedReports()];
+      localStorage.setItem(KEY, JSON.stringify(next));
+      setReports(next); setReport(next[0]); setSaved(true); setError(""); setHistoryNotice(null);
+    }
     catch { setError("브라우저에 저장하지 못했습니다. 저장 공간 및 브라우저 설정을 확인하세요."); }
+  }
+  function deleteSavedReport(key: string) {
+    try {
+      const next = readSavedReports().filter(entry => savedReportKey(entry) !== key);
+      localStorage.setItem(KEY, JSON.stringify(next));
+      setReports(next);
+      if (report && saved && savedReportKey(report) === key) {
+        setReport(null);
+        setSaved(false);
+      }
+      setDeleteTarget(null);
+      setHistoryNotice({ text: "브리핑을 삭제했습니다." });
+    } catch {
+      setHistoryNotice({ text: "브라우저에 저장한 브리핑을 삭제하지 못했습니다.", error: true });
+    }
   }
   const freshnessReport = report ?? (type === "weekly" ? selectedWeekly : [...automatic.map(entry => entry.report), ...reports]
     .filter(entry => entry.type === "daily").sort((a, b) => b.period.end.localeCompare(a.period.end) || b.createdAt.localeCompare(a.createdAt))[0]);
@@ -84,6 +116,35 @@ export function BriefingBoard() {
       <p className="border-t border-white/10 pt-4 text-xs text-zinc-500">정보 제공 및 개인 리서치용입니다. 투자 권유나 매매 신호가 아닙니다.</p>
     </article>}
     <div className={`${panel} briefing-controls mt-6`}><h2 className="font-bold">생성된 브리핑</h2><p className="mt-1 text-xs text-zinc-500">공유 저장소와 이 PC의 생성 결과 · 이력 갱신은 화면 새로고침</p>{automaticError ? <p role="alert" className="mt-3 text-sm text-rose-300">{automaticError}</p> : automatic.length === 0 ? <p className="mt-3 text-sm text-zinc-500">생성된 브리핑이 없습니다.</p> : <ul className="mt-2 divide-y divide-white/10">{automatic.map(({id, report: r}) => <li key={id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"><span>{r.type === "daily" ? "일간" : "주간"} · {r.type === "weekly" ? `${r.period.start} ~ ${r.period.end}` : r.period.end} <span className="text-zinc-500">· {stamp(r.createdAt)} · {r.sectors.some(s => s.error || s.hasMissing) || r.flows.some(f => f.error) ? "일부 결측" : "자료 준비"}</span></span><span className="flex gap-2"><button type="button" className={button} onClick={() => { setReport(r); setSaved(true); setError(""); window.scrollTo({top: 0, behavior: "smooth"}); }}>보기</button><a className={button} href={`/api/briefing/automatic/pdf?id=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">PDF</a></span></li>)}</ul>}</div>
-    <div className={`${panel} briefing-controls mt-6`}><h2 className="font-bold">브라우저에 저장한 브리핑</h2>{reports.length === 0 ? <p className="mt-3 text-sm text-zinc-500">이 브라우저에 저장된 브리핑이 없습니다.</p> : <ul className="mt-3 divide-y divide-white/10">{reports.map((r,i) => <li key={`${r.createdAt}-${i}`} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"><span>{r.type === "daily" ? "일간" : "주간"} · {r.type === "weekly" ? `${r.period.start} ~ ${r.period.weekEnd}` : r.period.end} <span className="text-zinc-500">· {stamp(r.createdAt)} · {r.sectors.some(s => s.error) || r.flows.some(f => f.error) ? "일부 결측" : "자료 준비"}</span></span><button type="button" className={button} onClick={() => { setReport(r); setSaved(true); setError(""); window.scrollTo({top: 0, behavior: "smooth"}); }}>보기</button></li>)}</ul>}</div>
+    <section className={`${panel} briefing-controls mt-6`} aria-labelledby="saved-briefings">
+      <h2 id="saved-briefings" className="font-bold">브라우저에 저장한 브리핑</h2>
+      {historyNotice && <p role={historyNotice.error ? "alert" : "status"} className={`mt-3 text-sm ${historyNotice.error ? "text-rose-300" : "text-emerald-200"}`}>{historyNotice.text}</p>}
+      {reports.length === 0 ? <p className="mt-3 text-sm text-zinc-500">이 브라우저에 저장된 브리핑이 없습니다.</p> : (
+        <ul className="mt-3 divide-y divide-white/10">
+          {reports.map(r => {
+            const key = savedReportKey(r);
+            const period = r.type === "weekly" ? `${r.period.start} ~ ${r.period.weekEnd}` : r.period.end;
+            const label = `${r.type === "daily" ? "일간" : "주간"} · ${period}`;
+            return (
+              <li key={key} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+                <span>{label} <span className="text-zinc-500">· {stamp(r.createdAt)} · {r.sectors.some(s => s.error) || r.flows.some(f => f.error) ? "일부 결측" : "자료 준비"}</span></span>
+                {deleteTarget === key ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-zinc-400">이 브라우저의 저장본을 삭제할까요?</span>
+                    <button type="button" className={button} onClick={() => { setDeleteTarget(null); setHistoryNotice(null); }}>취소</button>
+                    <button type="button" className={deleteButton} onClick={() => deleteSavedReport(key)}>삭제 확인</button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <button type="button" className={button} onClick={() => { setReport(r); setSaved(true); setError(""); window.scrollTo({top: 0, behavior: "smooth"}); }}>보기</button>
+                    <button type="button" className={deleteButton} aria-label={`${label} 저장본 삭제`} onClick={() => { setDeleteTarget(key); setHistoryNotice(null); }}>삭제</button>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   </section>;
 }

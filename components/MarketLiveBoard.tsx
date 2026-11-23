@@ -3,7 +3,7 @@
 import { krxCloseTime } from "@/config/market-calendar";
 import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp, type WhitespaceData } from "lightweight-charts";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { MarketLiveGlobalQuotes } from "@/components/MarketLiveGlobalQuotes";
 import { MarketLiveSectorPanels } from "@/components/MarketLiveSectorReplay";
 import { MarketLiveSectorStocks, MarketLiveSectorToggle } from "@/components/MarketLiveSectorStocks";
@@ -352,6 +352,7 @@ function SectorPanel({ sectors, closed, selected, stocks, onToggle }: {
 
 const leaderFilters = { all: "전체", KOSPI: "코스피", KOSDAQ: "코스닥" } as const;
 type LeaderRow = MarketLiveStock & Partial<Pick<MarketLiveBuyStrengthStock, "marketCap" | "buyStrengthPct">>;
+const leaderColumn = "whitespace-nowrap px-2 py-2.5 font-medium";
 
 function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
   leaders: MarketLiveStock[];
@@ -362,10 +363,13 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
   const [market, setMarket] = useState<keyof typeof leaderFilters>("all");
   const [buyStrengthSelected, setBuyStrengthSelected] = useState(false);
   const showBuyStrength = buyStrengthSelected && buyStrengthLeaders !== undefined;
+  const showTurnover = !closed || showBuyStrength;
   const ranked: LeaderRow[] = (showBuyStrength ? buyStrengthLeaders : leaders)
     .filter((stock) => market === "all" || stock.market === market).slice(0, 10);
+  const priceLabel = closed ? "종가" : "현재가";
+  const timeLabel = closed ? "가격 기준 시각" : "시세 시각";
   return (
-    <section className={panel} aria-labelledby="market-live-leaders">
+    <section className={`${panel} @container`} aria-labelledby="market-live-leaders">
       <div className="flex flex-wrap items-start justify-between gap-2 px-4 py-3.5">
         <div>
           <h2 id="market-live-leaders" className="font-semibold">{closed ? "정규장 주도주" : "장중 주도주"}</h2>
@@ -394,35 +398,36 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs tabular-nums">
-          <thead className="border-y border-white/[0.08] bg-white/[0.025] text-zinc-400">
-            <tr>
-              <th scope="col" className={columnHeader}>종목</th>
-              <th scope="col" className={`${columnHeader} text-right`}>{closed ? "종가" : "현재가"}</th>
-              <th scope="col" className={`${columnHeader} text-right`}>등락률</th>
-              {(!closed || showBuyStrength) && <th scope="col" className={`${columnHeader} text-right`}>{closed ? "정규장 거래대금" : "거래대금"}</th>}
+        <table role="table" className="block w-full text-left text-xs tabular-nums @min-[34rem]:table">
+          <thead role="rowgroup" className="hidden border-y border-white/[0.08] bg-white/[0.025] text-zinc-400 @min-[34rem]:table-header-group">
+            <tr role="row" className="text-right">
+              <th scope="col" className={`${leaderColumn} text-left`}>종목</th>
+              <th scope="col" className={leaderColumn}>{priceLabel}</th>
+              <th scope="col" className={leaderColumn}>등락률</th>
+              {showTurnover && <th scope="col" aria-label={closed ? "정규장 거래대금" : undefined} className={leaderColumn}>거래대금</th>}
               {showBuyStrength && <>
-                <th scope="col" className={`${columnHeader} text-right`}>시가총액</th>
-                <th scope="col" aria-sort="descending" className={`${columnHeader} text-right`}>매수강도</th>
+                <th scope="col" className={leaderColumn}>시가총액</th>
+                <th scope="col" aria-sort="descending" className={leaderColumn}>매수강도</th>
               </>}
-              <th scope="col" className={`${columnHeader} text-right`}>{closed ? "가격 기준 시각" : "시세 시각"}</th>
+              <th scope="col" aria-label={timeLabel} className={leaderColumn}>{closed ? "기준 시각" : timeLabel}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.06]">
+          <tbody role="rowgroup" className="block divide-y divide-white/[0.06] border-t border-white/[0.08] @min-[34rem]:table-row-group @min-[34rem]:border-t-0">
             {ranked.map((stock) => (
-              <tr key={stock.code}>
-                <th scope="row" className="px-3 py-2.5 text-left font-normal">
-                  <span className="block font-medium text-zinc-100">{stock.name}</span>
-                  <span className="mt-0.5 block text-zinc-400">{stock.code} · {stock.sector}</span>
+              <tr role="row" key={stock.code}
+                className="grid grid-cols-3 gap-x-2 gap-y-2 px-3 py-2.5 @min-[34rem]:table-row @min-[34rem]:p-0">
+                <th scope="row" role="rowheader" title={stock.sector}
+                  className="col-span-3 whitespace-nowrap text-left font-medium text-zinc-100 @min-[34rem]:px-2 @min-[34rem]:py-2.5">
+                  {stock.name}
                 </th>
-                <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{formatNumber(stock.price, 0)}원</td>
-                <td className={`whitespace-nowrap px-3 py-2.5 text-right font-semibold ${direction(stock.changePct)}`}>{percent(stock.changePct)}</td>
-                {(!closed || showBuyStrength) && <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.turnover == null ? "—" : `${formatCompact(stock.turnover, "")}원`}</td>}
+                <LeaderValue label={priceLabel}>{formatNumber(stock.price, 0)}원</LeaderValue>
+                <LeaderValue label="등락률" tone={`font-semibold ${direction(stock.changePct)}`}>{percent(stock.changePct)}</LeaderValue>
+                {showTurnover && <LeaderValue label={closed ? "정규장 거래대금" : "거래대금"}>{stock.turnover == null ? "—" : `${formatCompact(stock.turnover, "")}원`}</LeaderValue>}
                 {showBuyStrength && <>
-                  <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-200">{stock.marketCap == null ? "—" : `${formatCompact(stock.marketCap, "")}원`}</td>
-                  <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-emerald-200">{stock.buyStrengthPct == null ? "—" : `${formatNumber(stock.buyStrengthPct, 3)}%`}</td>
+                  <LeaderValue label="시가총액">{stock.marketCap == null ? "—" : `${formatCompact(stock.marketCap, "")}원`}</LeaderValue>
+                  <LeaderValue label="매수강도" tone="font-semibold text-emerald-200">{stock.buyStrengthPct == null ? "—" : `${formatNumber(stock.buyStrengthPct, 3)}%`}</LeaderValue>
                 </>}
-                <td className="whitespace-nowrap px-3 py-2.5 text-right text-zinc-400">{clock(stock.asOf)}</td>
+                <LeaderValue label={timeLabel} tone="text-zinc-400">{clock(stock.asOf)}</LeaderValue>
               </tr>
             ))}
             {!ranked.length && <EmptyRow columns={showBuyStrength ? 7 : closed ? 4 : 5}
@@ -431,6 +436,15 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
         </table>
       </div>
     </section>
+  );
+}
+
+function LeaderValue({ label, tone = "text-zinc-200", children }: { label: string; tone?: string; children: ReactNode }) {
+  return (
+    <td role="cell" className="block @min-[34rem]:table-cell @min-[34rem]:px-2 @min-[34rem]:py-2.5 @min-[34rem]:text-right">
+      <span className="mb-0.5 block text-[11px] text-zinc-400 @min-[34rem]:hidden">{label}</span>
+      <span className={`whitespace-nowrap ${tone}`}>{children}</span>
+    </td>
   );
 }
 
