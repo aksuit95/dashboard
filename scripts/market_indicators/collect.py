@@ -41,7 +41,8 @@ def atomic(file, value):
 def run(end=None, now=None, only=None):
     now = now or dt.datetime.now(dt.timezone.utc)
     us_end = us.eastern_time(now.timestamp()).date()
-    us_only = only is not None and only <= {'nasdaq','sp500','us10y','us2y'}
+    us_indexes = {'nasdaq','sp500','vix','sox'}
+    us_only = only is not None and only <= us_indexes | {'us10y','us2y'}
     if us_only:
         if end is not None: raise ValueError('미국 지표에는 --through를 사용할 수 없습니다')
         end = us_end
@@ -64,15 +65,20 @@ def run(end=None, now=None, only=None):
     sources.update({
       'nasdaq': ('Yahoo Finance ^IXIC', '미국 정규장 종가 · 뉴욕 거래일 (ET)', lambda: (us.collect_index(query_start,us_end,'^IXIC',now),stamp)),
       'sp500': ('Yahoo Finance ^GSPC', '미국 정규장 종가 · 뉴욕 거래일 (ET)', lambda: (us.collect_index(query_start,us_end,'^GSPC',now),stamp)),
+      'vix': ('Yahoo Finance ^VIX', '미국 정규장 종가 · 뉴욕 거래일 (ET)', lambda: (us.collect_index(query_start,us_end,'^VIX',now),stamp)),
+      'sox': ('Yahoo Finance ^SOX', '미국 정규장 종가 · 뉴욕 거래일 (ET)', lambda: (us.collect_index(query_start,us_end,'^SOX',now),stamp)),
       'us10y': ('미국 재무부', '10년 만기 국채 파 수익률(%) · 뉴욕 약 15:30 호가 기준', lambda: (us.collect_treasury(start,us_end,'10'),stamp)),
       'us2y': ('미국 재무부', '2년 만기 국채 파 수익률(%) · 뉴욕 약 15:30 호가 기준', lambda: (us.collect_treasury(start,us_end,'2'),stamp)),
     })
     failures = []
     for name,(source,basis,collect) in sources.items():
         if only is not None and name not in only: continue
+        query_start = start
         datafile = DEST / f'{name}.json'; metafile = DEST / f'{name}.meta.json'
         try:
-            incremental = name in ('kospi','kosdaq','nasdaq','sp500')
+            incremental = name in ('kospi','kosdaq') or name in us_indexes
+            # Bootstrap the two newly published series; established histories must remain validated.
+            if name in ('vix','sox') and not datafile.exists() and not metafile.exists(): incremental = False
             old_points, old_meta = None, {}
             if incremental:
                 old_points = json.loads(datafile.read_text(encoding='utf-8'))
@@ -80,7 +86,7 @@ def run(end=None, now=None, only=None):
                 old_basis = ('KRX 정규장 ' + ('16:30' if old_meta.get('asOf') == '2026-11-19' else '15:30') + ' KST') if name in ('kospi','kosdaq') else basis
                 if old_meta.get('source') != source or old_meta.get('basis') != old_basis or not old_points:
                     raise ValueError('검증된 기존 이력이 없어 증분 수집 불가')
-                validate(old_points, dt.date.fromisoformat(old_points[0]['date']), us_end if name in ('nasdaq','sp500') else end)
+                validate(old_points, dt.date.fromisoformat(old_points[0]['date']), us_end if name in us_indexes else end)
                 if old_meta.get('asOf') != old_points[-1]['date']: raise ValueError('기존 이력 기준일 불일치')
                 query_start = dt.date.fromisoformat(old_points[-1]['date'])
                 if name in ('kospi','kosdaq') and query_start == end and old_meta.get('status') == 'ok':
@@ -88,13 +94,13 @@ def run(end=None, now=None, only=None):
                     continue
             points, fetched = collect()
             if incremental:
-                validate(points, query_start, us_end if name in ('nasdaq','sp500') else end)
+                validate(points, query_start, us_end if name in us_indexes else end)
                 if points[0]['date'] != old_points[-1]['date']:
                     raise ValueError('기존 이력과 새 이력의 기준일이 겹치지 않습니다')
                 points = old_points + [row for row in points if row['date'] > old_points[-1]['date']]
             if name not in ('adr_kospi','adr_kosdaq'):
                 fetched = dt.datetime.now(dt.timezone.utc).isoformat()
-            validate(points,dt.date.fromisoformat(points[0]['date']) if incremental else start,us_end if name in ('nasdaq','sp500','us10y','us2y') else end, allow_zero=name in ('us10y','us2y'))
+            validate(points,dt.date.fromisoformat(points[0]['date']) if incremental else start,us_end if name in us_indexes | {'us10y','us2y'} else end, allow_zero=name in ('us10y','us2y'))
             try:
                 old_points = json.loads(datafile.read_text(encoding='utf-8'))
                 old_meta = json.loads(metafile.read_text(encoding='utf-8'))
@@ -121,7 +127,7 @@ def run(end=None, now=None, only=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='KRX 정규장 및 환율 이력을 수집합니다')
     parser.add_argument('--through', help='최신 완료 거래일 확인용 YYYY-MM-DD')
-    parser.add_argument('--only', nargs='+', choices=['kospi','kosdaq','adr_kospi','adr_kosdaq','usdkrw','nasdaq','sp500','us10y','us2y'])
+    parser.add_argument('--only', nargs='+', choices=['kospi','kosdaq','adr_kospi','adr_kosdaq','usdkrw','nasdaq','sp500','vix','sox','us10y','us2y'])
     args = parser.parse_args()
     try:
         bad = run(dt.date.fromisoformat(args.through) if args.through else None, only=set(args.only) if args.only else None)

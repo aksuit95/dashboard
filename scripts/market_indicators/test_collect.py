@@ -94,4 +94,37 @@ class TestMarketIndicators(unittest.TestCase):
         xml=b'''<feed xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"><m:properties><d:NEW_DATE>2026-11-06T00:00:00</d:NEW_DATE><d:BC_10YEAR>4.86</d:BC_10YEAR><d:BC_2YEAR>4.51</d:BC_2YEAR></m:properties></feed>'''
         data=us.collect_treasury(dt.date(2026,1,1),dt.date(2026,11,6),'10',lambda _:xml)
         self.assertEqual(data,[{'date':'2026-11-06','value':4.86}])
+
+    def test_vix_accepts_chicago_timezone_and_rejects_stale_or_wrong_symbol(self):
+        utc=dt.timezone.utc
+        start,end=dt.date(2026,11,18),dt.date(2026,11,23)
+        now=dt.datetime(2026,11,23,0,0,tzinfo=utc)
+        result={'meta':{'symbol':'^VIX','currency':'USD','exchangeTimezoneName':'America/Chicago','instrumentType':'INDEX'},
+            'timestamp':[int(dt.datetime(2026,11,20,8,tzinfo=utc).timestamp())], 'indicators':{'quote':[{'close':[35.89]}]}}
+        fetch=lambda _: {'chart':{'result':[result]}}
+        self.assertEqual(us.collect_index(start,end,'^VIX',now,fetch),[{'date':'2026-11-20','value':35.89}])
+        result['timestamp']=[int(dt.datetime(2026,11,18,8,tzinfo=utc).timestamp())]
+        with self.assertRaisesRegex(ValueError,'종가 지연'): us.collect_index(start,end,'^VIX',now,fetch)
+        result['meta']['symbol']='^SOX'
+        with self.assertRaisesRegex(ValueError,'심볼'): us.collect_index(start,end,'^VIX',now,fetch)
+
+    def test_us_expected_session_respects_weekends_holidays_and_publication_cutoff(self):
+        for moment,expected in [('2026-11-23T00:00:00','2026-11-20'),('2026-11-23T21:59:59','2026-11-20'),
+            ('2026-11-23T22:00:00','2026-11-23'),('2026-11-27T00:00:00','2026-11-25')]:
+            self.assertEqual(us.latest_index_session(dt.datetime.fromisoformat(moment).replace(tzinfo=dt.timezone.utc)).isoformat(),expected)
+
+    def test_new_risk_series_bootstrap_and_keep_last_success_when_next_collection_fails(self):
+        with tempfile.TemporaryDirectory() as temp:
+            target=Path(temp)
+            points=[{'date':'2026-11-20','value':35.89}]
+            with patch.object(collect,'DEST',target), patch.object(us,'collect_index',return_value=points), patch.object(session,'latest_session',side_effect=ValueError('KRX should not be called')):
+                self.assertEqual(collect.run(now=dt.datetime(2026,11,23,0,tzinfo=dt.timezone.utc),only={'vix','sox'}),[])
+                self.assertEqual(json.loads((target/'vix.meta.json').read_text(encoding='utf-8'))['asOf'],'2026-11-20')
+                before=(target/'vix.json').read_bytes()
+            with patch.object(collect,'DEST',target), patch.object(us,'collect_index',side_effect=ValueError('delayed')):
+                self.assertEqual(set(collect.run(now=dt.datetime(2026,11,24,0,tzinfo=dt.timezone.utc),only={'vix','sox'})),{'vix','sox'})
+                self.assertEqual((target/'vix.json').read_bytes(),before)
+                meta=json.loads((target/'vix.meta.json').read_text(encoding='utf-8'))
+                self.assertEqual(meta['status'],'error')
+                self.assertEqual(meta['asOf'],'2026-11-20')
 if __name__=='__main__': unittest.main()

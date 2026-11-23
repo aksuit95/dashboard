@@ -1,33 +1,28 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { unstable_cache } from "next/cache";
+import { usRefreshDate } from "@/lib/market/daily-close";
 
 type Point = { date: string; value: number };
 type ChartData = { id: string; name: string; basis: string; source: string; points: Point[]; asOf: string | null; fetchedAt: string | null; error: string | null };
-const nyDate = (date: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
-const nyHour = (date: Date) => Number(new Intl.DateTimeFormat("en-GB", { timeZone: "America/New_York", hour: "2-digit", hourCycle: "h23" }).format(date));
-
-const usIndex = unstable_cache(async (symbol: string): Promise<{ points: Point[]; fetchedAt: string }> => {
-  const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5y`, { cache: "no-store", signal: AbortSignal.timeout(12000), headers: { "user-agent": "Mozilla/5.0" } });
-  if (!response.ok) throw new Error("시세 수집 실패");
-  const result = (await response.json())?.chart?.result?.[0];
-  if (result?.meta?.symbol !== symbol || !(["America/New_York", "America/Chicago"].includes(result?.meta?.exchangeTimezoneName)) || result?.meta?.instrumentType !== "INDEX") throw new Error("지수 정보 불일치");
-  const stamps: number[] = result.timestamp, closes: (number | null)[] = result.indicators?.quote?.[0]?.close;
-  if (!Array.isArray(stamps) || !Array.isArray(closes) || stamps.length !== closes.length) throw new Error("일별 이력 오류");
-  const now = new Date(), today = nyDate(now), seen = new Set<string>();
-  const points = stamps.flatMap((stamp, i) => {
-    const value = closes[i], date = nyDate(new Date(stamp * 1000));
-    if (value == null || !Number.isFinite(value) || value <= 0 || date > today || (date === today && nyHour(now) < 17)) return [];
-    if (seen.has(date)) throw new Error("날짜 중복");
-    seen.add(date); return [{ date, value }];
-  }).sort((a, b) => a.date.localeCompare(b.date));
-  if (!points.length) throw new Error("완료된 종가 없음");
-  return { points, fetchedAt: now.toISOString() };
-}, ["risk-history-us-v1"], { revalidate: 3600 });
-
-async function indexChart(id: string, name: string, symbol: string): Promise<ChartData> {
+async function indexChart(id: string, name: string, symbol: string, now: Date): Promise<ChartData> {
   const base = { id, name, basis: "미국 정규장 종가 · 뉴욕 거래일 (ET)", source: `Yahoo Finance ${symbol}` };
-  try { const data = await usIndex(symbol); return { ...base, ...data, asOf: data.points.at(-1)!.date, error: null }; }
+  try {
+    const dir = path.join(process.cwd(), "public/data/market-indicators-live");
+    const [raw, info] = await Promise.all([readFile(path.join(dir, `${id}.json`), "utf8"), readFile(path.join(dir, `${id}.meta.json`), "utf8")]);
+    const points: Point[] = JSON.parse(raw), meta = JSON.parse(info);
+    const expected = usRefreshDate(now);
+    if (!["ok", "error"].includes(meta.status) || meta.source !== base.source || meta.basis !== base.basis
+      || !Array.isArray(points) || !points.length || !Number.isFinite(Date.parse(meta.fetchedAt))) throw new Error("지수 메타데이터 오류");
+    let previous = "";
+    for (const p of points) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(p.date) || p.date <= previous || p.date > expected || !Number.isFinite(p.value) || p.value <= 0) throw new Error("지수 이력 오류");
+      previous = p.date;
+    }
+    if (previous !== meta.asOf) throw new Error("지수 기준일 불일치");
+    const error = meta.status === "error" ? "최근 수집 실패 · 마지막으로 확인된 종가를 표시합니다."
+      : previous < expected ? `갱신 지연 · ${expected} 종가가 아직 반영되지 않았습니다.` : null;
+    return { ...base, points, asOf: previous, fetchedAt: meta.fetchedAt, error };
+  }
   catch { return { ...base, points: [], asOf: null, fetchedAt: null, error: "지수 이력을 불러오지 못했습니다." }; }
 }
 async function treasury(): Promise<ChartData> {
@@ -50,7 +45,7 @@ async function treasury(): Promise<ChartData> {
     return { ...base, points, asOf: points.at(-1)!.date, fetchedAt: [ten.meta.fetchedAt, two.meta.fetchedAt].filter(Boolean).sort()[0] ?? null, error: null };
   } catch { return { ...base, points: [], asOf: null, fetchedAt: null, error: "같은 날짜의 미국 국채 금리 이력을 불러오지 못했습니다." }; }
 }
-export async function loadRiskCharts(): Promise<ChartData[]> {
-  const [vix, sox, spread] = await Promise.all([indexChart("vix", "VIX", "^VIX"), indexChart("sox", "필라델피아 반도체", "^SOX"), treasury()]);
+export async function loadRiskCharts(now = new Date()): Promise<ChartData[]> {
+  const [vix, sox, spread] = await Promise.all([indexChart("vix", "VIX", "^VIX", now), indexChart("sox", "필라델피아 반도체", "^SOX", now), treasury()]);
   return [vix, sox, spread];
 }

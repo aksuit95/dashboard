@@ -2,13 +2,15 @@
 
 | 항목 | 한국시간 | 실행 위치 |
 | --- | --- | --- |
-| 미국 ADR·환율 | 매일 오전 9시 | GitHub Actions `market-indicators-us.yml`에서 미국 지표와 함께 수집 (`0 0 * * *`, UTC) |
+| 미국 ADR·환율·VIX·SOX·NASDAQ·S&P 500·국채 금리 | 매일 오전 9시 | GitHub Actions `market-indicators-us.yml`에서 함께 수집 (`0 0 * * *`, UTC) |
 | 한국 프록시 종가·섹터·미너비니·시가총액 | 평일 오후 4시 | GitHub Actions `sector-daily.yml` (`0 7 * * 1-5`, UTC) |
 | CNN 공포·탐욕 지수 | 매일 오전 10시 | Vercel Cron `/api/cron/fear-greed` (`0 1 * * *`, UTC) |
 
 프록시 작업은 `data/proxy-close/board.json`을 검증 후 커밋하고 Vercel Git 배포를 유발합니다. 한국의 기준일 KRX Open API 종가와 네이버 명시적 정규장 종가 이력을 대조합니다. 가격 기준은 **KRX 15:30**이며 수집 시각과 구분합니다. 한국·미국 휴장일은 해당 시장의 직전 완료 거래일을 사용합니다. ADR은 미국 종가, 환율은 Yahoo 일별 값이며 각각의 날짜를 표시합니다. KRX Open API 접속 실패·미발표 시 네이버 KRX 정규장 종가만 사용하며 출처를 표시합니다. 자료 누락·두 국내 소스 불일치·미국 종가 지연 시 기존 정상 파일을 유지하고 실패를 기록합니다. 한국·미국 GitHub 워크플로는 같은 concurrency 그룹으로 파일 업데이트 충돌을 방지합니다. 오전 미국 작업은 저장된 검증된 KRX 종가를 유지하며 ADR·환율만 갱신하고 미국 지표와 같은 커밋으로 배포합니다. `proxy-us-close.yml`은 수동 복구용이며 별도 예약은 없습니다.
 
 GitHub 예약 및 Vercel 배포는 지연될 수 있습니다. `KRX_API_KEY`는 GitHub Actions Secrets에 필요합니다. `npm run proxy-close:export`로 로컬에서 수동 수집할 수 있습니다. 화면 조회는 배포된 파일만 읽습니다. 데이터 수집 전에 가격·과거 이력을 KRX 정규장 기준으로 확인하며 기존 Yahoo 국내 가격이나 통합 종가 캐시는 사용하지 않습니다.
+
+VIX·SOX는 `public/data/market-indicators-live/{vix,sox}.json`과 대응하는 `.meta.json`을 사용합니다. 페이지 조회 중 Yahoo를 직접 호출하던 `risk-history-us-v1` 캐시는 사용하지 않습니다. 수집기는 요청한 심볼·USD 통화·지수 유형·거래소 시간대(VIX Chicago, SOX New York), 완료 거래일과 최신성까지 확인합니다. 뉴욕 17시 전의 당일 일봉은 제외합니다. 원본 응답이 최신 완료 거래일보다 뒤처지면 기존 파일을 유지하고 실패를 기록합니다. 화면은 수집 실패나 게시본 지연을 경고하고 마지막 유효 종가와 실제 수집 시각을 표시합니다. 수동 복구는 `python scripts/market_indicators/collect.py --only vix sox`입니다.
 
 CNN 예약에는 Vercel Production 환경의 `CRON_SECRET`이 필요합니다. Hobby Cron은 오전 10시부터 11시 사이에 실행될 수 있습니다. 실패는 View Logs에서 확인하며 최초 요청도 같은 일별 수집을 시도합니다.
 

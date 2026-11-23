@@ -35,6 +35,7 @@ export default async function RiskPage() {
           </section>
         ))}
       </div>
+      <p className="mt-6 text-xs text-zinc-500">미국 지표는 매일 오전 9시 KST 이후 자동 수집·배포합니다. 휴장일에는 직전 완료 거래일 종가를 표시합니다.</p>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {charts.map(item => <section key={item.id} className="rounded-xl border border-white/10 bg-[#151a22] p-4">
           <h2 className="font-medium">{item.name}</h2>
