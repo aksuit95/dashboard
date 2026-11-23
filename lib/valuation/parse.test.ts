@@ -11,6 +11,19 @@ function sheet(name: string, codes: string[], labels: string[], rows: unknown[][
 const parse = (sheets: SourceSheet[]) => parseValuationSheets(sheets, "코스피200.xlsx", "2026-11-02T06:00:00Z", "2026-11-02");
 
 describe("QuantiWise 밸류에이션 가져오기", () => {
+  it("선행과 TTM PER·PBR을 원본 항목별로 구분하고 날짜와 값을 보존한다", () => {
+    const result = parse([sheet("지수", ["E382160.M", "M382005.M", "E382560.M", "M382405.M"], ["선행 PER", "PER TTM", "선행 PBR", "PBR TTM"], [["2026-10-30", 10, 12, 1, 1.2], ["2026-11-02", 11, null, 1.1, 1.3]])]);
+    expect(result.series.find(s => s.id === "per")?.points.at(-1)?.value).toBe(11);
+    expect(result.series.find(s => s.id === "perTtm")?.points).toEqual([{ date: "2026-10-30", value: 12 }]);
+    expect(result.series.find(s => s.id === "pbrTtm")?.points.at(-1)?.value).toBe(1.3);
+    const bad = parse([sheet("지수", ["E382160.M", "M382005.M"], ["선행", "TTM"], [["2026-10-30", 10, 12]], ["X", "KRW"])]);
+    expect(bad.series.some(s => s.id === "perTtm")).toBe(false);
+    expect(bad.warnings).toHaveLength(1);
+  });
+  it("장중에 들어온 TTM 값은 제외하고 직전 완료 거래일까지만 보존한다", () => {
+    const result = parseValuationSheets([sheet("지수", ["M382005.M"], ["PER TTM"], [["2026-11-20", 10], ["2026-11-23", 12]])], "test.xlsx", "2026-11-23T00:00:00Z", "2026-11-23", "IKS200", "2026-11-20");
+    expect(result.series[0].points).toEqual([{date: "2026-11-20", value: 10}]);
+  });
   it("두 지수의 시계열과 갱신 시각을 섞지 않는다", () => {
     const kospi = sheet("코스피", ["E382160.M"], ["PER"], [["2026-10-30", 10]]);
     kospi.rows.unshift(["Refresh", "Last Update : 2026-11-02 10:00:00"]);

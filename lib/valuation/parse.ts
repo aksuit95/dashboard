@@ -1,4 +1,5 @@
 import type { ValuationData, ValuationSeries } from "./types";
+import { minerviniSession } from "@/lib/market/minervini-session";
 
 export type SourceSheet = { name: string; rows: unknown[][] };
 export const definitions = [
@@ -9,6 +10,12 @@ export const definitions = [
   { id: "evEbitda", code: "E331060", name: "선행 EV/EBITDA", unit: "배", digits: 2, color: "#fb923c" },
   { id: "operatingProfit", code: "E121560", name: "선행 영업이익", unit: "억원", digits: 0, color: "#f472b6" },
   { id: "fcf", code: "E124260", name: "선행 FCF", unit: "억원", digits: 0, color: "#2dd4bf" },
+] as const;
+
+const indexDefinitions = [
+  ...definitions,
+  { id: "perTtm", code: "M382005", name: "PER(TTM)", unit: "배", digits: 2, color: "#22d3ee" },
+  { id: "pbrTtm", code: "M382405", name: "PBR(TTM)", unit: "배", digits: 2, color: "#c084fc" },
 ] as const;
 
 function text(value: unknown): string { return String(value ?? "").trim(); }
@@ -30,7 +37,7 @@ export function valuationDate(value: unknown): string | null {
   return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === iso ? iso : null;
 }
 
-export function parseValuationSheets(sheets: SourceSheet[], fileName: string, savedAt: string, today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10), indexCode = "IKS200"): ValuationData {
+export function parseValuationSheets(sheets: SourceSheet[], fileName: string, savedAt: string, today = new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10), indexCode = "IKS200", completedSession?: string): ValuationData {
   const candidates = new Map<string, ValuationSeries[]>();
   const warnings = new Set<string>();
   let sourceUpdatedAt: string | null = null;
@@ -54,16 +61,18 @@ export function parseValuationSheets(sheets: SourceSheet[], fileName: string, sa
       // Do not interpret a leftover metadata column as a second, empty series.
       if (normalize(codes[column]) !== indexCode || !text(sheet.rows[header][column])) continue;
       const itemCode = text(items[column]);
-      const definition = definitions.find((d) => d.code === itemCode.split(".")[0]);
+      const definition = indexDefinitions.find((d) => d.code === itemCode.split(".")[0]);
       if (!definition) continue;
       const unit = text(units?.[column]);
+      if (definition.id.endsWith("Ttm") && !/^X$/i.test(unit)) { warnings.add(`${sheet.name}: ${definition.name}의 단위(${unit})를 확인할 수 없어 제외했습니다.`); continue; }
       const factor = definition.unit !== "억원" ? 1 : /thou/i.test(unit) ? 1 / 100_000 : /100mn/i.test(unit) ? 1 : /bil/i.test(unit) ? 10 : /mn/i.test(unit) ? 1 / 100 : /^(Local|KRW)$/i.test(unit) ? 1 / 100_000_000 : null;
       if (factor == null) { warnings.add(`${sheet.name}: ${definition.name}의 단위(${unit})를 확인할 수 없어 제외했습니다.`); continue; }
       const byDate = new Map<string, number>();
+      const through = definition.id.endsWith("Ttm") ? (completedSession ?? minerviniSession()) : today;
       for (const row of sheet.rows.slice(header + 1)) {
         const date = valuationDate(row[0]);
         const value = numeric(row[column]);
-        if (!date || date > today || value == null) continue;
+        if (!date || date > today || date > through || value == null) continue;
         if (byDate.has(date) && byDate.get(date) !== value * factor) warnings.add(`${sheet.name}: ${definition.name}의 중복 날짜는 마지막 행을 사용했습니다.`);
         byDate.set(date, value * factor);
       }
@@ -73,7 +82,7 @@ export function parseValuationSheets(sheets: SourceSheet[], fileName: string, sa
     }
   }
   const series: ValuationSeries[] = [];
-  for (const definition of definitions) {
+  for (const definition of indexDefinitions) {
     const options = candidates.get(definition.id)?.sort((a, b) => b.points.length - a.points.length || b.points.at(-1)!.date.localeCompare(a.points.at(-1)!.date));
     if (!options?.length) continue;
     const chosen = options[0];

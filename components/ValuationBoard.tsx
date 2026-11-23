@@ -69,7 +69,7 @@ function ValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq150" })
           </button>;
         })}
       </div>
-      {active && <ValuationChart series={active} universe={universe} />}
+      {active && <ValuationChart series={active} universe={universe} allSeries={data.series} onSelect={setSelected} />}
       {data.warnings.length > 0 && <details className="rounded-lg border border-amber-400/15 bg-amber-400/[0.03] px-4 py-3 text-xs text-amber-200">
         <summary className="cursor-pointer">원본 데이터 확인 필요 · {data.warnings.length}건</summary>
         <ul className="mt-3 space-y-2">{data.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
@@ -85,7 +85,7 @@ function ValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq150" })
 }
 
 
-function ValuationChart({ series, universe }: { series: ValuationSeries; universe: "kospi200" | "kosdaq150" }) {
+function ValuationChart({ series, universe, allSeries, onSelect }: { series: ValuationSeries; universe: "kospi200" | "kosdaq150"; allSeries: ValuationSeries[]; onSelect: (id: string) => void }) {
   const [range, setRange] = useState<Range>("1Y");
   const [hover, setHover] = useState<{ date: string; value: number } | null>(null);
   const host = useRef<HTMLDivElement>(null);
@@ -122,13 +122,16 @@ function ValuationChart({ series, universe }: { series: ValuationSeries; univers
     return () => { observer.disconnect(); chart.remove(); };
   }, [series, selected, mean]);
   const detail = hover ?? selected.at(-1);
+  const pair = series.id === "per" || series.id === "perTtm" ? ["per", "perTtm"] : series.id === "pbr" || series.id === "pbrTtm" ? ["pbr", "pbrTtm"] : [];
+  const availablePair = pair.flatMap(id => allSeries.find(item => item.id === id) ?? []);
   return <section className="rounded-xl border border-white/10 bg-[#151a22] p-4 sm:p-6" aria-label={`${series.name} 선차트`}>
     <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-      <div><p className="text-xs uppercase tracking-widest text-zinc-500">{universe === "kospi200" ? "KOSPI 200" : "KOSDAQ 150"} · 12M Forward</p><h2 className="mt-1 text-lg font-semibold">{series.name}</h2>
+      <div><p className="text-xs uppercase tracking-widest text-zinc-500">{universe === "kospi200" ? "KOSPI 200" : "KOSDAQ 150"} · {series.id.endsWith("Ttm") ? "TTM" : "12M Forward"}</p><h2 className="mt-1 text-lg font-semibold">{series.name}</h2>
         <p className="mt-3 flex items-baseline gap-3"><span className="text-3xl font-semibold tabular-nums" style={{ color: series.color }}>{detail ? number(detail.value, series.digits) : "—"}<span className="ml-1 text-sm font-normal">{series.unit}</span></span><span className="text-xs text-zinc-500">{detail?.date}</span></p>
       </div>
       <div className="flex flex-wrap gap-1" aria-label="차트 기간">{(Object.keys(ranges) as Range[]).map((value) => <button type="button" key={value} aria-pressed={range === value} onClick={() => setRange(value)} className={`rounded-md px-2.5 py-1.5 text-xs ${range === value ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`}>{value === "ALL" ? "전체" : value}</button>)}</div>
     </div>
+    {availablePair.length > 1 && <div className="mb-4 flex gap-2" aria-label="선행 또는 TTM 선택">{availablePair.map(item => <button key={item.id} type="button" aria-pressed={item.id === series.id} onClick={() => onSelect(item.id)} className={`rounded-md border px-3 py-1.5 text-xs ${item.id === series.id ? "border-sky-400/50 bg-sky-400/10 text-sky-200" : "border-white/10 text-zinc-400 hover:text-white"}`}>{item.id.endsWith("Ttm") ? "TTM" : "선행 12개월"}</button>)}</div>}
     <div ref={host} className="h-[370px] w-full" />
     <div className="mt-4 flex flex-wrap justify-between gap-2 border-t border-white/5 pt-3 text-xs text-zinc-500"><span>{selected[0]?.date} ~ {selected.at(-1)?.date} · {selected.length.toLocaleString("ko-KR")}개 관측값</span><span>점선: 선택 기간 평균 {number(mean, series.digits)}{series.unit}</span></div>
     <p className="mt-2 text-[11px] text-zinc-600">{series.sheet} · {series.itemCode}</p>
