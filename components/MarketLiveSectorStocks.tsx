@@ -20,9 +20,9 @@ export function MarketLiveSectorToggle({ name, expanded, controls, onToggle }: {
   );
 }
 
-export function MarketLiveSectorStocks({ id, name, stocks, priceLabel, status, selectedTime, showQuoteTime = false }: {
+export function MarketLiveSectorStocks({ id, name, stocks, priceLabel, changeLabel = "등락률", status, selectedTime, showQuoteTime = false }: {
   id: string; name: string; stocks: MarketLiveSectorStock[]; priceLabel: string;
-  status?: string; selectedTime?: string; showQuoteTime?: boolean;
+  changeLabel?: string; status?: string; selectedTime?: string; showQuoteTime?: boolean;
 }) {
   const ranked = [...stocks].sort((a, b) => (b.changePct ?? -Infinity) - (a.changePct ?? -Infinity) || a.name.localeCompare(b.name, "ko"));
   return (
@@ -38,7 +38,7 @@ export function MarketLiveSectorStocks({ id, name, stocks, priceLabel, status, s
               <tr>
                 <th scope="col" className="px-3 py-2 font-medium">종목</th>
                 <th scope="col" className="whitespace-nowrap px-2 py-2 text-right font-medium">{priceLabel}</th>
-                <th scope="col" className="whitespace-nowrap px-2 py-2 text-right font-medium">등락률</th>
+                <th scope="col" className="whitespace-nowrap px-2 py-2 text-right font-medium">{changeLabel}</th>
                 {showQuoteTime && <th scope="col" className="whitespace-nowrap px-3 py-2 text-right font-medium">시세 시각</th>}
               </tr>
             </thead>

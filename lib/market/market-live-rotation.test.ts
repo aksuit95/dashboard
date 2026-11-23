@@ -21,9 +21,15 @@ describe("KRX 장중 섹터 순환매", () => {
     const first = frame(earlier, [stock("000001", 90, earlier), stock("000002", 100, earlier), stock("000003", 185, earlier), stock("000004", 80, earlier)]);
     const next = frame(later, [stock("000001", 95, later), stock("000002", 105, later), stock("000004", 108, later, 110)]);
     const data = compareMarketLiveRotation(first, next, 10);
-    expect(data).toMatchObject({ minutes: 10, from: earlier, to: later, rows: [{ name: "반도체", changePp: 5, compared: 2, total: 4 }] });
+    expect(data).toMatchObject({ minutes: 10, from: earlier, to: later, rows: [{ name: "반도체", changePp: 5, up: 2, compared: 2, total: 4 }] });
     expect(data?.rows[0].nowPct).toBeCloseTo(0);
     expect(compareMarketLiveRotation(first, frame(later, [next.stocks[0], first.stocks[1]]), 10)).toBeNull();
+  });
+
+  it("당일 등락률의 부호와 관계없이 구간에 오른 종목만 센다", () => {
+    const first = frame(earlier, [stock("000001", 85, earlier), stock("000002", 105, earlier), stock("000003", 120, earlier)]);
+    const last = frame(later, [stock("000001", 90, later), stock("000002", 105, later), stock("000003", 115, later)]);
+    expect(compareMarketLiveRotation(first, last, 10)?.rows[0]).toMatchObject({ up: 1, compared: 3, total: 4 });
   });
 
   it.each([10, 30, 60] as const)("선택한 %i분 전 기록과 허용 지연만 비교한다", minutes => {

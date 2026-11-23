@@ -18,12 +18,13 @@ export function compareMarketLiveRotation(
   if (!(earlierAt >= from && earlierAt <= through)) return null;
 
   const earlier = new Map(base.stocks.map(stock => [`${stock.market}:${stock.code}`, stock]));
-  const matched = new Map<string, { count: number; nowPct: number; changePp: number }>();
+  const matched = new Map<string, { count: number; up: number; nowPct: number; changePp: number }>();
   for (const stock of current.stocks) {
     const prior = earlier.get(`${stock.market}:${stock.code}`);
     if (!prior || stock.sector !== prior.sector || stock.close !== prior.close || !(Date.parse(stock.asOf) > Date.parse(prior.asOf))) continue;
-    const group = matched.get(stock.sector) ?? { count: 0, nowPct: 0, changePp: 0 };
+    const group = matched.get(stock.sector) ?? { count: 0, up: 0, nowPct: 0, changePp: 0 };
     group.count++;
+    group.up += Number(stock.price > prior.price);
     group.nowPct += (stock.price / stock.close - 1) * 100;
     group.changePp += (stock.price - prior.price) / stock.close * 100;
     matched.set(stock.sector, group);
@@ -33,7 +34,7 @@ export function compareMarketLiveRotation(
     const sector = matched.get(name);
     const minimumCount = Math.max(2, Math.ceil(Math.max(total, previousTotals.get(name) ?? 0) / 2));
     return sector && sector.count >= minimumCount ? [{
-      name, total, compared: sector.count, nowPct: sector.nowPct / sector.count, changePp: sector.changePp / sector.count,
+      name, total, compared: sector.count, up: sector.up, nowPct: sector.nowPct / sector.count, changePp: sector.changePp / sector.count,
     }] : [];
   });
   return rows.length ? { minutes, from: marketLiveFrameTime(base), to: marketLiveFrameTime(current), rows } : null;

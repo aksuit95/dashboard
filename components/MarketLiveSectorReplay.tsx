@@ -3,6 +3,7 @@
 import { krxCloseTime } from "@/config/market-calendar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketLiveRotation } from "@/components/MarketLiveRotation";
+import { MarketLiveRotationHeatmap } from "@/components/MarketLiveRotationHeatmap";
 import { MarketLiveSectorStocks, MarketLiveSectorToggle } from "@/components/MarketLiveSectorStocks";
 import { sectorNames } from "@/config/sectors";
 import { formatSigned } from "@/lib/format";
@@ -209,6 +210,7 @@ export function MarketLiveSectorPanels({ live = false, closed = false }: { live?
         </p>
       ) : (
         <>
+          <MarketLiveRotationHeatmap key={day.date} day={day} />
           <div className="mt-4 flex flex-wrap items-baseline justify-between gap-2">
             <div className="text-xs tabular-nums text-zinc-400">
               <span className="font-semibold text-zinc-200">{day.date}</span>

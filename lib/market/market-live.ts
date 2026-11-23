@@ -50,7 +50,7 @@ export type MarketLiveRotationData = {
   minutes: MarketLiveRotationWindow;
   from: string;
   to: string;
-  rows: { name: string; nowPct: number; changePp: number; compared: number; total: number }[];
+  rows: { name: string; nowPct: number; changePp: number; compared: number; total: number; up?: number }[];
 };
 export type MarketLiveRadar = {
   date: string;
