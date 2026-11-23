@@ -1,4 +1,4 @@
-import { marketLiveFrameTime, type MarketLiveArchiveFrame } from "./market-live-archive";
+import { marketLiveFrameTime, type MarketLiveArchiveFrame, type MarketLiveArchiveResponse } from "./market-live-archive";
 import { marketLiveRotationWindows, type MarketLiveRadar, type MarketLiveRotationData, type MarketLiveRotationWindow } from "./market-live";
 
 const maximumDelayMs = 90_000;
@@ -51,9 +51,43 @@ export function calculateMarketLiveRadar(
   const time = Date.parse(marketLiveFrameTime(current));
   for (const minutes of marketLiveRotationWindows) {
     const { from, through } = marketLiveRotationBounds(time, minutes);
-    const earlier = readEarlier(from, through);
-    const comparison = earlier && compareMarketLiveRotation(earlier, current, minutes);
-    if (comparison) windows[minutes] = comparison;
+    let candidateThrough = through;
+    while (candidateThrough >= from) {
+      const earlier = readEarlier(from, candidateThrough);
+      if (!earlier) break;
+      const at = Date.parse(marketLiveFrameTime(earlier));
+      if (!(at >= from && at <= candidateThrough)) break;
+      const comparison = compareMarketLiveRotation(earlier, current, minutes);
+      if (comparison) windows[minutes] = comparison;
+      if (comparison || live) break;
+      // A thin auction frame can leave an earlier frame in the allowed window usable.
+      candidateThrough = at - 1;
+    }
   }
   return { date, baselineDate, live, windows };
+}
+
+/** Rebuild the comparison frame from the per-stock tape shipped with the archive. */
+export function calculateMarketLiveCloseRadar(day: NonNullable<MarketLiveArchiveResponse["day"]>, closing: MarketLiveArchiveFrame): MarketLiveRadar | null {
+  const tape = day.stockTape;
+  if (!tape) return null;
+  return {
+    ...calculateMarketLiveRadar(day.date, day.baselineDate, closing, false, (from, through) => {
+      const frame = day.frames.findLast(item => {
+        const time = Date.parse(marketLiveFrameTime(item));
+        return time >= from && time <= through;
+      });
+      if (!frame) return null;
+      const asOf = marketLiveFrameTime(frame);
+      const slot = Math.floor((Date.parse(asOf) - tape.openAt) / 60_000);
+      const stocks = tape.stocks.flatMap(row => {
+        const price = row.prices[slot];
+        const close = row.correctedCloses?.[slot] ?? row.close;
+        return price != null && Number.isFinite(price) && price > 0 && Number.isFinite(close) && close > 0
+          ? [{ code: row.code, market: row.market, sector: row.sector, price, close, asOf }] : [];
+      });
+      return { ...frame, stocks };
+    }),
+    closeAt: marketLiveFrameTime(closing),
+  };
 }

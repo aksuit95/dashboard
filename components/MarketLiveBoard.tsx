@@ -157,7 +157,7 @@ export function MarketLiveBoard() {
       </section>
 
       <MarketLiveGlobalQuotes />
-      <BreadthPanel breadth={board?.breadth} />
+      <BreadthPanel breadth={board?.breadth} priceBasis={closed ? krxCloseDetail(board.date) : undefined} />
       <MarketLiveSectorPanels live={board?.state === "open" || board?.state === "auction"} closed={closed} />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
@@ -274,7 +274,7 @@ function IntradayChart({ symbol, points, change, closing, session: { openAt, clo
   return <div ref={host} className="h-36 w-full" role="img" aria-label={`${indexNames[symbol]} KRX 정규장 지수 추이 ${range} KST`} />;
 }
 
-function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | undefined }) {
+function BreadthPanel({ breadth, priceBasis }: { breadth: MarketLiveBoardData["breadth"] | undefined; priceBasis?: string }) {
   const groups = [
     { name: "상승", count: breadth?.up, text: "text-rose-400", bar: "bg-rose-400" },
     { name: "보합", count: breadth?.flat, text: "text-zinc-300", bar: "bg-zinc-500" },
@@ -284,7 +284,7 @@ function BreadthPanel({ breadth }: { breadth: MarketLiveBoardData["breadth"] | u
     <section className={`${panel} grid gap-3 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-center`} aria-labelledby="market-live-breadth">
       <div>
         <h2 id="market-live-breadth" className="text-sm font-semibold">상승·하락 종목 수</h2>
-        <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 구성 종목{breadth?.total ? ` · 비교 가능 ${breadth.compared}/${breadth.total}` : ""}</p>
+        <p className="mt-1 text-xs text-zinc-400">코스피200·코스닥150 구성 종목{priceBasis ? ` · ${priceBasis}` : ""}{breadth?.total ? ` · 비교 가능 ${breadth.compared}/${breadth.total}` : ""}</p>
       </div>
       <div>
         <dl className="mb-2 flex items-center justify-between gap-2 text-xs tabular-nums">

@@ -57,8 +57,10 @@ function buildMarketLiveMinuteReplay(
   const latest = closing ?? [...frames.values()].findLast(frame => frame.sectors.some(sector => sector.changePct !== null));
   if (!latest) return { day: null, radar: null };
   const { date, baselineDate, state } = session;
-  const radar = calculateMarketLiveRadar(date, baselineDate, latest, state !== "closed",
-    (from, through) => frames.get(through) ?? (through - minute >= from ? frames.get(through - minute) : undefined) ?? null);
+  const radar = calculateMarketLiveRadar(date, baselineDate, latest, state !== "closed", (from, through) => {
+    const at = Math.floor(through / minute) * minute;
+    return (at >= from ? frames.get(at) : undefined) ?? (at - minute >= from ? frames.get(at - minute) : undefined) ?? null;
+  });
   const stockTape = packMarketLiveReplayStocks(session.openAt, frames.values(), new Map(members.map(member => [member.code, member.name])));
   return { day: { date, baselineDate, frames: [...frames.values()].map(({ stocks: _stocks, ...frame }) => frame), stockTape },
     radar: { ...radar, closeAt: closing?.minuteAt } };

@@ -4,11 +4,13 @@ import {
   type MarketLiveArchiveResponse, type MarketLiveSectorResponse,
 } from "@/lib/market/market-live-archive";
 import { marketLiveRotationWindows, type MarketLiveRadar } from "@/lib/market/market-live";
+import { calculateMarketLiveCloseRadar } from "@/lib/market/market-live-rotation";
 import { marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 import { loadMarketLiveBoard } from "@/lib/sources/market-live";
 import { isMarketLiveArchiveDate, readMarketLiveRotationFrame } from "@/lib/sources/market-live-archive";
 import { loadMarketLiveMinuteReplay } from "@/lib/sources/market-live-minute-replay";
 import { buildMarketLiveRadar, readMarketLivePublication, readSharedMarketLiveArchive } from "@/lib/sources/market-live-publication";
+import { readHeatmapSectorCapitalization } from "@/lib/sources/sector-market-caps";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -17,11 +19,13 @@ export const preferredRegion = "icn1";
 
 const noStore = { "Cache-Control": "no-store" };
 
-function cached(data: MarketLiveSectorResponse, maxAge: number) {
+async function cached(data: MarketLiveSectorResponse, maxAge: number) {
   const headers = process.env.VERCEL === "1"
     ? { "Cache-Control": "public, max-age=0, must-revalidate", "Vercel-CDN-Cache-Control": `public, s-maxage=${Math.max(1, maxAge)}` }
     : noStore;
-  return Response.json(data, { headers });
+  const sectorCapitalization = data.day ? await readHeatmapSectorCapitalization(data.day).catch(() => undefined) : undefined;
+  const day = data.day && { ...data.day, sectorCapitalization };
+  return Response.json({ ...data, day }, { headers });
 }
 
 function archivedRadar(day: NonNullable<MarketLiveSectorResponse["day"]>, now: number, includeLocal: boolean, live: boolean) {
@@ -49,11 +53,12 @@ async function closingArchive(
 
   const closeAt = closing.minuteAt;
   const names = new Map(board?.sectorStocks?.map(stock => [stock.code, stock.name]));
-  const localRadar: MarketLiveRadar = includeLocal && day
+  const storedRadar = day && calculateMarketLiveCloseRadar(day, closing);
+  const archiveRadar: MarketLiveRadar = storedRadar || (includeLocal && day
     ? { ...buildMarketLiveRadar(date, baselineDate, closing, false), closeAt }
-    : { date, baselineDate, live: false, closeAt, windows: {} };
-  if (day && marketLiveRotationWindows.every(minutes => localRadar.windows[minutes])) {
-    return cached({ ...saved, day: appendMarketLiveClosingFrame(day, closing, session.openAt, names), radar: localRadar }, ttl);
+    : { date, baselineDate, live: false, closeAt, windows: {} });
+  if (day && marketLiveRotationWindows.every(minutes => archiveRadar.windows[minutes])) {
+    return cached({ ...saved, day: appendMarketLiveClosingFrame(day, closing, session.openAt, names), radar: archiveRadar }, ttl);
   }
 
   const pending = loadMarketLiveMinuteReplay(session, now, closing);
@@ -63,7 +68,7 @@ async function closingArchive(
   return cached({
     dates: [...new Set([date, ...saved.dates])].sort().reverse(),
     day: appendMarketLiveClosingFrame(replay, closing, session.openAt, names),
-    radar: { ...localRadar, windows: { ...localRadar.windows, ...rebuilt.radar?.windows } },
+    radar: { ...archiveRadar, windows: { ...rebuilt.radar?.windows, ...archiveRadar.windows } },
   }, Math.min(maxAge, untilBoundary));
 }
 

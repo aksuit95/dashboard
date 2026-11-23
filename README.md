@@ -17,6 +17,7 @@
 | 장 마감 브리핑 | `/briefing` | 일간·주간 리서치와 PDF 보관 |
 | 매크로·실적 캘린더 | `/events` | 국내·미국 주요 지표 일정과 국내 공시·실적 일정 |
 | 섹터·종목 등락률 | `/valuation/sectors`, `/rising`, `/stock-returns` | 기간별 수익률과 연속 상승 종목·섹터 |
+| 신고가·신저가 레이더 / MDD | `/stock-radar` | 코스피·코스닥 보통주의 종가 돌파·이탈, 현재 낙폭과 최대낙폭 |
 | 시장 심리 | `/adr`, `/risk` | 등락비율, 시장 지표 장기 비교, 공포·탐욕과 이격도 |
 | 수급·ETF | `/investor-flow/kospi200`, `/short-selling`, `/etf-holdings` | 외국인·기관·개인 수급, 국민연금 공시, 공매도, ETF 보유종목 |
 | 기업 분석 | `/valuation`, `/valuation/stocks`, `/financials`, `/investment-risk`, `/minervini` | 밸류에이션, 재무건전성, 투자위험, 기술적 분석 |
@@ -39,6 +40,7 @@
 - **장 마감 브리핑**은 섹터·코스피 및 코스닥 종가·수급 저장본으로 생성합니다. Windows 작업 `Dashboard Market Briefing`이 16:00 이후 자료를 확인해 PDF와 요약을 게시합니다. 브라우저에서 수동으로 저장한 브리핑은 해당 브라우저에 남습니다.
 - **투자자별 수급**은 Windows 작업 `Dashboard Investor Flow`가 16:00 이후 갱신합니다. 시장 수급에 사용한 토스 데이터는 원본 집계 범위를 표시하며, 종목 가격 비교는 KRX 15:30 기준을 유지합니다. 토스 Open API는 등록된 IP에서 호출합니다.
 - **재무건전성**은 DART 공시와 검증된 시가총액을 결합합니다. 수집 실패 항목과 적용한 회계 기간을 표시합니다. [재무건전성 운영 문서](docs/financial-health.md)
+- **신고가·신저가 레이더 / MDD**는 평일 16:25 KST에 KRX 15:30 종가를 수집합니다. KRX Open API의 당일 자료가 아직 없으면 네이버 KRX에서 15:30 마감이 확인된 종목만 먼저 집계합니다. 평일 08:20 KST에 KRX 공식 자료로 다시 확인하고, 수집이 실패하면 마지막 저장본의 가격 기준일을 표시합니다. 로컬 수동 실행은 `npm run stock-radar:export`입니다.
 
 ### 로컬 실행
 
@@ -55,6 +57,7 @@ npm run build
 ```
 
 - KRX 시세와 기준가에는 `KRX_API_KEY`를 사용합니다. 승인된 KRX 게시본을 읽는 기능은 해당 거래일과 출처를 검증합니다.
+- 레이더는 `KRX_API_KEY`에 유가증권·코스닥 일별매매정보와 종목기본정보의 이용 승인이 필요합니다.
 - `KRX_ID`, `KRX_PW`는 로컬 KRX 웹 수집용입니다. `TOSS_CLIENT_ID`, `TOSS_CLIENT_SECRET`은 토스 수급 수집에, `DART_API_KEY`는 공시·실적 수집에 사용합니다.
 - `VALUATION_WORKBOOK_PATH`는 로컬 엑셀 내보내기용입니다. `CRON_SECRET`은 Vercel 예약 수집 요청을 검사합니다. 지원하는 환경 변수는 [.env.example](.env.example)을 참고하세요.
 

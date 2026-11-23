@@ -2,7 +2,7 @@ import { minerviniUniverseIds, minerviniUniverses } from "@/config/minervini";
 import { classifySector } from "@/config/sectors";
 import { latestDataTime } from "@/lib/format";
 import { KR_CSAT_2026, krxCloseTime } from "@/config/market-calendar";
-import { hasMarketLiveClosingBasis, resolveMarketLiveSession } from "@/lib/market/market-live-session";
+import { hasMarketLiveClosingBasis, marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 import {
   MARKET_LIVE_POLL_MS, MARKET_LIVE_STALE_MS, marketLiveChange, marketLiveSymbols, summarizeMarketLiveStocks,
   type MarketLiveBoardData, type MarketLiveClosingSnapshot, type MarketLiveIndex, type MarketLiveMember, type MarketLiveQuote, type MarketLiveSymbol,
@@ -13,6 +13,7 @@ import { fetchNaverLiveIndex, fetchNaverLiveStocks } from "@/lib/sources/naver-m
 import { readSectorPublication, type SectorPublication } from "@/lib/sources/sector-publication";
 import { readMarketCaps } from "@/lib/valuation/market-caps";
 import { readMarketLiveClose, validMarketLiveClose, withinClosingCapture } from "./market-live-close";
+import { loadMarketLiveRegularCloses } from "./market-live-regular-closes";
 
 export { marketLiveTradingWindow, resolveMarketLiveSession } from "@/lib/market/market-live-session";
 
@@ -92,12 +93,15 @@ async function collectCloses(symbol: MarketLiveSymbol, date: string): Promise<Ma
       }
     }
   }
+  const officialStockCount = rows.size;
   const caps = await publishedCaps;
   if (caps?.asOf === date) {
     for (const [code, cap] of Object.entries(caps.values)) {
-      if (cap == null || caps.securities?.[code]?.market !== symbol || marketCaps.has(code)) continue;
+      if (caps.securities?.[code]?.market !== symbol) continue;
       const price = rows.get(code);
-      if (price === undefined || price === caps.closes[code]) marketCaps.set(code, cap);
+      const publishedClose = caps.closes[code];
+      if (price === undefined && publishedClose != null) rows.set(code, publishedClose);
+      if (cap != null && !marketCaps.has(code) && (price === undefined || price === publishedClose)) marketCaps.set(code, cap);
     }
   }
   const indexRows = indexResult.status === "fulfilled"
@@ -105,11 +109,11 @@ async function collectCloses(symbol: MarketLiveSymbol, date: string): Promise<Ma
     : [];
   const close = indexRows.length === 1 ? numberField(indexRows[0].CLSPRC_IDX) : null;
   const officialIndex = close && close > 0 ? close : null;
-  const fetchedAt = officialIndex !== null || rows.size ? new Date().toISOString() : null;
+  const fetchedAt = officialIndex !== null || officialStockCount ? new Date().toISOString() : null;
   const published = officialIndex === null ? await publishedIndexClose(symbol, date) : null;
   return {
     stocks: rows, marketCaps, index: officialIndex ?? published?.value ?? null,
-    fetchedAt: latestDataTime([fetchedAt, published?.fetchedAt]),
+    fetchedAt: latestDataTime([fetchedAt, published?.fetchedAt, rows.size > officialStockCount ? caps?.fetchedAt : null]),
   };
 }
 
@@ -254,9 +258,27 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
     if (isClosed && price != null) points.push({ time: closedStamp, value: price });
     return { symbol, price, asOf, changePct, turnover: isClosed ? null : live.turnover, breadth: isClosed ? null : live.breadth, points };
   });
+  let regularCloses: Awaited<ReturnType<typeof loadMarketLiveRegularCloses>> | undefined;
+  if (state === "closed" && standardClose && baselineDate) {
+    const missing = members.filter(({ code }) => !confirmedClosePrices.has(code) && !closingByCode.has(code)).map(({ code }) => code);
+    const baselineWindow = krxCloseTime(baselineDate) === "15:30" ? marketLiveTradingWindow(baselineDate) : null;
+    const baselineMissing = baselineWindow ? members.filter(({ code }) => !closeByCode.has(code)).map(({ code }) => code) : [];
+    const [currentDay, priorDay] = await Promise.all([
+      missing.length ? loadMarketLiveRegularCloses({ date, openAt, closeAt }, missing) : undefined,
+      baselineWindow && baselineMissing.length ? loadMarketLiveRegularCloses({ date: baselineDate, ...baselineWindow }, baselineMissing) : undefined,
+    ]);
+    regularCloses = currentDay;
+    for (const code of baselineMissing) {
+      const quote = priorDay?.get(code);
+      if (quote) closeByCode.set(code, quote.price);
+    }
+  }
+  const regularCloseUpdates: string[] = [];
   const quotes = state === "closed" ? members.flatMap(member => {
     const closing = closingByCode.get(member.code);
-    const price = confirmedClosePrices.get(member.code) ?? closing?.price;
+    const fallback = regularCloses?.get(member.code);
+    const price = confirmedClosePrices.get(member.code) ?? closing?.price ?? fallback?.price;
+    if (!confirmedClosePrices.has(member.code) && !closing && fallback) regularCloseUpdates.push(fallback.fetchedAt);
     return price == null ? [] : [{ code: member.code, price, turnover: closing?.price === price ? closing.turnover : null, asOf: closedStamp }];
   }) : liveStocks.quotes;
   const now = Date.now();
@@ -271,11 +293,12 @@ async function collectBoard(session: Session): Promise<MarketLiveBoardData> {
       : "검증된 KRX 정규장 종가를 확인할 수 없습니다.");
   }
   if (state === "open" && indexes.some(index => index.asOf && now - Date.parse(index.asOf) > MARKET_LIVE_STALE_MS)) warnings.push("일부 지수 시세 수신이 90초 이상 지연됐습니다.");
-  if (members.length && !summary.breadth.compared && (state !== "closed" || standardClose)) warnings.push(state === "closed" ? "종목의 KRX 정규장 종가 반영 대기 중입니다." : "최근 체결가와 직전 KRX 종가를 함께 확인한 종목이 없습니다.");
+  if (state === "closed" && standardClose && summary.breadth.compared < members.length) warnings.push(`KRX 정규장 종가 비교 가능 ${summary.breadth.compared}/${members.length}종목`);
+  if (state !== "closed" && members.length && !summary.breadth.compared) warnings.push("최근 체결가와 직전 KRX 종가를 함께 확인한 종목이 없습니다.");
   if (!baselineDate) warnings.push("비교에 필요한 직전 거래일 KRX 정규장 종가를 확인할 수 없습니다.");
   const collectedAt = new Date(now).toISOString();
   const updatedAt = state === "closed"
-    ? latestDataTime([...final.map(result => result.fetchedAt), ...publishedCloseUpdates, closingSnapshot?.collectedAt])
+    ? latestDataTime([...final.map(result => result.fetchedAt), ...publishedCloseUpdates, ...regularCloseUpdates, closingSnapshot?.collectedAt])
     : collectedAt;
   return { ...frame, collectedAt, updatedAt, indexes, ...summary, closingSnapshot, warnings };
 }

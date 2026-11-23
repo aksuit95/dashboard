@@ -121,6 +121,7 @@ export type MarketLiveArchiveResponse = {
   day: Omit<MarketLiveArchiveDay, "frames"> & {
     frames: Omit<MarketLiveArchiveFrame, "stocks">[];
     stockTape?: ReplayStockTape;
+    sectorCapitalization?: { asOf: string; totals: Record<string, number> };
   } | null;
 };
 

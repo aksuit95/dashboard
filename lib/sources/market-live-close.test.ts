@@ -8,6 +8,8 @@ const sources = vi.hoisted(() => ({
   fetchStocks: vi.fn(),
   readPublication: vi.fn(),
   readCaps: vi.fn(),
+  requestKrx: vi.fn(),
+  fetchRegularCloses: vi.fn(),
 }));
 
 vi.mock("./naver-market-live", () => ({
@@ -21,12 +23,8 @@ vi.mock("./minervini", () => ({
     ? ["005930", "000660", "035420", "035720"].map(code => ({ code, name: code })) : [],
 }));
 vi.mock("@/lib/valuation/market-caps", () => ({ readMarketCaps: sources.readCaps }));
-vi.mock("./krx-openapi", () => ({
-  requestKrxOpenApi: async (service: string) => service === "sto/stk_bydd_trd"
-    ? ["005930", "000660", "035420", "035720"].map(code => ({
-      BAS_DD: "20261120", ISU_CD: code, MKT_NM: "KOSPI", TDD_CLSPRC: "110",
-    })) : [],
-}));
+vi.mock("./krx-openapi", () => ({ requestKrxOpenApi: sources.requestKrx }));
+vi.mock("./market-live-regular-closes", () => ({ loadMarketLiveRegularCloses: sources.fetchRegularCloses }));
 
 beforeEach(() => {
   vi.resetModules();
@@ -34,6 +32,9 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.stubEnv("VERCEL", "1");
   const codes = ["005930", "000660", "035420", "035720"];
+  sources.requestKrx.mockImplementation(async (service: string, day: string) => service === "sto/stk_bydd_trd" && day === "20261120"
+    ? codes.map(code => ({ BAS_DD: day, ISU_CD: code, MKT_NM: "KOSPI", TDD_CLSPRC: "110" })) : []);
+  sources.fetchRegularCloses.mockResolvedValue(new Map());
   sources.readCaps.mockResolvedValue({
     asOf: baselineDate,
     closes: Object.fromEntries(codes.map(code => [code, 100])),
@@ -91,5 +92,25 @@ describe("regular-session closing stock strength", () => {
     expect(result.buyStrengthLeaders).toEqual([]);
     expect(result.leaders).toHaveLength(4);
     expect(sources.fetchStocks).not.toHaveBeenCalled();
+  });
+
+  it("uses verified regular closes for breadth while keeping turnover limited to the archived capture", async () => {
+    vi.setSystemTime(new Date(`${date}T19:00:00+09:00`));
+    sources.requestKrx.mockResolvedValue([]);
+    sources.readPublication.mockReturnValue({ closingSnapshot: {
+      date, baselineDate, basis: "KRX_REGULAR_CLOSE", collectedAt: `${date}T15:31:00+09:00`,
+      stocks: [{ code: "005930", price: 110, turnover: 9_000, baselineClose: 100, marketCap: 100_000 }],
+    } });
+    sources.fetchRegularCloses.mockResolvedValue(new Map([
+      ["000660", { price: 90, fetchedAt: `${date}T18:50:00+09:00` }],
+      ["035420", { price: 100, fetchedAt: `${date}T18:50:00+09:00` }],
+    ]));
+    const { loadMarketLiveBoard } = await import("./market-live");
+    const result = await loadMarketLiveBoard();
+    expect(result.breadth).toEqual({ up: 1, flat: 1, down: 1, compared: 3, total: 4 });
+    expect(result.rotationStocks.every(stock => stock.asOf === new Date(closeStamp).toISOString())).toBe(true);
+    expect(result.buyStrengthLeaders?.map(stock => stock.code)).toEqual(["005930"]);
+    expect(result.warnings).toContain("KRX 정규장 종가 비교 가능 3/4종목");
+    expect(sources.fetchRegularCloses).toHaveBeenCalledWith(expect.objectContaining({ date }), ["000660", "035420", "035720"]);
   });
 });

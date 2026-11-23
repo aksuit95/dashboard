@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { MarketLiveSectorStocks } from "@/components/MarketLiveSectorStocks";
 import { formatSigned } from "@/lib/format";
 import {
-  buildMarketLiveHeatmap, marketLiveIntervalStocks, type MarketLiveHeatmapDay, type MarketLiveHeatmapInterval,
+  buildMarketLiveHeatmap, marketLiveHeatmapIntervalMinutes, marketLiveIntervalStocks, type MarketLiveHeatmapDay, type MarketLiveHeatmapInterval,
 } from "@/lib/market/market-live-heatmap";
 
 const clock = new Intl.DateTimeFormat("en-GB", {
@@ -13,6 +13,11 @@ const clock = new Intl.DateTimeFormat("en-GB", {
 const number = (value: number, unit: string) => formatSigned(Math.abs(value) < 0.005 ? 0 : value) + unit;
 const tone = (value: number) => value >= 0.005 ? "text-rose-200" : value <= -0.005 ? "text-sky-200" : "text-zinc-300";
 const intervalLabel = (interval: MarketLiveHeatmapInterval) => clock.format(interval.start) + "–" + clock.format(interval.end);
+const comparisonLabel = (interval: MarketLiveHeatmapInterval) => clock.format(interval.comparedFrom) + "–" + clock.format(interval.comparedThrough);
+const usesFallback = (interval: MarketLiveHeatmapInterval) => interval.start !== interval.comparedFrom || interval.end !== interval.comparedThrough;
+const markedInterval = (interval: MarketLiveHeatmapInterval) => usesFallback(interval) || interval.end < interval.scheduledEnd;
+const intervalDescription = (interval: MarketLiveHeatmapInterval) => usesFallback(interval)
+  ? `${intervalLabel(interval)} · 실제 비교 ${comparisonLabel(interval)}` : intervalLabel(interval);
 
 function cellColor(value: number | null) {
   if (value == null || Math.abs(value) < 0.005) return undefined;
@@ -34,15 +39,16 @@ export function MarketLiveRotationHeatmap({ day }: { day: MarketLiveHeatmapDay }
         <div>
           <h3 className="text-sm font-semibold">장중 순환매 히트맵</h3>
           <p className="mt-1 text-xs leading-5 text-zinc-400">
-            섹터 수익률 − 비교 가능 종목의 동일가중 평균(%p) · 칸을 누르면 해당 10분 구간의 순위와 종목을 볼 수 있습니다.
+            섹터 수익률 − 비교 가능 종목의 동일가중 평균(%p) · 칸을 누르면 해당 {marketLiveHeatmapIntervalMinutes}분 구간의 순위와 종목을 볼 수 있습니다.
           </p>
         </div>
         {heatmap && (
-          <p className="text-xs tabular-nums text-zinc-400">
-            {day.date} · {heatmap.through === heatmap.closeAt
+          <div className="text-xs tabular-nums text-zinc-400">
+            <p>{day.date} · {heatmap.through === heatmap.closeAt
               ? "KRX 정규장 종가 " + clock.format(heatmap.closeAt)
-              : "KRX 기록 " + clock.format(heatmap.through) + "까지"} KST
-          </p>
+              : "KRX 기록 " + clock.format(heatmap.through) + "까지"} KST</p>
+            {day.sectorCapitalization && <p className="mt-1">시가총액순 · {day.sectorCapitalization.asOf} KRX 15:30 KST</p>}
+          </div>
         )}
       </div>
       {heatmap?.intervals.length ? (
@@ -51,17 +57,17 @@ export function MarketLiveRotationHeatmap({ day }: { day: MarketLiveHeatmapDay }
             <span className="text-rose-200">시장보다 강함</span>
             <span className="text-sky-200">시장보다 약함</span>
             <span>— 표본 부족</span>
-            {heatmap.intervals.at(-1)?.end !== heatmap.intervals.at(-1)?.scheduledEnd && <span>* 기록 시각까지 비교</span>}
+            {heatmap.intervals.some(markedInterval) && <span>* 구간 내 실제 기록 시각으로 비교</span>}
           </div>
           <div className="max-h-80 overflow-auto rounded-lg border border-white/10">
-            <table aria-label="10분 구간별 섹터 시장 대비 수익률" className="w-max min-w-full border-separate border-spacing-0 text-xs tabular-nums">
+            <table aria-label={`${marketLiveHeatmapIntervalMinutes}분 구간별 섹터 시장 대비 수익률`} className="w-max min-w-full border-separate border-spacing-0 text-xs tabular-nums">
               <thead className="sticky top-0 z-20 bg-[#1b212b] text-zinc-300">
                 <tr>
                   <th scope="col" className="sticky left-0 z-10 border-b border-white/10 bg-[#1b212b] px-3 py-2 text-left font-medium">섹터</th>
                   {heatmap.intervals.map(column => (
                     <th key={column.start} scope="col" className="min-w-13 whitespace-nowrap border-b border-white/10 px-1 py-2 text-center font-medium"
-                      aria-label={intervalLabel(column)} title={intervalLabel(column)}>
-                      {clock.format(column.start)}{column.end < column.scheduledEnd ? "*" : ""}
+                      aria-label={intervalDescription(column)} title={intervalDescription(column)}>
+                      {clock.format(column.start)}{markedInterval(column) ? "*" : ""}
                     </th>
                   ))}
                 </tr>
@@ -73,7 +79,7 @@ export function MarketLiveRotationHeatmap({ day }: { day: MarketLiveHeatmapDay }
                     {heatmap.intervals.map(column => {
                       const value = column.sectors.get(name)?.relativePp ?? null;
                       const selected = interval?.start === column.start && sector === name;
-                      const label = name + " " + intervalLabel(column) + " 시장 대비 " + (value == null ? "표본 부족" : number(value, "%p"));
+                      const label = name + " " + intervalDescription(column) + " 시장 대비 " + (value == null ? "표본 부족" : number(value, "%p"));
                       return (
                         <td key={column.start} className="p-px">
                           <button type="button" aria-pressed={selected} aria-label={label} aria-controls={selected ? "market-live-interval-detail" : undefined}
@@ -116,6 +122,7 @@ function IntervalDetail({ interval, sector, stocks, onSector }: {
     <section id="market-live-interval-detail" aria-labelledby="market-live-interval-title" className="mt-3 rounded-lg border border-white/10 bg-black/10 p-3">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h4 id="market-live-interval-title" className="text-xs font-semibold tabular-nums">{intervalLabel(interval)} KST 구간 섹터 순위</h4>
+        {usesFallback(interval) && <p className="text-xs text-zinc-400">실제 비교 {comparisonLabel(interval)} KST</p>}
         {interval.marketPct != null && <p className="text-xs tabular-nums text-zinc-400">시장 평균 {number(interval.marketPct, "%")}</p>}
       </div>
       <div className="mt-2 grid items-start gap-3 xl:grid-cols-2">

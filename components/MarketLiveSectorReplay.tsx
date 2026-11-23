@@ -12,6 +12,7 @@ import {
   type MarketLiveArchiveResponse, type MarketLiveHourlyLeader, type MarketLiveSectorResponse,
 } from "@/lib/market/market-live-archive";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
+import { marketLiveRotationWindows } from "@/lib/market/market-live";
 
 type ArchiveDay = NonNullable<MarketLiveArchiveResponse["day"]>;
 type Frame = ArchiveDay["frames"][number];
@@ -77,7 +78,7 @@ function useArchive(date: string | null, refresh: number, live: boolean, closed 
       reload.current = () => undefined;
     };
   }, [date, refresh]);
-  const waitingForClose = closed && !archive?.radar?.closeAt;
+  const waitingForClose = closed && (!archive?.radar?.closeAt || marketLiveRotationWindows.some(minutes => !archive?.radar?.windows[minutes]));
   useEffect(() => {
     if (date === null) return;
     const loadVisible = () => reload.current();

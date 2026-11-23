@@ -110,10 +110,15 @@ export function naverStockPreviousKrxClose(chart: Record<string, unknown>, basel
   return atClose !== null && atClose === positive(chart.lastClosePrice) ? atClose : null;
 }
 
-async function stockBatch(codes: string[], session: Session, fetcher: typeof fetch): Promise<StockQuote[]> {
+export async function fetchNaverKrxStockBatch(codes: string[], fetcher: typeof fetch = fetch) {
   const body = record(await readJson(`${NAVER_MARKET_API}/integration/price?domesticKrxCodes=${codes.join(",")}`, fetcher));
   const krx = record(body.domesticKrx);
   if (!Object.keys(krx).length) throw new Error("네이버 KRX 장중 종목 응답 없음");
+  return krx;
+}
+
+async function stockBatch(codes: string[], session: Session, fetcher: typeof fetch): Promise<StockQuote[]> {
+  const krx = await fetchNaverKrxStockBatch(codes, fetcher);
   const quotes: StockQuote[] = [];
   for (const code of codes) {
     const row = record(krx[code]);

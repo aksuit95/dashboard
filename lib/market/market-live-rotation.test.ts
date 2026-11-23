@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { MarketLiveRotationStock } from "./market-live";
-import type { MarketLiveArchiveFrame } from "./market-live-archive";
-import { compareMarketLiveRotation, marketLiveRotationBounds } from "./market-live-rotation";
+import { packMarketLiveReplayStocks, type MarketLiveArchiveFrame } from "./market-live-archive";
+import { calculateMarketLiveCloseRadar, compareMarketLiveRotation, marketLiveRotationBounds } from "./market-live-rotation";
 import { resolveMarketLiveSession } from "./market-live-session";
 
 const day = "2026-11-18";
@@ -44,6 +44,25 @@ describe("KRX 장중 섹터 순환매", () => {
     expect(compareMarketLiveRotation(prior(from), next, minutes)?.minutes).toBe(minutes);
     expect(compareMarketLiveRotation(prior(through + 1), next, minutes)).toBeNull();
     expect(compareMarketLiveRotation(prior(from - 1), next, minutes)).toBeNull();
+  });
+
+  it("게시본의 개별 종목 기록을 15:30 종가와 비교하고 표본이 부족한 동시호가 경계를 건너뛴다", () => {
+    const times = ["14:29:08", "14:59:08", "15:19:08", "15:20:00"].map(clock => `${day}T${clock}+09:00`);
+    const records = times.map((time, index) => frame(time, index === 3 ? [stock("000001", 97, time)] :
+      [stock("000001", 90 + index, time), stock("000002", 100, time)]));
+    const closeAt = `${day}T15:30:00+09:00`;
+    const closing = { ...frame(`${day}T16:20:00+09:00`, [stock("000001", 105, closeAt), stock("000002", 110, closeAt)]), minuteAt: closeAt };
+    const archive = {
+      date: day, baselineDate: "2026-11-17",
+      frames: records.map(({ stocks: _stocks, ...saved }) => saved),
+      stockTape: packMarketLiveReplayStocks(Date.parse(`${day}T09:00:00+09:00`), records, new Map()),
+    };
+    const radar = calculateMarketLiveCloseRadar(archive, closing);
+    expect(radar).toMatchObject({ live: false, closeAt, windows: {
+      10: { from: times[2], to: closeAt, rows: [{ compared: 2, up: 2 }] },
+      30: { from: times[1], to: closeAt },
+      60: { from: times[0], to: closeAt },
+    } });
   });
 });
 

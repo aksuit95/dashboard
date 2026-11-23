@@ -3,6 +3,7 @@ import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import { loadMarketLiveBoard } from "@/lib/sources/market-live";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const noStore = { "Cache-Control": "no-store" };
 

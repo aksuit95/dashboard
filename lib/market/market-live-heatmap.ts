@@ -1,3 +1,4 @@
+import { sectorNames } from "@/config/sectors";
 import { marketLiveFrameTime, type MarketLiveArchiveResponse } from "./market-live-archive";
 import type { MarketLiveSectorStock } from "./market-live";
 import { marketLiveTradingWindow } from "./market-live-session";
@@ -16,12 +17,17 @@ export type MarketLiveHeatmapInterval = {
   start: number;
   end: number;
   scheduledEnd: number;
+  comparedFrom: number;
+  comparedThrough: number;
   marketPct: number | null;
   sectors: ReadonlyMap<string, SectorMove>;
 };
 
 const minute = 60_000;
-const intervalLength = 10 * minute;
+export const marketLiveHeatmapIntervalMinutes = 30;
+const intervalLength = marketLiveHeatmapIntervalMinutes * minute;
+const maxBoundaryShiftMinutes = 3;
+const sectorOrder = new Map<string, number>(sectorNames.map((name, index) => [name, index]));
 
 function priceAt(row: StockTape["stocks"][number], slot: number) {
   const price = row.prices[slot];
@@ -34,14 +40,30 @@ function compareStock(row: StockTape["stocks"][number], first: number, last: num
   return { price, changePct: opening != null && price != null ? (price - opening) / opening * 100 : null };
 }
 
+function comparisonSlots(stocks: StockTape["stocks"], first: number, last: number, minimum: number) {
+  // Keep all returns on the same pair of minutes and minimize the total shortening.
+  for (let skipped = 0; skipped <= maxBoundaryShiftMinutes && skipped < last - first; skipped++) {
+    for (let skipFirst = 0; skipFirst <= skipped; skipFirst++) {
+      const from = first + skipFirst;
+      const through = last - (skipped - skipFirst);
+      let matched = 0;
+      for (const row of stocks) {
+        if (priceAt(row, from) !== null && priceAt(row, through) !== null && ++matched >= minimum) return { from, through };
+      }
+    }
+  }
+  return { from: first, through: last };
+}
+
 function compareInterval(tape: StockTape, totals: ReadonlyMap<string, number>, start: number, end: number, scheduledEnd: number): MarketLiveHeatmapInterval {
-  const first = (start - tape.openAt) / minute;
-  const last = (end - tape.openAt) / minute;
+  const marketTotal = [...totals.values()].reduce((sum, count) => sum + count, 0);
+  const minimum = Math.max(2, Math.ceil(marketTotal / 2));
+  const { from, through } = comparisonSlots(tape.stocks, (start - tape.openAt) / minute, (end - tape.openAt) / minute, minimum);
   const groups = new Map<string, { compared: number; up: number; sum: number }>();
   let marketSum = 0;
   let marketCompared = 0;
   for (const stock of tape.stocks) {
-    const { changePct } = compareStock(stock, first, last);
+    const { changePct } = compareStock(stock, from, through);
     if (changePct === null) continue;
     const group = groups.get(stock.sector) ?? { compared: 0, up: 0, sum: 0 };
     group.compared++;
@@ -51,8 +73,7 @@ function compareInterval(tape: StockTape, totals: ReadonlyMap<string, number>, s
     marketSum += changePct;
     marketCompared++;
   }
-  const marketTotal = [...totals.values()].reduce((sum, count) => sum + count, 0);
-  const marketPct = marketCompared >= Math.max(2, Math.ceil(marketTotal / 2)) ? marketSum / marketCompared : null;
+  const marketPct = marketCompared >= minimum ? marketSum / marketCompared : null;
   const sectors = new Map<string, SectorMove>();
   for (const [name, total] of totals) {
     const { compared, up, sum } = groups.get(name) ?? { compared: 0, up: 0, sum: 0 };
@@ -60,7 +81,7 @@ function compareInterval(tape: StockTape, totals: ReadonlyMap<string, number>, s
     const relativePp = changePct != null && marketPct != null ? changePct - marketPct : null;
     sectors.set(name, { name, total, compared, up, changePct, relativePp });
   }
-  return { start, end, scheduledEnd, marketPct, sectors };
+  return { start, end, scheduledEnd, comparedFrom: tape.openAt + from * minute, comparedThrough: tape.openAt + through * minute, marketPct, sectors };
 }
 
 export function buildMarketLiveHeatmap(day: MarketLiveHeatmapDay) {
@@ -85,13 +106,16 @@ export function buildMarketLiveHeatmap(day: MarketLiveHeatmapDay) {
     const scheduledEnd = Math.min(start + intervalLength, closeAt);
     intervals.push(compareInterval(tape, totals, start, Math.min(scheduledEnd, through), scheduledEnd));
   }
-  const names = [...totals.keys()].sort((a, b) => a.localeCompare(b, "ko"));
+  const caps = day.sectorCapitalization?.asOf === day.baselineDate ? day.sectorCapitalization.totals : undefined;
+  const names = [...totals.keys()].sort((a, b) =>
+    (caps?.[b] ?? 0) - (caps?.[a] ?? 0) ||
+    (sectorOrder.get(a) ?? sectorNames.length) - (sectorOrder.get(b) ?? sectorNames.length) || a.localeCompare(b, "ko"));
   return { intervals, names, through, closeAt };
 }
 
 export function marketLiveIntervalStocks(tape: StockTape, interval: MarketLiveHeatmapInterval, sector: string): MarketLiveSectorStock[] {
-  const first = (interval.start - tape.openAt) / minute;
-  const last = (interval.end - tape.openAt) / minute;
+  const first = (interval.comparedFrom - tape.openAt) / minute;
+  const last = (interval.comparedThrough - tape.openAt) / minute;
   return tape.stocks.filter(row => row.sector === sector).map(row => ({
     code: row.code, name: row.name ?? row.code, market: row.market,
     ...compareStock(row, first, last), asOf: null,

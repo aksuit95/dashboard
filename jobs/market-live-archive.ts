@@ -4,10 +4,11 @@ import { recordMarketLiveArchive } from "@/lib/sources/market-live-archive";
 import { exportMarketLivePublication } from "@/lib/sources/market-live-publication";
 import { loadMarketLiveBoard, marketLiveTradingWindow } from "@/lib/sources/market-live";
 import { readMarketLiveClose, saveMarketLiveClose, withinClosingCapture } from "@/lib/sources/market-live-close";
-import type { MarketLiveClosingSnapshot } from "@/lib/market/market-live";
+import { MARKET_LIVE_POLL_MS, type MarketLiveClosingSnapshot } from "@/lib/market/market-live";
 
 const minute = 60_000;
 const captureOffset = 8_000;
+const nextCapture = (time: number) => (Math.floor((time - captureOffset) / minute) + 1) * minute + captureOffset;
 
 async function captureClose(date: string, closeAt: number) {
   if (readMarketLiveClose(date)) return;
@@ -53,22 +54,35 @@ async function main() {
   let lastReport = 0;
   while (Date.now() < window.closeAt) {
     const now = Date.now();
+    const minuteStart = Math.floor(now / minute) * minute;
+    const minuteEnd = Math.min(minuteStart + minute, window.closeAt);
     let error: string | null = null;
-    try {
-      const result = await recordMarketLiveArchive({ now });
-      if (result.status === "missing") error = result.reason;
-      if (result.status === "recorded" && (now - lastReport >= 15 * minute || lastError != null)) {
-        console.log(`${result.collectedAt} 섹터 기록 저장 · ${result.date} KRX · ${result.stocks}종목`);
-        lastReport = now;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt && Date.now() >= minuteEnd) break;
+      try {
+        const result = await recordMarketLiveArchive({ now: Date.now() });
+        if (result.status === "skipped") break;
+        error = result.status === "missing" ? result.reason : null;
+        if (result.status === "recorded" && (now - lastReport >= 15 * minute || lastError != null || attempt > 0)) {
+          console.log(`${result.collectedAt} 섹터 기록 저장 · ${result.date} KRX · ${result.stocks}종목`);
+          lastReport = now;
+        }
+      } catch (failure) {
+        error = failure instanceof Error ? failure.message : "섹터 기록 수집 실패";
       }
-    } catch (failure) {
-      error = failure instanceof Error ? failure.message : "섹터 기록 수집 실패";
+      if (!error || attempt || Date.now() + MARKET_LIVE_POLL_MS >= minuteEnd) break;
+      await sleep(MARKET_LIVE_POLL_MS);
     }
-    if (error && error !== lastError) console.error(`${new Date().toISOString()} ${error}`);
+    if (error) console.error(`${new Date(minuteStart).toISOString()} KRX 분봉 수집 실패 · ${error}`);
     lastError = error;
 
     const after = Date.now();
-    const next = (Math.floor((after - captureOffset) / minute) + 1) * minute + captureOffset;
+    const next = nextCapture(after);
+    const firstSkipped = nextCapture(now);
+    if (firstSkipped < Math.min(next, window.closeAt)) {
+      const skipped = Math.ceil((Math.min(next, window.closeAt) - firstSkipped) / minute);
+      console.error(`${new Date(firstSkipped - captureOffset).toISOString()} KRX 분봉 수집 일정 지연 · ${skipped}분`);
+    }
     if (next >= window.closeAt) break;
     await sleep(next - after);
   }

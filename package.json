@@ -20,6 +20,7 @@
     "job:daily": "tsx jobs/daily.ts",
     "proxy-close:export": "tsx jobs/proxy-close-export.ts",
     "minervini:export": "tsx jobs/minervini-export.ts",
+    "stock-radar:export": "tsx jobs/stock-radar-export.ts",
     "job:minervini": "tsx jobs/minervini.ts",
     "job:sectors": "tsx jobs/sectors.ts",
     "sectors:export": "tsx jobs/sector-publish-export.ts",

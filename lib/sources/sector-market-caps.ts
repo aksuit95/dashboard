@@ -1,9 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { krxCloseTime } from "@/config/market-calendar";
+import type { MarketLiveArchiveResponse } from "@/lib/market/market-live-archive";
 import { krxClient } from "@/lib/sources/krx-client";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
 import { atomicJson } from "@/lib/financials/source";
+import { readMarketCaps } from "@/lib/valuation/market-caps";
 
 type CapRow = { close: number; cap: number };
 type Publication = { version: 2; exchange: "KRX"; priceBasis: "KRX_REGULAR_CLOSE"; priceTime: SectorCapPriceTime; priceTimeByDate?: Record<string, SectorCapPriceTime>; fetchedAt: string; dates: Record<string, Record<string, CapRow>> };
@@ -38,6 +40,40 @@ export async function readSectorCaps(): Promise<Publication | null> {
 }
 export function matchingCaps(rows: { code: string; price: number | null }[], caps: Record<string, CapRow> | undefined): Record<string, number> {
   return Object.fromEntries(rows.flatMap(row => { const item = caps?.[row.code]; return item && Number.isSafeInteger(item.cap) && item.cap > 0 && item.close === row.price ? [[row.code, item.cap]] : []; }));
+}
+
+export async function readHeatmapSectorCapitalization(day: NonNullable<MarketLiveArchiveResponse["day"]>) {
+  const asOf = day.baselineDate;
+  if (!day.stockTape?.stocks.length || asOf >= day.date || closeTimeFor(asOf) !== "15:30 KST") return undefined;
+
+  const members = [...new Map(day.stockTape.stocks.map(stock => [stock.code, stock])).values()];
+  const publication = await readSectorCaps().catch(() => null);
+  const byCode = matchingCaps(members.map(({ code, close }) => ({ code, price: close })), publication?.dates[asOf]);
+  if (Object.keys(byCode).length < members.length) {
+    const fallback = await readMarketCaps().catch(() => null);
+    if (fallback?.asOf === asOf && fallback.priceTime === "15:30 KST") {
+      for (const { code, close, market } of members) {
+        const cap = fallback.values[code];
+        if (!Object.hasOwn(byCode, code) && fallback.securities?.[code]?.market === market && fallback.closes[code] === close && cap != null) byCode[code] = cap;
+      }
+    }
+  }
+
+  const expected = new Map<string, number>();
+  for (const { sectors } of day.frames) for (const { name, total } of sectors) {
+    expected.set(name, Math.max(total, expected.get(name) ?? 0));
+  }
+  const groups = new Map<string, { total: number; verified: number; cap: number }>();
+  for (const { code, sector } of members) {
+    const group = groups.get(sector) ?? { total: 0, verified: 0, cap: 0 };
+    const cap = byCode[code];
+    group.total++;
+    if (cap != null) { group.cap += cap; group.verified++; }
+    groups.set(sector, group);
+  }
+  const totals = Object.fromEntries([...groups].flatMap(([sector, { total, verified, cap }]) =>
+    verified === total && total >= (expected.get(sector) ?? 0) && Number.isSafeInteger(cap) && cap > 0 ? [[sector, cap]] : []));
+  return Object.keys(totals).length ? { asOf, totals } : undefined;
 }
 export async function collectSectorCaps() {
   const sectors = await readSectorPublication();
