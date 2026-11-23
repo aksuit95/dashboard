@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-23T11:28:04.639Z",
+      "updatedAt": "2026-11-23T19:01:52.521Z",
       "error": null,
       "events": [
         {
@@ -69,6 +69,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "54.6",
+          "actual": "54.5",
           "previous": "54.9"
         },
         {
@@ -83,6 +84,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "55.8",
+          "actual": "54.7",
           "previous": "56.1"
         },
         {
@@ -615,12 +617,48 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false
+        },
+        {
+          "id": "smt-usd-core-pce-mom.20261218T1330",
+          "date": "2026-12-23",
+          "time": "22:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "Core Personal Consumption Expenditure - Price Index  MoM",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-core-pce-yoy.20261218T1330",
+          "date": "2026-12-23",
+          "time": "22:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "Core Personal Consumption Expenditure - Price Index  YoY",
+          "detail": "대상 기간 2026-11",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
+        },
+        {
+          "id": "smt-usd-gdp-annualized.20261223T1330",
+          "date": "2026-12-23",
+          "time": "22:30",
+          "country": "US",
+          "category": "매크로",
+          "title": "Gross Domestic Product Annualized",
+          "detail": "대상 기간 2026-07",
+          "source": "https://showmytrades.com/tools/economic-calendar",
+          "sourceName": "ShowMyTrades",
+          "tentative": false
         }
       ],
-      "generatedAt": "2026-11-23T11:25:41Z"
+      "generatedAt": "2026-11-23T19:00:59Z"
     },
     "ism": {
-      "updatedAt": "2026-11-23T11:28:04.639Z",
+      "updatedAt": "2026-11-23T19:01:52.521Z",
       "error": null,
       "events": [
         {
@@ -650,11 +688,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-23T11:25:41Z"
+      "generatedAt": "2026-11-23T19:00:59Z"
     },
     "dart": {
       "updatedAt": "2026-11-23T07:10:08.961Z",
-      "error": null,
+      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
       "capAsOf": "2026-11-23",
       "companies": [
         {
