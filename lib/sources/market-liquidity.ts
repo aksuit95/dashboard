@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { latestDataTime } from "@/lib/format";
 import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
 import type { IndexMarket } from "@/lib/market/market-liquidity";
 import { collectMarketFunds, collectMarginLoans, collectFundBalance, collectFundFlows, dateBefore } from "./market-liquidity-kofia";
@@ -87,12 +88,19 @@ export async function loadLiquidityDerivatives(now: Date) {
     const foreign = selectPublishedSeries(saved?.foreign, through);
     const vkospi = selectPublishedSeries(saved?.volatility, through);
     const dates = new Set(totals.value?.slice(-10).map(point => point.date));
-    const ratio = (selectPublishedSeries(saved?.putCall, through).value ?? []).filter(point => dates.has(point.date));
-    return { totals, foreign, vkospi, ratio, ratioMissing: dates.size - ratio.length, through };
+    const putCallSeries = selectPublishedSeries(saved?.putCall, through);
+    const ratio = (putCallSeries.value ?? []).filter(point => dates.has(point.date));
+    const ratioCollectedAt = ratio.length ? putCallSeries.collectedAt : null;
+    return { totals, foreign, vkospi, ratio, ratioMissing: dates.size - ratio.length, ratioCollectedAt, through };
   }
   const [totals, foreign, vkospi] = await Promise.all([
     available(derivativeTotals(from, through)), available(foreignFutures(from, through)), available(volatility(dateBefore(through, 400), through)),
   ]);
-  const { ratio, ratioMissing } = await collectPutCallSeries(totals.value ?? [], async day => (await putCall(day.date, String(day.optionVolume))).value);
-  return { totals, foreign, vkospi, ratio, ratioMissing, through };
+  const ratioTimestamps: string[] = [];
+  const { ratio, ratioMissing } = await collectPutCallSeries(totals.value ?? [], async day => {
+    const { value, collectedAt } = await putCall(day.date, String(day.optionVolume));
+    if (value) ratioTimestamps.push(collectedAt);
+    return value;
+  });
+  return { totals, foreign, vkospi, ratio, ratioMissing, ratioCollectedAt: latestDataTime(ratioTimestamps), through };
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { PageHeader } from "@/components/PageHeader";
 import { IndexTurnoverChart, LiquidityChart, type LiquiditySeries } from "@/components/MarketLiquidityCharts";
 import { changeOver, creditToMarketCap, type Point } from "@/lib/market/market-liquidity";
@@ -51,7 +52,7 @@ function Note({ children }: { children: React.ReactNode }) {
 }
 
 function Source({ label, url, timestamps = [] }: { label: string; url: string; timestamps?: (string | null)[] }) {
-  const latest = timestamps.filter((stamp): stamp is string => stamp != null).sort().at(-1);
+  const latest = latestDataTime(timestamps);
   return <p className="mt-4 text-xs text-zinc-400">
     출처 <a className="underline underline-offset-2" href={url} target="_blank" rel="noreferrer">{label}</a>
     {latest ? ` · 최근 수집 ${new Date(latest).toLocaleString("ko-KR", { timeZone: "Asia/Seoul", hour12: false })} KST` : ""}
@@ -61,6 +62,15 @@ function Source({ label, url, timestamps = [] }: { label: string; url: string; t
 function Notices({ errors }: { errors: (string | null)[] }) {
   const messages = [...new Set(errors.filter(Boolean))];
   return messages.length ? <p role="status" className="my-4 text-sm text-amber-300">{messages.join(" · ")}</p> : null;
+}
+
+type DatedSeries = { value: { date: string }[] | null; collectedAt: string | null };
+
+function LiquidityFreshness({ sources, basisDetail }: { sources: DatedSeries[]; basisDetail?: string }) {
+  const available = sources.filter(source => source.value?.length);
+  const basis = latestDataTime(available.map(source => source.value?.at(-1)?.date));
+  return <DataFreshness basis={basis} updatedAt={latestDataTime(available.map(source => source.collectedAt))}
+    basisDetail={basisDetail ?? krxCloseDetail(basis)} updateDetail="표시 지표의 최근 수집 시각" />;
 }
 
 function comparison(indices: Awaited<ReturnType<typeof loadLiquidityIndices>>) {
@@ -85,6 +95,7 @@ async function Liquidity({ now }: { now: Date }) {
     points: creditToMarketCap((loans.value ?? []).map(row => ({ date: row.date, balance: market === "KOSPI" ? row.kospi : row.kosdaq })), indices[market].value ?? []),
   }));
   return <>
+    <LiquidityFreshness sources={[balance, loans]} basisDetail="금융투자협회 증시자금·신용융자 중 최근 기준일" />
     <Note>투자자예탁금은 파생 예수금을 제외합니다. 파생 예수금은 증권회사 집계이며, 실제 반대매매는 전일 미수금에 대한 금투협 공표값입니다.</Note>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <MetricCard item={deposits} changes />
@@ -109,6 +120,7 @@ async function FundFlows({ now }: { now: Date }) {
   const subscriptionsEx = money("subscriptions-ex", "설정 · ETF 제외", excluding.value, row => row.subscriptions, "억원");
   const redemptionsEx = money("redemptions-ex", "환매 · ETF 제외", excluding.value, row => row.redemptions, "억원");
   return <>
+    <LiquidityFreshness sources={[including, excluding, fundPrincipal, fundNav]} basisDetail="금융투자협회 주식형 펀드 중 최근 기준일" />
     <Note>국내 주식형 기준입니다. 순설정액은 결제일 기준 설정액에서 환매액을 뺀 금액입니다. 설정원본·순자산은 운용일 기준이며 ETF를 포함합니다.</Note>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {[net, netEx, setting, nav].map(item => <MetricCard key={item.id} item={item} />)}
@@ -124,6 +136,7 @@ async function Profile({ now }: { now: Date }) {
   const markets = ["KOSPI", "KOSDAQ"] as const;
   const lagging = markets.filter(market => indices[market].value?.at(-1)?.date !== indices.through);
   return <>
+    <LiquidityFreshness sources={markets.map(market => indices[market])} />
     <Note>일봉 종가 기준 추정입니다. 각 KRX 거래일의 시장 거래대금 전액을 그날의 15:30 종가가 속한 지수 구간에 배정합니다. 가로 막대는 구간별 거래대금 비중입니다.</Note>
     {lagging.length ? <Notices errors={[`${indices.through} KRX 15:30 종가 미확인 · ${lagging.map(market => market === "KOSPI" ? "코스피" : "코스닥").join(", ")}`]} /> : null}
     <div className="grid gap-4 xl:grid-cols-2">
@@ -135,12 +148,14 @@ async function Profile({ now }: { now: Date }) {
 }
 
 async function Derivatives({ now }: { now: Date }) {
-  const { totals, foreign, vkospi, ratio, ratioMissing } = await loadLiquidityDerivatives(now);
+  const { totals, foreign, vkospi, ratio, ratioMissing, ratioCollectedAt } = await loadLiquidityDerivatives(now);
   const net = { id: "foreign", name: "코스피200 선물 외국인 순매수", unit: "계약", points: foreign.value ?? [] };
   const oi = series("oi", "코스피200 선물 미결제약정", "계약", totals.value, row => row.openInterest);
   const putCall = { id: "pcr", name: "코스피200 옵션 풋/콜 거래량", unit: "배", points: ratio };
   const volatility = { id: "vkospi", name: "코스피200 변동성지수", unit: "pt", points: vkospi.value ?? [] };
   return <>
+    <LiquidityFreshness sources={[totals, foreign, vkospi, { value: ratio, collectedAt: ratioCollectedAt }]}
+      basisDetail="KRX 주간 파생 지표 중 최근 거래일" />
     <Note>KRX 주간 정규장 기준입니다. 선물은 전 월물 합계, 옵션은 코스피200 월물의 풋 거래량 ÷ 콜 거래량입니다. V-KOSPI 200은 옵션 기반 지수로 정규 기준 시각은 15:45 KST입니다.</Note>
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <MetricCard item={net} />
@@ -150,7 +165,7 @@ async function Derivatives({ now }: { now: Date }) {
     </div>
     <Notices errors={[totals.error, foreign.error, vkospi.error, ratioMissing ? "KRX 원본 거래량을 대조할 수 없는 풋/콜 관측일이 있습니다." : null]} />
     <LiquidityChart series={[net, oi, putCall, volatility]} />
-    <Source label="한국거래소 통계정보 · 파생상품 주요통계 / 투자자별 거래실적 / 파생지수 시세" url={krx} timestamps={[totals.collectedAt, foreign.collectedAt, vkospi.collectedAt]} />
+    <Source label="한국거래소 통계정보 · 파생상품 주요통계 / 투자자별 거래실적 / 파생지수 시세" url={krx} timestamps={[totals.collectedAt, foreign.collectedAt, vkospi.collectedAt, ratioCollectedAt]} />
   </>;
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { IndexBacktestPanel } from "@/components/IndexBacktestPanel";
 import { IndexTechnicalCharts } from "@/components/IndexTechnicalChart";
 import { describeIndexRules, IndexTechnicalSettings } from "@/components/IndexTechnicalSettings";
@@ -179,10 +180,13 @@ export function IndexTechnicalBoard({ indices, asOf, specialSession }: {
   const suggestedIndex = Math.min(completed.length - 2, Math.max(Math.floor(completed.length * 0.7), rules.maPeriods[2] + indexPercentileSampleMin(timeframe, rules.pctlLookback) - 2));
   const bounds = completed.length ? { first: completed[0].date, latest: completed.at(-1)!.date } : null;
   const date = market.daily?.date;
+  const updatedAt = latestDataTime([market.fetchedAt, market.candlesAt]);
   const notice = asOf === null ? "최근 완료된 KRX 거래일을 확인할 수 없습니다." : specialSession ? `${asOf} 특별 운영일의 KRX 15:30 종가는 결측입니다.` :
     date !== asOf ? `${asOf} ${market.name} KRX 15:30 종가가 아직 확인되지 않았습니다.` : null;
 
   return <div className="space-y-4">
+    <DataFreshness basis={date} updatedAt={updatedAt} basisDetail={`${market.name} · ${krxCloseDetail(date)}`}
+      updateDetail="종가·일봉 중 최근 수집 시각" />
     <div role="group" aria-label="분석 지수 선택" className="grid grid-cols-2 gap-3">
       {indices.map(item => {
         const daily = item.daily?.change;
@@ -197,11 +201,10 @@ export function IndexTechnicalBoard({ indices, asOf, specialSession }: {
         </button>;
       })}
     </div>
-    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs text-zinc-400">
-      <span><strong className="font-medium text-zinc-200">{date ?? "기준일 미확인"}</strong> · KRX 정규장 15:30 KST</span>
-      {market.fetchedAt && <span>종가 수집 <time dateTime={market.fetchedAt}>{seoul.format(new Date(market.fetchedAt))} KST</time></span>}
-      {market.candlesAt && <span>일봉 수집 <time dateTime={market.candlesAt}>{seoul.format(new Date(market.candlesAt))} KST</time></span>}
-    </div>
+    {market.fetchedAt && market.candlesAt && market.fetchedAt !== market.candlesAt && <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs text-zinc-400">
+      <span>종가 수집 <time dateTime={market.fetchedAt}>{seoul.format(new Date(market.fetchedAt))} KST</time></span>
+      <span>일봉 수집 <time dateTime={market.candlesAt}>{seoul.format(new Date(market.candlesAt))} KST</time></span>
+    </div>}
     {notice && <p role="status" className="rounded-lg border border-amber-500/25 bg-amber-500/5 px-4 py-3 text-sm text-amber-200">{notice}{date && ` ${date} 기준 저장본을 표시합니다.`}</p>}
     <div className="flex flex-wrap items-center gap-2" role="group" aria-label="봉 주기">
       {indexTimeframes.map(item => <button key={item} type="button" aria-pressed={item === timeframe}
