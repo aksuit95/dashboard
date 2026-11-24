@@ -33,7 +33,7 @@ export function publishIndexBreadth(snapshot: RadarSnapshot) {
 export async function readIndexBreadth(): Promise<IndexBreadthPublication | null> {
   const data = JSON.parse(await readFile(file, "utf8")) as IndexBreadthPublication;
   if (data.version !== 1 || data.exchange !== "KRX" || data.priceBasis !== radarPriceBasis ||
-    (data.source !== "KRX_OPEN_API" && data.source !== "NAVER_KRX_CLOSE") || krxCloseTime(data.asOf) !== "15:30" ||
+    (data.source !== "KRX_OPEN_API" && data.source !== "KRX_WEB_VERIFIED" && data.source !== "NAVER_KRX_CLOSE") || krxCloseTime(data.asOf) !== "15:30" ||
     !Number.isFinite(Date.parse(`${data.asOf}T15:30:00+09:00`)) || !Number.isFinite(Date.parse(data.fetchedAt)) ||
     Date.parse(data.fetchedAt) < Date.parse(`${data.asOf}T15:30:00+09:00`)) return null;
   for (const market of markets) {

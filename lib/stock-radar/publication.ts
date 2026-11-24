@@ -10,7 +10,7 @@ export async function readStockRadar(): Promise<RadarSnapshot | null> {
     const p = JSON.parse(await fs.readFile(stockRadarPath, "utf8")) as RadarSnapshot;
     if ((p?.version !== 1 && p?.version !== 2) || p.exchange !== "KRX" || p.priceBasis !== radarPriceBasis || p.priceTime !== "15:30 KST" ||
         !isoDatePattern.test(p.asOf) || !isoDatePattern.test(p.universeAsOf) ||
-        (p.source === "KRX_OPEN_API" ? p.universeAsOf !== p.asOf : p.source !== "NAVER_KRX_CLOSE" || p.universeAsOf >= p.asOf) ||
+        (p.source === "KRX_OPEN_API" || p.source === "KRX_WEB_VERIFIED" ? p.universeAsOf !== p.asOf : p.source !== "NAVER_KRX_CLOSE" || p.universeAsOf >= p.asOf) ||
         !Number.isFinite(Date.parse(p.fetchedAt)) || Date.parse(p.fetchedAt) < Date.parse(`${p.asOf}T15:30:00+09:00`) ||
         !Array.isArray(p.dates) || p.dates.length !== radarHistoryLength || p.dates.at(-1) !== p.asOf ||
         p.dates.some((date, i) => !isoDatePattern.test(date) || radarCloseTime(date) !== "15:30" || (i > 0 && p.dates[i - 1] >= date)) ||

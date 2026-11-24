@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { atomicJson } from "@/lib/financials/source";
+import { createInvestorKrxWebQuery } from "@/lib/sources/investor-flow-krx-web";
+import { krxClient } from "@/lib/sources/krx-client";
 import { fetchKrxDailyCloses } from "@/lib/sources/krx-daily-prices";
 import { KrxOpenApiNoDataError, requestKrxOpenApi } from "@/lib/sources/krx-openapi";
 import { fetchNaverKrxStockBatch, fetchNaverStockMinuteChart } from "@/lib/sources/naver-market-live";
@@ -113,7 +115,40 @@ async function collectNaverDay(date: string, securities: RadarSecurity[], benchm
   return day;
 }
 
-export async function collectStockRadar(asOf: string, force = false) {
+async function collectWebDay(date: string, benchmarks: Benchmarks) {
+  const query = createInvestorKrxWebQuery(undefined, undefined, { allowInvalidRows: true });
+  const day: KrxRadarDay = { date, source: "KRX_WEB_VERIFIED", priceTime: "15:30", markets: { KOSPI: {}, KOSDAQ: {} } };
+  const trdDd = date.replaceAll("-", "");
+  const results = await Promise.all(radarMarkets.map(async market => {
+    const mktId = market === "KOSPI" ? "STK" : "KSQ";
+    const [daily, listings] = await Promise.all([
+      query("MDCSTAT01501", { trdDd, mktId }),
+      krxClient.query("MDCSTAT01901", { mktId }),
+    ]);
+    const belongs = (value: unknown) => value === market || (market === "KOSDAQ" && value === "KOSDAQ GLOBAL");
+    if (!Array.isArray(listings.OutBlock_1) || !Array.isArray(daily.OutBlock_1)) throw new Error(`${date} ${market} KRX 웹 통계 누락`);
+    const records = daily.OutBlock_1.map(row => {
+      if (!belongs(row.MKT_NM)) throw new Error(`${date} ${market} KRX 웹 일별시세 시장 불일치`);
+      return { ...row, ISU_CD: row.ISU_SRT_CD, BAS_DD: trdDd, MKT_NM: market };
+    });
+    day.markets[market] = parseRadarQuotes(records, market, date);
+    if (!verifiedMarket(day, market, benchmarks)) throw new Error(`${date} ${market} KRX 웹 15:30 종가 교차검증 실패`);
+
+    const matched = listings.OutBlock_1.filter(row => Object.hasOwn(day.markets[market], row.ISU_SRT_CD));
+    if (new Set(matched.map(row => row.ISU_SRT_CD)).size !== records.length) throw new Error(`${date} ${market} KRX 웹 종목기본정보 누락`);
+    const securities = parseRadarSecurities(matched.map(row => {
+      if (!belongs(row.MKT_TP_NM)) throw new Error(`${date} ${market} KRX 웹 종목기본정보 시장 불일치`);
+      return { ...row, MKT_TP_NM: market, LIST_DD: String(row.LIST_DD ?? "").replaceAll("/", "-") };
+    }), market, date);
+    if (securities.length < 100) throw new Error(`${date} ${market} KRX 웹 보통주 목록 누락`);
+    return securities;
+  }));
+  const securities = results.flat();
+  if (new Set(securities.map(item => item.code)).size !== securities.length) throw new Error("KRX 웹 보통주 목록 중복");
+  return { day, securities };
+}
+
+export async function collectStockRadar(asOf: string, force = false, useKrxWeb = false) {
   if (radarCloseTime(asOf) !== "15:30") throw new Error(`${asOf} 특별 운영일 KRX 15:30 종가 없음`);
   const benchmarks = await collectBenchmarks(asOf);
   const dated = [...benchmarks.KOSPI.keys()];
@@ -125,15 +160,19 @@ export async function collectStockRadar(asOf: string, force = false) {
 
   let universeAsOf = asOf;
   let latest: KrxRadarDay, securities: RadarSecurity[];
-  try {
-    [latest, securities] = await Promise.all([collectOfficialDay(asOf, benchmarks, !force), collectUniverse(asOf)]);
-  } catch (error) {
-    if (!(error instanceof KrxOpenApiNoDataError)) throw error;
-    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-    if (today !== asOf) throw error;
-    universeAsOf = dates.at(-2)!;
-    securities = await collectUniverse(universeAsOf);
-    latest = await collectNaverDay(asOf, securities, benchmarks);
+  if (useKrxWeb) {
+    ({ day: latest, securities } = await collectWebDay(asOf, benchmarks));
+  } else {
+    try {
+      [latest, securities] = await Promise.all([collectOfficialDay(asOf, benchmarks, !force), collectUniverse(asOf)]);
+    } catch (error) {
+      if (!(error instanceof KrxOpenApiNoDataError)) throw error;
+      const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+      if (today !== asOf) throw error;
+      universeAsOf = dates.at(-2)!;
+      securities = await collectUniverse(universeAsOf);
+      latest = await collectNaverDay(asOf, securities, benchmarks);
+    }
   }
 
   const history: KrxRadarDay[] = [];

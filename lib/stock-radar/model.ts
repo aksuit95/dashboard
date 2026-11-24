@@ -36,7 +36,7 @@ export type RadarSnapshot = {
   asOf: string;
   fetchedAt: string;
   universeAsOf: string;
-  source: "KRX_OPEN_API" | "NAVER_KRX_CLOSE";
+  source: "KRX_OPEN_API" | "KRX_WEB_VERIFIED" | "NAVER_KRX_CLOSE";
   dates: string[];
   rows: RadarRow[];
   series: Record<string, RadarSeries>;
