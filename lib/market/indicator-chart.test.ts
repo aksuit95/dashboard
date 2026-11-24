@@ -22,6 +22,11 @@ describe("시장 지표 차트 데이터", () => {
     expect(indicatorChange(80,100,"absolute","pp")).toBe("-20.00%p");
     expect(() => normalizeIndicator([{date:"2026-01-01",value:0}],"return")).toThrow();
   });
+  it("음수와 0을 포함하는 자금 흐름의 변화를 원래 단위로 표시한다", () => {
+    expect(indicatorChange(12.5, -20, "absolute", "억원")).toBe("+32.50 억원");
+    expect(indicatorChange(-120, 0, "absolute", "계약")).toBe("-120 계약");
+    expect(indicatorChange(1.25, 1, "absolute", "배")).toBe("+0.25배");
+  });
   it("확인된 휴장일만 이전 값을 채우고 결측이나 관측 범위 밖은 채우지 않는다", () => {
     const points = [{date:"2026-11-06",value:100},{date:"2026-11-10",value:110},{date:"2026-11-12",value:120}];
     const dates = ["2026-11-05","2026-11-06","2026-11-07","2026-11-08","2026-11-09","2026-11-10","2026-11-11","2026-11-12","2026-11-13"];
@@ -32,6 +37,13 @@ describe("시장 지표 차트 데이터", () => {
     expect(aligned[6].value).toBeNull();
     expect(aligned[8].value).toBeNull();
     expect(alignIndicator(points,dates,new Set())[4].value).toBeNull();
+  });
+  it("원본 관측일을 사용하는 보조 시계열은 휴장일에도 값을 채우지 않는다", () => {
+    const dates = ["2026-11-06", "2026-11-07", "2026-11-09", "2026-11-10"];
+    const points = [{ date: dates[0], value: -10 }, { date: dates[3], value: 20 }];
+    const aligned = alignIndicator(points, dates, new Set([dates[2]]), false);
+    expect(aligned.map(point => point.value)).toEqual([-10, null, null, 20]);
+    expect(aligned[2].sourceDate).toBeNull();
   });
   it("다운샘플링에도 명시적 결측을 유지한다", () => {
     const points=Array.from({length:1000},(_,i)=>({date:String(i).padStart(4,"0"),value:i===500 ? null : i,sourceDate:i===500 ? null : String(i).padStart(4,"0")}));

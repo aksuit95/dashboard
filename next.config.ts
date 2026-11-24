@@ -3,7 +3,7 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["node:sqlite"],
-  outputFileTracingIncludes: { "/etf-holdings": ["./data/etf/holdings.json"], "/api/investor-flow/pension": ["./data/pension/board.json"], "/risk": ["./public/data/market-indicators-live/*.json"], "/adr": ["./data/adr/board.json"], "/events": ["./data/events/board.json"], "/api/proxy/adr-premium": ["./data/proxy-close/board.json"], "/api/proxy/samsung-preferred": ["./data/proxy-close/board.json"], "/api/minervini": ["./data/minervini/board.json"], "/api/valuation/us-sectors": ["./data/us-sectors/board.json"],
+  outputFileTracingIncludes: { "/etf-holdings": ["./data/etf/holdings.json"], "/api/investor-flow/pension": ["./data/pension/board.json"], "/risk": ["./public/data/market-indicators-live/*.json"], "/adr": ["./data/adr/board.json", "./data/market-liquidity/board.json"], "/events": ["./data/events/board.json"], "/api/proxy/adr-premium": ["./data/proxy-close/board.json"], "/api/proxy/samsung-preferred": ["./data/proxy-close/board.json"], "/api/minervini": ["./data/minervini/board.json"], "/api/valuation/us-sectors": ["./data/us-sectors/board.json"],
     "/api/briefing": ["./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json", "./data/sectors/board.json", "./data/investor-flow/board.json"],
     "/api/briefing/automatic": ["./public/data/briefing-archive/*.json"],
     "/api/briefing/automatic/pdf": ["./public/data/briefing-archive/*.json"],

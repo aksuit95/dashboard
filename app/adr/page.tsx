@@ -4,16 +4,17 @@ import { RangeChart } from "@/components/RangeChart";
 import { readAdr } from "@/lib/sources/adr-naver";
 import { reviewedCloseSession as minerviniSession } from "@/lib/market/reviewed-close-session";
 import { MarketIndicatorChart } from "@/components/MarketIndicatorChart";
+import { readLiquidityComparison } from "@/lib/sources/liquidity-comparison";
 
 export const dynamic = "force-dynamic";
 export default async function AdrPage() {
-  const data = await readAdr().catch(() => null);
+  const [data, liquidity] = await Promise.all([readAdr().catch(() => null), readLiquidityComparison()]);
   let expected: string | null = null;
   try { expected = minerviniSession(); } catch { /* calendar requires review */ }
   return <div>
     <PageHeader title="등락비율 ADR" description="최근 20거래일 상승 종목 수의 합 ÷ 하락 종목 수의 합 × 100. 네이버에서 제공하는 KRX 정규장 종가로 계산합니다." />
     <DataFreshness basis={data?.asOf} updatedAt={data?.fetchedAt} basisDetail={`ADR · ${krxCloseDetail(data?.asOf)}`} />
-    <MarketIndicatorChart expectedKrxDate={expected} />
+    <MarketIndicatorChart expectedKrxDate={expected} liquidity={liquidity} />
     {!data ? <p className="rounded-xl border border-white/10 p-5 text-zinc-400">ADR 데이터 수집 대기 중입니다. 수집이 완료되면 차트가 표시됩니다.</p> : <>
       {expected !== data.asOf && <p role="status" className="mb-4 rounded-lg border border-amber-500/30 p-3 text-sm text-amber-300">최신 완료 거래일의 수집을 확인하지 못했습니다. 마지막 저장 결과를 표시합니다{expected ? ` · 기대 기준일 ${expected}` : " · 거래일 확인 필요"}.</p>}
       <div className="grid gap-4">{(["KOSPI", "KOSDAQ"] as const).map(market => {

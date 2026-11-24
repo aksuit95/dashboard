@@ -1,6 +1,22 @@
 export type IndicatorPoint = { date: string; value: number };
 export type AlignedIndicatorPoint = { date: string; value: number | null; sourceDate: string | null };
 export type IndicatorRange = "1W" | "1M" | "3M" | "6M" | "1Y" | "3Y" | "5Y";
+export type IndicatorDifferenceUnit = "bp" | "pp" | "억원" | "계약" | "배";
+export type IndicatorDefinition = {
+  id: string; label: string; color: string; unit: "pt" | "%" | "원" | "조원" | "억원" | "계약" | "배";
+  axis: "left" | "right"; change: ChangeMethod; differenceUnit: IndicatorDifferenceUnit | null;
+  rawGroup: string; calendar: "KRX" | "US" | "FX"; sourceUrl: string;
+};
+export type IndicatorMetadata = {
+  status: "ok" | "error" | "not_configured"; source: string; basis: string;
+  asOf?: string; fetchedAt?: string; coverageStart?: string; error?: string;
+};
+export type IndicatorData = { points: IndicatorPoint[]; meta: IndicatorMetadata; error?: string };
+export type SupplementalIndicator = {
+  definition: IndicatorDefinition;
+  group: "liquidity" | "funds" | "derivatives";
+  data: IndicatorData;
+};
 const days: Record<IndicatorRange, number> = { "1W": 7, "1M": 31, "3M": 92, "6M": 183, "1Y": 366, "3Y": 1096, "5Y": 1827 };
 export function validateIndicatorPoints(input: unknown): IndicatorPoint[] {
   if (!Array.isArray(input) || !input.length) throw new Error("데이터가 비어 있습니다.");
@@ -17,7 +33,7 @@ export function selectIndicatorRange<T extends { date: string }>(points: T[], ra
   return points.filter(point => point.date >= start && point.date <= end);
 }
 /** Fill only known closures after a real observation; an unexplained gap blocks carrying. */
-export function alignIndicator(points: IndicatorPoint[], dates: string[], knownHolidays: Set<string>): AlignedIndicatorPoint[] {
+export function alignIndicator(points: IndicatorPoint[], dates: string[], knownHolidays: Set<string>, carryClosures = true): AlignedIndicatorPoint[] {
   if (!points.length) return [];
   const values = new Map(points.map(point => [point.date, point.value]));
   const first = points[0].date;
@@ -29,7 +45,7 @@ export function alignIndicator(points: IndicatorPoint[], dates: string[], knownH
     if (date < first) return { date, value: null, sourceDate: null };
     const day = new Date(`${date}T00:00:00Z`).getUTCDay();
     const isClosure = day === 0 || day === 6 || knownHolidays.has(date);
-    if (isClosure && canCarry && prior) return { date, value: prior.value, sourceDate: prior.date };
+    if (carryClosures && isClosure && canCarry && prior) return { date, value: prior.value, sourceDate: prior.date };
     canCarry = false;
     return { date, value: null, sourceDate: null };
   });
@@ -71,14 +87,16 @@ export function normalizeIndicator(points: IndicatorPoint[], method: ChangeMetho
   if (method === "return" && base <= 0) throw new Error("시작값이 0 이하여서 정규화할 수 없습니다.");
   return points.map(point => ({ date: point.date, value: method === "return" ? point.value / base * 100 : point.value - base }));
 }
-export function indicatorChange(value: number, base: number, method: ChangeMethod, unit: "bp" | "pp" | null): string {
+export function indicatorChange(value: number, base: number, method: ChangeMethod, unit: IndicatorDifferenceUnit | null): string {
   if (method === "return") {
     if (base <= 0) return "—";
     const delta = (value / base - 1) * 100;
     return `${delta >= 0 ? "+" : ""}${delta.toFixed(2)}%`;
   }
   const delta = (value - base) * (unit === "bp" ? 100 : 1);
-  return `${delta >= 0 ? "+" : ""}${delta.toFixed(unit === "bp" ? 0 : 2)}${unit === "bp" ? "bp" : "%p"}`;
+  const suffix = unit === "pp" || unit === null ? "%p" : unit === "억원" || unit === "계약" ? ` ${unit}` : unit;
+  const digits = unit === "bp" || unit === "계약" ? 0 : 2;
+  return `${delta >= 0 ? "+" : ""}${delta.toFixed(digits)}${suffix}`;
 }
 /** Keep bucket extrema in chronological order so long ranges preserve spikes. */
 export function downsampleIndicator(points: IndicatorPoint[], maxPoints = 500): IndicatorPoint[] {
