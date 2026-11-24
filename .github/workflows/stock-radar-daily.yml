@@ -2,7 +2,7 @@ name: Collect closing prices for the stock radar
 
 on:
   schedule:
-    - cron: '25 7 * * 1-5' # 16:25 KST, after the regular close
+    - cron: '0 9 * * 1-5' # 18:00 KST, after the regular close
     - cron: '20 23 * * 0-4' # 08:20 KST, confirm with KRX Open API
   workflow_dispatch:
     inputs:
