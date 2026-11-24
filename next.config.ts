@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     "/api/valuation/sectors": ["./data/sectors/board.json", "./data/sectors/index-daily.json", "./data/sectors/market-caps.json"],
     "/api/investor-flow": ["./data/investor-flow/board.json"],
     "/api/investor-flow/toss": ["./data/investor-flow/board.json"],
-    "/market-liquidity": ["./data/investor-flow/board.json", "./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json"],
+    "/market-liquidity": ["./data/market-liquidity/board.json"],
     "/api/stock-returns": ["./data/stock-returns/board.json"],
     "/stock-radar": ["./data/stock-radar/board.json"],
     "/api/stock-radar/[code]": ["./data/stock-radar/board.json"],

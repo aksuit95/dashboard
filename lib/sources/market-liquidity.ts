@@ -1,8 +1,9 @@
 import { unstable_cache } from "next/cache";
 import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
-import type { IndexMarket, Point } from "@/lib/market/market-liquidity";
+import type { IndexMarket } from "@/lib/market/market-liquidity";
 import { collectMarketFunds, collectMarginLoans, collectFundBalance, collectFundFlows, dateBefore } from "./market-liquidity-kofia";
-import { collectCashIndex, collectDerivativeTotals, collectForeignFutures, collectPutCall, collectVolatilityIndex, readPublishedCashIndex } from "./market-liquidity-krx";
+import { collectCashIndex, collectDerivativeTotals, collectForeignFutures, collectPutCall, collectPutCallSeries, collectVolatilityIndex, readPublishedCashIndex } from "./market-liquidity-krx";
+import { readLiquidityPublication, selectPublishedSeries } from "./market-liquidity-publication";
 
 function cached<Args extends string[], Value>(id: string, collect: (...args: Args) => Promise<Value>, revalidate = 1_800) {
   return unstable_cache(async (...args: Args) => ({ value: await collect(...args), collectedAt: new Date().toISOString() }),
@@ -31,14 +32,29 @@ function kstDay(now: Date) {
   return new Date(now.getTime() + 9 * 3_600_000).toISOString().slice(0, 10);
 }
 
+function usePublication() {
+  return process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
+}
+
 export async function loadLiquidityFunds(now: Date) {
   const through = kstDay(now), from = dateBefore(through, 400);
+  if (usePublication()) {
+    const saved = await readLiquidityPublication();
+    return { balance: selectPublishedSeries(saved?.balance, through), loans: selectPublishedSeries(saved?.loans, through) };
+  }
   const [balance, loans] = await Promise.all([available(funds(from, through)), available(credit(from, through))]);
   return { balance, loans };
 }
 
 export async function loadEquityFunds(now: Date) {
   const through = kstDay(now), from = dateBefore(through, 400), balanceFrom = dateBefore(through, 100);
+  if (usePublication()) {
+    const saved = await readLiquidityPublication();
+    return {
+      including: selectPublishedSeries(saved?.including, through), excluding: selectPublishedSeries(saved?.excluding, through),
+      fundPrincipal: selectPublishedSeries(saved?.principal, through), fundNav: selectPublishedSeries(saved?.nav, through),
+    };
+  }
   const [including, excluding, fundPrincipal, fundNav] = await Promise.all([
     available(inflows(from, through)), available(inflowsExEtf(from, through)),
     available(principal(balanceFrom, through)), available(nav(balanceFrom, through)),
@@ -48,6 +64,10 @@ export async function loadEquityFunds(now: Date) {
 
 export async function loadLiquidityIndices(now: Date) {
   const through = reviewedCloseSession(now, 0), from = dateBefore(through, 400);
+  if (usePublication()) {
+    const saved = await readLiquidityPublication();
+    return { KOSPI: selectPublishedSeries(saved?.KOSPI, through), KOSDAQ: selectPublishedSeries(saved?.KOSDAQ, through), through };
+  }
   async function index(market: IndexMarket) {
     const live = await available((market === "KOSPI" ? kospi : kosdaq)(from, through));
     if (live.value) return live;
@@ -61,18 +81,18 @@ export async function loadLiquidityIndices(now: Date) {
 export async function loadLiquidityDerivatives(now: Date) {
   const through = reviewedCloseSession(now, 160);
   const from = dateBefore(through, 95);
+  if (usePublication()) {
+    const saved = await readLiquidityPublication();
+    const totals = selectPublishedSeries(saved?.totals, through);
+    const foreign = selectPublishedSeries(saved?.foreign, through);
+    const vkospi = selectPublishedSeries(saved?.volatility, through);
+    const dates = new Set(totals.value?.slice(-10).map(point => point.date));
+    const ratio = (selectPublishedSeries(saved?.putCall, through).value ?? []).filter(point => dates.has(point.date));
+    return { totals, foreign, vkospi, ratio, ratioMissing: dates.size - ratio.length, through };
+  }
   const [totals, foreign, vkospi] = await Promise.all([
     available(derivativeTotals(from, through)), available(foreignFutures(from, through)), available(volatility(dateBefore(through, 400), through)),
   ]);
-  const ratio: Point[] = [];
-  let ratioMissing = 0;
-  const days = totals.value?.slice(-10) ?? [];
-  for (let i = 0; i < days.length; i += 2) {
-    const observations = await Promise.all(days.slice(i, i + 2).map(day => available(putCall(day.date, String(day.optionVolume)))));
-    for (const observation of observations) {
-      if (observation.value) ratio.push(observation.value);
-      else ratioMissing++;
-    }
-  }
+  const { ratio, ratioMissing } = await collectPutCallSeries(totals.value ?? [], async day => (await putCall(day.date, String(day.optionVolume))).value);
   return { totals, foreign, vkospi, ratio, ratioMissing, through };
 }

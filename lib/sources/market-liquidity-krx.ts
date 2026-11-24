@@ -104,6 +104,18 @@ export async function collectPutCall(day: Pick<DerivativeDay, "date" | "optionVo
   return value == null ? null : { date: day.date, value };
 }
 
+export async function collectPutCallSeries(days: DerivativeDay[], read = collectPutCall) {
+  const ratio: Point[] = [];
+  const recent = days.slice(-10);
+  for (let i = 0; i < recent.length; i += 2) {
+    const observations = await Promise.allSettled(recent.slice(i, i + 2).map(day => read(day)));
+    for (const observation of observations) {
+      if (observation.status === "fulfilled" && observation.value) ratio.push(observation.value);
+    }
+  }
+  return { ratio, ratioMissing: recent.length - ratio.length };
+}
+
 /** KRX code 1/300 is V-KOSPI 200. This derivatives index has its own 15:45 close. */
 export async function collectVolatilityIndex(from: string, through: string): Promise<Point[]> {
   const data = await krxClient.query("MDCSTAT01201", { indTpCd: "1", idxIndCd: "300", ...terms(from, through) });
