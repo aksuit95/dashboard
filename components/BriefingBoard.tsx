@@ -31,10 +31,18 @@ function readSavedReports(): Report[] {
 export function BriefingBoard() {
   const [type, setType] = useState<"daily" | "weekly">("daily");
   const [date, setDate] = useState("");
+  const [manualWeeklyDate, setManualWeeklyDate] = useState("");
   const [weeklyDate, setWeeklyDate] = useState("");
+  const [weeklyMode, setWeeklyMode] = useState<"create" | "archive">("create");
   const [reports, setReports] = useState<Report[]>([]);
   const [automatic, setAutomatic] = useState<{id: string; report: Report}[]>([]);
+  const [deletedAutomatic, setDeletedAutomatic] = useState<string[]>([]);
   const [automaticError, setAutomaticError] = useState("");
+  const [canDeleteAutomatic, setCanDeleteAutomatic] = useState(false);
+  const [automaticTarget, setAutomaticTarget] = useState<string | null>(null);
+  const [deletingAutomatic, setDeletingAutomatic] = useState(false);
+  const [recreating, setRecreating] = useState<string | null>(null);
+  const [automaticNotice, setAutomaticNotice] = useState<{ text: string; error?: boolean } | null>(null);
   const [report, setReport] = useState<Report | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -46,20 +54,26 @@ export function BriefingBoard() {
     return [...new Map<string, Report>(sorted.map(r => [r.period.end, r] as const).reverse()).values()].sort((a, b) => b.period.end.localeCompare(a.period.end));
   }, [automatic, reports]);
   const selectedWeekly = weeklyReports.find(r => r.period.end === weeklyDate) ?? weeklyReports[0];
+  const viewingWeeklyArchive = type === "weekly" && weeklyMode === "archive";
+  const manualDate = type === "weekly" ? manualWeeklyDate : date;
   useEffect(() => {
     setDate(new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10));
     try { setReports(readSavedReports()); } catch { setError("저장된 브리핑 이력을 읽을 수 없습니다."); }
-    fetch("/api/briefing/automatic", { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(data => setAutomatic(data.reports)).catch(() => setAutomaticError("자동 생성 이력을 읽지 못했습니다."));
+    fetch("/api/briefing/automatic", { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(data => {
+      setAutomatic(data.reports);
+      setDeletedAutomatic(data.deleted ?? []);
+      setCanDeleteAutomatic(data.canDelete === true);
+    }).catch(() => setAutomaticError("자동 생성 이력을 읽지 못했습니다."));
   }, []);
   async function review() {
-    if (type === "weekly") {
+    if (viewingWeeklyArchive) {
       if (!selectedWeekly) return;
       setError(""); setReport(selectedWeekly); setSaved(true);
       return;
     }
     setBusy(true); setError(""); setReport(null); setSaved(false);
     try {
-      const response = await fetch(`/api/briefing?type=${type}&date=${date}`, { cache: "no-store" });
+      const response = await fetch(`/api/briefing?type=${type}&date=${manualDate}`, { cache: "no-store" });
       const data = await response.json(); if (!response.ok) throw new Error(data.error || "자료를 확인하지 못했습니다.");
       setReport(data);
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
@@ -88,6 +102,40 @@ export function BriefingBoard() {
       setHistoryNotice({ text: "브라우저에 저장한 브리핑을 삭제하지 못했습니다.", error: true });
     }
   }
+  async function deleteAutomaticReport(id: string, selected: Report) {
+    setDeletingAutomatic(true);
+    try {
+      const response = await fetch(`/api/briefing/automatic?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!response.ok) {
+        const { error } = await response.json();
+        throw new Error(error);
+      }
+      setAutomatic(entries => entries.filter(entry => entry.id !== id));
+      setDeletedAutomatic(entries => [...new Set([id, ...entries])]);
+      if (report === selected) {
+        setReport(null);
+        setSaved(false);
+      }
+      setAutomaticTarget(null);
+      setAutomaticNotice({ text: "생성된 브리핑을 삭제했습니다. 공유 이력에는 다음 게시 때 반영됩니다." });
+    } catch (error) {
+      setAutomaticNotice({ text: error instanceof Error ? error.message : "자동 생성 브리핑을 삭제하지 못했습니다.", error: true });
+    } finally { setDeletingAutomatic(false); }
+  }
+  async function recreateAutomaticReport(id: string) {
+    setRecreating(id);
+    setAutomaticNotice(null);
+    try {
+      const response = await fetch(`/api/briefing/automatic?id=${encodeURIComponent(id)}`, { method: "POST" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "브리핑을 다시 생성하지 못했습니다.");
+      setAutomatic(entries => [data, ...entries.filter(entry => entry.id !== id)].sort((a, b) => b.id.localeCompare(a.id)));
+      setDeletedAutomatic(entries => entries.filter(entry => entry !== id));
+      setAutomaticNotice({ text: "브리핑을 다시 생성했습니다. 공유 이력에는 다음 게시 때 반영됩니다." });
+    } catch (error) {
+      setAutomaticNotice({ text: error instanceof Error ? error.message : "브리핑을 다시 생성하지 못했습니다.", error: true });
+    } finally { setRecreating(null); }
+  }
   const freshnessReport = report ?? (type === "weekly" ? selectedWeekly : [...automatic.map(entry => entry.report), ...reports]
     .filter(entry => entry.type === "daily").sort((a, b) => b.period.end.localeCompare(a.period.end) || b.createdAt.localeCompare(a.createdAt))[0]);
   const updatedAt = freshnessReport ? latestDataTime([
@@ -100,8 +148,46 @@ export function BriefingBoard() {
       <DataFreshness basis={freshnessReport?.period.end} basisDetail={`${report ? "선택 브리핑 · " : ""}${krxCloseDetail(freshnessReport?.period.end)}`}
         updatedAt={updatedAt} updateDetail="브리핑 원자료 수집" />
       <div className={panel}>
-        <div className="flex flex-wrap items-end gap-4"><div><label htmlFor="brief-type" className="mb-2 block text-xs text-zinc-400">브리핑 종류</label><select id="brief-type" value={type} onChange={e => { setType(e.target.value as typeof type); setReport(null); setError(""); }} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2"><option value="daily">일간</option><option value="weekly">주간</option></select></div><div><label htmlFor="brief-date" className="mb-2 block text-xs text-zinc-400">{type === "weekly" ? "생성된 주간 브리핑" : "선택 날짜"}</label>{type === "weekly" ? <select id="brief-date" value={selectedWeekly?.period.end ?? ""} onChange={e => { setWeeklyDate(e.target.value); setReport(null); setError(""); }} disabled={!weeklyReports.length} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2 disabled:opacity-50">{weeklyReports.length ? weeklyReports.map(r => <option key={r.period.end} value={r.period.end}>{r.period.end} 마감 · {r.period.start} ~ {r.period.end}</option>) : <option value="">생성된 주간 브리핑 없음</option>}</select> : <input id="brief-date" type="date" value={date} onChange={e => setDate(e.target.value)} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2" />}</div><button type="button" onClick={review} disabled={busy || (type === "weekly" ? !selectedWeekly : !date)} className="rounded-lg bg-emerald-400 px-5 py-2.5 text-sm font-bold text-zinc-950 disabled:opacity-40">{busy ? "자료 확인 중…" : type === "weekly" ? "주간 브리핑 보기" : "자료 확인 · 미리보기"}</button></div>
-        <p className="mt-4 text-sm text-zinc-400">{type === "weekly" ? "생성되어 보관된 주간 브리핑의 마지막 거래일만 선택할 수 있습니다." : "일간은 선택일의 직전 완료 거래일을 기준으로 합니다."} KRX 정규장 종가 기준입니다(통상 15:30, 2026-11-19은 16:30).</p>
+        <div className="flex flex-wrap items-end gap-4">
+          <div>
+            <label htmlFor="brief-type" className="mb-2 block text-xs text-zinc-400">브리핑 종류</label>
+            <select id="brief-type" value={type} disabled={busy} onChange={e => {
+              setType(e.target.value as typeof type);
+              if (e.target.value === "weekly" && !manualWeeklyDate) setManualWeeklyDate(selectedWeekly?.period.end ?? date);
+              setReport(null); setError("");
+            }} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2">
+              <option value="daily">일간</option><option value="weekly">주간</option>
+            </select>
+          </div>
+          {type === "weekly" && (
+            <div>
+              <label htmlFor="brief-weekly-mode" className="mb-2 block text-xs text-zinc-400">주간 브리핑 방식</label>
+              <select id="brief-weekly-mode" value={weeklyMode} disabled={busy} onChange={e => {
+                setWeeklyMode(e.target.value as typeof weeklyMode); setReport(null); setError("");
+              }} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2">
+                <option value="create">직접 만들기</option><option value="archive">보관된 브리핑 보기</option>
+              </select>
+            </div>
+          )}
+          <div>
+            <label htmlFor="brief-date" className="mb-2 block text-xs text-zinc-400">{viewingWeeklyArchive ? "생성된 주간 브리핑" : "선택 날짜"}</label>
+            {viewingWeeklyArchive ? (
+              <select id="brief-date" value={selectedWeekly?.period.end ?? ""} onChange={e => {
+                setWeeklyDate(e.target.value); setReport(null); setError("");
+              }} disabled={!weeklyReports.length} className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2 disabled:opacity-50">
+                {weeklyReports.length ? weeklyReports.map(r => <option key={r.period.end} value={r.period.end}>{r.period.end} 마감 · {r.period.start} ~ {r.period.end}</option>)
+                  : <option value="">생성된 주간 브리핑 없음</option>}
+              </select>
+            ) : <input id="brief-date" type="date" value={manualDate} disabled={busy}
+              onChange={e => (type === "weekly" ? setManualWeeklyDate : setDate)(e.target.value)}
+              className="rounded-lg border border-white/15 bg-zinc-900 px-3 py-2" />}
+          </div>
+          <button type="button" onClick={review} disabled={busy || (viewingWeeklyArchive ? !selectedWeekly : !manualDate)}
+            className="rounded-lg bg-emerald-400 px-5 py-2.5 text-sm font-bold text-zinc-950 disabled:opacity-40">
+            {busy ? "자료 확인 중…" : viewingWeeklyArchive ? "주간 브리핑 보기" : "자료 확인 · 미리보기"}
+          </button>
+        </div>
+        <p className="mt-4 text-sm text-zinc-400">{type === "weekly" ? "주간은 선택한 날짜가 속한 주의 마지막 거래일 마감 후 만들 수 있습니다." : "일간은 선택일의 직전 완료 거래일을 기준으로 합니다."} KRX 정규장 종가 기준입니다(통상 15:30, 2026-11-19은 16:30).</p>
         <p className="mt-2 text-xs leading-5 text-zinc-500">자동 생성된 브리핑은 공유 이력에서 확인할 수 있습니다. 직접 저장한 브리핑은 이 브라우저에만 보관됩니다.</p>
       </div>
       {error && <p role="alert" className="rounded-lg border border-rose-400/30 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
@@ -115,7 +201,56 @@ export function BriefingBoard() {
       <section><h3 className="briefing-section-title text-lg font-bold">04 투자자 수급</h3><p className="mt-0.5 text-xs text-zinc-400">출처: 토스증권 · 단위 억 원 · 매수 − 매도. 수급은 KRX·NXT 합산으로 KRX 종가와 거래 범위가 다릅니다.</p>{report.flows.map(f => <div key={f.universe} className="briefing-card mt-2 rounded-xl border border-white/[0.09] bg-white/[0.035] p-3"><h4 className="font-semibold">{f.universe === "kospi200" ? "코스피 시장" : "코스닥 시장"}</h4>{f.points.length > 0 && <div className="overflow-x-auto"><table className="briefing-flow-table mt-1 w-full text-left text-sm"><thead><tr><th>거래일</th><th>개인</th><th>외국인</th><th>기관</th></tr></thead><tbody>{f.points.map(p => <tr key={p.date}><td>{p.date}</td>{([p.individual,p.foreign,p.institution]).map((v,i) => <td key={i}><Signed value={v === null ? null : v / 100000000} digits={0} /></td>)}</tr>)}{report.type === "weekly" && <tr><th>주간 합계</th>{(["individual","foreign","institution"] as const).map(k => <td key={k}>{f.missing.length ? "결측" : <Signed value={f.points.reduce((sum,p) => sum + (p[k] ?? 0), 0) / 100000000} digits={0} />}</td>)}</tr>}</tbody></table></div>}{f.error && <p className="mt-2 text-sm">{f.error} {f.missing.join(", ")}</p>}<p className="mt-1 text-xs text-zinc-500">원본 갱신 {stamp(f.updatedAt)} · 수집 {stamp(f.collectedAt)}</p></div>)}</section>
       <p className="border-t border-white/10 pt-4 text-xs text-zinc-500">정보 제공 및 개인 리서치용입니다. 투자 권유나 매매 신호가 아닙니다.</p>
     </article>}
-    <div className={`${panel} briefing-controls mt-6`}><h2 className="font-bold">생성된 브리핑</h2><p className="mt-1 text-xs text-zinc-500">공유 저장소와 이 PC의 생성 결과 · 이력 갱신은 화면 새로고침</p>{automaticError ? <p role="alert" className="mt-3 text-sm text-rose-300">{automaticError}</p> : automatic.length === 0 ? <p className="mt-3 text-sm text-zinc-500">생성된 브리핑이 없습니다.</p> : <ul className="mt-2 divide-y divide-white/10">{automatic.map(({id, report: r}) => <li key={id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"><span>{r.type === "daily" ? "일간" : "주간"} · {r.type === "weekly" ? `${r.period.start} ~ ${r.period.end}` : r.period.end} <span className="text-zinc-500">· {stamp(r.createdAt)} · {r.sectors.some(s => s.error || s.hasMissing) || r.flows.some(f => f.error) ? "일부 결측" : "자료 준비"}</span></span><span className="flex gap-2"><button type="button" className={button} onClick={() => { setReport(r); setSaved(true); setError(""); window.scrollTo({top: 0, behavior: "smooth"}); }}>보기</button><a className={button} href={`/api/briefing/automatic/pdf?id=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">PDF</a></span></li>)}</ul>}</div>
+    <section className={`${panel} briefing-controls mt-6`} aria-labelledby="automatic-briefings">
+      <h2 id="automatic-briefings" className="font-bold">생성된 브리핑</h2>
+      <p className="mt-1 text-xs text-zinc-500">공유 저장소와 이 PC의 생성 결과 · 이력 갱신은 화면 새로고침</p>
+      {automaticNotice && <p role={automaticNotice.error ? "alert" : "status"} className={`mt-3 text-sm ${automaticNotice.error ? "text-rose-300" : "text-emerald-200"}`}>{automaticNotice.text}</p>}
+      {automaticError ? <p role="alert" className="mt-3 text-sm text-rose-300">{automaticError}</p> : automatic.length === 0 ? (
+        <p className="mt-3 text-sm text-zinc-500">생성된 브리핑이 없습니다.</p>
+      ) : (
+        <ul className="mt-2 divide-y divide-white/10">
+          {automatic.map(({ id, report: r }) => {
+            const label = r.type === "daily" ? `일간 · ${r.period.end}` : `주간 · ${r.period.start} ~ ${r.period.end}`;
+            return (
+              <li key={id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+                <span>{label} <span className="text-zinc-500">· {stamp(r.createdAt)} · {r.sectors.some(s => s.error || s.hasMissing) || r.flows.some(f => f.error) ? "일부 결측" : "자료 준비"}</span></span>
+                {automaticTarget === id ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-zinc-400">이 브리핑을 생성 이력과 공유 목록에서 삭제할까요?</span>
+                    <button type="button" className={button} disabled={deletingAutomatic} onClick={() => { setAutomaticTarget(null); setAutomaticNotice(null); }}>취소</button>
+                    <button type="button" className={deleteButton} disabled={deletingAutomatic} onClick={() => void deleteAutomaticReport(id, r)}>삭제 확인</button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <button type="button" className={button} onClick={() => { setReport(r); setSaved(true); setError(""); window.scrollTo({ top: 0, behavior: "smooth" }); }}>보기</button>
+                    <a className={button} href={`/api/briefing/automatic/pdf?id=${encodeURIComponent(id)}`} target="_blank" rel="noreferrer">PDF</a>
+                    {canDeleteAutomatic && <button type="button" className={deleteButton} disabled={deletingAutomatic || recreating !== null}
+                      aria-label={`${label} 생성본 삭제`} onClick={() => { setAutomaticTarget(id); setAutomaticNotice(null); }}>삭제</button>}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {canDeleteAutomatic && deletedAutomatic.length > 0 && (
+        <details className="mt-4 border-t border-white/10 pt-3">
+          <summary className="cursor-pointer text-sm font-medium text-zinc-300">삭제한 브리핑</summary>
+          <ul className="mt-2 divide-y divide-white/10">
+            {deletedAutomatic.map(id => {
+              const label = `${id.startsWith("weekly-") ? "주간" : "일간"} · ${id.slice(id.indexOf("-") + 1)}`;
+              return (
+                <li key={id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                  <span>{label}</span>
+                  <button type="button" className={button} disabled={deletingAutomatic || automaticTarget !== null || recreating !== null}
+                    aria-label={`${label} 다시 생성`} onClick={() => void recreateAutomaticReport(id)}>{recreating === id ? "생성 중…" : "다시 생성"}</button>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      )}
+    </section>
     <section className={`${panel} briefing-controls mt-6`} aria-labelledby="saved-briefings">
       <h2 id="saved-briefings" className="font-bold">브라우저에 저장한 브리핑</h2>
       {historyNotice && <p role={historyNotice.error ? "alert" : "status"} className={`mt-3 text-sm ${historyNotice.error ? "text-rose-300" : "text-emerald-200"}`}>{historyNotice.text}</p>}

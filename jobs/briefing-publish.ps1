@@ -19,9 +19,28 @@ try {
   if ($LASTEXITCODE -ne 0) { throw '공유 저장소 갱신에 실패했습니다. 기존 자료를 유지하고 다음 실행 때 재시도합니다.' }
   $archive = Join-Path $runner 'public\data\briefing-archive'
   New-Item -ItemType Directory -Force -Path $archive | Out-Null
+  $restored = @{}
+  foreach ($marker in (Get-ChildItem -LiteralPath $source -File -Filter 'deleted-*.json')) {
+    if ($marker.Name -cnotmatch '^deleted-((daily|weekly)-\d{4}-\d{2}-\d{2})\.json$') { continue }
+    $id = $Matches[1]
+    $state = Get-Content -LiteralPath $marker.FullName -Raw -Encoding utf8 | ConvertFrom-Json
+    if ($state.id -ceq $id -and $state.restored -eq $true) {
+      $restored[$id] = $true
+      continue
+    }
+    $destination = Join-Path $archive $marker.Name
+    if (-not (Test-Path -LiteralPath $destination)) { Copy-Item -LiteralPath $marker.FullName -Destination $destination }
+    foreach ($extension in @('json', 'pdf')) {
+      $removed = Join-Path $archive "$id.$extension"
+      if (Test-Path -LiteralPath $removed -PathType Leaf) { Remove-Item -LiteralPath $removed }
+    }
+  }
   foreach ($item in (Get-ChildItem -LiteralPath $source -File -Filter '*.json')) {
     $id = [System.IO.Path]::GetFileNameWithoutExtension($item.Name)
     if ($id -notmatch '^(daily|weekly)-\d{4}-\d{2}-\d{2}$') { continue }
+    $deletedPath = Join-Path $archive "deleted-$id.json"
+    $hasDeletion = Test-Path -LiteralPath $deletedPath
+    if ($hasDeletion -and -not $restored.ContainsKey($id)) { continue }
     $pdf = Join-Path $source "$id.pdf"
     if (-not (Test-Path -LiteralPath $pdf -PathType Leaf)) { continue }
     $report = Get-Content -LiteralPath $item.FullName -Raw -Encoding utf8 | ConvertFrom-Json
@@ -29,12 +48,18 @@ try {
     if ($report.type -ne $id.Split('-')[0] -or $report.period.end -ne $date -or $null -eq $report.indices -or $null -eq $report.sectors -or $null -eq $report.flows) { throw "잘못된 브리핑 스냅샷: $id" }
     $reader = [System.IO.File]::OpenRead($pdf)
     try { $header = New-Object byte[] 5; if ($reader.Read($header, 0, 5) -ne 5 -or [System.Text.Encoding]::ASCII.GetString($header) -ne '%PDF-') { throw "잘못된 PDF: $id" } } finally { $reader.Dispose() }
-    foreach ($entry in @(@($item.FullName, "$id.json"), @($pdf, "$id.pdf"))) {
+    $entries = @(@($item.FullName, "$id.json"), @($pdf, "$id.pdf"))
+    $mismatch = $false
+    foreach ($entry in $entries) {
       $destination = Join-Path $archive $entry[1]
-      if (Test-Path -LiteralPath $destination) {
-        if ((Get-FileHash -LiteralPath $entry[0] -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash) { throw "이미 게시된 브리핑과 로컬 파일이 달라 덮어쓰지 않습니다: $id" }
-      } else { Copy-Item -LiteralPath $entry[0] -Destination $destination }
+      if ((Test-Path -LiteralPath $destination) -and (Get-FileHash -LiteralPath $entry[0] -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash) { $mismatch = $true; break }
     }
+    if ($mismatch) { Write-Warning "Keeping existing published briefing: $id"; continue }
+    foreach ($entry in $entries) {
+      $destination = Join-Path $archive $entry[1]
+      if (-not (Test-Path -LiteralPath $destination)) { Copy-Item -LiteralPath $entry[0] -Destination $destination }
+    }
+    if ($hasDeletion) { Remove-Item -LiteralPath $deletedPath }
   }
   & $git -c "safe.directory=$runner" add -- public/data/briefing-archive
   if ($LASTEXITCODE -ne 0) { throw '브리핑 게시 파일을 준비하지 못했습니다.' }

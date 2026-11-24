@@ -4,20 +4,68 @@ import { resolvePeriod } from "@/lib/market/briefing";
 import { readSectorPublication } from "@/lib/sources/sector-publication";
 import { readInvestorPublication } from "@/lib/sources/investor-flow-publication";
 import { summarizeBriefingMovers } from "@/lib/market/briefing-movers";
+import { KR_CSAT_2026, krxCloseTime } from "@/config/market-calendar";
+import { requestKrxOpenApi } from "@/lib/sources/krx-openapi";
 
 type Point = { date: string; value: number };
+const indexServices = { kospi: ["idx/kospi_dd_trd", "코스피"], kosdaq: ["idx/kosdaq_dd_trd", "코스닥"] } as const;
+const officialCloses = new Map<string, Promise<{ value: number; fetchedAt: string }>>();
+
+function loadOfficialClose(id: keyof typeof indexServices, date: string) {
+  const key = `${id}:${date}`;
+  const existing = officialCloses.get(key);
+  if (existing) return existing;
+  const [service, name] = indexServices[id];
+  const tradeDate = date.replaceAll("-", "");
+  const promise = requestKrxOpenApi(service, tradeDate).then(rows => {
+    const matching = rows.filter(row => row.BAS_DD === tradeDate && String(row.IDX_NM).replace(/\s/g, "") === name);
+    const raw = matching.length === 1 ? matching[0].CLSPRC_IDX : null;
+    const value = typeof raw === "string" || typeof raw === "number" ? Number(String(raw).replaceAll(",", "")) : NaN;
+    if (!Number.isFinite(value) || value <= 0) throw new Error(`${name} ${date} KRX 정규장 종가를 확인할 수 없습니다.`);
+    return { value, fetchedAt: new Date().toISOString() };
+  }).catch(error => {
+    officialCloses.delete(key);
+    throw error;
+  });
+  officialCloses.set(key, promise);
+  return promise;
+}
+
+async function publishedIndex(id: string, root: string) {
+  try {
+    const dir = path.join(root, "public", "data", "market-indicators-live");
+    const [points, meta] = await Promise.all([
+      fs.readFile(path.join(dir, `${id}.json`), "utf8").then(JSON.parse) as Promise<Point[]>,
+      fs.readFile(path.join(dir, `${id}.meta.json`), "utf8").then(JSON.parse),
+    ]);
+    if (meta.status === "ok" && meta.source === "KRX 정보데이터시스템" && typeof meta.asOf === "string" &&
+        meta.basis === `KRX 정규장 ${krxCloseTime(meta.asOf)} KST` && Array.isArray(points)) {
+      return { points: new Map(points.filter(point => point.date <= meta.asOf && Number.isFinite(point.value) && point.value > 0)
+        .map(point => [point.date, point.value])), fetchedAt: typeof meta.fetchedAt === "string" ? meta.fetchedAt : null };
+    }
+  } catch {
+    // A missing publication can be recovered using the official dated index endpoint.
+  }
+  return null;
+}
+
 export async function buildBriefing(type: "daily" | "weekly", selected: string, root = process.cwd(), now = new Date()) {
     const period = resolvePeriod(type, selected, now);
-    const indices = await Promise.all(["kospi", "kosdaq"].map(async (id) => {
+    const indices = await Promise.all((["kospi", "kosdaq"] as const).map(async (id) => {
       try {
-        const dir = path.join(root, "public/data/market-indicators-live");
-        const [points, meta] = await Promise.all([fs.readFile(path.join(dir, `${id}.json`), "utf8").then(JSON.parse) as Promise<Point[]>, fs.readFile(path.join(dir, `${id}.meta.json`), "utf8").then(JSON.parse)]);
-        if (meta.status !== "ok" || meta.basis !== `KRX 정규장 ${meta.asOf === "2026-11-19" ? "16:30" : "15:30"} KST` || meta.source !== "KRX 정보데이터시스템" || meta.asOf < period.end) throw new Error("KRX 종가 출처 또는 기준일을 확인할 수 없습니다.");
-        const allDates = [period.base, ...period.days];
-        const values = allDates.map(date => ({ date, value: points.find(x => x.date === date)?.value ?? null }));
-        if (values.some(x => typeof x.value !== "number" || !Number.isFinite(x.value) || x.value <= 0)) throw new Error("대상 거래일 또는 비교일의 KRX 종가가 없습니다.");
-        const base = values[0].value as number, close = values.at(-1)!.value as number;
-        return { id, values, close, change: close - base, percent: (close / base - 1) * 100, fetchedAt: meta.fetchedAt, error: null };
+        const published = await publishedIndex(id, root);
+        const points = await Promise.all([period.base, ...period.days].map(async date => {
+          const value = published?.points.get(date);
+          if (value != null) return { date, value, fetchedAt: published?.fetchedAt ?? null };
+          // The delayed CSAT session requires the verified 16:30 publication.
+          if (date === KR_CSAT_2026) throw new Error(`${date} KRX 정규장 16:30 지수 종가가 없습니다.`);
+          return { date, ...await loadOfficialClose(id, date) };
+        }));
+        const base = points[0].value, close = points.at(-1)!.value;
+        const fetchedAt = points.flatMap(point => point.fetchedAt ? [point.fetchedAt] : [])
+          .sort((a, b) => Date.parse(b) - Date.parse(a))[0] ?? null;
+        const values = points.map(({ date, value }) => ({ date, value }));
+        return { id, values, close, change: close - base, percent: (close / base - 1) * 100, fetchedAt, error: null };
       } catch (error) { return { id, values: [], close: null, change: null, percent: null, fetchedAt: null, error: (error as Error).message }; }
     }));
     const sectors = await readSectorPublication(path.join(root, "data/sectors/board.json")).then(pub => ["kospi200", "kosdaq150"].map(universe => {

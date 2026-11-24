@@ -2,7 +2,6 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 $projectRoot = 'C:\dashboard'
 $node = 'C:\Program Files\nodejs\node.exe'
-$env:BRIEFING_PYTHON = 'C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\dependencies\python\python.exe'
 $logPath = Join-Path $projectRoot 'logs\briefing-auto.log'
 New-Item -ItemType Directory -Path (Split-Path $logPath) -Force | Out-Null
 $taskMutex = [System.Threading.Mutex]::new($false, 'Local\DashboardBriefingAuto')
@@ -15,7 +14,7 @@ try {
     "[$(Get-Date -Format o)] Checking briefing data" | Out-File -LiteralPath $logPath -Append -Encoding utf8
     $ErrorActionPreference = 'Continue'
     try {
-      & $node --import tsx jobs/briefing-auto.ts 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
+      & $node --use-system-ca --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx jobs/briefing-auto.ts 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
       $generationExit = $LASTEXITCODE
       & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $projectRoot 'jobs\briefing-publish.ps1') 2>&1 | Out-File -LiteralPath $logPath -Append -Encoding utf8
       $publicationExit = $LASTEXITCODE
