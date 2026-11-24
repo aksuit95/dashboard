@@ -1,50 +1,9 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-24T13:02:20.667Z",
+      "updatedAt": "2026-11-24T18:41:36.840Z",
       "error": null,
       "events": [
-        {
-          "id": "smt-usd-fed-s-chair-warsh-speech.20261116T1700",
-          "date": "2026-11-17",
-          "time": "02:00",
-          "country": "US",
-          "category": "매크로",
-          "title": "Fed's Chair Warsh speech",
-          "detail": "시장 영향도 높음",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false
-        },
-        {
-          "id": "smt-usd-retail-sales-control-group.20261117T1330",
-          "date": "2026-11-17",
-          "time": "22:30",
-          "country": "US",
-          "category": "매크로",
-          "title": "Retail Sales Control Group",
-          "detail": "대상 기간 2026-10",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "actual": "0.6%",
-          "previous": "0.1%"
-        },
-        {
-          "id": "smt-usd-retail-sales-mom.20261117T1330",
-          "date": "2026-11-17",
-          "time": "22:30",
-          "country": "US",
-          "category": "매크로",
-          "title": "Retail Sales MoM",
-          "detail": "대상 기간 2026-10",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false,
-          "forecast": "0.2%",
-          "actual": "0.2%",
-          "previous": "0.8%"
-        },
         {
           "id": "smt-usd-fomc-minutes.20261118T1900",
           "date": "2026-11-19",
@@ -655,10 +614,10 @@
           "tentative": false
         }
       ],
-      "generatedAt": "2026-11-24T13:00:03Z"
+      "generatedAt": "2026-11-24T18:40:50Z"
     },
     "ism": {
-      "updatedAt": "2026-11-24T13:02:20.667Z",
+      "updatedAt": "2026-11-24T18:41:36.840Z",
       "error": null,
       "events": [
         {
@@ -688,11 +647,11 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-24T13:00:03Z"
+      "generatedAt": "2026-11-24T18:40:50Z"
     },
     "dart": {
       "updatedAt": "2026-11-23T19:10:07.414Z",
-      "error": null,
+      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
       "capAsOf": "2026-11-23",
       "companies": [
         {
