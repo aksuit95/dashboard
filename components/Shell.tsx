@@ -22,6 +22,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
     icon: "flow", title: { ko: "수급 · ETF", en: "Flows & ETFs" },
     items: [
       { href: "/investor-flow/kospi200", ko: "수급지표", en: "Investor flows" },
+      { href: "/market-liquidity", ko: "증시자금 · 시장지표", en: "Market liquidity" },
       { href: "/short-selling", ko: "공매도 분석", en: "Short selling" },
       { href: "/etf-holdings", ko: "ETF 보유 종목", en: "ETF holdings" },
     ],

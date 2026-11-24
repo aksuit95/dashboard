@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     "/api/valuation/sectors": ["./data/sectors/board.json", "./data/sectors/index-daily.json", "./data/sectors/market-caps.json"],
     "/api/investor-flow": ["./data/investor-flow/board.json"],
     "/api/investor-flow/toss": ["./data/investor-flow/board.json"],
+    "/market-liquidity": ["./data/investor-flow/board.json", "./public/data/market-indicators-live/kospi*.json", "./public/data/market-indicators-live/kosdaq*.json"],
     "/api/stock-returns": ["./data/stock-returns/board.json"],
     "/stock-radar": ["./data/stock-radar/board.json"],
     "/api/stock-radar/[code]": ["./data/stock-radar/board.json"],
@@ -24,11 +25,12 @@ const nextConfig: NextConfig = {
 };
 
 export default function config(phase: string): NextConfig {
+  const development = phase === PHASE_DEVELOPMENT_SERVER;
   return {
     ...nextConfig,
-    // Keep development servers from overwriting production build assets.
-    distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
-    ...(phase === PHASE_DEVELOPMENT_SERVER && {
+    // Keep the primary local dashboard separate from other dev servers and production builds.
+    distDir: development ? (process.env.PORT === "3000" ? ".next-dev-3000" : ".next-dev") : ".next",
+    ...(development && {
       // Keep recently visited dashboard chunks available to open tabs.
       onDemandEntries: { maxInactiveAge: 60 * 60 * 1000, pagesBufferLength: 12 },
     }),

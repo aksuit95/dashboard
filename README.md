@@ -19,7 +19,7 @@
 | 섹터·종목 등락률 | `/valuation/sectors`, `/rising`, `/stock-returns` | 기간별 수익률과 연속 상승 종목·섹터 |
 | 신고가·신저가 레이더 / MDD | `/stock-radar` | 코스피·코스닥 보통주의 종가 돌파·이탈, 현재 낙폭과 최대낙폭 |
 | 시장 심리 | `/adr`, `/risk` | 등락비율, 시장 지표 장기 비교, 공포·탐욕과 이격도 |
-| 수급·ETF | `/investor-flow/kospi200`, `/short-selling`, `/etf-holdings` | 외국인·기관·개인 수급, 국민연금 공시, 공매도, ETF 보유종목 |
+| 수급·ETF | `/investor-flow/kospi200`, `/market-liquidity`, `/short-selling`, `/etf-holdings` | 외국인·기관·개인 수급, 증시자금·펀드·지수 매물대·파생 포지션, 공매도, ETF 보유종목 |
 | 기업 분석 | `/valuation`, `/valuation/stocks`, `/financials`, `/investment-risk`, `/minervini` | 밸류에이션, 재무건전성, 투자위험, 기술적 분석 |
 | 글로벌·야간 시장 | `/proxy`, `/futures`, `/single-stock`, `/market-hours` | ADR·GDR·야간선물·ETF 프록시와 장 운영시간 |
 
@@ -39,6 +39,7 @@
 - 운영은 GitHub `cursor/personal-dashboard-readme` 브랜치와 Vercel Git 배포를 연결합니다. 배포 파일은 `data/`와 `public/data/`에 저장합니다. GitHub Actions와 Windows 작업은 실행 결과가 바뀌었을 때 게시합니다.
 - **장 마감 브리핑**은 섹터·코스피 및 코스닥 종가·수급 저장본으로 생성합니다. Windows 작업 `Dashboard Market Briefing`이 16:00 이후 자료를 확인해 PDF와 요약을 게시합니다. 브라우저에서 수동으로 저장한 브리핑은 해당 브라우저에 남습니다.
 - **투자자별 수급**은 Windows 작업 `Dashboard Investor Flow`가 16:00 이후 갱신합니다. 시장 수급에 사용한 토스 데이터는 원본 집계 범위를 표시하며, 종목 가격 비교는 KRX 15:30 기준을 유지합니다. 토스 Open API는 등록된 IP에서 호출합니다.
+- **증시자금·시장지표**는 화면을 조회할 때 금투협 FreeSIS와 KRX 통계를 확인하며, 성공한 조회를 30분간 캐시합니다. 예탁금·신용·펀드는 원본 통계 기준일을 쓰고, 지수 비교와 매물대는 KRX 15:30 현물 종가를 씁니다. 매물대는 시장 일별 거래대금을 당일 종가 구간에 배정한 추정치입니다. KRX 실수집은 서버의 `KRX_ID`, `KRX_PW`를 사용합니다. 선물·옵션은 KRX 주간 정규장 통계이며, 옵션 풋/콜은 최근 10개 거래일을 검증합니다.
 - **재무건전성**은 DART 공시와 검증된 시가총액을 결합합니다. 수집 실패 항목과 적용한 회계 기간을 표시합니다. [재무건전성 운영 문서](docs/financial-health.md)
 - **신고가·신저가 레이더 / MDD**는 평일 16:25 KST에 KRX 15:30 종가를 수집합니다. KRX Open API의 당일 자료가 아직 없으면 네이버 KRX에서 15:30 마감이 확인된 종목만 먼저 집계합니다. 평일 08:20 KST에 KRX 공식 자료로 다시 확인하고, 수집이 실패하면 마지막 저장본의 가격 기준일을 표시합니다. 로컬 수동 실행은 `npm run stock-radar:export`입니다.
 
