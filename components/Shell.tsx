@@ -35,6 +35,7 @@ const groups: { icon: IconName; title: { ko: string; en: string }; items: { href
       { href: "/financials", ko: "현금 · 재무건전성", en: "Cash & financial health" },
       { href: "/investment-risk", ko: "투자위험", en: "Investment risk" },
       { href: "/minervini", ko: "미너비니 기술적 분석", en: "Minervini analysis" },
+      { href: "/index-technical", ko: "지수 기술적 분석", en: "Index technical analysis" },
     ],
   },
   {

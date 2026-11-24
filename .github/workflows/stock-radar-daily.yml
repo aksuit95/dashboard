@@ -65,6 +65,7 @@ jobs:
         run: |
           if [[ ! -f data/stock-radar/board.json ]]; then exit 0; fi
           git add -- data/stock-radar/board.json
+          if [[ -f data/index-technical/breadth.json ]]; then git add -- data/index-technical/breadth.json; fi
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

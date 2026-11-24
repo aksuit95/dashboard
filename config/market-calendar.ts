@@ -7,9 +7,9 @@ export const CALENDAR_YEAR = 2026;
 // KRX notice: https://kind.krx.co.kr/external/2026/11/05/000141/20261105000216/99303.htm
 export const KR_CSAT_2026 = "2026-11-19";
 // KRX notice: https://kind.krx.co.kr/external/2025/10/30/000102/20251030000137/99303.htm
-const KR_CSAT_2025 = "2025-11-13";
+const KR_CSAT_LATE_CLOSES = new Set(["2021-11-18", "2022-11-17", "2023-11-16", "2024-11-14", "2025-11-13", KR_CSAT_2026]);
 export function krxCloseTime(date: string): "15:30" | "16:30" {
-  return date === KR_CSAT_2025 || date === KR_CSAT_2026 ? "16:30" : "15:30";
+  return KR_CSAT_LATE_CLOSES.has(date) ? "16:30" : "15:30";
 }
 export const KR_HOLIDAYS: Record<string, string> = {
   "2026-01-01": "신정",

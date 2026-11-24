@@ -110,6 +110,13 @@ jobs:
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
         run: npx tsx jobs/sector-index-export.ts
+      - name: Collect KRX index candles and volume
+        id: index-bars
+        continue-on-error: true
+        env:
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
+        run: npx tsx jobs/index-bars-export.ts
       - name: Commit daily snapshots and trigger Vercel Git deployment
         shell: bash
         env:
@@ -118,6 +125,7 @@ jobs:
           BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           git add -- data/sectors/board.json public/data/market-indicators-live
+          if [ -f data/index-technical/bars.json ]; then git add -- data/index-technical/bars.json; fi
           if [ -f data/sectors/market-caps.json ]; then
             git add -- data/sectors/market-caps.json
           fi
@@ -159,5 +167,5 @@ jobs:
           git rebase "origin/$BRANCH"
           git push origin "HEAD:$BRANCH"
       - name: Report collection failures after publishing available results
-        if: steps.sectors.outcome == 'failure' || steps.sector-caps.outcome == 'failure' || steps.sector-index.outcome == 'failure' || steps.annual-estimates.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.investment-risk.outcome == 'failure' || steps.stock-returns.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
+        if: steps.sectors.outcome == 'failure' || steps.sector-caps.outcome == 'failure' || steps.sector-index.outcome == 'failure' || steps.index-bars.outcome == 'failure' || steps.annual-estimates.outcome == 'failure' || steps.minervini.outcome == 'failure' || steps.proxy-close.outcome == 'failure' || steps.market-caps.outcome == 'failure' || steps.investment-risk.outcome == 'failure' || steps.stock-returns.outcome == 'failure' || steps.adr.outcome == 'failure' || steps.market-indicators.outcome == 'failure'
         run: exit 1

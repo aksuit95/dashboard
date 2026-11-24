@@ -5,6 +5,7 @@ import { addMarketCapsToLegacyRadar, collectStockRadar } from "@/lib/stock-radar
 import { localDate } from "@/lib/market/market-hours";
 import { radarCloseTime } from "@/lib/stock-radar/krx";
 import { readStockRadar, stockRadarPath } from "@/lib/stock-radar/publication";
+import { publishIndexBreadth } from "@/lib/sources/index-breadth";
 
 async function main() {
   loadEnv();
@@ -16,7 +17,8 @@ async function main() {
   const force = process.argv.includes("--force");
   const previous = await readStockRadar();
   if (previous && previous.asOf > asOf) throw new Error("KRX 레이더 기준일 역행");
-  if (!force && previous?.asOf === asOf && previous.source === "KRX_OPEN_API" && previous.version === 2) {
+  if (!force && previous?.asOf === asOf && previous.source === "KRX_OPEN_API" && previous.version === 2 && previous.aboveSma20) {
+    await publishIndexBreadth(previous);
     console.log(`${asOf} KRX 레이더 저장본 유지`);
     return;
   }
@@ -26,6 +28,7 @@ async function main() {
     throw new Error(`${asOf} KRX 공식 저장본 유지 · 잠정본으로 변경 불가`);
   }
   await atomicJson(stockRadarPath, snapshot);
+  await publishIndexBreadth(snapshot);
   const covered = snapshot.rows.filter(row => row.metrics["52w"]).length;
   console.log(`${asOf} ${snapshot.source} 보통주 ${snapshot.rows.length}종목 저장 · 52주 분석 ${covered}종목`);
 }

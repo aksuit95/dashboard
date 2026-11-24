@@ -27,6 +27,7 @@ export type RadarRow = {
   metrics: Record<RadarPeriod, RadarMetrics | null>;
 };
 export type RadarSeries = { prices: number[]; adjustedFrom: string | null };
+export type RadarAboveSma20 = Record<RadarMarket, { above: number; eligible: number }>;
 export type RadarSnapshot = {
   version: 1 | 2;
   exchange: "KRX";
@@ -39,6 +40,7 @@ export type RadarSnapshot = {
   dates: string[];
   rows: RadarRow[];
   series: Record<string, RadarSeries>;
+  aboveSma20?: RadarAboveSma20;
 };
 const pct = (price: number, reference: number) => (price - reference) / reference * 100;
 

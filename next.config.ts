@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     "/market-liquidity": ["./data/market-liquidity/board.json"],
     "/api/stock-returns": ["./data/stock-returns/board.json"],
     "/stock-radar": ["./data/stock-radar/board.json"],
+    "/index-technical": ["./data/index-technical/*.json", "./data/adr/board.json"],
     "/api/stock-radar/[code]": ["./data/stock-radar/board.json"],
     "/api/investment-risk": ["./data/valuation/market-caps.json"],
     "/api/investment-risk/outlook": ["./data/investment-risk/closes.json", "./data/financials/board.json", "./data/financials/kosdaq150.json"],

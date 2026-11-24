@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MinerviniBoard } from "@/components/MinerviniBoard";
 import { PageHeader } from "@/components/PageHeader";
 import { minerviniUniverseIds, minerviniUniverses } from "@/config/minervini";
@@ -14,5 +15,6 @@ export default function MinerviniPage() {
         <MinerviniBoard universe={universe} />
       </div>)}
     </div>
+    <Link href="/index-technical" className="mt-8 inline-block rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300 hover:bg-white/10">지수 기술적 분석 →</Link>
   </div>;
 }
