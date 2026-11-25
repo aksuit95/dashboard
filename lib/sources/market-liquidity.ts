@@ -16,8 +16,8 @@ async function available<T>(load: Promise<{ value: T; collectedAt: string }>) {
   catch (error) { return { value: null, collectedAt: null, error: error instanceof Error ? error.message : "통계 수집 실패" }; }
 }
 
-const funds = cached("cash", collectMarketFunds);
-const credit = cached("credit", collectMarginLoans);
+const funds = cached("cash", (from, through) => collectMarketFunds(from, through));
+const credit = cached("credit", (from, through) => collectMarginLoans(from, through));
 const inflows = cached("fund-flow", (from, through) => collectFundFlows(from, through, true));
 const inflowsExEtf = cached("fund-flow-ex-etf", (from, through) => collectFundFlows(from, through, false));
 const principal = cached("fund-principal", (from, through) => collectFundBalance(from, through, "principal"));

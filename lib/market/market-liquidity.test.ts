@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { changeOver, creditToMarketCap, indexTurnoverProfile } from "./market-liquidity";
-import { parseFundFlows, parseMarginLoans, parseMarketFunds } from "@/lib/sources/market-liquidity-kofia";
+import { kofiaPublishedAmountUnit, parseFundFlows, parseMarginLoans, parseMarketFunds, preserveFinerKofiaAmounts } from "@/lib/sources/market-liquidity-kofia";
 import { parsePutCallRatio } from "@/lib/sources/market-liquidity-krx";
 
 const from = "2026-11-18", through = "2026-11-20";
@@ -30,6 +30,22 @@ describe("시장 유동성 원본 검증", () => {
     expect(parsePutCallRatio({ output }, 1_600)).toBe(0.6);
     expect(() => parsePutCallRatio({ output }, 1_601)).toThrow("합계 불일치");
     expect(() => parsePutCallRatio({ output: output.map(row => ({ ...row, ISU_NM: row.ISU_NM.replace("주간", "야간") })) }, 1_600)).toThrow("주간장 종목 확인 실패");
+  });
+
+  it("금투협 백만원 단위 응답의 공표값과 반올림 오차를 보존한다", () => {
+    const unit = kofiaPublishedAmountUnit;
+    const credit = { TMPV1: "20261120", TMPV2: 100, TMPV3: 75, TMPV4: 24 };
+    expect(parseMarginLoans({ ds1: [credit] }, from, through, unit)).toEqual([{ date: through, total: 100_000_000, kospi: 75_000_000, kosdaq: 24_000_000 }]);
+    expect(() => parseMarginLoans({ ds1: [{ ...credit, TMPV4: 23 }] }, from, through, unit)).toThrow("시장 합계 불일치");
+    const flow = { TMPV1: "20261120", TMPV5: 25, TMPV6: 60, TMPV7: -34, TMPV99: "W" };
+    expect(parseFundFlows({ ds1: [flow] }, from, through, unit)).toEqual([{ date: through, subscriptions: 25_000_000, redemptions: 60_000_000, net: -34_000_000 }]);
+    expect(() => parseFundFlows({ ds1: [{ ...flow, TMPV7: -33 }] }, from, through, unit)).toThrow("펀드 유출입 합계 불일치");
+  });
+
+  it("기존 원 단위 값과 일치하는 백만원 공표값만 원 단위로 보존한다", () => {
+    const saved = [{ date: from, value: 10_499_999 }, { date: through, value: 22_500_001 }];
+    const published = [{ date: from, value: 10_000_000 }, { date: "2026-11-19", value: 20_000_000 }, { date: through, value: 22_000_000 }];
+    expect(preserveFinerKofiaAmounts(published, saved)).toEqual([saved[0], published[1], published[2]]);
   });
 });
 

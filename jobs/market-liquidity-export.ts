@@ -2,7 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { loadEnv } from "@/lib/env";
 import { reviewedCloseSession } from "@/lib/market/reviewed-close-session";
-import { collectMarketFunds, collectMarginLoans, collectFundBalance, collectFundFlows, dateBefore, type Dated } from "@/lib/sources/market-liquidity-kofia";
+import { collectMarketFunds, collectMarginLoans, collectFundBalance, collectFundFlows, dateBefore,
+  kofiaPublishedAmountUnit, preserveFinerKofiaAmounts, type Dated } from "@/lib/sources/market-liquidity-kofia";
 import { collectCashIndex, collectDerivativeTotals, collectForeignFutures, collectPutCallSeries, collectVolatilityIndex } from "@/lib/sources/market-liquidity-krx";
 import { liquidityPublicationPath, readLiquidityPublication, validateLiquidityPublication, type LiquidityPublication, type PublishedSeries } from "@/lib/sources/market-liquidity-publication";
 
@@ -34,13 +35,17 @@ async function main() {
 
   const fundFrom = dateBefore(koreaDay, 400), balanceFrom = dateBefore(koreaDay, 100);
   const cashFrom = dateBefore(cashSession, 400), derivativeFrom = dateBefore(derivativeSession, 95);
+  const amountUnit = kofiaPublishedAmountUnit;
+  function refreshKofia<T extends Dated>(name: string, collect: () => Promise<T[]>, saved?: PublishedSeries<T>) {
+    return refresh(name, async () => preserveFinerKofiaAmounts(await collect(), saved?.value ?? []), saved);
+  }
   const kofia = Promise.all([
-    refresh("투자자예탁금", () => collectMarketFunds(fundFrom, koreaDay), previous?.balance),
-    refresh("신용융자", () => collectMarginLoans(fundFrom, koreaDay), previous?.loans),
-    refresh("주식형 순설정액", () => collectFundFlows(fundFrom, koreaDay, true), previous?.including),
-    refresh("주식형 순설정액 ETF 제외", () => collectFundFlows(fundFrom, koreaDay, false), previous?.excluding),
-    refresh("주식형 설정원본", () => collectFundBalance(balanceFrom, koreaDay, "principal"), previous?.principal),
-    refresh("주식형 순자산", () => collectFundBalance(balanceFrom, koreaDay, "nav"), previous?.nav),
+    refreshKofia("투자자예탁금", () => collectMarketFunds(fundFrom, koreaDay, amountUnit), previous?.balance),
+    refreshKofia("신용융자", () => collectMarginLoans(fundFrom, koreaDay, amountUnit), previous?.loans),
+    refreshKofia("주식형 순설정액", () => collectFundFlows(fundFrom, koreaDay, true, amountUnit), previous?.including),
+    refreshKofia("주식형 순설정액 ETF 제외", () => collectFundFlows(fundFrom, koreaDay, false, amountUnit), previous?.excluding),
+    refreshKofia("주식형 설정원본", () => collectFundBalance(balanceFrom, koreaDay, "principal", amountUnit), previous?.principal),
+    refreshKofia("주식형 순자산", () => collectFundBalance(balanceFrom, koreaDay, "nav", amountUnit), previous?.nav),
   ]);
   const krx = Promise.all([
     refresh("코스피", () => collectCashIndex("KOSPI", cashFrom, cashSession), previous?.KOSPI),
