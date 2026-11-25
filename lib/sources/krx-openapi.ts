@@ -13,7 +13,8 @@ export const krxOpenApiServices = {
 } as const;
 export type KrxOpenApiService = keyof typeof krxOpenApiServices;
 
-export class KrxOpenApiNoDataError extends Error {}
+export class KrxOpenApiUnavailableError extends Error {}
+export class KrxOpenApiNoDataError extends KrxOpenApiUnavailableError {}
 
 /** Production API only. Never send a personal key to a sample URL or return it in errors. */
 export async function requestKrxOpenApi(service: KrxOpenApiService, basDd: string, fetchImpl: typeof fetch = fetch): Promise<Row[]> {
@@ -25,8 +26,9 @@ export async function requestKrxOpenApi(service: KrxOpenApiService, basDd: strin
     response = await fetchImpl(`https://data-dbg.krx.co.kr/svc/apis/${service}?basDd=${basDd}`, {
       cache: "no-store", headers: { AUTH_KEY: key, accept: "application/json" }, signal: AbortSignal.timeout(20_000),
     });
-  } catch { throw new Error(`KRX Open API 네트워크 오류 · ${krxOpenApiServices[service]}`); }
+  } catch { throw new KrxOpenApiUnavailableError(`KRX Open API 네트워크 오류 · ${krxOpenApiServices[service]}`); }
   if (response.status === 401 || response.status === 403) throw new Error(`KRX Open API ${response.status} · ${krxOpenApiServices[service]} 개별 이용 승인과 인증키 유효 상태를 확인해 주세요.`);
+  if (response.status === 429 || response.status >= 500) throw new KrxOpenApiUnavailableError(`KRX Open API HTTP ${response.status} · ${krxOpenApiServices[service]}`);
   if (!response.ok) throw new Error(`KRX Open API HTTP ${response.status} · ${krxOpenApiServices[service]}`);
   let data: { OutBlock_1?: unknown; respCode?: unknown };
   try { data = await response.json(); } catch { throw new Error("KRX Open API JSON 형식 오류"); }

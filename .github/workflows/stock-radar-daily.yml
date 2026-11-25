@@ -41,10 +41,12 @@ jobs:
       - name: Collect and verify KRX closing prices
         env:
           KRX_API_KEY: ${{ secrets.KRX_API_KEY }}
+          KRX_ID: ${{ secrets.KRX_ID }}
+          KRX_PW: ${{ secrets.KRX_PW }}
           FORCE: ${{ inputs.force || 'false' }}
         shell: bash
         run: |
-          args=()
+          args=(--krx-web-fallback)
           if [[ "$FORCE" == 'true' ]]; then args+=(--force); fi
           for attempt in 1 2 3; do
             if npm run stock-radar:export -- "${args[@]}"; then exit 0; fi

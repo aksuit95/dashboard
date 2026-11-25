@@ -16,6 +16,7 @@ async function main() {
   }
   const force = process.argv.includes("--force");
   const useKrxWeb = process.argv.includes("--krx-web");
+  const useWebFallback = process.argv.includes("--krx-web-fallback");
   const previous = await readStockRadar();
   if (previous && previous.asOf > asOf) throw new Error("KRX 레이더 기준일 역행");
   if (!force && previous?.asOf === asOf && previous.source === "KRX_OPEN_API" && previous.version === 2 && previous.aboveSma20) {
@@ -24,11 +25,18 @@ async function main() {
     return;
   }
   const snapshot = !force && !useKrxWeb && previous?.version === 1 && previous.source === "NAVER_KRX_CLOSE" && previous.asOf === asOf && asOf === localDate(Date.now())
-    ? await addMarketCapsToLegacyRadar(previous) : await collectStockRadar(asOf, force, useKrxWeb);
+    ? await addMarketCapsToLegacyRadar(previous) : await collectStockRadar(asOf, { force, useKrxWeb, useWebFallback });
   if (previous?.asOf === asOf &&
       ((previous.source === "KRX_OPEN_API" && snapshot.source !== "KRX_OPEN_API") ||
        (previous.source === "KRX_WEB_VERIFIED" && snapshot.source === "NAVER_KRX_CLOSE"))) {
     throw new Error(`${asOf} 기존 검증된 KRX 저장본 유지`);
+  }
+  const unchanged = !force && previous?.asOf === snapshot.asOf && previous.source === snapshot.source &&
+    JSON.stringify(previous) === JSON.stringify({ ...snapshot, fetchedAt: previous.fetchedAt });
+  if (unchanged) {
+    await publishIndexBreadth(previous);
+    console.log(`${asOf} ${previous.source} 검증 완료 · 변경 없음`);
+    return;
   }
   await atomicJson(stockRadarPath, snapshot);
   await publishIndexBreadth(snapshot);
