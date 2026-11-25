@@ -7,8 +7,6 @@ export const krxOpenApiServices = {
   "idx/kosdaq_dd_trd": "KOSDAQ 시리즈 일별시세정보",
   "sto/stk_bydd_trd": "유가증권 일별매매정보",
   "sto/ksq_bydd_trd": "코스닥 일별매매정보",
-  "sto/stk_isu_base_info": "유가증권 종목기본정보",
-  "sto/ksq_isu_base_info": "코스닥 종목기본정보",
   "drv/fut_bydd_trd": "선물 일별매매정보 (주식선물外)",
 } as const;
 export type KrxOpenApiService = keyof typeof krxOpenApiServices;
@@ -34,9 +32,7 @@ export async function requestKrxOpenApi(service: KrxOpenApiService, basDd: strin
   try { data = await response.json(); } catch { throw new Error("KRX Open API JSON 형식 오류"); }
   if (!data || typeof data !== "object" || !Array.isArray(data.OutBlock_1)) throw new Error(`KRX Open API 응답 형식 오류 · ${krxOpenApiServices[service]}`);
   if (!data.OutBlock_1.length) throw new KrxOpenApiNoDataError(`KRX Open API 데이터 없음 · ${krxOpenApiServices[service]} · ${basDd}`);
-  // Security master rows lack BAS_DD. Callers validate their listing date and match the daily market rows.
-  const securityMaster = service === "sto/stk_isu_base_info" || service === "sto/ksq_isu_base_info";
-  if (data.OutBlock_1.some(r => !r || typeof r !== "object" || (!securityMaster || Object.hasOwn(r, "BAS_DD")) && (r as Row).BAS_DD !== basDd)) throw new Error("KRX Open API 기준일 불일치 · 다른 날짜로 대체하지 않습니다.");
+  if (data.OutBlock_1.some(r => !r || typeof r !== "object" || (r as Row).BAS_DD !== basDd)) throw new Error("KRX Open API 기준일 불일치 · 다른 날짜로 대체하지 않습니다.");
   return data.OutBlock_1 as Row[];
 }
 

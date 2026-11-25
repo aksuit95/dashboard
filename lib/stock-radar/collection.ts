@@ -10,8 +10,8 @@ import { buildRadarSnapshot, marketCapFromNaverListedShares, parseNaverRadarQuot
 import type { RadarMarket, RadarSnapshot } from "./model";
 
 const sources = {
-  KOSPI: { quotes: "sto/stk_bydd_trd", master: "sto/stk_isu_base_info", benchmark: "005930" },
-  KOSDAQ: { quotes: "sto/ksq_bydd_trd", master: "sto/ksq_isu_base_info", benchmark: "086520" },
+  KOSPI: { quotes: "sto/stk_bydd_trd", benchmark: "005930" },
+  KOSDAQ: { quotes: "sto/ksq_bydd_trd", benchmark: "086520" },
 } as const;
 type Benchmarks = Record<RadarMarket, Map<string, number | null>>;
 export const radarCacheDirectory = path.join(process.cwd(), "tmp", "stock-radar", "krx-v1");
@@ -79,19 +79,6 @@ async function collectOfficialDay(date: string, benchmarks: Benchmarks, useCache
   return day;
 }
 
-async function collectUniverse(date: string) {
-  const get = async (market: RadarMarket) => {
-    const rows = await requestKrxOpenApi(sources[market].master, date.replaceAll("-", ""));
-    const securities = parseRadarSecurities(rows, market, date);
-    if (securities.length < 100) throw new Error(`${date} ${market} KRX 보통주 목록 누락`);
-    return securities;
-  };
-  const [kospi, kosdaq] = await Promise.all([get("KOSPI"), get("KOSDAQ")]);
-  const securities = [...kospi, ...kosdaq];
-  if (new Set(securities.map(item => item.code)).size !== securities.length) throw new Error("KRX 보통주 목록 중복");
-  return securities;
-}
-
 async function collectNaverDay(date: string, securities: RadarSecurity[], benchmarks: Benchmarks): Promise<KrxRadarDay> {
   const day: KrxRadarDay = { date, source: "NAVER_KRX_CLOSE", priceTime: "15:30", markets: { KOSPI: {}, KOSDAQ: {} } };
   const batches: RadarSecurity[][] = [];
@@ -140,11 +127,12 @@ async function collectWebQuotes(date: string, benchmarks: Benchmarks) {
     day.markets[market] = parseRadarQuotes(records, market, date);
     if (!verifiedMarket(day, market, benchmarks)) throw new Error(`${date} ${market} KRX 웹 15:30 종가 교차검증 실패`);
   }));
+  await atomicJson(cachePath(date), day);
   return day;
 }
 
-async function collectWebDay(date: string, benchmarks: Benchmarks) {
-  const day = await collectWebQuotes(date, benchmarks);
+async function collectWebUniverse(day: KrxRadarDay) {
+  const { date } = day;
   const results = await Promise.all(radarMarkets.map(async market => {
     const listings = await krxClient.query("MDCSTAT01901", { mktId: webMarketIds[market] });
     if (!Array.isArray(listings.OutBlock_1)) throw new Error(`${date} ${market} KRX 웹 종목기본정보 누락`);
@@ -159,8 +147,7 @@ async function collectWebDay(date: string, benchmarks: Benchmarks) {
   }));
   const securities = results.flat();
   if (new Set(securities.map(item => item.code)).size !== securities.length) throw new Error("KRX 웹 보통주 목록 중복");
-  await atomicJson(cachePath(date), day);
-  return { day, securities };
+  return securities;
 }
 
 async function collectHistoricalDay(date: string, benchmarks: Benchmarks, useWebFallback: boolean) {
@@ -168,9 +155,7 @@ async function collectHistoricalDay(date: string, benchmarks: Benchmarks, useWeb
     return await collectOfficialDay(date, benchmarks, true, true);
   } catch (error) {
     if (!useWebFallback || radarCloseTime(date) !== "15:30" || !(error instanceof KrxOpenApiUnavailableError)) throw error;
-    const day = await collectWebQuotes(date, benchmarks);
-    await atomicJson(cachePath(date), day);
-    return day;
+    return collectWebQuotes(date, benchmarks);
   }
 }
 
@@ -184,27 +169,28 @@ export async function collectStockRadar(asOf: string, { force = false, useKrxWeb
   const kosdaqDates = [...benchmarks.KOSDAQ.keys()].filter(date => date >= historyStart);
   if (dates.length !== kosdaqDates.length || dates.some((date, index) => kosdaqDates[index] !== date)) throw new Error("코스피·코스닥 거래일 이력 불일치");
 
-  let universeAsOf = asOf;
-  let latest: KrxRadarDay, securities: RadarSecurity[];
+  let latest: KrxRadarDay;
+  let priorUniverse: { date: string; securities: RadarSecurity[] } | undefined;
   if (useKrxWeb) {
-    ({ day: latest, securities } = await collectWebDay(asOf, benchmarks));
+    latest = await collectWebQuotes(asOf, benchmarks);
   } else {
     try {
-      securities = await collectUniverse(asOf);
       latest = await collectOfficialDay(asOf, benchmarks, !force);
     } catch (error) {
       if (useWebFallback && error instanceof KrxOpenApiUnavailableError) {
         console.log(`${error.message} · KRX 웹 통계에서 재조회`);
-        ({ day: latest, securities } = await collectWebDay(asOf, benchmarks));
+        latest = await collectWebQuotes(asOf, benchmarks);
       } else {
         const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
         if (today !== asOf || !(error instanceof KrxOpenApiNoDataError)) throw error;
-        universeAsOf = dates.at(-2)!;
-        securities = await collectUniverse(universeAsOf);
+        const date = dates.at(-2)!;
+        const securities = await collectWebUniverse(await collectHistoricalDay(date, benchmarks, true));
+        priorUniverse = { date, securities };
         latest = await collectNaverDay(asOf, securities, benchmarks);
       }
     }
   }
+  const securities = priorUniverse?.securities ?? await collectWebUniverse(latest);
 
   const history: KrxRadarDay[] = [];
   const priorDates = dates.slice(0, -1);
@@ -212,7 +198,7 @@ export async function collectStockRadar(asOf: string, { force = false, useKrxWeb
     history.push(...await Promise.all(priorDates.slice(i, i + 4).map(date => collectHistoricalDay(date, benchmarks, useKrxWeb || useWebFallback))));
     if (i > 0 && i % 40 === 0) console.log(`KRX 레이더 이력 ${history.length}/${priorDates.length} 거래일 확인`);
   }
-  const snapshot = buildRadarSnapshot(asOf, [...history, latest], securities, new Date().toISOString(), universeAsOf);
+  const snapshot = buildRadarSnapshot(asOf, [...history, latest], securities, new Date().toISOString(), priorUniverse?.date ?? asOf);
   for (const market of radarMarkets) {
     const rows = snapshot.rows.filter(row => row.market === market);
     if (!rows.some(row => row.metrics["52w"])) throw new Error(`${market} KRX 52주 분석 가능 종목 없음`);
