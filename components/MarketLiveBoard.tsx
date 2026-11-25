@@ -11,6 +11,7 @@ import { formatCompact, formatNumber, formatSigned } from "@/lib/format";
 import { marketLiveTradingWindow } from "@/lib/market/market-live-session";
 import {
   MARKET_LIVE_POLL_MS,
+  MARKET_LIVE_CLOSE_LEADER_LIMIT,
   marketLiveSymbols,
   type MarketLiveBoardData,
   type MarketLiveBuyStrengthStock,
@@ -365,7 +366,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
   const showBuyStrength = buyStrengthSelected && buyStrengthLeaders !== undefined;
   const showTurnover = !closed || showBuyStrength;
   const ranked: LeaderRow[] = (showBuyStrength ? buyStrengthLeaders : leaders)
-    .filter((stock) => market === "all" || stock.market === market).slice(0, 10);
+    .filter((stock) => market === "all" || stock.market === market).slice(0, closed ? MARKET_LIVE_CLOSE_LEADER_LIMIT : 10);
   const priceLabel = closed ? "종가" : "현재가";
   const timeLabel = closed ? "가격 기준 시각" : "시세 시각";
   return (

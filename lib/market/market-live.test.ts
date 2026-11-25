@@ -5,6 +5,26 @@ const asOf = "2026-11-20T10:00:00+09:00";
 const cutoff = Date.parse(asOf) - 90_000;
 
 describe("market live buy strength", () => {
+  it("keeps twenty candidates per market for each regular-session closing ranking", () => {
+    const closingTime = "2026-11-25T15:30:00+09:00";
+    const markets = ["KOSPI", "KOSDAQ"] as const;
+    const members: MarketLiveMember[] = markets.flatMap((market, index) =>
+      Array.from({ length: 22 }, (_, rank) => ({
+        code: String(index * 100 + rank + 1).padStart(6, "0"), name: String(rank), market, sector: "반도체",
+      })));
+    const quotes = members.map((member, rank) => ({ code: member.code, price: 101 + rank, turnover: 100 - rank, asOf: closingTime }));
+    const closes = new Map(members.map(member => [member.code, 100]));
+    const caps = new Map(members.map(member => [member.code, 1_000]));
+    const summary = summarizeMarketLiveStocks(members, quotes, closes, Date.parse(closingTime), "change", caps);
+
+    for (const market of markets) {
+      expect(summary.leaders.filter(stock => stock.market === market)).toHaveLength(20);
+      expect(summary.buyStrengthLeaders?.filter(stock => stock.market === market)).toHaveLength(20);
+    }
+    expect(summary.leaders.slice(0, 20).every(stock => stock.market === "KOSDAQ")).toBe(true);
+    expect(summary.buyStrengthLeaders?.slice(0, 20).every(stock => stock.market === "KOSPI")).toBe(true);
+  });
+
   it("ranks the full rising universe by turnover relative to market cap before applying per-market limits", () => {
     const largeCaps = Array.from({ length: 13 }, (_, i) => String(i + 1).padStart(6, "0"));
     const lowTurnover = "000100";
