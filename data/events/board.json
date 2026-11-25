@@ -1,7 +1,7 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-25T11:51:26.344Z",
+      "updatedAt": "2026-11-25T17:50:50.880Z",
       "error": null,
       "events": [
         {
@@ -58,6 +58,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "3.4%",
+          "actual": "4.3%",
           "previous": "3.4%"
         },
         {
@@ -72,6 +73,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "0.4%",
+          "actual": "0.2%",
           "previous": "1.8%"
         },
         {
@@ -86,6 +88,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "0.5%",
+          "actual": "0.5%",
           "previous": "0.5%"
         },
         {
@@ -100,6 +103,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "3.2%",
+          "actual": "3.3%",
           "previous": "3.1%"
         },
         {
@@ -114,6 +118,7 @@
           "sourceName": "ShowMyTrades",
           "tentative": false,
           "forecast": "0.3%",
+          "actual": "0.3%",
           "previous": "0.3%"
         },
         {
@@ -563,7 +568,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.2%"
         },
         {
           "id": "smt-usd-durable-goods-orders-ex-transportation.20261222T1330",
@@ -575,7 +581,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.5%"
         },
         {
           "id": "smt-usd-core-pce-mom.20261218T1330",
@@ -587,7 +594,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "0.3%"
         },
         {
           "id": "smt-usd-core-pce-yoy.20261218T1330",
@@ -599,7 +607,8 @@
           "detail": "대상 기간 2026-11",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "3.3%"
         },
         {
           "id": "smt-usd-gdp-annualized.20261223T1330",
@@ -611,13 +620,14 @@
           "detail": "대상 기간 2026-07",
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
-          "tentative": false
+          "tentative": false,
+          "previous": "4.3%"
         }
       ],
-      "generatedAt": "2026-11-25T11:51:15Z"
+      "generatedAt": "2026-11-25T17:51:05Z"
     },
     "ism": {
-      "updatedAt": "2026-11-25T11:51:26.344Z",
+      "updatedAt": "2026-11-25T17:50:50.880Z",
       "error": null,
       "events": [
         {
@@ -647,90 +657,90 @@
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-25T11:51:15Z"
+      "generatedAt": "2026-11-25T17:51:05Z"
     },
     "dart": {
-      "updatedAt": "2026-11-24T23:42:08.923Z",
+      "updatedAt": "2026-11-25T17:50:50.880Z",
       "error": null,
-      "capAsOf": "2026-11-24",
+      "capAsOf": "2026-11-25",
       "companies": [
         {
           "code": "005930",
           "corpCode": "00126380",
           "name": "삼성전자",
-          "marketCap": 1107285168355200,
+          "marketCap": 997959758385600,
           "status": "발표완료"
         },
         {
           "code": "000660",
           "corpCode": "00164779",
           "name": "SK하이닉스",
-          "marketCap": 818473349694000,
+          "marketCap": 728003065790000,
           "status": "발표완료"
         },
         {
           "code": "402340",
           "corpCode": "01596425",
           "name": "SK스퀘어",
-          "marketCap": 94325658570000,
+          "marketCap": 83771738730000,
           "status": "확인되지 않음"
         },
         {
           "code": "373220",
           "corpCode": "01515323",
           "name": "LG에너지솔루션",
-          "marketCap": 73593000000000,
+          "marketCap": 72189000000000,
           "status": "발표완료"
-        },
-        {
-          "code": "009150",
-          "corpCode": "00126371",
-          "name": "삼성전기",
-          "marketCap": 64087191168000,
-          "status": "발표완료",
-          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012800250"
         },
         {
           "code": "207940",
           "corpCode": "00877059",
           "name": "삼성바이오로직스",
-          "marketCap": 59715326790000,
+          "marketCap": 63094566213000,
           "status": "발표완료",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261007800351"
+        },
+        {
+          "code": "009150",
+          "corpCode": "00126371",
+          "name": "삼성전기",
+          "marketCap": 56393740480000,
+          "status": "발표완료",
+          "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261012800250"
         },
         {
           "code": "005380",
           "corpCode": "00164742",
           "name": "현대차",
-          "marketCap": 55953285300000,
+          "marketCap": 54834219594000,
           "status": "발표완료"
         },
         {
           "code": "105560",
           "corpCode": "00688996",
           "name": "KB금융",
-          "marketCap": 53699722927600,
-          "status": "발표완료"
-        },
-        {
-          "code": "032830",
-          "corpCode": "00126256",
-          "name": "삼성생명",
-          "marketCap": 49400000000000,
+          "marketCap": 52529253405400,
           "status": "발표완료"
         },
         {
           "code": "068270",
           "corpCode": "00413046",
           "name": "셀트리온",
-          "marketCap": 48515000501000,
+          "marketCap": 50372034013000,
+          "status": "발표완료"
+        },
+        {
+          "code": "032830",
+          "corpCode": "00126256",
+          "name": "삼성생명",
+          "marketCap": 44000000000000,
           "status": "발표완료"
         },
         {
           "code": "028260",
           "corpCode": "00149655",
           "name": "삼성물산",
-          "marketCap": 43055492755500,
+          "marketCap": 39487805973500,
           "status": "발표완료",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261014800572"
         },
@@ -738,57 +748,57 @@
           "code": "055550",
           "corpCode": "00382199",
           "name": "신한지주",
-          "marketCap": 40088155211800,
+          "marketCap": 39393787627300,
           "status": "예정"
         },
         {
           "code": "000270",
           "corpCode": "00106641",
           "name": "기아",
-          "marketCap": 37323482608800,
+          "marketCap": 37479647808000,
           "status": "예정"
         },
         {
           "code": "006400",
           "corpCode": "00126362",
           "name": "삼성SDI",
-          "marketCap": 36263488500000,
-          "status": "발표완료"
-        },
-        {
-          "code": "034730",
-          "corpCode": "00181712",
-          "name": "SK",
-          "marketCap": 34692543385500,
-          "status": "확인되지 않음"
-        },
-        {
-          "code": "086790",
-          "corpCode": "00547583",
-          "name": "하나금융지주",
-          "marketCap": 33124265512400,
+          "marketCap": 33684751540000,
           "status": "발표완료"
         },
         {
           "code": "012450",
           "corpCode": "00126566",
           "name": "한화에어로스페이스",
-          "marketCap": 32381815828000,
+          "marketCap": 32639632833000,
           "status": "발표완료",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261008800483"
+        },
+        {
+          "code": "086790",
+          "corpCode": "00547583",
+          "name": "하나금융지주",
+          "marketCap": 32532280263600,
+          "status": "발표완료"
         },
         {
           "code": "012330",
           "corpCode": "00164788",
           "name": "현대모비스",
-          "marketCap": 32245590015000,
+          "marketCap": 31392294457500,
           "status": "발표완료"
+        },
+        {
+          "code": "034730",
+          "corpCode": "00181712",
+          "name": "SK",
+          "marketCap": 31067408235500,
+          "status": "확인되지 않음"
         },
         {
           "code": "034020",
           "corpCode": "00159616",
           "name": "두산에너빌리티",
-          "marketCap": 27448045106100,
+          "marketCap": 25622445840000,
           "status": "발표완료",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261022800612"
         },
@@ -796,79 +806,79 @@
           "code": "329180",
           "corpCode": "01390344",
           "name": "HD현대중공업",
-          "marketCap": 26292786862500,
+          "marketCap": 25558058287500,
           "status": "발표완료"
         },
         {
           "code": "035420",
           "corpCode": "00266961",
           "name": "NAVER",
-          "marketCap": 23746953518400,
-          "status": "발표완료"
-        },
-        {
-          "code": "066570",
-          "corpCode": "00401731",
-          "name": "LG전자",
-          "marketCap": 23325080161600,
+          "marketCap": 24188120496000,
           "status": "발표완료"
         },
         {
           "code": "316140",
           "corpCode": "01350869",
           "name": "우리금융지주",
-          "marketCap": 23096460043800,
+          "marketCap": 23133296503200,
           "status": "예정"
         },
         {
           "code": "000810",
           "corpCode": "00139214",
           "name": "삼성화재",
-          "marketCap": 22814858703000,
+          "marketCap": 22948801122000,
+          "status": "발표완료"
+        },
+        {
+          "code": "066570",
+          "corpCode": "00401731",
+          "name": "LG전자",
+          "marketCap": 22315195406000,
           "status": "발표완료"
         },
         {
           "code": "011200",
           "corpCode": "00164645",
           "name": "HMM",
-          "marketCap": 21081368629500,
+          "marketCap": 20892721035500,
           "status": "확인되지 않음"
         },
         {
           "code": "138040",
           "corpCode": "00860332",
           "name": "메리츠금융지주",
-          "marketCap": 20583714579000,
+          "marketCap": 20717592397400,
           "status": "발표완료"
         },
         {
           "code": "005490",
           "corpCode": "00155319",
           "name": "POSCO홀딩스",
-          "marketCap": 20246210148500,
+          "marketCap": 19929244040500,
           "status": "발표완료"
         },
         {
           "code": "033780",
           "corpCode": "00244455",
           "name": "KT&G",
-          "marketCap": 19069980767200,
+          "marketCap": 19018075539200,
           "status": "발표완료"
         },
         {
           "code": "010120",
           "corpCode": "00105855",
           "name": "LS ELECTRIC",
-          "marketCap": 18300000000000,
+          "marketCap": 17145000000000,
           "status": "발표완료",
           "source": "https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20261016800208"
         },
         {
-          "code": "298040",
-          "corpCode": "01316245",
-          "name": "효성중공업",
-          "marketCap": 16439178124000,
-          "status": "발표완료"
+          "code": "180640",
+          "corpCode": "00983040",
+          "name": "한진칼",
+          "marketCap": 16423519650000,
+          "status": "확인되지 않음"
         }
       ],
       "events": [
