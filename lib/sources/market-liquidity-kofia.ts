@@ -89,9 +89,15 @@ function freeSis(object: string, from: string, through: string, filters: Record<
     method: "POST", cache: "no-store", signal: AbortSignal.timeout(12_000),
     headers: { "content-type": "application/json", accept: "application/json", referer: `${origin}/` },
     body: JSON.stringify({ dmSearch: { tmpV40: "1", tmpV41: "1", tmpV1: "D", tmpV45: compact(from), tmpV46: compact(through), OBJ_NM: object, ...filters } }),
-  }, response => {
+  }, async response => {
     if (!response.ok) throw new Error(`금투협 통계 HTTP ${response.status}`);
-    return response.json();
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      throw new Error(`${reason} · ${response.headers.get("content-type")} · ${JSON.stringify(text.slice(0, 220))}`);
+    }
   });
 }
 
