@@ -1,8 +1,8 @@
 {
   "schema_version": "short-selling.krx-close.v1",
-  "dataset_id": "237db7daf220355f14cb",
-  "as_of": "2026-11-24",
-  "collected_at": "2026-11-25T06:06:29.873975+09:00",
+  "dataset_id": "aa16135ddfac511a67ad",
+  "as_of": "2026-11-25",
+  "collected_at": "2026-11-26T05:29:42.994548+09:00",
   "price_basis": {
     "exchange": "KRX",
     "session": "regular",
@@ -11,7 +11,7 @@
     "adjusted": false
   },
   "is_sample": false,
-  "period_start": "2025-11-24",
+  "period_start": "2025-11-25",
   "flow_scope": "KRX short-selling statistics; ratios use denominators from the same source response; venue scope not independently verified",
   "universe": "kospi200",
   "membership_basis": "point_in_time",
@@ -21,20 +21,6 @@
     "ratio": "percent_0_100"
   },
   "rows": [
-    {
-      "date": "2025-11-24",
-      "session_status": "trading",
-      "index_close": 540.81,
-      "short_value": 1017216331489,
-      "trading_value": 22260016960119,
-      "short_volume": 10797548,
-      "volume": 191777882,
-      "short_value_ratio_pct": 4.569701511510268,
-      "short_volume_ratio_pct": 5.630236337681527,
-      "expected_count": 200,
-      "observed_count": 200,
-      "coverage": "complete"
-    },
     {
       "date": "2025-11-25",
       "session_status": "trading",
@@ -5141,6 +5127,20 @@
       "volume": 136081917,
       "short_value_ratio_pct": 3.33210556111359,
       "short_volume_ratio_pct": 5.354100795038036,
+      "expected_count": 201,
+      "observed_count": 201,
+      "coverage": "complete"
+    },
+    {
+      "date": "2026-11-25",
+      "session_status": "trading",
+      "index_close": 723.81,
+      "short_value": 832943516142,
+      "trading_value": 22839490554483,
+      "short_volume": 8019330,
+      "volume": 137770382,
+      "short_value_ratio_pct": 3.646944375379281,
+      "short_volume_ratio_pct": 5.820793906196761,
       "expected_count": 201,
       "observed_count": 201,
       "coverage": "complete"
