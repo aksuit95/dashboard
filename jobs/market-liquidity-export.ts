@@ -25,8 +25,9 @@ async function main() {
         return saved && JSON.stringify(value) === JSON.stringify(saved.value) ? saved : { value, collectedAt: new Date().toISOString() };
       } catch (error) { failure = error; }
     }
-    if (!saved) throw new Error(`${name} 초기 수집 실패 · ${failure instanceof Error ? failure.message : "응답 오류"}`);
-    console.error(`${name} 갱신 실패 · 저장된 기준일 ${saved.value.at(-1)?.date} 유지`);
+    const reason = failure instanceof Error ? failure.message : "응답 오류";
+    if (!saved) throw new Error(`${name} 초기 수집 실패 · ${reason}`);
+    console.error(`${name} 갱신 실패 · ${reason} · 저장된 기준일 ${saved.value.at(-1)?.date} 유지`);
     process.exitCode = 1;
     return saved;
   }
