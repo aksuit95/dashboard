@@ -26,7 +26,7 @@ describe("market live buy strength", () => {
   });
 
   it("ranks the full rising universe by turnover relative to market cap before applying per-market limits", () => {
-    const largeCaps = Array.from({ length: 13 }, (_, i) => String(i + 1).padStart(6, "0"));
+    const largeCaps = Array.from({ length: 21 }, (_, i) => String(i + 1).padStart(6, "0"));
     const lowTurnover = "000100";
     const kosdaq = "000200";
     const codes = [...largeCaps, lowTurnover, kosdaq];
@@ -40,8 +40,9 @@ describe("market live buy strength", () => {
     const board = summarizeMarketLiveStocks(members, quotes, closes, cutoff, "turnover", caps);
 
     expect(board.leaders.some(stock => stock.code === lowTurnover)).toBe(false);
+    expect(board.leaders.filter(stock => stock.market === "KOSPI")).toHaveLength(20);
     expect(board.buyStrengthLeaders?.[0]).toMatchObject({ code: lowTurnover, marketCap: 1_000, buyStrengthPct: 5 });
-    expect(board.buyStrengthLeaders?.filter(stock => stock.market === "KOSPI")).toHaveLength(12);
+    expect(board.buyStrengthLeaders?.filter(stock => stock.market === "KOSPI")).toHaveLength(20);
     expect(board.buyStrengthLeaders?.filter(stock => stock.market === "KOSDAQ")).toHaveLength(1);
   });
 

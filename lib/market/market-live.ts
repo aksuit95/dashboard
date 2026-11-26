@@ -2,7 +2,7 @@ import type { Sector } from "@/config/sectors";
 
 export const MARKET_LIVE_POLL_MS = 15_000;
 export const MARKET_LIVE_STALE_MS = 90_000;
-export const MARKET_LIVE_CLOSE_LEADER_LIMIT = 20;
+export const MARKET_LIVE_LEADER_LIMIT = 20;
 export const marketLiveSymbols = ["KOSPI", "KOSDAQ"] as const;
 export type MarketLiveSymbol = typeof marketLiveSymbols[number];
 
@@ -128,17 +128,16 @@ export function summarizeMarketLiveStocks(
   }).sort((a, b) => (b.changePct ?? -Infinity) - (a.changePct ?? -Infinity) || a.name.localeCompare(b.name, "ko"));
   const rank = (a: MarketLiveStock, b: MarketLiveStock) =>
     (leaderOrder === "turnover" ? (b.turnover ?? 0) - (a.turnover ?? 0) : 0) || b.changePct - a.changePct || a.code.localeCompare(b.code);
-  const leaderLimit = leaderOrder === "change" ? MARKET_LIVE_CLOSE_LEADER_LIMIT : 12;
   const leaders = marketLiveSymbols.flatMap(market => stocks
     .filter(row => row.market === market && row.changePct > 0 && (leaderOrder === "change" || (row.turnover ?? 0) > 0))
-    .sort(rank).slice(0, leaderLimit)).sort(rank);
-  const buyStrengthLeaders = marketCaps && rankBuyStrength(stocks, marketCaps, leaderLimit);
+    .sort(rank).slice(0, MARKET_LIVE_LEADER_LIMIT)).sort(rank);
+  const buyStrengthLeaders = marketCaps && rankBuyStrength(stocks, marketCaps);
   const up = countUp(stocks);
   const down = stocks.filter(row => row.changePct < 0).length;
   return { sectors, leaders, buyStrengthLeaders, rotationStocks, sectorStocks, breadth: { up, down, flat: stocks.length - up - down, compared: stocks.length, total: members.length } };
 }
 
-function rankBuyStrength(stocks: MarketLiveStock[], marketCaps: ReadonlyMap<string, number>, limit: number) {
+function rankBuyStrength(stocks: MarketLiveStock[], marketCaps: ReadonlyMap<string, number>) {
   const eligible = stocks.flatMap(stock => {
     const marketCap = marketCaps.get(stock.code);
     if (stock.changePct <= 0 || stock.turnover == null || !Number.isFinite(stock.turnover) || stock.turnover <= 0 ||
@@ -147,5 +146,5 @@ function rankBuyStrength(stocks: MarketLiveStock[], marketCaps: ReadonlyMap<stri
   });
   const rank = (a: MarketLiveBuyStrengthStock, b: MarketLiveBuyStrengthStock) =>
     b.buyStrengthPct - a.buyStrengthPct || b.changePct - a.changePct || a.code.localeCompare(b.code);
-  return marketLiveSymbols.flatMap(market => eligible.filter(stock => stock.market === market).sort(rank).slice(0, limit)).sort(rank);
+  return marketLiveSymbols.flatMap(market => eligible.filter(stock => stock.market === market).sort(rank).slice(0, MARKET_LIVE_LEADER_LIMIT)).sort(rank);
 }
