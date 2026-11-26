@@ -1,21 +1,9 @@
 {
   "feeds": {
     "show": {
-      "updatedAt": "2026-11-26T11:40:26.705Z",
+      "updatedAt": "2026-11-26T17:35:38.379Z",
       "error": null,
       "events": [
-        {
-          "id": "smt-usd-fomc-minutes.20261118T1900",
-          "date": "2026-11-19",
-          "time": "04:00",
-          "country": "US",
-          "category": "매크로",
-          "title": "FOMC Minutes",
-          "detail": "시장 영향도 높음",
-          "source": "https://showmytrades.com/tools/economic-calendar",
-          "sourceName": "ShowMyTrades",
-          "tentative": false
-        },
         {
           "id": "smt-usd-manufacturing-pmi.20261123T1445",
           "date": "2026-11-23",
@@ -184,6 +172,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "55.2",
           "previous": "55.5"
         },
         {
@@ -262,6 +251,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "54.5",
           "previous": "54.5"
         },
         {
@@ -624,10 +614,10 @@
           "previous": "4.3%"
         }
       ],
-      "generatedAt": "2026-11-26T11:40:11Z"
+      "generatedAt": "2026-11-26T17:35:16Z"
     },
     "ism": {
-      "updatedAt": "2026-11-26T11:40:26.705Z",
+      "updatedAt": "2026-11-26T17:35:38.379Z",
       "error": null,
       "events": [
         {
@@ -641,6 +631,7 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "55.2",
           "previous": "55.5"
         },
         {
@@ -654,14 +645,15 @@
           "source": "https://showmytrades.com/tools/economic-calendar",
           "sourceName": "ShowMyTrades",
           "tentative": false,
+          "forecast": "54.5",
           "previous": "54.5"
         }
       ],
-      "generatedAt": "2026-11-26T11:40:11Z"
+      "generatedAt": "2026-11-26T17:35:16Z"
     },
     "dart": {
       "updatedAt": "2026-11-25T17:50:50.880Z",
-      "error": null,
+      "error": "DART 기업 목록 수집 실패: DART 네트워크 연결 실패 (TimeoutError) · 3회 시도",
       "capAsOf": "2026-11-25",
       "companies": [
         {
