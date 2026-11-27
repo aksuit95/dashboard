@@ -1,9 +1,9 @@
 name: Publish macro and earnings calendar
 on:
   schedule:
-    # Every day at 16:00 Asia/Seoul (07:00 UTC).
+    # Korean macro and the daily calendar refresh at 16:00 KST (07:00 UTC).
     - cron: '0 7 * * *'
-    # Macro results: 00:00, 04:00, 08:00, 12:00 and 20:00 KST.
+    # Additional US macro refreshes: 00:00, 04:00, 08:00, 12:00 and 20:00 KST.
     - cron: '0 3,11,15,19,23 * * *'
   workflow_dispatch:
 permissions:
@@ -31,7 +31,6 @@ jobs:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
-          TRADING_ECONOMICS_API_KEY: ${{ secrets.TRADING_ECONOMICS_API_KEY }}
           SCHEDULE: ${{ github.event.schedule }}
         run: |
           if [ "$SCHEDULE" = '0 3,11,15,19,23 * * *' ]; then

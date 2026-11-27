@@ -106,8 +106,9 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
       {country==="KR" ? <>
         <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 ${feeds.dart.capAsOf === "2026-11-19" ? "16:30" : "15:30"} 종가` : "확인되지 않음"}.</p>
         {feedStatus("DART · KRX",feeds.dart)}
-        <p className="mt-2 text-xs leading-5 text-zinc-400">국내 매크로는 한국은행·국가데이터처·관세청에서 수집합니다. 이전치는 같은 지표의 직전 기간 발표값이며, 컨센서스는 출처를 확인한 시장 설문만 표시합니다.</p>
+        <p className="mt-2 text-xs leading-5 text-zinc-400">국내 매크로와 컨센서스는 매일 16:00 KST에 갱신합니다. 일정과 발표값은 한국은행·국가데이터처·관세청에서 수집하며, 이전치는 같은 지표의 직전 기간 발표값입니다.</p>
         {krMacroFeeds.map(({label,feed}) => <div key={label}>{feedStatus(label,feed)}</div>)}
+        {feedStatus("컨센서스 · Myfxbook",feeds.krConsensus)}
         <p className="mt-2 text-xs leading-5 text-zinc-400">공시예고가 없으면 날짜를 추측하지 않습니다. 공시와 IR 설명회는 별개이며 정정·취소될 수 있습니다. 발표일이 4주 밖인 일정은 목록에 표시되지 않습니다.</p>
       </> : <>
         <p className="mt-2 text-xs leading-5 text-zinc-400">미국 주요 매크로와 ISM은 ShowMyTrades에서 4시간마다 수집하며, 화면을 열 때도 최신값을 확인합니다. 기업 실적은 수동 확인 ({reviewedAt}) 자료이며 실적 예상치·실제치는 아직 자동 제공하지 않습니다.</p>

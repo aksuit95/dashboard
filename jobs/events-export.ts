@@ -4,7 +4,8 @@ import { refreshFeed, shouldRefreshDart, type Feed, type Snapshot } from "@/lib/
 import { loadEnv } from "@/lib/env";
 import { collectDartEarnings } from "@/lib/events/dart-earnings";
 import { headlineIsm, mergeRecentEvents, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
-import { refreshKoreanMacroFeeds, type CalendarQuote } from "@/lib/events/korean-macro";
+import { refreshKoreanMacroFeeds } from "@/lib/events/korean-macro";
+import { collectMyfxbookConsensus, type KoreanConsensusQuote } from "@/lib/events/korean-consensus";
 
 const path = "data/events/board.json";
 async function download(url: string) {
@@ -20,24 +21,18 @@ async function main() {
   const macroOnly = process.argv.includes("--macro-only");
   const koreanMacroOnly = process.argv.includes("--kr-macro-only");
   async function refreshKoreanMacro() {
-    const key = process.env.TRADING_ECONOMICS_API_KEY?.trim();
-    let quotes: CalendarQuote[] = [];
-    if (key) {
-      const url = new URL(`https://api.tradingeconomics.com/calendar/country/south%20korea/${addDays(today,-7)}/${addDays(today,28)}`);
-      url.searchParams.set("c", key);
-      try {
-        const response = JSON.parse(await download(url.href));
-        if (!Array.isArray(response)) throw new Error("컨센서스 응답 형식 오류");
-        quotes = response;
-      } catch {
-        console.warn("Trading Economics 컨센서스 조회 실패 · 공식 자료 수집 계속");
-      }
-    }
-    return refreshKoreanMacroFeeds(prior.feeds, current, download, quotes);
+    let quotes: KoreanConsensusQuote[] | null = null;
+    const krConsensus = await refreshFeed(prior.feeds.krConsensus, async () => {
+      quotes = await collectMyfxbookConsensus(today);
+      return [];
+    }, now);
+    const official = await refreshKoreanMacroFeeds(prior.feeds, current, download, quotes);
+    return { ...official, krConsensus };
   }
   const refreshDart = shouldRefreshDart(macroOnly, prior.feeds.dart);
   let generatedAt: string | undefined;
-  const krPromise = refreshKoreanMacro();
+  // Extra US macro runs do not refresh any of the Korean macro feeds.
+  const krPromise: Promise<Record<string, Feed>> = macroOnly && !koreanMacroOnly ? Promise.resolve({}) : refreshKoreanMacro();
   const [show, dart] = koreanMacroOnly ? [prior.feeds.show, prior.feeds.dart] : await Promise.all([
     refreshFeed(prior.feeds.show, async () => { const parsed = parseShowMyTrades(JSON.parse(await download(SHOWMYTRADES_URL)), current); generatedAt = parsed.generatedAt; return mergeRecentEvents(prior.feeds.show?.events ?? [], parsed.events, current); }, now),
     !refreshDart ? Promise.resolve(prior.feeds.dart!) : collectDartEarnings(current).catch(error => ({updatedAt:prior.feeds.dart?.updatedAt ?? null, error:error instanceof Error ? error.message : "DART 수집 실패", capAsOf:prior.feeds.dart?.capAsOf ?? null, companies:prior.feeds.dart?.companies ?? [], events:prior.feeds.dart?.events ?? []})),

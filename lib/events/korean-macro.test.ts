@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { matchConsensus, parseOfficialResult, parseStatsSchedule } from "./korean-macro";
+import { parseMyfxbookConsensus, type KoreanConsensusQuote } from "./korean-consensus";
 
 const board = (text: string) => `<div class="board_content">${text}</div>`;
 
@@ -28,11 +29,34 @@ describe("Korean macro releases", () => {
 
   it("uses only an unambiguous consensus for the same series, reference period and Korean release date", () => {
     const release = { date:"2026-12-02", time:"08:00", period:"2026-11", source:"https://www.kostat.go.kr" };
-    const quote = { Country:"South Korea", Event:"Inflation Rate YoY", Date:"2026-12-01T23:00:00", ReferenceDate:"2026-11-30T00:00:00", Forecast:"2.8%" };
+    const quote: KoreanConsensusQuote = { indicator:"krCpi", date:"2026-12-02", time:"08:00", period:"2026-11", value:"2.8%" };
     expect(matchConsensus("krCpi", release, [quote])?.value).toBe("2.8%");
     expect(matchConsensus("krCpi", release, [quote, quote])).toBeUndefined();
-    expect(matchConsensus("krCpi", release, [{...quote, ReferenceDate:"2026-10-31"}])).toBeUndefined();
-    expect(matchConsensus("krCpi", release, [{...quote, Event:"Inflation Rate MoM"}])).toBeUndefined();
-    expect(matchConsensus("krCpi", release, [{...quote, Forecast:""}])).toBeUndefined();
+    expect(matchConsensus("krCpi", release, [{...quote, period:"2026-10"}])).toBeUndefined();
+    expect(matchConsensus("krCpi", release, [{...quote, time:"09:00"}])).toBeUndefined();
+    expect(matchConsensus("krCpi", release, [{...quote, indicator:"krJobs"}])).toBeUndefined();
+  });
+
+  it("reads the widget's consensus column and converts UTC and reference periods across year boundaries", () => {
+    const row = (title: string, timestamp: string, value: string, currency="KRW") => `
+      <div data-calendar-row="1">
+        <div data-time-left="${Date.parse(timestamp)}">2 days</div>
+        <div class="calendar-title">${title}</div>
+        <div class="calendar-results"><div>Act: 2.7%</div><div>Cons: ${value}</div><div>Prev: 2.8%</div></div>
+        <div class="calendar-country">${currency}</div>
+      </div><div data-event-description></div>`;
+    const html = '<div id="calendarMobile">' + [
+      row("Inflation Rate YoY (Dec)", "2026-12-31T23:00:00Z", "3%"),
+      row("GDP Growth Rate QoQ (Q4)", "2027-01-27T23:00:00Z", "-0.1%"),
+      row("Inflation Rate MoM (Dec)", "2026-12-31T23:00:00Z", "0%"),
+      row("Industrial Production MoM (Dec)", "2027-01-27T23:00:00Z", "-4%"),
+      row("Inflation Rate YoY (Dec)", "2026-12-31T23:00:00Z", "4%", "EUR"),
+      row("Unemployment Rate (Dec)", "2027-01-12T23:00:00Z", ""),
+    ].join("") + "</div>";
+    expect(parseMyfxbookConsensus(html)).toEqual([
+      { indicator:"krCpi", date:"2027-01-01", time:"08:00", period:"2026-12", value:"3%" },
+      { indicator:"krGdp", date:"2027-01-28", time:"08:00", period:"2026-Q4", value:"-0.1%" },
+    ]);
+    expect(() => parseMyfxbookConsensus("<title>Service unavailable</title>")).toThrow("형식 변경");
   });
 });

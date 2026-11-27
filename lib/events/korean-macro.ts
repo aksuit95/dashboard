@@ -1,5 +1,6 @@
 import { addDays, seoulDate, type MarketEvent } from "./calendar";
 import { refreshFeed, type Feed } from "./refresh";
+import { MYFXBOOK_KOREA, type KoreanConsensusQuote } from "./korean-consensus";
 
 const BOK = "https://www.bok.or.kr";
 const KOSTAT = "https://www.kostat.go.kr";
@@ -185,26 +186,13 @@ function asEvent(key: FeedKey, release: Release): MarketEvent {
 const verifiedConsensus: Record<string, Outlook> = {
   "krRate-2026-11-26": { value: "3.25%", label: "AJP 설문", source: "https://www.ajupress.com/view/20261123163804930" },
 };
-export type CalendarQuote = { Country?: string; Event?: string; Date?: string; ReferenceDate?: string; Forecast?: string };
-export function matchConsensus(key: FeedKey, release: Release, quotes: CalendarQuote[]): Outlook | undefined {
-  const names = {
-    krRate: /^interest rate decision$/i, krCpi: /^inflation rate yoy$/i, krJobs: /^unemployment rate$/i,
-    krIndustry: null, krGdp: /^gdp growth rate qoq (?:prel|prelim(?:inary)?)$/i, krExports: /^exports? yoy$/i,
-  }[key];
-  if (!names || release.stage === "확정" || (key === "krGdp" && release.stage !== "속보")) return;
-  const match = quotes.filter(row => {
-    if (typeof row?.Country !== "string" || row.Country.toLowerCase() !== "south korea" ||
-      typeof row.Event !== "string" || !names.test(row.Event) || typeof row.Date !== "string" ||
-      typeof row.Forecast !== "string" || !/^[-+]?\d+(?:\.\d+)?%$/.test(row.Forecast.trim())) return false;
-    const instant = new Date(/(?:Z|[+-]\d\d:\d\d)$/.test(row.Date) ? row.Date : `${row.Date}Z`);
-    if (!Number.isFinite(instant.getTime()) || seoulDate(instant) !== release.date) return false;
-    if (key === "krRate") return true;
-    const reference = typeof row.ReferenceDate === "string" && row.ReferenceDate.match(/^(20\d{2})-(0[1-9]|1[0-2])-\d{2}/);
-    if (!reference) return false;
-    const period = key === "krGdp" ? `${reference[1]}-Q${Math.ceil(Number(reference[2]) / 3)}` : `${reference[1]}-${reference[2]}`;
-    return period === release.period;
-  });
-  if (match.length === 1) return { value: match[0].Forecast!.trim(), label: "Trading Economics 설문", source: "https://tradingeconomics.com/south-korea/calendar" };
+export function matchConsensus(key: FeedKey, release: Release, quotes: KoreanConsensusQuote[]): Outlook | undefined {
+  // The exports consensus is for the first release. Industrial Production is
+  // a separate series from Korea's all-industry production headline.
+  if (release.stage === "확정") return;
+  const match = quotes.filter(quote => quote.indicator === key && quote.period === release.period &&
+    quote.date === release.date && (release.time === null || quote.time === release.time));
+  if (match.length === 1) return { value: match[0].value, label: "Myfxbook 컨센서스", source: MYFXBOOK_KOREA };
 }
 
 async function publicationResult(key: FeedKey, publication: Publication, read: Read) {
@@ -218,7 +206,7 @@ function bokSearch(term: string): string {
   return `${BOK}/portal/singl/newsData/listCont.do?${params}`;
 }
 
-export async function refreshKoreanMacroFeeds(old: Record<string, Feed>, now: Date, download: Read, quotes: CalendarQuote[] = []) {
+export async function refreshKoreanMacroFeeds(old: Record<string, Feed>, now: Date, download: Read, quotes: KoreanConsensusQuote[] | null = null) {
   const today = seoulDate(now), from = addDays(today, -6), to = addDays(today, 27);
   const months = monthsBetween(from, to);
   const cache = new Map<string, Promise<string>>();
@@ -267,12 +255,14 @@ export async function refreshKoreanMacroFeeds(old: Record<string, Feed>, now: Da
         const event = asEvent(key, item);
         const publication = publications.find(post => post.period === item.period && post.stage === item.stage && post.date === item.date);
         const oldEvent = old[key]?.events.find(previous => previous.id === event.id && previous.date === event.date);
-        const consensus = matchConsensus(key, item, quotes) ?? verifiedConsensus[event.id];
+        const consensus = matchConsensus(key, item, quotes ?? []) ?? verifiedConsensus[event.id];
         if (consensus) {
           event.forecast = consensus.value;
           event.forecastSource = consensus.source;
           event.forecastLabel = consensus.label;
-        } else if (oldEvent?.forecast && oldEvent.forecastSource) {
+        } else if (oldEvent?.forecast && oldEvent.forecastSource === MYFXBOOK_KOREA && oldEvent.time === event.time &&
+          (quotes === null || item.date < today || (publication && item.date === today &&
+            (!item.time || Date.parse(`${item.date}T${item.time}:00+09:00`) <= now.getTime())))) {
           event.forecast = oldEvent.forecast;
           event.forecastSource = oldEvent.forecastSource;
           event.forecastLabel = oldEvent.forecastLabel;

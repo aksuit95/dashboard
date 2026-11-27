@@ -889,7 +889,7 @@
       ]
     },
     "krRate": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -903,15 +903,15 @@
           "sourceName": "한국은행",
           "detail": "통화정책방향 결정회의",
           "forecast": "3.25%",
-          "forecastSource": "https://www.ajupress.com/view/20261123163804930",
-          "forecastLabel": "AJP 설문",
+          "forecastSource": "https://www.myfxbook.com/forex-economic-calendar/south-korea",
+          "forecastLabel": "Myfxbook 컨센서스",
           "actual": "3.25%",
           "previous": "3.00%"
         }
       ]
     },
     "krCpi": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -924,12 +924,15 @@
           "source": "https://www.kostat.go.kr/newsPln.es?mid=a10305000000&oa_yr=2026&oa_mm=12",
           "sourceName": "국가데이터처",
           "detail": "대상 기간 2026-11 · 전년 동월 대비",
+          "forecast": "3%",
+          "forecastSource": "https://www.myfxbook.com/forex-economic-calendar/south-korea",
+          "forecastLabel": "Myfxbook 컨센서스",
           "previous": "2.8%"
         }
       ]
     },
     "krJobs": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -947,7 +950,7 @@
       ]
     },
     "krIndustry": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -965,7 +968,7 @@
       ]
     },
     "krGdp": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -978,12 +981,15 @@
           "source": "https://www.bok.or.kr/portal/stats/statsPublictSchdul/listCldr.do?date=2026-12&menuNo=200775",
           "sourceName": "한국은행",
           "detail": "대상 기간 2026-Q3 · 실질 GDP 전분기 대비 · 잠정치",
+          "forecast": "1%",
+          "forecastSource": "https://www.myfxbook.com/forex-economic-calendar/south-korea",
+          "forecastLabel": "Myfxbook 컨센서스",
           "previous": "0.6%"
         }
       ]
     },
     "krExports": {
-      "updatedAt": "2026-11-27T03:02:58.055Z",
+      "updatedAt": "2026-11-27T03:48:34.870Z",
       "error": null,
       "events": [
         {
@@ -1000,6 +1006,11 @@
           "previous": "93.7%"
         }
       ]
+    },
+    "krConsensus": {
+      "updatedAt": "2026-11-27T03:48:34.870Z",
+      "error": null,
+      "events": []
     }
   }
 }
