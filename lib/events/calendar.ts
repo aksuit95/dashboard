@@ -25,6 +25,20 @@ export function addDays(date: string, days: number): string {
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
 }
+
+// Use the standard DART reporting window for December fiscal year-ends as the
+// display cutoff for undated Korean earnings, not as a company-specific deadline.
+export function isKoreanEarningsSeason(today: string): boolean {
+  const [year, month] = today.split("-").map(Number);
+  const quarterStartMonth = Math.floor((month - 1) / 3) * 3;
+  const periodEnd = new Date(Date.UTC(year, quarterStartMonth, 0)).toISOString().slice(0, 10);
+  let cutoff = addDays(periodEnd, quarterStartMonth === 0 ? 90 : 45);
+  while ([0, 6].includes(new Date(`${cutoff}T00:00:00Z`).getUTCDay())) {
+    cutoff = addDays(cutoff, 1);
+  }
+  return today <= cutoff;
+}
+
 export function upcomingEvents(today: string, all = events): MarketEvent[] {
   const end = addDays(today, 27);
   return all.filter(event => event.date >= today && event.date <= end).sort((a, b) => a.date.localeCompare(b.date) || (a.time ?? "99:99").localeCompare(b.time ?? "99:99"));

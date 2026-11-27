@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 import { readFile } from "node:fs/promises";
-import { addDays, events, reviewedAt, seoulDate, upcomingEvents } from "@/lib/events/calendar";
+import { addDays, events, isKoreanEarningsSeason, reviewedAt, seoulDate, upcomingEvents } from "@/lib/events/calendar";
 import type { Feed, Snapshot } from "@/lib/events/refresh";
 import { koreanEventTitle, mergeRecentEvents, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
 import type { MarketEvent } from "@/lib/events/calendar";
@@ -25,7 +25,7 @@ function title(event:MarketEvent) {
   return <>{translated}{translated !== event.title && <span className="ml-2 text-xs font-normal text-zinc-400">{event.title}</span>}</>;
 }
 export default async function EventsPage({searchParams}:{searchParams:Promise<{country?:string}>}) {
-  const country=(await searchParams).country === "us" ? "US" : "KR";
+  const country=(await searchParams).country === "kr" ? "KR" : "US";
   const now=new Date(), today=seoulDate(now), end=addDays(today,27), snapshot=await loadSnapshot(), feeds=snapshot?.feeds ?? {};
   let live:MarketEvent[] | null=null;
   if(country === "US") {
@@ -55,7 +55,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
     <DataFreshness basis={lastEvent} updatedAt={updatedAt ?? reviewedAt} basisDetail="최근 확인 일정 · 한국시간(KST)"
       updateDetail={updatedAt ? "저장한 일정 자료 갱신" : "수동 일정 확인일"} />
     <nav aria-label="국가별 캘린더" className="mb-5 flex gap-2 border-b border-white/10">
-      {([ ["KR","한국 캘린더","/events?country=kr"], ["US","미국 캘린더","/events?country=us"] ] as const).map(([id,label,href])=><Link key={id} href={href} aria-current={country===id?"page":undefined} className={`border-b-2 px-4 py-3 text-sm font-medium ${country===id?"border-rose-400 text-white":"border-transparent text-zinc-400 hover:text-white"}`}>{label}</Link>)}
+      {([ ["US","미국 캘린더","/events?country=us"], ["KR","한국 캘린더","/events?country=kr"] ] as const).map(([id,label,href])=><Link key={id} href={href} aria-current={country===id?"page":undefined} className={`border-b-2 px-4 py-3 text-sm font-medium ${country===id?"border-rose-400 text-white":"border-transparent text-zinc-400 hover:text-white"}`}>{label}</Link>)}
     </nav>
     <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-zinc-300">
       <p className="font-medium text-white">{today} ~ {end} <span className="ml-2 text-xs font-normal text-zinc-400">오늘 포함 28일</span></p>
@@ -69,7 +69,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
       </article>)}
     </div>
     {country === "US" && <section className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-4"><h2 className="font-semibold text-white">최근 발표 결과 · 7일</h2><p className="mt-2 text-xs text-zinc-400">최근 수집한 지표만 표시합니다. 수치가 없으면 제공처에서 아직 확인되지 않은 것입니다.</p><div className="mt-4 space-y-2">{recent.length === 0 ? <p className="text-sm text-zinc-400">수집된 최근 발표 결과가 없습니다.</p> : recent.map(event=><article key={event.id} className="rounded-md border border-white/10 p-3"><p className="text-sm text-white">{title(event)}</p><p className="mt-1 text-xs text-zinc-400">{event.date} {event.time} KST · {event.detail}</p>{values(event,true)}<a href={event.source} target="_blank" rel="noreferrer" className="mt-2 inline-block text-xs text-zinc-400 underline">출처 확인 ↗</a></article>)}</div></section>}
-    <section className="mt-8 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] p-4">
+    {(country === "US" || isKoreanEarningsSeason(today)) && <section className="mt-8 rounded-xl border border-amber-400/20 bg-amber-400/[0.04] p-4">
       <h2 className="font-semibold text-white">일정 미확정 · 확인 필요</h2>
       {country==="KR" ? <>
         <p className="mt-2 text-xs leading-5 text-zinc-400">DART에서 차기 실적 예정일을 확인하지 못한 상위 기업입니다. 향후 4주 내 발표 예정이라는 뜻은 아닙니다. 최근 실적이 이미 발표되었을 수도 있습니다.</p>
@@ -78,7 +78,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
       </> : <><p className="mt-2 text-xs leading-5 text-zinc-400">제공처가 날짜 또는 시간을 확정하지 못했거나 출처 간 의견이 다른 일정입니다.</p>
         <div className="mt-4 space-y-2">{tentative.length===0 ? <p className="text-sm text-zinc-400">현재 확인된 미확정 예정 일정이 없습니다.</p> : tentative.map(event=><div key={event.id} className="rounded-md border border-white/10 p-3 text-sm"><span className="font-medium text-white">{title(event)}</span><span className="ml-2 text-amber-300">미확정</span><p className="mt-1 text-zinc-400">예상 {event.date} {event.time} KST · {event.detail}</p><a className="mt-1 inline-block text-xs text-zinc-400 underline" href={event.source} target="_blank" rel="noreferrer">출처 확인 ↗</a></div>)}</div>
       </>}
-    </section>
+    </section>}
     <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-zinc-300">
       {country==="KR" ? <>
         <p className="mt-2 text-xs leading-5 text-zinc-400">코스피 보통주 시총 상위 30개 기업의 DART 실적 공시예고와 실적 설명회를 매일 16:00 KST 수집합니다. 시총 기준: {feeds.dart?.capAsOf ? `${feeds.dart.capAsOf} KRX 정규장 ${feeds.dart.capAsOf === "2026-11-19" ? "16:30" : "15:30"} 종가` : "확인되지 않음"}. 한국 매크로는 수동 확인 ({reviewedAt}) 자료입니다.</p>
