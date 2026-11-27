@@ -2,6 +2,7 @@ export type MarketEvent = {
   id: string; date: string; time: string | null; country: "KR" | "US";
   category: "매크로" | "실적"; title: string; detail: string; source: string; sourceName: string; tentative?: boolean;
   forecast?: string; actual?: string; previous?: string;
+  forecastSource?: string; forecastLabel?: string;
 };
 
 // Manually verified against the linked primary sources. Times and dates are KST.

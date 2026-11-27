@@ -1,9 +1,10 @@
 import { readFile, mkdir, writeFile, rename } from "node:fs/promises";
 import { addDays, seoulDate } from "@/lib/events/calendar";
-import { refreshFeed, shouldRefreshDart, type Snapshot } from "@/lib/events/refresh";
+import { refreshFeed, shouldRefreshDart, type Feed, type Snapshot } from "@/lib/events/refresh";
 import { loadEnv } from "@/lib/env";
 import { collectDartEarnings } from "@/lib/events/dart-earnings";
 import { headlineIsm, mergeRecentEvents, parseShowMyTrades, SHOWMYTRADES_URL } from "@/lib/events/showmytrades";
+import { refreshKoreanMacroFeeds, type CalendarQuote } from "@/lib/events/korean-macro";
 
 const path = "data/events/board.json";
 async function download(url: string) {
@@ -17,26 +18,48 @@ async function main() {
   try { prior = JSON.parse(await readFile(path, "utf8")) as Snapshot; } catch (e) { if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e; }
   const current = new Date(), now = current.toISOString(), today = seoulDate(current);
   const macroOnly = process.argv.includes("--macro-only");
+  const koreanMacroOnly = process.argv.includes("--kr-macro-only");
+  async function refreshKoreanMacro() {
+    const key = process.env.TRADING_ECONOMICS_API_KEY?.trim();
+    let quotes: CalendarQuote[] = [];
+    if (key) {
+      const url = new URL(`https://api.tradingeconomics.com/calendar/country/south%20korea/${addDays(today,-7)}/${addDays(today,28)}`);
+      url.searchParams.set("c", key);
+      try {
+        const response = JSON.parse(await download(url.href));
+        if (!Array.isArray(response)) throw new Error("컨센서스 응답 형식 오류");
+        quotes = response;
+      } catch {
+        console.warn("Trading Economics 컨센서스 조회 실패 · 공식 자료 수집 계속");
+      }
+    }
+    return refreshKoreanMacroFeeds(prior.feeds, current, download, quotes);
+  }
   const refreshDart = shouldRefreshDart(macroOnly, prior.feeds.dart);
   let generatedAt: string | undefined;
-  const [show, dart] = await Promise.all([
+  const krPromise = refreshKoreanMacro();
+  const [show, dart] = koreanMacroOnly ? [prior.feeds.show, prior.feeds.dart] : await Promise.all([
     refreshFeed(prior.feeds.show, async () => { const parsed = parseShowMyTrades(JSON.parse(await download(SHOWMYTRADES_URL)), current); generatedAt = parsed.generatedAt; return mergeRecentEvents(prior.feeds.show?.events ?? [], parsed.events, current); }, now),
     !refreshDart ? Promise.resolve(prior.feeds.dart!) : collectDartEarnings(current).catch(error => ({updatedAt:prior.feeds.dart?.updatedAt ?? null, error:error instanceof Error ? error.message : "DART 수집 실패", capAsOf:prior.feeds.dart?.capAsOf ?? null, companies:prior.feeds.dart?.companies ?? [], events:prior.feeds.dart?.events ?? []})),
   ]);
-  show.generatedAt = generatedAt ?? prior.feeds.show?.generatedAt;
-  const ism = await refreshFeed(prior.feeds.ism, async () => {
+  if (show && !koreanMacroOnly) show.generatedAt = generatedAt ?? prior.feeds.show?.generatedAt;
+  const ism = koreanMacroOnly ? prior.feeds.ism : await refreshFeed(prior.feeds.ism, async () => {
     if(show.error) throw new Error("ShowMyTrades 일정 수집 실패");
     const found = headlineIsm(show.events);
     if(!found.length) throw new Error("제공처에서 ISM PMI 일정을 찾지 못했습니다");
     return found;
   }, now);
-  ism.generatedAt = show.generatedAt ?? prior.feeds.ism?.generatedAt;
-  const snapshot: Snapshot = { feeds: { ...prior.feeds, show, ism, dart } };
+  if (ism && !koreanMacroOnly) ism.generatedAt = show.generatedAt ?? prior.feeds.ism?.generatedAt;
+  const krFeeds = await krPromise;
+  const snapshot: Snapshot = { feeds: { ...prior.feeds, ...(!koreanMacroOnly ? { show, ism, dart } : {}), ...krFeeds } };
   await mkdir("data/events", { recursive:true });
   await writeFile(`${path}.tmp`, JSON.stringify(snapshot, null, 2) + "\n", "utf8");
   await rename(`${path}.tmp`, path);
-  console.log(JSON.stringify({ period:[today, addDays(today,27)], show:{count:show.events.length,error:show.error}, ism:{count:ism.events.length,error:ism.error}, dart:{count:dart.events.length,error:dart.error,companies:dart.companies?.length ?? 0,capAsOf:dart.capAsOf} }));
-  if (show.error || ism.error || (refreshDart && dart.error)) process.exitCode = 1;
+  const summary = (feed: Feed | undefined) => ({count:feed?.events.length ?? 0,error:feed?.error ?? null});
+  console.log(JSON.stringify({ period:[today, addDays(today,27)], show:summary(show), ism:summary(ism), dart:summary(dart),
+    korea:Object.fromEntries(Object.entries(krFeeds).map(([key, feed]) => [key, {...summary(feed), results:feed.events.filter(event => event.actual).length}])) }));
+  if ((!koreanMacroOnly && (show?.error || ism?.error || (refreshDart && dart?.error))) ||
+    Object.values(krFeeds).some(feed => feed.error)) process.exitCode = 1;
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });
 

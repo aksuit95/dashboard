@@ -31,6 +31,7 @@ jobs:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
           KRX_ID: ${{ secrets.KRX_ID }}
           KRX_PW: ${{ secrets.KRX_PW }}
+          TRADING_ECONOMICS_API_KEY: ${{ secrets.TRADING_ECONOMICS_API_KEY }}
           SCHEDULE: ${{ github.event.schedule }}
         run: |
           if [ "$SCHEDULE" = '0 3,11,15,19,23 * * *' ]; then
