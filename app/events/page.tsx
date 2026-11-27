@@ -1,3 +1,4 @@
+import { StockChartButton } from "@/components/StockChartProvider";
 import Link from "next/link";
 import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 import { readFile } from "node:fs/promises";
@@ -28,6 +29,11 @@ function values(event:MarketEvent, past:boolean) {
   return <p className="mt-2 text-xs text-zinc-300">예상 {event.forecast ?? "미제공"} · 실제 {event.actual ?? (past ? "미제공" : "발표 전")} · 이전 {event.previous ?? "미제공"}</p>;
 }
 function title(event:MarketEvent) {
+  const stock = event.country === "KR" && event.sourceName === "DART"
+    ? /^dart-([A-Z0-9]{6})-(?:notice|ir)$/.exec(event.id)
+    : null;
+  const company = stock && /^(.*)( 실적 (?:공시 예정|설명회))$/.exec(event.title);
+  if (stock && company) return <><StockChartButton code={stock[1]} name={company[1]} />{company[2]}</>;
   const translated=event.country === "US" ? koreanEventTitle(event.title) : event.title;
   return <>{translated}{translated !== event.title && <span className="ml-2 text-xs font-normal text-zinc-400">{event.title}</span>}</>;
 }
@@ -96,7 +102,7 @@ export default async function EventsPage({searchParams}:{searchParams:Promise<{c
       {showUndatedEarnings && <>
         <p className="mt-2 text-xs leading-5 text-zinc-400">DART에서 차기 실적 예정일을 확인하지 못한 상위 기업입니다. 향후 4주 내 발표 예정이라는 뜻은 아닙니다. 최근 실적이 이미 발표되었을 수도 있습니다.</p>
         {!feeds.dart?.updatedAt && <p className="mt-3 text-sm text-amber-300">상위 기업 수집 결과가 없어 미확정 여부를 판단할 수 없습니다.</p>}
-        <div className="mt-3 flex flex-wrap gap-2">{unknown.map(c=><span key={c.code} className="rounded border border-white/10 px-3 py-2 text-sm text-zinc-200">{c.name} <span className="text-xs text-amber-300">{c.status}</span>{c.source && <> · <a href={c.source} target="_blank" rel="noreferrer" className="underline">DART</a></>}</span>)}</div>
+        <div className="mt-3 flex flex-wrap gap-2">{unknown.map(c=><span key={c.code} className="rounded border border-white/10 px-3 py-2 text-sm text-zinc-200"><StockChartButton code={c.code} name={c.name} /> <span className="text-xs text-amber-300">{c.status}</span>{c.source && <> · <a href={c.source} target="_blank" rel="noreferrer" className="underline">DART</a></>}</span>)}</div>
       </>}
       {(country === "US" || tentative.length > 0) && <><p className="mt-2 text-xs leading-5 text-zinc-400">발표 날짜나 시각을 확인 중인 일정입니다.</p>
         <div className="mt-4 space-y-2">{tentative.length===0 ? <p className="text-sm text-zinc-400">현재 확인된 미확정 예정 일정이 없습니다.</p> : tentative.map(event=><div key={event.id} className="rounded-md border border-white/10 p-3 text-sm"><span className="font-medium text-white">{title(event)}</span><span className="ml-2 text-amber-300">미확정</span><p className="mt-1 text-zinc-400">예상 {event.date} {event.time ? `${event.time} KST` : "· 시간 미확정"} · {event.detail}</p>{event.country === "KR" && (event.forecast || event.previous) && values(event,false)}<a className="mt-1 inline-block text-xs text-zinc-400 underline" href={event.source} target="_blank" rel="noreferrer">{event.sourceName} ↗</a></div>)}</div>

@@ -26,10 +26,12 @@ export async function readStockRadar(): Promise<RadarSnapshot | null> {
   }
 }
 
-export function getRadarChart(snapshot: RadarSnapshot, code: string, period: RadarPeriod) {
+export function getRadarChart(snapshot: RadarSnapshot, code: string, period: RadarPeriod, allowShortHistory = false) {
   const item = snapshot.series[code];
-  const length = radarPeriods[period] + 1;
-  if (!item || !Array.isArray(item.prices) || item.prices.length < length || item.prices.length > radarHistoryLength) return null;
+  const requested = radarPeriods[period] + 1;
+  if (!item || !Array.isArray(item.prices) || item.prices.length > snapshot.dates.length) return null;
+  const length = allowShortHistory ? Math.min(requested, item.prices.length) : requested;
+  if (length < 2 || item.prices.length < length) return null;
   const dates = snapshot.dates.slice(-length);
   const prices = item.prices.slice(-length);
   if (prices.some(price => !Number.isFinite(price) || price <= 0)) throw new Error("KRX 레이더 차트 데이터 검증 실패");

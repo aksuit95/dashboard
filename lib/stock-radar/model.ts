@@ -6,6 +6,14 @@ export const radarThresholds = [-20, -30, -40] as const;
 export const radarPriceBasis = "KRX_REGULAR_CLOSE_1530";
 
 export type RadarPoint = { date: string; price: number };
+export type StockChartRequest = { code: string; name: string; radar?: { tab: RadarTab; period: RadarPeriod; asOf: string; fetchedAt: string } };
+export type StockChartData = {
+  points: RadarPoint[];
+  adjusted: boolean;
+  asOf: string;
+  market: RadarMarket;
+  priceTime: string;
+};
 export type RadarMetrics = {
   priorHigh: RadarPoint;
   priorLow: RadarPoint;

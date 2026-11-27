@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ColorType, createChart, type SeriesMarker, type Time } from "lightweight-charts";
-import { radarSignal, radarThresholds, type RadarMarket, type RadarMetrics, type RadarPeriod, type RadarPoint, type RadarRow, type RadarTab } from "@/lib/stock-radar/model";
+import { useMemo, useState } from "react";
+import { StockChartButton } from "@/components/StockChartProvider";
+import { radarSignal, radarThresholds, type RadarMarket, type RadarMetrics, type RadarPeriod, type RadarRow, type RadarTab } from "@/lib/stock-radar/model";
 
 const periodLabels: Record<RadarPeriod, string> = { "1m": "1개월", "3m": "3개월", "52w": "52주" };
 const marketLabels = { ALL: "전체 시장", KOSPI: "코스피", KOSDAQ: "코스닥" };
@@ -20,7 +20,6 @@ const formatPct = (value: number) => `${value > 0 ? "+" : ""}${value.toFixed(2)}
 const inputStyle = "mt-1 block rounded-md border border-white/15 bg-[#10151c] px-3 py-2 text-sm text-zinc-100";
 const pageSize = 40;
 
-type ChartData = { points: RadarPoint[]; adjusted: boolean };
 type Candidate = { row: RadarRow; metrics: RadarMetrics; signal: number };
 type SortColumn = "name" | "close" | "reference" | "signal" | "mdd" | "marketCap" | "turnover";
 type SortDirection = "ascending" | "descending";
@@ -40,94 +39,6 @@ function SortHeader({ label, direction, onSort, left = false }: {
   </th>;
 }
 
-function StockRadarChart({ points, markers }: { points: RadarPoint[]; markers: SeriesMarker<Time>[] }) {
-  const host = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!host.current) return;
-    const chart = createChart(host.current, {
-      height: 260, autoSize: true,
-      layout: { background: { type: ColorType.Solid, color: "#151a22" }, textColor: "#a1a1aa" },
-      grid: { vertLines: { color: "#252c35" }, horzLines: { color: "#252c35" } },
-      rightPriceScale: { borderColor: "#343b45" }, timeScale: { borderColor: "#343b45" },
-      localization: { priceFormatter: formatPrice },
-    });
-    const line = chart.addLineSeries({ color: "#5eead4", lineWidth: 2, priceLineVisible: false });
-    line.setData(points.map(point => ({ time: point.date, value: point.price })));
-    line.setMarkers(markers);
-    const edge = Math.max(1, Math.ceil(points.length * 0.02));
-    chart.timeScale().setVisibleLogicalRange({ from: -edge, to: points.length - 1 + edge });
-    return () => chart.remove();
-  }, [points, markers]);
-  return <div ref={host} role="img" aria-label="KRX 종가 추이 차트" className="h-[260px] w-full" />;
-}
-
-function RadarDetail({ candidate, tab, period, asOf, fetchedAt, close }: {
-  candidate: Candidate; tab: RadarTab; period: RadarPeriod; asOf: string; fetchedAt: string; close: () => void;
-}) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const [chart, setChart] = useState<ChartData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const { row, metrics } = candidate;
-  useEffect(() => { const dialog = ref.current; if (dialog && !dialog.open) dialog.showModal(); }, []);
-  useEffect(() => {
-    const controller = new AbortController();
-    async function load() {
-      try {
-        const params = new URLSearchParams({ period, asOf, fetchedAt });
-        const response = await fetch(`/api/stock-radar/${row.code}?${params}`, { signal: controller.signal, cache: "no-store" });
-        const data = await response.json() as ChartData & { error?: string };
-        if (!response.ok) throw new Error(data.error ?? "차트를 불러오지 못했습니다.");
-        if (!controller.signal.aborted) setChart(data);
-      } catch (error) {
-        if (!controller.signal.aborted) setError(error instanceof Error ? error.message : "차트를 불러오지 못했습니다.");
-      }
-    }
-    void load();
-    return () => controller.abort();
-  }, [asOf, fetchedAt, period, row.code]);
-
-  const levels = useMemo(() => {
-    const candidates = tab === "drawdown" ? [
-      { point: metrics.currentPeak, label: "기간 고점", color: "#fbbf24", above: true },
-      { point: metrics.mddPeak, label: "MDD 고점", color: "#fb7185", above: true },
-      { point: metrics.mddTrough, label: "MDD 저점", color: "#7dd3fc", above: false },
-    ] : [
-      { point: metrics.priorHigh, label: "직전 고점", color: "#fb7185", above: true },
-      { point: metrics.priorLow, label: "직전 저점", color: "#7dd3fc", above: false },
-      { point: { date: asOf, price: row.close! }, label: tab === "high" ? "신고가" : "신저가", color: "#5eead4", above: tab === "high" },
-    ];
-    const byDate = new Map<string, typeof candidates[number]>();
-    for (const level of candidates) {
-      const existing = byDate.get(level.point.date);
-      if (existing) existing.label += ` · ${level.label}`;
-      else byDate.set(level.point.date, level);
-    }
-    return [...byDate.values()];
-  }, [asOf, metrics, row.close, tab]);
-  const markers = useMemo<SeriesMarker<Time>[]>(() => {
-    return [...levels].sort((a, b) => a.point.date.localeCompare(b.point.date)).map(({ point, color, above }) => ({
-      time: point.date, position: above ? "aboveBar" : "belowBar", shape: "circle", color,
-    }));
-  }, [levels]);
-
-  return <dialog ref={ref} onClose={close} aria-labelledby="radar-detail-title" className="m-auto max-h-[90vh] w-[calc(100%_-_2rem)] max-w-3xl overflow-y-auto rounded-xl border border-white/15 bg-[#151a22] p-4 text-zinc-100 shadow-2xl backdrop:bg-black/70 sm:p-6">
-    <div className="mb-4 flex items-start justify-between gap-4">
-      <div><h2 id="radar-detail-title" className="text-lg font-semibold">{row.name} <span className="ml-1 text-sm font-normal text-zinc-400">{row.code}</span></h2>
-        <p className="mt-1 text-xs text-zinc-400">{marketLabels[row.market]} · {periodLabels[period]} · {asOf} KRX 정규장 종가</p></div>
-      <button type="button" autoFocus onClick={() => ref.current?.close()} className="rounded-md border border-white/15 px-3 py-1.5 text-sm hover:bg-white/10">닫기</button>
-    </div>
-    {chart ? <>
-      <StockRadarChart points={chart.points} markers={markers} />
-      <dl className="mt-3 grid gap-2 sm:grid-cols-3">
-        {levels.map(({ point, label, color }) => <div key={label} className="rounded-md bg-white/5 p-3 text-xs">
-          <dt style={{ color }}>{label}</dt><dd className="mt-1 tabular-nums">{formatPrice(point.price)}원 · {point.date}</dd>
-        </div>)}
-      </dl>
-      {chart.adjusted && <p className="mt-3 text-xs text-zinc-400">확인된 주식 수 변동 조정계수를 과거 종가에 적용했습니다.</p>}
-    </> : <p role="status" className="px-3 py-14 text-center text-sm text-zinc-400">{error ?? "KRX 종가 차트를 불러오는 중입니다."}</p>}
-  </dialog>;
-}
-
 export function StockRadarBoard({ rows, asOf, fetchedAt }: { rows: RadarRow[]; asOf: string; fetchedAt: string }) {
   const [tab, setTab] = useState<RadarTab>("high");
   const [period, setPeriod] = useState<RadarPeriod>("52w");
@@ -138,7 +49,6 @@ export function StockRadarBoard({ rows, asOf, fetchedAt }: { rows: RadarRow[]; a
   const [threshold, setThreshold] = useState<number>(radarThresholds[0]);
   const [sort, setSort] = useState<Sort | null>(null);
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState<Candidate | null>(null);
 
   const marketRows = useMemo(() => rows.filter(row => market === "ALL" || row.market === market), [rows, market]);
   const analyzable = marketRows.filter(row => row.metrics[period]).length;
@@ -238,7 +148,7 @@ export function StockRadarBoard({ rows, asOf, fetchedAt }: { rows: RadarRow[]; a
               const { row, metrics, signal } = candidate;
               const reference = referencePoint(metrics, tab);
               return <tr key={row.code} className="border-t border-white/5 hover:bg-white/[0.035]">
-                <th scope="row" className="px-4 py-3 text-left font-medium"><button type="button" onClick={() => setSelected(candidate)} className="text-zinc-100 underline decoration-white/25 underline-offset-4 hover:decoration-white">{row.name}</button><p className="mt-1 text-[11px] text-zinc-400">{row.code} · {marketLabels[row.market]}</p></th>
+                <th scope="row" className="px-4 py-3 text-left font-medium"><StockChartButton code={row.code} name={row.name} chart={{ tab, period, asOf, fetchedAt }} className="text-zinc-100" /><p className="mt-1 text-[11px] text-zinc-400">{row.code} · {marketLabels[row.market]}</p></th>
                 <td className="px-4 py-3 text-zinc-200">{formatPrice(row.close)}</td>
                 <td className="px-4 py-3 text-zinc-300">{formatPrice(reference.price)}<p className="mt-1 text-[11px] text-zinc-400">{reference.date}</p></td>
                 <td className={`px-4 py-3 font-semibold ${active.tone}`}>{formatPct(signal)}</td>
@@ -258,6 +168,5 @@ export function StockRadarBoard({ rows, asOf, fetchedAt }: { rows: RadarRow[]; a
       </div>}
     </div>
     <p className="mt-4 max-w-4xl text-xs leading-relaxed text-zinc-400">1개월·3개월·52주는 기준일 직전의 KRX 15:30 종가가 있는 시장 거래일을 각각 21·63·252일 사용합니다. MDD는 기간 중 고점 이후 저점까지의 최대 낙폭입니다. 거래가 없던 기준일, 이력 부족, 가격 연속성을 확인할 수 없는 종목은 해당 기간 분석에서 제외합니다.</p>
-    {selected && <RadarDetail candidate={selected} tab={tab} period={period} asOf={asOf} fetchedAt={fetchedAt} close={() => setSelected(null)} />}
   </section>;
 }

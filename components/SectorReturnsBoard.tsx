@@ -1,4 +1,5 @@
 "use client";
+import { StockChartButton } from "@/components/StockChartProvider";
 import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import { useEffect, useMemo, useState } from "react";
@@ -158,7 +159,7 @@ export function SectorReturnsBoard({ market = "kr" }: { market?: "kr" | "us" }) 
         <caption className="sr-only">{universeName} {selected ?? "전체 섹터"} 종목별 기간 등락률</caption>
         <thead className="bg-white/[0.025] text-zinc-400"><tr><th scope="col" className="px-4 py-3 text-left font-medium">종목</th><th scope="col" className="px-3 py-3 text-left font-medium">섹터</th><th scope="col" className="px-3 py-3 font-medium">종가({isUs ? "USD" : "원"})</th>{returnPeriods.map(p => <th scope="col" key={p.id} aria-sort={period === p.id ? descending ? "descending" : "ascending" : "none"} className="px-3 py-3 font-medium"><button type="button" onClick={() => sortBy(p.id)} className={period === p.id ? "text-zinc-100" : "hover:text-zinc-100"}>{p.label} {period === p.id ? descending ? "↓" : "↑" : "↕"}</button></th>)}</tr></thead>
         <tbody>{visible.map(r => <tr key={r.code} className="border-t border-white/5 hover:bg-white/[0.025]">
-          <td className="px-4 py-3 text-left"><a href={isUs ? usStockUrl(r.code) : `https://stock.naver.com/domestic/stock/${r.code}/chart`} target="_blank" rel="noreferrer" className="font-medium text-zinc-100 hover:underline">{r.name} ↗</a><p className="mt-1 text-[10px] text-zinc-500">{r.code}{"membership" in r ? ` · ${r.membership}` : !r.tradable ? " · 거래 제한" : ""}</p></td>
+          <td className="px-4 py-3 text-left">{isUs ? <a href={usStockUrl(r.code)} target="_blank" rel="noreferrer" className="font-medium text-zinc-100 hover:underline">{r.name} ↗</a> : <StockChartButton code={r.code} name={r.name} className="font-medium text-zinc-100" />}<p className="mt-1 text-[10px] text-zinc-500">{r.code}{"membership" in r ? ` · ${r.membership}` : !r.tradable ? " · 거래 제한" : ""}</p></td>
           <td className="px-3 py-3 text-left text-zinc-400" title={r.industry ?? "업종 미확인"}>{r.sector}</td><td className="px-3 py-3 text-zinc-200">{r.price?.toLocaleString(isUs ? "en-US" : "ko-KR", isUs ? { maximumFractionDigits: 2 } : undefined) ?? "—"}</td>
           {returnPeriods.map(p => <td key={p.id} style={period === p.id ? heat(r.returns[p.id]) : undefined} className={`px-3 py-3 ${color(r.returns[p.id])} ${period === p.id ? "font-semibold" : ""}`}>{percent(r.returns[p.id])}</td>)}
         </tr>)}</tbody>

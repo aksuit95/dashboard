@@ -1,4 +1,5 @@
 "use client";
+import { StockChartButton } from "@/components/StockChartProvider";
 import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 
 import Link from "next/link";
@@ -240,7 +241,7 @@ function TossFlow({ board, universe, data, failure }: {
             </th>;
           })}</tr></thead>
           <tbody>{filtered.map(row => <tr key={row.code} className="border-t border-white/5">
-            <td className="p-2 text-left">{row.name} <span className="text-xs text-zinc-500">{row.code}</span>{row.error && <span className="ml-2 text-xs text-amber-300" title={row.error}>결측</span>}</td>
+            <td className="p-2 text-left"><StockChartButton code={row.code} name={row.name} /> <span className="text-xs text-zinc-500">{row.code}</span>{row.error && <span className="ml-2 text-xs text-amber-300" title={row.error}>결측</span>}</td>
             <td className="px-2 text-zinc-200">{row.marketCap == null ? "—" : capFormat.format(row.marketCap / wonPerEok)}</td>
             <td className={`px-2 ${tone(row.amount)}`}>{number(row.amount, 0)}</td>
             {stockWindows.map(days => <td key={days} className={`px-2 ${tone(row[days])}`}>{number(row[days], 0)}</td>)}

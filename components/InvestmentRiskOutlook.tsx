@@ -1,5 +1,6 @@
 "use client";
 
+import { StockChartButton } from "@/components/StockChartProvider";
 import Link from "next/link";
 import { financialMarkets, type FinancialMarket } from "@/lib/financials/types";
 import { useEffect, useState } from "react";
@@ -37,7 +38,7 @@ function RiskPriceTable({ rows, stage, limit }: { rows: PriceCandidate[]; stage:
         <th className={cell}>다음 거래일 기준 종가</th><th className={cell}>필요한 추가 상승률</th><th className={cell}>기준가 도달 시 지수 조건</th>
       </tr></thead>
       <tbody>{candidates.map(row => <tr className="border-b border-white/5 align-top tabular-nums" key={row.code}>
-        <td className={cell}><strong>{row.name}</strong><p className="text-xs text-zinc-500">{row.code} · {marketName[row.market]}</p></td>
+        <td className={cell}><strong><StockChartButton code={row.code} name={row.name} /></strong><p className="text-xs text-zinc-500">{row.code} · {marketName[row.market]}</p></td>
         <td className={cell}>{won(row.close)}</td>
         <td className={cell}>{row.thresholds.map(rule => <p key={rule.days} className="leading-6">
           {rule.days}거래일 +{rule.rise}% <span className="text-xs text-zinc-400">({rule.baseDate} · {won(rule.base)})</span>
@@ -66,7 +67,7 @@ function RiskFinancialTable({ rows }: { rows: FinancialCandidate[] }) {
         <th className={cell}>다음 공시에서 볼 조건</th><th className={cell}>같은 분기 순손실 반복 시</th>
       </tr></thead>
       <tbody>{rows.map(row => <tr key={row.code} className="border-b border-white/5 align-top">
-        <td className={cell}><Link className={link} href={`/financials?universe=${financialMarkets[row.market].universe}&code=${row.code}`}>{row.name}</Link><p className="text-xs text-zinc-500">{row.code} · {financialMarkets[row.market].label}</p></td>
+        <td className={cell}><StockChartButton code={row.code} name={row.name} /> <Link className={link} href={`/financials?universe=${financialMarkets[row.market].universe}&code=${row.code}`}>재무 상세</Link><p className="text-xs text-zinc-500">{row.code} · {financialMarkets[row.market].label}</p></td>
         <td className={cell}>{row.periodEnd} · {row.scope === "CFS" ? "연결" : "별도"}
           <p><a className={`${link} text-xs`} href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${row.receipt}`} target="_blank" rel="noreferrer">DART {row.filedAt}</a></p>
         </td>

@@ -1,4 +1,5 @@
 "use client";
+import { StockChartButton } from "@/components/StockChartProvider";
 import { DataFreshness, latestDataTime } from "@/components/DataFreshness";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -97,13 +98,13 @@ function StockValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq15
     {capError && <p role="status" className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-3 text-sm text-amber-200">{capError} 시총은 결측으로 표시합니다.</p>}
     {active && <>
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div><p className="text-xs text-zinc-500">선택 종목 · {active.code}</p><h2 className="mt-1 text-xl font-semibold">{active.name}</h2></div>
+        <div><p className="text-xs text-zinc-500">선택 종목 · {active.code}</p><h2 className="mt-1 text-xl font-semibold"><StockChartButton code={active.code} name={active.name} /></h2></div>
         <div className="flex flex-wrap items-end gap-3">
           <div className="relative">
             <label className="block text-xs text-zinc-400" htmlFor="stock-picker-search">종목 검색</label>
             <input id="stock-picker-search" type="search" autoComplete="off" placeholder="종목명 또는 코드" value={stockSearch} onChange={event => setStockSearch(event.target.value)} onKeyDown={event => { if (event.key === "Escape") setStockSearch(""); }} className="mt-1 w-48 rounded-md border border-white/15 bg-[#151a22] px-3 py-2 text-sm text-zinc-200" />
             {stockSearch.trim() && <div className="absolute right-0 z-30 mt-1 max-h-60 w-64 overflow-auto rounded-md border border-white/15 bg-[#151a22] p-1 shadow-xl" aria-label="종목 검색 결과">
-              {searchMatches.length ? searchMatches.map(stock => <button type="button" key={stock.code} onClick={() => { setSelected(stock.code); setStockSearch(""); }} className="block w-full rounded px-3 py-2 text-left text-sm text-zinc-200 hover:bg-white/10 focus-visible:bg-white/10">{stock.name} <span className="text-xs text-zinc-500">{stock.code}</span></button>) : <p role="status" className="px-3 py-2 text-xs text-zinc-400">검색 결과가 없습니다.</p>}
+              {searchMatches.length ? searchMatches.map(stock => <div key={stock.code} className="flex items-center justify-between gap-2 rounded px-3 py-2 text-sm text-zinc-200"><span><StockChartButton code={stock.code} name={stock.name} /> <span className="text-xs text-zinc-500">{stock.code}</span></span><button type="button" onClick={() => { setSelected(stock.code); setStockSearch(""); }} className="text-xs text-sky-300 hover:underline" aria-label={stock.name + " 밸류에이션 선택"}>선택</button></div>) : <p role="status" className="px-3 py-2 text-xs text-zinc-400">검색 결과가 없습니다.</p>}
             </div>}
           </div>
           <label className="text-xs text-zinc-400">종목 선택<select aria-label="종목 선택" value={active.code} onChange={event => { setSelected(event.target.value); setStockSearch(""); }} className="ml-3 max-w-[240px] rounded-md border border-white/15 bg-[#151a22] px-3 py-2 text-sm text-zinc-200">{[...(data?.stocks ?? [])].sort((a, b) => a.name.localeCompare(b.name, "ko")).map(stock => <option value={stock.code} key={stock.code}>{stock.name} · {stock.code}</option>)}</select></label>
@@ -147,7 +148,7 @@ function StockValuationUniverse({ universe }: { universe: "kospi200" | "kosdaq15
           {visibleMetrics.map(metric => <th scope="col" key={metric.id} aria-sort={sort === metric.id ? ascending ? "ascending" : "descending" : "none"} className={`min-w-[125px] px-4 py-3 ${sort === metric.id ? "text-sky-300" : ""}`}><button type="button" onClick={() => order(metric.id)} className="hover:text-white">{metric.name} {sort === metric.id ? ascending ? "↑" : "↓" : "↕"}<span className="mt-1 block text-[11px] font-normal text-zinc-400">{metric.unit}</span></button></th>)}
         </tr></thead>
         <tbody>{rows.map((stock, index) => <tr key={stock.code} className={`border-t border-white/[0.06] ${active?.code === stock.code ? "bg-sky-400/[0.08]" : index % 2 ? "bg-white/[0.025]" : ""}`}>
-          <th scope="row" className={`sticky left-0 z-10 border-r border-white/10 px-4 py-3 text-left font-normal ${active?.code === stock.code ? "bg-[#192c3a]" : index % 2 ? "bg-[#1b2028]" : "bg-[#151a22]"}`}><div className="flex items-center gap-3"><input type="checkbox" aria-label={`${stock.name} 비교에 선택`} checked={comparison.includes(stock.code)} onChange={() => toggleComparison(stock.code)} /><button type="button" aria-pressed={active?.code === stock.code} onClick={() => setSelected(stock.code)} className="text-left text-sm font-medium text-zinc-100 hover:text-sky-400"><span className="block">{stock.name}</span><span className="text-xs font-normal text-zinc-400">{stock.code}{active?.code === stock.code ? " · 선택됨" : ""}</span></button></div></th>
+          <th scope="row" className={`sticky left-0 z-10 border-r border-white/10 px-4 py-3 text-left font-normal ${active?.code === stock.code ? "bg-[#192c3a]" : index % 2 ? "bg-[#1b2028]" : "bg-[#151a22]"}`}><div className="flex items-center gap-3"><input type="checkbox" aria-label={`${stock.name} 비교에 선택`} checked={comparison.includes(stock.code)} onChange={() => toggleComparison(stock.code)} /><div><StockChartButton code={stock.code} name={stock.name} className="font-medium" /><div className="mt-1 flex flex-wrap items-center gap-x-2 text-[11px] text-zinc-500"><span>{stock.code}{active?.code === stock.code ? " · 선택됨" : ""}</span><button type="button" aria-pressed={active?.code === stock.code} onClick={() => setSelected(stock.code)} className="text-sky-300 hover:underline">밸류에이션</button></div></div></div></th>
           <td className="px-4 py-3 tabular-nums text-zinc-200">{format(caps?.values[stock.code] == null ? null : caps.values[stock.code]! / 1e8, 0)}</td>
           {visibleMetrics.map(metric => <td key={metric.id} className={`px-4 py-3 tabular-nums ${stock.values[metric.id] == null ? "text-zinc-500" : stock.values[metric.id]! < 0 ? "text-sky-300" : "text-zinc-100"}`}>{format(stock.values[metric.id], metric.digits)}</td>)}
         </tr>)}</tbody>

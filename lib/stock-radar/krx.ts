@@ -1,5 +1,5 @@
 import { krxCloseTime } from "@/config/market-calendar";
-import { calculateRadarMetrics, radarPeriods, radarPriceBasis, radarThresholds, type RadarAboveSma20, type RadarMarket, type RadarPeriod, type RadarPoint, type RadarRow, type RadarSnapshot } from "./model";
+import { calculateRadarMetrics, radarPeriods, radarPriceBasis, type RadarAboveSma20, type RadarMarket, type RadarPeriod, type RadarPoint, type RadarRow, type RadarSnapshot } from "./model";
 
 type SourceRow = Record<string, unknown>;
 export type RadarSecurity = { code: string; name: string; market: RadarMarket; listedOn: string };
@@ -142,7 +142,7 @@ export function buildRadarSnapshot(asOf: string, days: KrxRadarDay[], securities
       if (window[19].price > window.reduce((sum, point) => sum + point.price, 0) / 20) aboveSma20[market].above++;
     }
     const metrics = Object.fromEntries(Object.entries(radarPeriods).map(([period, length]) => [period, calculateRadarMetrics(points, length)])) as RadarRow["metrics"];
-    if (Object.values(metrics).some(item => item && (item.breakoutPct !== null || item.breakdownPct !== null || item.currentDrawdownPct <= radarThresholds[0]))) {
+    if (points.length >= 2) {
       series[code] = { prices: points.map(point => point.price), adjustedFrom };
     }
     return { code, name, market, close: latest?.close ?? null, marketCap: latest ? latest.close * latest.shares : null, turnover: latest?.turnover ?? null, metrics };

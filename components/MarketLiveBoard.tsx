@@ -1,5 +1,6 @@
 "use client";
 
+import { StockChartButton } from "@/components/StockChartProvider";
 import { krxCloseTime } from "@/config/market-calendar";
 import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 import { ColorType, createChart, type AreaData, type IChartApi, type ISeriesApi, type Time, type UTCTimestamp, type WhitespaceData } from "lightweight-charts";
@@ -419,7 +420,7 @@ function LeaderPanel({ leaders, buyStrengthLeaders, baselineDate, closed }: {
                 className="grid grid-cols-3 gap-x-2 gap-y-2 px-3 py-2.5 @min-[34rem]:table-row @min-[34rem]:p-0">
                 <th scope="row" role="rowheader" title={stock.sector}
                   className="col-span-3 whitespace-nowrap text-left font-medium text-zinc-100 @min-[34rem]:px-2 @min-[34rem]:py-2.5">
-                  {stock.name}
+                  <StockChartButton code={stock.code} name={stock.name} />
                 </th>
                 <LeaderValue label={priceLabel}>{formatNumber(stock.price, 0)}원</LeaderValue>
                 <LeaderValue label="등락률" tone={`font-semibold ${direction(stock.changePct)}`}>{percent(stock.changePct)}</LeaderValue>

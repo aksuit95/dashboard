@@ -1,4 +1,5 @@
 "use client";
+import { StockChartButton } from "@/components/StockChartProvider";
 import { DataFreshness, krxCloseDetail, latestDataTime } from "@/components/DataFreshness";
 
 import { useEffect, useRef, useState } from "react";
@@ -139,7 +140,7 @@ function NameColumn({ group }: { group: SingleStockGroup }) {
   return (
     <section>
       <div className="mb-3 flex items-start justify-between gap-3">
-        <h2 className="text-lg font-medium">{group.name}</h2>
+        <h2 className="text-lg font-medium"><StockChartButton code={group.code} name={group.name} /></h2>
         <div className="text-right">
           <p className={`text-sm font-medium tabular-nums ${tone(group.changePct)}`}>
             {group.price == null ? "—" : `₩${formatNumber(group.price, 0)}`} · {group.changePct == null ? "—" : `${formatSigned(group.changePct)}%`}

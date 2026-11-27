@@ -1,3 +1,4 @@
+import { StockChartButton } from "@/components/StockChartProvider";
 import { formatNumber, formatSigned } from "@/lib/format";
 import type { MarketLiveSectorStock } from "@/lib/market/market-live";
 
@@ -46,7 +47,7 @@ export function MarketLiveSectorStocks({ id, name, stocks, priceLabel, changeLab
               {ranked.map(stock => (
                 <tr key={`${stock.market}:${stock.code}`}>
                   <th scope="row" className="px-3 py-1.5 font-normal">
-                    <span className="block font-medium text-zinc-100">{stock.name}</span>
+                    <StockChartButton code={stock.code} name={stock.name} className="block font-medium text-zinc-100" />
                     <span className="text-[11px] text-zinc-400">{stock.name !== stock.code ? `${stock.code} · ` : ""}{marketNames[stock.market]}</span>
                   </th>
                   <td className="whitespace-nowrap px-2 py-1.5 text-right text-zinc-200">{stock.price == null ? "—" : `${formatNumber(stock.price, 0)}원`}</td>

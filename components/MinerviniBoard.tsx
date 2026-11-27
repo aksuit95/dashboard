@@ -1,4 +1,5 @@
 "use client";
+import { StockChartButton } from "@/components/StockChartProvider";
 import { DataFreshness, krxCloseDetail } from "@/components/DataFreshness";
 
 import { Fragment, useEffect, useState } from "react";
@@ -93,7 +94,7 @@ export function MinerviniBoard({ universe = "kospi200" }: { universe?: Minervini
         <thead className="bg-white/5 text-zinc-400"><tr>{["종목", "종가", "RS", "추세", "상태", "피벗", "피벗 대비", "거래량/50일", "손절 참고가", "피벗→손절"].map(h => <th key={h} className="px-3 py-3 font-medium">{h}</th>)}</tr></thead>
         <tbody>{visible.map(r => <Fragment key={r.code}>
           <tr className="border-t border-white/10 hover:bg-white/[0.025]">
-            <td className="px-3 py-3 text-left"><button type="button" aria-expanded={selected === r.code} onClick={() => setSelected(selected === r.code ? null : r.code)} className="text-left"><span className="block font-medium text-zinc-100">{r.name}</span><span className="text-[10px] text-zinc-500">{r.code} {selected === r.code ? "▴" : "▾"}</span></button></td>
+            <td className="px-3 py-3 text-left"><div><StockChartButton code={r.code} name={r.name} className="font-medium" /><div className="mt-1 flex flex-wrap items-center gap-x-2 text-[11px] text-zinc-500"><span>{r.code}</span><button type="button" aria-expanded={selected === r.code} onClick={() => setSelected(selected === r.code ? null : r.code)} className="text-cyan-300 hover:underline">판정 상세 {selected === r.code ? "▴" : "▾"}</button></div></div></td>
             <td className="px-3 py-3">{number(r.price)}</td><td className={`px-3 py-3 font-semibold ${(r.rs ?? 0) >= 90 ? "text-emerald-300" : "text-zinc-200"}`}>{r.rs?.toFixed(1) ?? "—"}</td>
             <td className="px-3 py-3">{r.checks.length ? `${r.checks.filter(c => c.pass).length}/8` : "—"}</td><td className={`px-3 py-3 ${colors[r.status]}`}>{labels[r.status]}</td><td className="px-3 py-3">{number(r.pivot)}</td><td className="px-3 py-3">{percent(r.pivotGap)}</td><td className="px-3 py-3">{ratio(r.volumeRatio)}</td><td className="px-3 py-3">{number(r.stop)}</td><td className="px-3 py-3 text-zinc-300">{r.pivotRisk == null ? "—" : `${r.pivotRisk.toFixed(1)}%`}</td>
           </tr>

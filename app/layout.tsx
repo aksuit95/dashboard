@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Shell } from "@/components/Shell";
+import { StockChartProvider } from "@/components/StockChartProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        <Shell>{children}</Shell>
+        <StockChartProvider><Shell>{children}</Shell></StockChartProvider>
       </body>
     </html>
   );

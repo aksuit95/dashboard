@@ -98,4 +98,15 @@ describe("closing stock radar", () => {
     days.at(-10)!.markets.KOSPI[company.code] = null;
     expect(buildRadarSnapshot(end, days, [company], snapshot.fetchedAt).rows[0].metrics["1m"]).toBeNull();
   });
+
+  it("uses the dated KRX closes available for a new listing in the shared chart", () => {
+    const recent = { ...company, listedOn: "2026-11-15" };
+    const snapshot = buildRadarSnapshot(end, priceHistory(), [recent], "2026-11-20T16:00:00+09:00");
+    const chart = getRadarChart(snapshot, recent.code, "52w", true);
+    expect(getRadarChart(snapshot, recent.code, "52w")).toBeNull();
+    expect(chart?.points.map(point => point.date)).toEqual([
+      "2026-11-15", "2026-11-16", "2026-11-17", "2026-11-18", end,
+    ]);
+    expect(getRadarChart(snapshot, "999999", "52w", true)).toBeNull();
+  });
 });
